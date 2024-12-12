@@ -5,7 +5,7 @@
 #include <cstdio>
 #include <vector>
 #include <stdexcept>
-#include <ringworld/ringworld.h>
+#include <ringworld/ringworld.hpp>
 
 extern "C" {
     #include "impl/exception/exception.h"

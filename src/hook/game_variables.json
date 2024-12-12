@@ -1,3 +1,3 @@
 {
-    "structure_bsp_index": {"type": "int", "address": "0x6397d0"}
+    "structure_bsp_index": {"type": "uint16_t", "address": "0x6397d0"}
 }

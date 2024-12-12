@@ -10,6 +10,9 @@ with open(sys.argv[1], "r") as f:
 
 cpp_source_code = """// AUTO-GENERATED! DO NOT EDIT UNLESS YOU LIKE REGRETTING THINGS!
 
+#include <stdint.h>
+#include <stddef.h>
+
 extern "C" {
 """
 
@@ -19,7 +22,7 @@ for variable in variables:
     var_type = var_info["type"]
     var_name = variable
     var_address = var_info["address"]
-    var_decl += "   auto *{} = reinterpret_cast<{}*>({});\n".format(var_name, var_type, var_address)
+    var_decl += "   auto *{} = reinterpret_cast<{} *>({});\n".format(var_name, var_type, var_address)
 
 cpp_source_code += var_decl + """}
 """

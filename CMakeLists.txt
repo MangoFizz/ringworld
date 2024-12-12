@@ -30,6 +30,20 @@ add_custom_command(
     COMMAND Python3::Interpreter "${CMAKE_CURRENT_SOURCE_DIR}/src/hook/generate_hooks.py" "${CMAKE_CURRENT_SOURCE_DIR}/src/hook/dedicated_functions.json" "set_up_dedicated_hooks" "${CMAKE_CURRENT_BINARY_DIR}/dedicated_function_hooks.cpp"
 )
 
+add_custom_command(
+    OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/game_variables.cpp"
+    DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/src/hook/game_variables.json"
+    DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/src/hook/generate_variables.py"
+    COMMAND Python3::Interpreter "${CMAKE_CURRENT_SOURCE_DIR}/src/hook/generate_variables.py" "${CMAKE_CURRENT_SOURCE_DIR}/src/hook/game_variables.json" "${CMAKE_CURRENT_BINARY_DIR}/game_variables.cpp"
+)
+
+add_custom_command(
+    OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/dedicated_variables.cpp"
+    DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/src/hook/dedicated_variables.json"
+    DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/src/hook/generate_variables.py"
+    COMMAND Python3::Interpreter "${CMAKE_CURRENT_SOURCE_DIR}/src/hook/generate_variables.py" "${CMAKE_CURRENT_SOURCE_DIR}/src/hook/dedicated_variables.json" "${CMAKE_CURRENT_BINARY_DIR}/dedicated_variables.cpp"
+)
+
 include_directories("${CMAKE_CURRENT_SOURCE_DIR}/src" "${CMAKE_CURRENT_SOURCE_DIR}/include")
 
 add_library(ringworld STATIC
@@ -37,5 +51,6 @@ add_library(ringworld STATIC
     src/impl/exception/exception.c
     src/impl/script/hsc.c
     "${CMAKE_CURRENT_BINARY_DIR}/game_function_hooks.cpp"
+    "${CMAKE_CURRENT_BINARY_DIR}/game_variables.cpp"
     "${CMAKE_CURRENT_BINARY_DIR}/dedicated_function_hooks.cpp"
 )

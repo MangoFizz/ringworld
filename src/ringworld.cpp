@@ -19,10 +19,6 @@ static std::byte *hook_heap;
 static const std::size_t hook_heap_size = 512 * 1024;
 static std::size_t hook_heap_usage;
 
-extern "C" {
-    void attack_mode();
-}
-
 void set_up_ringworld_hooks(Platform platform) {
     // Enable DEP (if doable) because executing code not marked as executable is bad
     SetProcessDEPPolicy(PROCESS_DEP_ENABLE);
@@ -50,14 +46,6 @@ void set_up_ringworld_hooks(Platform platform) {
 
     // Once done, set the protection to execute/read only so we don't get pwned.
     VirtualProtect(hook_heap, hook_heap_size, PAGE_EXECUTE_READ, &old_protection);
-
-    // My Giant Soldier of Stone will now attack the moon.
-    void *the_moon = (void *)(0x53C1A7);
-    std::uint8_t giant_soldier_of_stone[] = { 0xE9, 0xFF, 0xFF, 0xFF, 0xFF };
-    *reinterpret_cast<std::uintptr_t *>(giant_soldier_of_stone + 1) = reinterpret_cast<std::uintptr_t>(attack_mode) - (reinterpret_cast<std::uintptr_t>(the_moon) + 5);
-    VirtualProtect(the_moon, sizeof(giant_soldier_of_stone), PAGE_EXECUTE_READWRITE, &old_protection);
-    std::memcpy(the_moon, giant_soldier_of_stone, sizeof(giant_soldier_of_stone));
-    VirtualProtect(the_moon, sizeof(giant_soldier_of_stone), old_protection, &old_protection);
 }
 
 void release_ringworld_hooks() {

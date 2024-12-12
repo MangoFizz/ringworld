@@ -30,8 +30,8 @@ for hook in hooks:
             print("Unknown replace value: ", hook_info["replace"])
             sys.exit(1)
     else:
-        lib_fns += "    void *{} = nullptr;\n".format(hook)
-        hook_fn += "        {hook} = Hook(\"{hook}\", {address})".format(hook=hook, address=hook_info["address"])
+        lib_fns += "    void *{}_address = nullptr;\n".format(hook)
+        hook_fn += "        {hook}_address = Hook(\"{hook}\", {address})".format(hook=hook, address=hook_info["address"])
 
     if "arguments" in hook_info:
         for arg in hook_info["arguments"]:
@@ -63,6 +63,27 @@ namespace Demon {
 """ + hook_fn + """    }
 }
 """
+
+cpp_source_code += """
+// Define hooks functions
+extern "C" {"""
+
+for hook in hooks:
+    hook_info = hooks[hook]
+    if hook_info["replace"] == False:
+        cpp_source_code += """
+    void {hook}() {{
+        __asm__ __volatile__ (
+            "jmp *%0"
+            :
+            : "r"({hook}_address)
+            : "memory"
+        );
+    }}
+""".format(hook=hook)
+
+cpp_source_code += """
+}"""
 
 with open(sys.argv[3], "w") as f:
     f.write(cpp_source_code)

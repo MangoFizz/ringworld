@@ -1,8 +1,8 @@
 import json
 import sys
 
-if len(sys.argv) != 3:
-    print("Usage: {} <hooks.json> <out.cpp>")
+if len(sys.argv) != 4:
+    print("Usage: {} <hooks.json> <function-name> <out.cpp>")
     sys.exit(1)
 
 with open(sys.argv[1], "r") as f:
@@ -59,10 +59,10 @@ extern "C" {
 """ + lib_fns + """}
 
 namespace Demon {
-    void set_up_all_hooks() {
+    void """ + sys.argv[2] + """() {
 """ + hook_fn + """    }
 }
 """
 
-with open(sys.argv[2], "w") as f:
+with open(sys.argv[3], "w") as f:
     f.write(cpp_source_code)

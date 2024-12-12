@@ -1,0 +1,3 @@
+{
+    "convert_8bit_string_to_16bit": {"address": "0x5528c0", "replace": true, "arguments": ["0", "eax", "edi"]}
+}

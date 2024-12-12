@@ -17,16 +17,25 @@ if(NOT (CMAKE_SIZEOF_VOID_P EQUAL 4))
 endif()
 
 add_custom_command(
-    OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/hook.cpp"
-    DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/src/hook/hook.json"
+    OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/game_function_hooks.cpp"
+    DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/src/hook/game_functions.json"
     DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/src/hook/generate_hooks.py"
-    COMMAND Python3::Interpreter "${CMAKE_CURRENT_SOURCE_DIR}/src/hook/generate_hooks.py" "${CMAKE_CURRENT_SOURCE_DIR}/src/hook/hook.json" "${CMAKE_CURRENT_BINARY_DIR}/hook.cpp"
+    COMMAND Python3::Interpreter "${CMAKE_CURRENT_SOURCE_DIR}/src/hook/generate_hooks.py" "${CMAKE_CURRENT_SOURCE_DIR}/src/hook/game_functions.json" "set_up_game_hooks" "${CMAKE_CURRENT_BINARY_DIR}/game_function_hooks.cpp"
 )
 
-include_directories("${CMAKE_CURRENT_SOURCE_DIR}/src")
+add_custom_command(
+    OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/dedicated_function_hooks.cpp"
+    DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/src/hook/dedicated_functions.json"
+    DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/src/hook/generate_hooks.py"
+    COMMAND Python3::Interpreter "${CMAKE_CURRENT_SOURCE_DIR}/src/hook/generate_hooks.py" "${CMAKE_CURRENT_SOURCE_DIR}/src/hook/dedicated_functions.json" "set_up_dedicated_hooks" "${CMAKE_CURRENT_BINARY_DIR}/dedicated_function_hooks.cpp"
+)
+
+include_directories("${CMAKE_CURRENT_SOURCE_DIR}/src" "${CMAKE_CURRENT_SOURCE_DIR}/include")
 
 add_library(ringworld STATIC
     src/ringworld.cpp
     src/impl/exception/exception.c
-    "${CMAKE_CURRENT_BINARY_DIR}/hook.cpp"
+    src/impl/script/hsc.c
+    "${CMAKE_CURRENT_BINARY_DIR}/game_function_hooks.cpp"
+    "${CMAKE_CURRENT_BINARY_DIR}/dedicated_function_hooks.cpp"
 )

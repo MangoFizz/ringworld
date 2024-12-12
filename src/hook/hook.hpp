@@ -112,7 +112,8 @@ namespace Demon {
             std::vector<std::pair<ParameterStorageType, std::size_t>> parameters;
     };
 
-    void set_up_all_hooks();
+    void set_up_game_hooks();
+    void set_up_dedicated_hooks();
 }
 
 #endif

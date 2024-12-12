@@ -1,0 +1,4 @@
+{
+    "hs_return": {"address": "0x48d270", "replace": false, "arguments": ["eax", "ecx"]},
+    "structure_bsp_index_evaluate": {"address": "0x482200", "replace": true, "arguments": ["0", "4"]}
+}

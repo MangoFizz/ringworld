@@ -5,6 +5,7 @@
 #include <cstdio>
 #include <vector>
 #include <stdexcept>
+#include <ringworld/ringworld.h>
 
 extern "C" {
     #include "impl/exception/exception.h"
@@ -22,7 +23,7 @@ extern "C" {
     void attack_mode();
 }
 
-void set_up_ringworld_hooks() {
+void set_up_ringworld_hooks(Platform platform) {
     // Enable DEP (if doable) because executing code not marked as executable is bad
     SetProcessDEPPolicy(PROCESS_DEP_ENABLE);
 
@@ -33,7 +34,14 @@ void set_up_ringworld_hooks() {
     hook_heap_usage = 0;
 
     try {
-        set_up_all_hooks();
+        switch(platform) {
+            case PLATFORM_CLIENT: 
+                set_up_game_hooks();
+                break;
+            case PLATFORM_DEDICATED_SERVER:
+                set_up_dedicated_hooks();
+                break;
+        }
     }
     catch(std::exception &e) {
         MessageBox(nullptr, e.what(), "Error patching the game!", 0);

@@ -1,4 +1,5 @@
 {
     "hs_return": {"address": "0x48d270", "replace": false, "arguments": ["eax", "ecx"]},
-    "structure_bsp_index_evaluate": {"address": "0x482200", "replace": true, "arguments": ["0", "4"]}
+    "structure_bsp_index_evaluate": {"address": "0x482200", "replace": true, "arguments": ["0", "4"]},
+    "unit_delete_all_weapons": {"address": "0x570a60", "replace": false, "arguments": ["eax"]}
 }

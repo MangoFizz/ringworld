@@ -2,5 +2,6 @@
     "hs_return": {"address": "0x48d270", "replace": false, "arguments": ["eax", "ecx"]},
     "structure_bsp_index_evaluate": {"address": "0x482200", "replace": true, "arguments": ["0", "4"]},
     "unit_delete_all_weapons": {"address": "0x570a60", "replace": false, "arguments": ["eax"]},
-    "unit_add_weapon_to_inventory": {"address": "0x570b00", "replace": false, "arguments": ["ecx", "eax", "0"]}
+    "unit_add_weapon_to_inventory": {"address": "0x570b00", "replace": false, "arguments": ["ecx", "eax", "0"]},
+    "object_attach_to_marker": {"address": "0x4f9a90", "replace": false, "arguments": ["0", "4", "esi", "edi"]}
 }

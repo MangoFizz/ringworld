@@ -433,6 +433,15 @@ typedef struct DeviceLightFixtureObject {
 } DeviceLightFixtureObject;
 _Static_assert(sizeof(DeviceLightFixtureObject) == 0x18 + sizeof(DeviceObject));
 
+/**
+ * Attach an object to another object by its markers.
+ * @param object The object to attach.
+ * @param object_marker The marker on the object to attach.
+ * @param attachment The object to attach to.
+ * @param attachment_marker The marker on the attachment to attach to.
+ */
+void object_attach_to_marker(ObjectHandle object, const char *object_marker, ObjectHandle attachment, const char *attachment_marker);
+
 #ifdef __cplusplus
 }
 #endif

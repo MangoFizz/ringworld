@@ -26,7 +26,7 @@ extern uint32_t *game_state_checksum;
 void *create_table(const char *name, uint16_t maximum_count, uint16_t element_size) {
     size_t allocation_amount = CALCULATE_ALLOCATION_SIZE(maximum_count, element_size);
     GenericTable *table = (GenericTable *)(allocate_heap(allocation_amount));
-    init_table(table, name, maximum_count, element_size);
     malloc_crc_checksum_buffer(game_state_checksum, &maximum_count, 4);
+    init_table(table, name, maximum_count, element_size);
     return table;
 }

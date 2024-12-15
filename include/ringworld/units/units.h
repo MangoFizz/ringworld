@@ -32,7 +32,7 @@ typedef struct UnitFlags {
     bool impervious : 1;
     bool suspended : 1;
     bool blind : 1;
-    bool unknown_nv_related : 1; // when this is on, the integrated NV power increases. rate is 2x the speed it leaks when on. Wtf is an NV?? I asked the same thing, maybe night vision?
+    bool unknown_nv_related : 1; 
     bool possessed : 1;
     bool desires_flashlight_on : 1;
     bool desires_flashlight_off : 1;

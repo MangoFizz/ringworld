@@ -49,6 +49,8 @@ include_directories("${CMAKE_CURRENT_SOURCE_DIR}/src" "${CMAKE_CURRENT_SOURCE_DI
 add_library(ringworld STATIC
     src/ringworld.cpp
     src/impl/exception/exception.c
+    src/impl/memory/memory.c
+    src/impl/memory/table.c
     src/impl/script/hsc.c
     "${CMAKE_CURRENT_BINARY_DIR}/game_function_hooks.cpp"
     "${CMAKE_CURRENT_BINARY_DIR}/game_functions.S"

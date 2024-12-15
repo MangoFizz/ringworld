@@ -1,8 +1,8 @@
 import json
 import sys
 
-if len(sys.argv) != 4:
-    print("Usage: {} <hooks.json> <function-name> <out.cpp>")
+if len(sys.argv) != 5:
+    print("Usage: {} <hooks.json> <function-name> <hooks-out.cpp> <functions-out.cpp>")
     sys.exit(1)
 
 with open(sys.argv[1], "r") as f:
@@ -64,26 +64,23 @@ namespace Demon {
 }
 """
 
-cpp_source_code += """
-// Define hooks functions
-extern "C" {"""
+with open(sys.argv[3], "w") as f:
+    f.write(cpp_source_code)
+
+asm_source_code = """;# AUTO-GENERATED! DO NOT EDIT UNLESS YOU LIKE REGRETTING THINGS!
+.intel_syntax noprefix
+
+.text
+"""
 
 for hook in hooks:
     hook_info = hooks[hook]
     if hook_info["replace"] == False:
-        cpp_source_code += """
-    void {hook}() {{
-        __asm__ __volatile__ (
-            "jmp *%0"
-            :
-            : "r"({hook}_address)
-            : "memory"
-        );
-    }}
+        asm_source_code += """
+.globl _{hook}
+_{hook}:
+    jmp dword ptr [_{hook}_address]
 """.format(hook=hook)
 
-cpp_source_code += """
-}"""
-
-with open(sys.argv[3], "w") as f:
-    f.write(cpp_source_code)
+with open(sys.argv[4], "w") as f:
+    f.write(asm_source_code)

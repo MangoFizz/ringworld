@@ -54,6 +54,7 @@ void memory_map_initialize(void) {
 
 extern void **alloc_base_address;
 extern uint32_t *alloc_size;
+extern uint32_t *alloc_crc_checksum;
 
 void *allocate_heap(size_t size) {
     size_t remaining_bytes = BASE_HEAP_AMOUNT - *alloc_size;
@@ -63,5 +64,8 @@ void *allocate_heap(size_t size) {
 
     void *allocated = *alloc_base_address + *alloc_size;
     *alloc_size += size;
+
+    malloc_crc_checksum_buffer(alloc_crc_checksum, &size, 4);
+
     return allocated;
 }

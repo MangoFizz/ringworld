@@ -15,50 +15,50 @@ typedef struct ModelNode {
     float scale;
     VectorXYZ rotation[3];
     VectorXYZ position;
-};
+} ModelNode;
 
 typedef struct BaseObjectFlags {
-    bool no_collision : 1;
-    bool on_ground : 1;
-    bool ignore_gravity : 1;
-    bool in_water : 1;
-    bool pad_1 : 1;
-    bool stationary : 1;
-    bool pad_2 : 1;
-    bool no_collision2 : 1;
-    bool pad_3 : 2;
-    bool has_sound_looping_attachment : 1;
-    bool connected_to_map : 1;
-    bool not_placed_automatically : 1;
-    bool is_device_machine : 1;
-    bool is_elevator : 1;
-    bool is_elevator_2 : 1;
-    bool is_garbage : 1;
-    bool pad_4 : 1;
-    bool no_shadow : 1;
-    bool delete_at_deactivation : 1;
-    bool do_not_reactivate : 1;
-    bool outside_of_map : 1;
-    bool pad_5 : 2;
-    bool collidable : 1;
-    bool has_collision_model : 1;
-    bool network_message_unknown_1 : 1;
-    bool network_message_unknown_2 : 1;
-    bool opensauce_is_transforming_in : 1;
-    bool opensauce_is_transforming_out : 1;
-    bool pad_6 : 2;
+    Bool no_collision : 1;
+    Bool on_ground : 1;
+    Bool ignore_gravity : 1;
+    Bool in_water : 1;
+    Bool pad_1 : 1;
+    Bool stationary : 1;
+    Bool pad_2 : 1;
+    Bool no_collision2 : 1;
+    Bool pad_3 : 2;
+    Bool has_sound_looping_attachment : 1;
+    Bool connected_to_map : 1;
+    Bool not_placed_automatically : 1;
+    Bool is_device_machine : 1;
+    Bool is_elevator : 1;
+    Bool is_elevator_2 : 1;
+    Bool is_garbage : 1;
+    Bool pad_4 : 1;
+    Bool no_shadow : 1;
+    Bool delete_at_deactivation : 1;
+    Bool do_not_reactivate : 1;
+    Bool outside_of_map : 1;
+    Bool pad_5 : 2;
+    Bool collidable : 1;
+    Bool has_collision_model : 1;
+    Bool network_message_unknown_1 : 1;
+    Bool network_message_unknown_2 : 1;
+    Bool opensauce_is_transforming_in : 1;
+    Bool opensauce_is_transforming_out : 1;
+    Bool pad_6 : 2;
 } BaseObjectFlags;
 _Static_assert(sizeof(BaseObjectFlags) == sizeof(uint32_t));
 
 typedef struct BaseObjectNetwork {
-    bool valid_position;
+    Bool valid_position;
     VectorXYZ position;
-    bool valid_forward_and_up;
+    Bool valid_forward_and_up;
     VectorXYZ orientation[2];
-    bool valid_transitional_velocity;
+    Bool valid_transitional_velocity;
     VectorXYZ transitional_velocity;
-    bool valid_timestamp;
-    uint32_t timestamp;
+    Bool valid_timestamp;
+    TickCount32 timestamp;
 } BaseObjectNetwork;
 _Static_assert(sizeof(BaseObjectNetwork) == 0x44);
 
@@ -70,19 +70,19 @@ typedef struct ScenarioLocation {
 _Static_assert(sizeof(ScenarioLocation) == 0x8);
 
 typedef struct BaseObjectVitalsFlags {
-    bool health_damage_effect_applied : 1;
-    bool shield_damage_effect_applied : 1;
-    bool health_depleted : 1;
-    bool shield_depleted : 1;
-    bool pad_1 : 1;
-    bool killed : 1;
-    bool killed_silent : 1;
-    bool cannot_melee_attack : 1;
-    bool pad_2 : 3;
-    bool invulnerable : 1;
-    bool shield_recharging : 1;
-    bool killed_no_stats : 1;
-    bool pad_3 : 2;
+    Bool health_damage_effect_applied : 1;
+    Bool shield_damage_effect_applied : 1;
+    Bool health_depleted : 1;
+    Bool shield_depleted : 1;
+    Bool pad_1 : 1;
+    Bool killed : 1;
+    Bool killed_silent : 1;
+    Bool cannot_melee_attack : 1;
+    Bool pad_2 : 3;
+    Bool invulnerable : 1;
+    Bool shield_recharging : 1;
+    Bool killed_no_stats : 1;
+    Bool pad_3 : 2;
 } BaseObjectVitalsFlags;
 _Static_assert(sizeof(BaseObjectVitalsFlags) == sizeof(uint16_t));
 
@@ -96,9 +96,9 @@ typedef struct BaseObjectVitals {
     ObjectHandle entangled_object_handle;
     float recent_shield_damage;
     float recent_health_damage;
-    uint32_t recent_shield_damage_time;
-    uint32_t recent_health_damage_time;
-    uint16_t shield_stun_time;
+    TickCount32 recent_shield_damage_time;
+    TickCount32 recent_health_damage_time;
+    TickCount16 shield_stun_time;
     BaseObjectVitalsFlags flags;
 } BaseObjectVitals;
 _Static_assert(sizeof(BaseObjectVitals) == 0x30);
@@ -111,15 +111,15 @@ typedef struct BaseObjectAttachmentsData {
 _Static_assert(sizeof(BaseObjectAttachmentsData) == 0x2C);
 
 typedef struct BaseObjectRegionDestroyeds {
-    bool region_0 : 1;
-    bool region_1 : 1;
-    bool region_2 : 1;
-    bool region_3 : 1;
-    bool region_4 : 1;
-    bool region_5 : 1;
-    bool region_6 : 1;
-    bool region_7 : 1;
-    bool pad_1 : 8;
+    Bool region_0 : 1;
+    Bool region_1 : 1;
+    Bool region_2 : 1;
+    Bool region_3 : 1;
+    Bool region_4 : 1;
+    Bool region_5 : 1;
+    Bool region_6 : 1;
+    Bool region_7 : 1;
+    Bool pad_1;
 } BaseObjectRegionDestroyeds;
 _Static_assert(sizeof(BaseObjectRegionDestroyeds) == sizeof(uint16_t));
 
@@ -130,11 +130,11 @@ typedef struct BaseObjectBlockReference {
 _Static_assert(sizeof(BaseObjectBlockReference) == 0x4);
 
 typedef struct ObjectValidOutGoingFunctions {
-    bool a : 1;
-    bool b : 1;
-    bool c : 1;
-    bool d : 1;
-    bool pad_1 : 4;
+    Bool a : 1;
+    Bool b : 1;
+    Bool c : 1;
+    Bool d : 1;
+    Bool pad_1 : 4;
 } ObjectValidOutGoingFunctions;
 _Static_assert(sizeof(ObjectValidOutGoingFunctions) == 0x1);
 
@@ -142,7 +142,7 @@ typedef struct DynamicObjectBase {
     TagHandle tag_handle;
     uint32_t network_role;
     uint32_t flags_0;
-    uint32_t existence_time;
+    TickCount32 existence_time;
     BaseObjectFlags flags_1;
     uint32_t object_marker_id;
     BaseObjectNetwork network;
@@ -157,7 +157,7 @@ typedef struct DynamicObjectBase {
     uint32_t object_type;
     uint16_t team_owner;
     uint16_t name_list_index;
-    uint16_t moving_time;
+    TickCount16 moving_time;
     uint16_t variant_index;
     TableResourceHandle player;
     ObjectHandle owner_object;
@@ -211,7 +211,7 @@ _Static_assert(sizeof(ItemObject) == 0x38 + sizeof(DynamicObjectBase));
 
 typedef struct GarbageObject {
     ItemObject base;
-    uint16_t ticks_until_garbage_collection;
+    TickCount16 ticks_until_garbage_collection;
     char pad_1[2];
     char pad_2[20];
 } GarbageObject;
@@ -220,7 +220,7 @@ _Static_assert(sizeof(GarbageObject) == 0x18 + sizeof(ItemObject));
 typedef struct WeaponTrigger {
     int8_t idle_time;
     int8_t state;
-    uint16_t trigger_time;
+    TickCount16 trigger_time;
     uint32_t not_firing;
     uint32_t auto_reload;
     char pad_1[2];
@@ -237,8 +237,8 @@ _Static_assert(sizeof(WeaponTrigger) == 0x28);
 
 typedef struct WeaponMagazine {
     int16_t state;
-    uint16_t reload_ticks_remaining;
-    uint16_t reload_ticks;
+    TickCount16 reload_ticks_remaining;
+    TickCount16 reload_ticks;
     int16_t rounds_unloaded;
     int16_t rounds_loaded;
     int16_t rounds_left_to_recharge; 
@@ -263,12 +263,12 @@ typedef struct WeaponNetworkData {
 _Static_assert(sizeof(WeaponNetworkData) == 0x2C);
 
 typedef struct WeaponNetwork {
-    bool baseline_valid;
+    Bool baseline_valid;
     int8_t baseline_index;
     int8_t message_index;
     char pad_1;
     WeaponNetworkData update_baseline;
-    bool delta_valid;
+    Bool delta_valid;
     char pad_2[3];
     WeaponNetworkData update_delta;
 }WeaponNetwork;
@@ -293,7 +293,7 @@ typedef struct WeaponObject {
     char pad_5[2];
     WeaponTrigger triggers[2];
     WeaponMagazine magazines[2]; 
-    uint32_t last_trigger_fire_tick;
+    TickCount32 last_trigger_fire_tick;
     WeaponReloadStartData reload_starting_point;
     char pad_6[4];
     WeaponNetwork network;
@@ -308,12 +308,12 @@ typedef struct EquipmentNetworkData {
 _Static_assert(sizeof(EquipmentNetworkData) == 0x24);
 
 typedef struct EquipmentNetwork {
-    bool baseline_valid;
+    Bool baseline_valid;
     int8_t baseline_index;
     int8_t message_index;
     char pad_1;
     EquipmentNetworkData update_baseline;
-    bool delta_valid; 
+    Bool delta_valid; 
     char pad_2[3];
     EquipmentNetworkData update_delta;
 } EquipmentNetwork;
@@ -326,10 +326,10 @@ typedef struct EquipmentObject {
 _Static_assert(sizeof(EquipmentObject) == 0x68 + sizeof(ItemObject));
 
 typedef struct ProjectileObjectFlags {
-    bool tracer : 1;
-    bool projectile_unknown_bit : 1;
-    bool attached : 1;
-    bool pad_1 : 5;
+    Bool tracer : 1;
+    Bool projectile_unknown_bit : 1;
+    Bool attached : 1;
+    Bool pad_1 : 5;
     char pad_2[3];
 } ProjectileObjectFlags;
 
@@ -340,12 +340,12 @@ typedef struct ProjectileNetworkData {
 _Static_assert(sizeof(ProjectileNetworkData) == 0x18);
 
 typedef struct ProjectileNetwork {
-    bool unknown;
-    bool baseline_valid;
+    Bool unknown;
+    Bool baseline_valid;
     int8_t baseline_index;
     int8_t message_index;
     ProjectileNetworkData update_baseline;
-    bool delta_valid;
+    Bool delta_valid;
     char pad_1[3];
     ProjectileNetworkData update_delta;
 } ProjectileNetwork;
@@ -380,25 +380,25 @@ typedef struct DeviceObjectState {
 
 typedef struct DeviceObject {
     DynamicObjectBase base;
-    bool position_reversed : 1;
-    bool not_usable_from_any_side : 1;
-    bool pad_1 : 6;
+    Bool position_reversed : 1;
+    Bool not_usable_from_any_side : 1;
+    Bool pad_1 : 6;
     char pad_2[3];
     DeviceObjectState power;
     DeviceObjectState position;
-    bool one_sided : 1;
-    bool operates_automatically : 1;
-    bool pad_3 : 6;
+    Bool one_sided : 1;
+    Bool operates_automatically : 1;
+    Bool pad_3 : 6;
     char pad_4[3];
 } DeviceObject;
 _Static_assert(sizeof(DeviceObject) == 0x20 + sizeof(DynamicObjectBase));
 
 typedef struct DeviceMachineObjectFlags {
-    bool does_not_operate_automatically : 1;
-    bool machine_one_sided : 1;
-    bool never_appears_locked : 1;
-    bool opened_by_melee_attack : 1;
-    bool pad_1 : 4;
+    Bool does_not_operate_automatically : 1;
+    Bool machine_one_sided : 1;
+    Bool never_appears_locked : 1;
+    Bool opened_by_melee_attack : 1;
+    Bool pad_1 : 4;
     char pad_2[3];
 } DeviceMachineObjectFlags;
 
@@ -411,8 +411,8 @@ typedef struct DeviceMachineObject {
 _Static_assert(sizeof(DeviceMachineObject) == 0x14 + sizeof(DeviceObject));
 
 typedef struct DeviceControlObjectFlags {
-    bool usable_from_both_sides : 1;
-    bool pad_1 : 7;
+    Bool usable_from_both_sides : 1;
+    Bool pad_1 : 7;
     char pad_2[3];
 } DeviceControlObjectFlags;
 

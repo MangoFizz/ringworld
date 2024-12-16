@@ -22,7 +22,7 @@ for variable in variables:
     var_type = var_info["type"]
     var_name = variable
     var_address = var_info["address"]
-    var_decl += "   auto *{} = reinterpret_cast<{} *>({});\n".format(var_name, var_type, var_address)
+    var_decl += "   void *{} = reinterpret_cast<void *>({});\n".format(var_name, var_address)
 
 cpp_source_code += var_decl + """}
 """

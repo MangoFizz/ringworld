@@ -107,6 +107,17 @@ typedef struct TableIterator {
     uint32_t salt;
 } TableIterator;
 
+/**
+ * Allocate a table of objects.
+ *
+ * @param name          name of table
+ * @param maximum_count maximum element count
+ * @param element_size  size of each element
+ *
+ * @return table
+ */
+void *create_table(const char *name, uint16_t maximum_count, uint16_t element_size);
+
 #ifdef __cplusplus
 }
 #endif

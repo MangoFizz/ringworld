@@ -7,5 +7,9 @@
     "sound_cache_mib": {"type": "uint16_t *", "address": "0x621f84"},
     "alloc_base_address": {"type": "void *", "address": "0x67dd88"},
     "alloc_size": {"type": "uint32_t", "address": "0x67dd8c"},
-    "game_state_checksum": {"type": "uint32_t", "address": "0x67dd94", "comment": "seems to be a checksum of the game state"}
+    "alloc_crc_checksum": {"type": "uint32_t", "address": "0x67dd94", "comment": "seems to be a checksum of the allocation heap"},
+    "players_data": {"type": "PlayersTable *", "address": "0x815920"},
+    "teams_data": {"type": "TeamsTable *", "address": "0x81591c"},
+    "players_globals": {"type": "PlayersGlobals *", "address": "0x815918"},
+    "player_control_globals": {"type": "PlayerControlGlobals *", "address": "0x64c38c"}
 }

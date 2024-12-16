@@ -9,5 +9,6 @@
 
     "memory_map_initialize": {"address": "0x445230", "replace": true},
     "create_table": {"address": "0x53b3b0", "replace": true, "use_return_value": true, "arguments": ["0", "4", "ebx"]},
-    "malloc_crc_checksum_buffer": {"address": "0x4d36d0", "replace": false, "use_return_value": true, "arguments": ["0", "4", "8"]}
+    "malloc_crc_checksum_buffer": {"address": "0x4d36d0", "replace": false, "use_return_value": true, "arguments": ["0", "4", "8"]},
+    "players_data_initialize": {"address": "0x476170", "replace": true}
 }

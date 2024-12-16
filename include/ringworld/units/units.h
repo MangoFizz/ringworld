@@ -9,7 +9,7 @@ extern "C" {
 #include "../object/object.h"
 
 typedef struct UnitRecentDamager {
-    uint32_t last_damage_time;
+    TickCount32 last_damage_time;
     float total_damage;
     ObjectHandle object;
     TableResourceHandle player;
@@ -121,7 +121,7 @@ typedef struct UnitSpeech {
     uint16_t priority;
     uint16_t scream_type;
     TagHandle sound_tag;
-    uint16_t ticks;
+    TickCount16 ticks;
     int16_t unknown2;
     int32_t unknown;
     AiCommunicationPacket ai_communication_info;
@@ -175,7 +175,7 @@ typedef struct UnitObject {
     int8_t shield_snapping;
     int8_t base_seat_index;
     struct {
-        uint32_t ticks_remaining;
+        TickCount32 ticks_remaining;
         UnitControlFlags control_flags;
         uint16_t pad_1;
     } persistent_control;
@@ -212,7 +212,7 @@ typedef struct UnitObject {
     int16_t next_weapon_id;
     uint16_t pad_4;
     ObjectHandle weapons[4];
-    uint32_t weapon_ready_ticks[4];
+    TickCount32 weapon_ready_ticks[4];
     ObjectHandle equipment_handle; 
     int8_t current_grenade_index;
     int8_t next_grenade_index;
@@ -237,19 +237,19 @@ typedef struct UnitObject {
     UnitSpeechData speech;
     struct {
         uint16_t category;
-        uint16_t ai_ticks_until_handle;
+        TickCount16 ai_ticks_until_handle;
         float amount;
         TagHandle responsible_unit;
     } damage_result;
     ObjectHandle object_flame_causer; 
     float unknown23;
     char pad_5[4];
-    uint32_t died_at_tick;
-    uint16_t feign_death_timer;
+    TickCount32 died_at_tick;
+    TickCount16 feign_death_timer;
     bool camo_regrowth;
     char pad_6;
     float stun;
-    uint16_t stun_ticks;
+    TickCount16 stun_ticks;
     int16_t spree_count;
     int32_t spree_starting_time;
     UnitRecentDamager recent_damage[4];
@@ -362,7 +362,7 @@ typedef struct VehicleNetwork {
     bool delta_valid; 
     char pad_1[3];
     VehicleNetworkData update_delta;
-    uint32_t last_moved_at_tick; 
+    TickCount32 last_moved_at_tick; 
     int16_t scenario_respawn_id; 
     char pad_2[2];
     VectorXYZ respawn_position; 

@@ -51,6 +51,7 @@ add_library(ringworld STATIC
     src/impl/exception/exception.c
     src/impl/memory/memory.c
     src/impl/memory/table.c
+    src/impl/player/player.c
     src/impl/script/hsc.c
     "${CMAKE_CURRENT_BINARY_DIR}/game_function_hooks.cpp"
     "${CMAKE_CURRENT_BINARY_DIR}/game_functions.S"

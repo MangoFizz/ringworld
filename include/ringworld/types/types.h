@@ -7,8 +7,10 @@ extern "C" {
 
 #include "../memory/table.h"
 
+typedef uint8_t Bool;
 typedef uint32_t FourCC;
-
+typedef uint32_t TickCount32;
+typedef uint16_t TickCount16;
 typedef uint32_t ColorARGBInt;
 
 typedef union ScenarioScriptNodeValue {
@@ -75,6 +77,12 @@ typedef struct VectorIJK {
     float k;
 } VectorIJK;
 _Static_assert(sizeof(VectorIJK) == 0xC);
+
+typedef struct VectorIJ {
+    float i;
+    float j;
+} VectorIJ;
+_Static_assert(sizeof(VectorIJ) == 0x8);
 
 typedef struct Quaternion {
     float i;

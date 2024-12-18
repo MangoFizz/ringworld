@@ -1,5 +1,5 @@
-#ifndef RINGWORLD__TABLE__TABLE_H
-#define RINGWORLD__TABLE__TABLE_H
+#ifndef RINGWORLD__MEMORY__TABLE_H
+#define RINGWORLD__MEMORY__TABLE_H
 
 #ifdef __cplusplus
 extern "C" {

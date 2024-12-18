@@ -15,7 +15,7 @@ extern "C" {
 typedef TableResourceHandle PlayerHandle;
 
 typedef struct PlayersGlobals {
-    int32_t pad_1; 
+    int32_t unk_1; 
     PlayerHandle local_player_players[MAX_LOCAL_PLAYERS]; 
     ObjectHandle local_player_dead_units[MAX_LOCAL_PLAYERS]; 
     int16_t local_player_count; 

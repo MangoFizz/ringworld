@@ -11,5 +11,12 @@
     "players_data": {"type": "PlayersTable *", "address": "0x815920"},
     "teams_data": {"type": "TeamsTable *", "address": "0x81591c"},
     "players_globals": {"type": "PlayersGlobals *", "address": "0x815918"},
-    "player_control_globals": {"type": "PlayerControlGlobals *", "address": "0x64c38c"}
+    "player_control_globals": {"type": "PlayerControlGlobals *", "address": "0x64c38c"},
+    "mouse_x_delta": {"type": "int32_t", "address": "0x64c73c"},
+    "mouse_y_delta": {"type": "int32_t", "address": "0x64c740"},
+    "menu_cursor_x": {"type": "int32_t", "address": "0x6b400c"},
+    "menu_cursor_y": {"type": "int32_t", "address": "0x6b4010"},
+    "cursor_should_activate_widgets": {"type": "uint8_t", "address": "0x6b400a"},
+    "ui_widget_memory_pool": {"type": "WidgetMemoryPool *", "address": "0x62dcb4"},
+    "ui_widget_globals": {"type": "WidgetGlobals", "address": "0x6b401c"}
 }

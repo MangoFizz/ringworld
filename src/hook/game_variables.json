@@ -17,6 +17,6 @@
     "menu_cursor_x": {"type": "int32_t", "address": "0x6b400c"},
     "menu_cursor_y": {"type": "int32_t", "address": "0x6b4010"},
     "cursor_should_activate_widgets": {"type": "uint8_t", "address": "0x6b400a"},
-    "ui_widget_memory_pool": {"type": "WidgetMemoryPool *", "address": "0x62dcb4"},
+    "ui_widget_memory_pool": {"type": "MemoryPool *", "address": "0x62dcb4"},
     "ui_widget_globals": {"type": "WidgetGlobals", "address": "0x6b401c"}
 }

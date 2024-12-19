@@ -7,7 +7,6 @@ extern "C" {
 
 #include "../memory/table.h"
 
-typedef uint8_t Bool;
 typedef uint32_t FourCC;
 typedef uint32_t TickCount32;
 typedef uint16_t TickCount16;

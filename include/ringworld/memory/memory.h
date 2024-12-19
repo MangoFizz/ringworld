@@ -8,6 +8,8 @@ extern "C" {
 
 #include <stdint.h>
 
+typedef uint8_t Bool;
+
 /**
  * Allocate buffers for holding tag data and sounds.
  */

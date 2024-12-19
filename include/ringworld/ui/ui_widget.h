@@ -10,25 +10,8 @@ extern "C" {
 #include <stdint.h>
 
 #include "../memory/memory.h"
-#include "../types/types.h"
+#include "../player/player.h"
 #include "../tag/tag.h"
-
-typedef struct WidgetMemoryPoolBlockHeader {
-    uint32_t head;
-    uint32_t size;
-    uint32_t block_index;
-    struct MemoryPoolResourceHeader *previous;
-    struct MemoryPoolResourceHeader *next;
-} WidgetMemoryPoolElementHeader;
-
-typedef struct WidgetMemoryPool {
-    const char *name;
-    void *allocated_memory;
-    size_t allocated_size;
-    size_t unk_1;
-    char unk_2[0x24];
-} WidgetMemoryPool;
-_Static_assert(sizeof(WidgetMemoryPool) == 0x34);
 
 typedef struct EnqueuedErrorDescriptor {
     int16_t error_string;
@@ -45,65 +28,92 @@ typedef struct DeferredErrorDescriptor {
 } DeferredErrorDescriptor;
 _Static_assert(sizeof(DeferredErrorDescriptor) == 0x04);
 
+typedef struct WidgetTextBoxParameters {
+    wchar_t *text;
+    int16_t string_list_index;
+    ColorARGB text_color;
+    Bool flashing;
+} WidgetTextBoxParameters;
+_Static_assert(sizeof(WidgetTextBoxParameters) == 0x1C);
+
+typedef struct WidgetListParameters {
+    int16_t selected_list_item_index;
+    int16_t list_item_top_index;
+    int16_t current_list_item_index;
+    int16_t last_list_tab_direction;
+    void *list_items;
+    int16_t number_of_items;
+    struct Widget *extended_description;
+    wchar_t *item_text;
+    int16_t spin_activated;
+} WidgetListParameters;
+_Static_assert(sizeof(WidgetListParameters) == 0x1C);
+
+typedef struct WidgetAnimationData {
+    int16_t current_frame_index;
+    int16_t first_frame_index;
+    int16_t last_frame_index;
+    int16_t number_of_sprite_frames;
+} WidgetAnimationData;
+_Static_assert(sizeof(WidgetAnimationData) == 0x8);
+
 typedef struct Widget {
     TagHandle definition_tag_handle;
-    const char *name;
-    uint16_t controller_index;
+    char *name;
+    uint16_t local_player_index;
     VectorXYInt position;
     uint16_t type;
     Bool visible;
     Bool render_regardless_of_controller_index;
-    Bool pad_1;
+    Bool never_receive_events;
     Bool pauses_game_time; 
     Bool deleted;
-    uint32_t creation_process_start_time;
+    Bool is_error_dialog;
+    Bool close_if_local_player_controller_present;
+    TickCount32 creation_process_start_time;
     uint32_t ms_to_close;
     uint32_t ms_to_close_fade_time;
-    float opacity;
-    struct Widget *previous_widget;
-    struct Widget *next_widget;
-    struct Widget *parent_widget;
-    struct Widget *child_widget;
+    float alpha_modifier;
+    struct Widget *previous;
+    struct Widget *next;
+    struct Widget *parent;
+    struct Widget *child;
     struct Widget *focused_child;
-    const wchar_t *text;
-    uint16_t element_index;
-    void *elements;
-    uint16_t element_count;
-    struct Widget *extended_description;
-    void *userdata; // no idea about this
-    uint32_t pad_2;
-    uint16_t bitmap_index;
-    uint32_t pad_3;
+    union {
+        WidgetTextBoxParameters text_box_parameters;
+        WidgetListParameters list_parameters;
+    };
+    WidgetAnimationData animation_data;
 } Widget; 
 _Static_assert(sizeof(Widget) == 0x60);
 
-typedef struct WidgetHistoryEntry {
+typedef struct WidgetHistoryNode {
     Widget *previous_menu;
     Widget *previous_menu_list;
     uint16_t focused_item_index;
-    struct WidgetHistoryEntry *previous;
-} WidgetHistoryEntry;
-_Static_assert(sizeof(WidgetHistoryEntry) == 0x10);
+    struct WidgetHistoryNode *previous;
+} WidgetHistoryNode;
+_Static_assert(sizeof(WidgetHistoryNode) == 0x10);
 
 typedef struct WidgetGlobals {
-    Widget *root_widget;
-    WidgetHistoryEntry *history_top_entry;
-    int32_t current_time;
+    Widget *active_widget[MAX_LOCAL_PLAYERS];
+    WidgetHistoryNode *history_top_node[MAX_LOCAL_PLAYERS];
+    int32_t current_time_ms;
     int32_t popup_display_time;
-    int16_t error_message_index;
-    int16_t widget_pause_counter;
-    float unk_1;
-    EnqueuedErrorDescriptor enqueued_errors[1];
+    int16_t deferred_error_code;
+    int16_t pause_time_count;
+    float fade_to_black;
+    EnqueuedErrorDescriptor enqueued_errors[MAX_LOCAL_PLAYERS];
     DeferredErrorDescriptor priority_warning;
-    DeferredErrorDescriptor deferred_for_cinematic_errors[1];
+    DeferredErrorDescriptor deferred_for_cinematic_errors[MAX_LOCAL_PLAYERS];
     void *initialization_thread;
-    int16_t demo_error;
+    int16_t filesystem_check_result;
     Bool initialized;
-    Bool unk_2;
-    Bool unk_3;
-    Bool unk_4;
-    Bool unk_5;
-    Bool unk_6;
+    Bool dont_load_children_recursive;
+    Bool debug_show_path;
+    Bool processing_inhibited;
+    Bool main_menu_music;
+    Bool sound_paused;
 } WidgetGlobals;
 _Static_assert(sizeof(WidgetGlobals) == 0x34);
 

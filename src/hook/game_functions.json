@@ -14,6 +14,6 @@
 
     "pow_float": {"address": "0x5ccf80", "replace": true, "arguments": ["st1", "st0"]},
 
-    "update_menu_cursor_coords": {"address": "0x49a220", "replace": true},
+    "update_menu_cursor_coords": {"address": "0x49a220", "replace": false},
     "ui_widgets_initialize": {"address": "0x49a940", "replace": true}
 }

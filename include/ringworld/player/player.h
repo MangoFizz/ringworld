@@ -15,8 +15,8 @@ extern "C" {
 typedef TableResourceHandle PlayerHandle;
 
 typedef struct PlayersGlobals {
-    int32_t unk_1; 
-    PlayerHandle local_player_players[MAX_LOCAL_PLAYERS]; 
+    int32_t local_player_network_id; 
+    PlayerHandle local_players[MAX_LOCAL_PLAYERS]; 
     ObjectHandle local_player_dead_units[MAX_LOCAL_PLAYERS]; 
     int16_t local_player_count; 
     int16_t double_speed_ticks_remaining; 
@@ -24,10 +24,10 @@ typedef struct PlayersGlobals {
     bool input_disabled; 
     int16_t bsp_switch_trigger_index; 
     int16_t respawn_failure; 
-    bool was_teleported; // or respawned
+    bool was_teleported; 
     uint8_t pad_2;
-    uint32_t combined_pvs[16]; // combined pvs of all players in the game
-    uint32_t combined_pvs_local[16]; // combined pvs of all local players
+    uint32_t combined_pvs[16]; 
+    uint32_t combined_pvs_local[16]; 
 } PlayersGlobals; 
 _Static_assert(sizeof(PlayersGlobals) == 0x98);
 
@@ -51,23 +51,24 @@ typedef struct PlayerControl {
     uint8_t pad_3;
     ObjectHandle target_object_index; 
     float autoaim_level; 
-    uint32_t pad_4;
-    uint32_t pad_5;
-    uint32_t pad_6;
-    uint32_t pad_7;
+    float magnetism_level;
+    float look_acceleration_time;
+    float pitch_minimum;
+    float pitch_maximum;
 } PlayerControl; 
 _Static_assert(sizeof(PlayerControl) == 0x40);
 
 typedef struct PlayerControlGlobals {
-    uint32_t action_flags[2]; 
-    uint32_t pad_1;
-    uint32_t flags; // FLAG(0) = camera control
+    uint32_t action_test_flags; 
+    uint32_t testing_for_action_flags; 
+    uint32_t disabled_button_flags;
+    uint32_t control_flags; // FLAG(0) = camera control
     PlayerControl local_players[MAX_LOCAL_PLAYERS];
 } PlayerControlGlobals; 
 _Static_assert(sizeof(PlayerControlGlobals) == 0x50);
 
 typedef union PlayerMultiplayerStatistics {
-    uint32_t pad_1[2];
+    char raw[8];
 
     struct Ctf {
         int16_t flag_grabs;
@@ -79,8 +80,8 @@ typedef union PlayerMultiplayerStatistics {
     } slayer;
 
     struct Oddball {
-        int16_t unknown;
-        int16_t target_kills;
+        int16_t time;
+        int16_t carrier_kills;
         int16_t kills;
     } oddball;
 
@@ -96,44 +97,50 @@ typedef union PlayerMultiplayerStatistics {
 } PlayerMultiplayerStatistics; 
 _Static_assert(sizeof(PlayerMultiplayerStatistics) == 8);
 
+typedef struct NetworkPlayer {
+    wchar_t name[12];
+    uint16_t color_index;
+    int16_t icon_index;
+    uint8_t machine_index;
+    uint8_t controller_index;
+    uint8_t team_index;
+    uint8_t index;
+} NetworkPlayer;
+
+typedef struct MultiplayerPlayerInfo {
+    float speed_multiplier;
+    int32_t teleporter_index;
+    int32_t objective_mode;
+    int32_t objective_player_handle;
+    int32_t target_player;
+    TickCount32 target_time;
+    TickCount32 last_death_time;
+    uint32_t slayer_target;
+    bool odd_man_out;
+} MultiplayerPlayerInfo;
+
 typedef struct Player {
     uint16_t player_id;
     uint16_t local_handle;
     wchar_t name[12];
-    TableResourceHandle unknown_handle;
-    uint8_t team;
-    char pad_1[3];
+    uint32_t squad_index;
+    uint32_t team_index;
     ObjectHandle interaction_object_handle;
     uint16_t interaction_object_type;
     uint16_t interaction_object_seat;
     TickCount32 respawn_time;
-    TickCount32 respawn_time_growth;
-    ObjectHandle object_handle;
-    ObjectHandle prev_object_handle;
-    int16_t bsp_cluster_id;
+    TickCount32 respawn_time_penalty;
+    ObjectHandle unit_handle;
+    ObjectHandle dead_unit_handle;
+    int16_t bsp_cluster_index;
     bool weapon_swap_result;
-    char pad_2;
+    char pad_1;
     ObjectHandle auto_aim_target_object;
     TickCount32 last_fire_time;
-    wchar_t name2[12];
-    uint16_t color;
-    int16_t icon_index;
-    uint8_t machine_index;
-    uint8_t controller_index;
-    uint8_t team2;
-    uint8_t index;
-    uint16_t invisibility_time;
-    int16_t other_powerup_time_left;
-    float speed;
-    TableResourceHandle teleporter_flag_handle;
-    int32_t objective_mode;
-    PlayerHandle objective_player_handle;
-    PlayerHandle target_player;
-    TickCount32 target_time;
-    TickCount32 last_death_time;
-    PlayerHandle slayer_target;
-    bool odd_man_out;
-    char pad_3[9];
+    NetworkPlayer network_player_data;
+    uint16_t power_up_durations[2];
+    MultiplayerPlayerInfo multiplayer_info;
+    char pad_3[6];
     uint16_t kill_streak;
     uint16_t multikill;
     uint16_t last_kill_time;

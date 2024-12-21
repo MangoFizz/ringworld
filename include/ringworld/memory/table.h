@@ -25,7 +25,7 @@ typedef union TableResourceHandle {
  *
  * @return true if the handle is NULL, false if not
  */
-#define ID_IS_NULL(handle) (handle.value == NULL_HANDLE.value)
+#define HANDLE_IS_NULL(handle) ((handle).value == NULL_HANDLE.value)
 
 /**
  * Make a handle from a salt and index

@@ -12,6 +12,7 @@ extern "C" {
 #include "../memory/memory.h"
 #include "../player/player.h"
 #include "../tag/tag.h"
+#include "../tag/definitions/ui_widget_definition.h"
 
 typedef struct EnqueuedErrorDescriptor {
     int16_t error_string;
@@ -88,9 +89,10 @@ typedef struct Widget {
 _Static_assert(sizeof(Widget) == 0x60);
 
 typedef struct WidgetHistoryNode {
-    Widget *previous_menu;
-    Widget *previous_menu_list;
+    TagHandle previous_menu;
+    TagHandle previous_menu_list;
     uint16_t focused_item_index;
+    uint16_t local_player_index;
     struct WidgetHistoryNode *previous;
 } WidgetHistoryNode;
 _Static_assert(sizeof(WidgetHistoryNode) == 0x10);
@@ -121,6 +123,28 @@ _Static_assert(sizeof(WidgetGlobals) == 0x34);
  * Initialize the UI widgets.
  */
 void ui_widgets_initialize(void);
+
+/**
+ * Delete a widget and all of its children.
+ * @param widget pointer widget to delete
+ * @param widget_memory_pool pointer to the memory pool
+ */
+void ui_widget_delete_recursive(Widget *widget);
+
+/**
+ * Create a new widget history node.
+ */
+WidgetHistoryNode *ui_widget_new_history_node();
+
+/**
+ * Create a new widget instance
+ * @param controller_index controller index
+ * @param definition_tag_data pointer to the widget definition tag data
+ * @param widget pointer to the widget block where the new widget will be instantiated
+ * @param definition_tag_handle handle of the widget definition tag
+ * @param parent pointer to the parent widget
+ */
+void ui_widget_new_instance(int16_t controller_index, UIWidgetDefinition *definition_tag_data, Widget *widget, TagHandle definition_tag_handle, Widget *parent);
 
 #ifdef __cplusplus
 }

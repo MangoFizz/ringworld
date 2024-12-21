@@ -55,6 +55,7 @@ include_directories(
 
 add_library(ringworld STATIC
     src/ringworld.cpp
+    src/impl/console/console.c
     src/impl/exception/exception.c
     src/impl/math/math.c
     src/impl/input/mouse.c
@@ -62,6 +63,7 @@ add_library(ringworld STATIC
     src/impl/memory/table.c
     src/impl/player/player.c
     src/impl/script/hsc.c
+    src/impl/tag/tag.c
     src/impl/ui/ui_widget.c
 
     ${CMAKE_CURRENT_BINARY_DIR}/game_function_hooks.cpp

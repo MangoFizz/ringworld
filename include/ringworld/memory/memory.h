@@ -1,6 +1,8 @@
 #ifndef RINGWORLD__MEMORY__MEMORY_H
 #define RINGWORLD__MEMORY__MEMORY_H
 
+#define PACKED_ENUM __attribute__((__packed__))
+
 #ifdef __cplusplus
 #define _Static_assert static_assert
 extern "C" {

@@ -151,6 +151,27 @@ typedef struct TagBlockDefinition {
 } TagBlockDefinition;
 _Static_assert(sizeof(TagBlockDefinition) == 0x14);
 
+/**
+ * Lookup the tag.
+ * @param path  path of the tag (not including file extension)
+ * @param group group of the tag
+ * @return tag ID if found, NULL_ID if not
+ */
+TagHandle lookup_tag(const char *path, TagGroupFourCC group);
+
+/**
+ * Get the data for the tag.
+ * @param tag_handle tag handle
+ * @return pointer to tag data
+ */
+void *get_tag_data(TagHandle tag_handle);
+
+/**
+ * Convert a tag group FourCC to a name.
+ * @param group_fourcc fourcc to look up
+ * @return tag group or "???" if unknown
+ */
+const char *group_fourcc_to_name(TagGroupFourCC group_fourcc);
 
 #ifdef __cplusplus
 }

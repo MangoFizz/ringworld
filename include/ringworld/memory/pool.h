@@ -36,6 +36,14 @@ typedef struct MemoryPool {
 } MemoryPool;
 _Static_assert(sizeof(MemoryPool) == 0x34);
 
+/**
+ * Create a new memory pool block.
+ * @param pool pointer to memory pool
+ * @param size size of the block
+ * @return pointer to the created block
+ */
+void *memory_pool_new_block(MemoryPool *pool, size_t size);
+
 #ifdef __cplusplus
 }
 #endif

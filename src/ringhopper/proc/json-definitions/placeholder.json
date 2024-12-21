@@ -1,0 +1,12 @@
+[
+    {
+        "name": "Placeholder",
+        "fields": [],
+        "type": "struct",
+        "inherits": "BasicObject",
+        "size": 508,
+        "group": "placeholder",
+        "needs_preprocessed": true,
+        "needs_postprocessed": true
+    }
+]

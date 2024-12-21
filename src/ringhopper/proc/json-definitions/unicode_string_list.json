@@ -1,0 +1,30 @@
+[
+    {
+        "name": "UnicodeStringListString",
+        "fields": [
+            {
+                "name": "string",
+                "type": "Data",
+                "maximum": 32768
+            }
+        ],
+        "type": "struct",
+        "size": 20,
+        "needs_preprocessed": true
+    },
+    {
+        "name": "UnicodeStringList",
+        "fields": [
+            {
+                "name": "strings",
+                "type": "Reflexive",
+                "struct": "UnicodeStringListString",
+                "read_only": true,
+                "maximum": 800
+            }
+        ],
+        "type": "struct",
+        "size": 12,
+        "group": "unicode_string_list"
+    }
+]

@@ -5,7 +5,11 @@ project("ring-world"
     LANGUAGES C CXX ASM
 )
 
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake")
+
 find_package(Python3 COMPONENTS Interpreter REQUIRED)
+
+include("lua/code_generation.cmake")
 
 if(NOT WIN32)
     message(FATAL_ERROR "This can only be built for 32-bit Windows. If you are cross compiling, use MinGW.")

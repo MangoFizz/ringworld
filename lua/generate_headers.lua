@@ -32,31 +32,15 @@ local function generateHeader(definitionName, tagDefinition, dependencies)
         add("T<" .. typeName .. ">")
     end
 
-    local invalidNames = {
-        "NULL",
-        "NONE",
-        "COSINE",
-        "A_IN",
-        "B_IN",
-        "C_IN",
-        "D_IN",
-        "A_OUT",
-        "B_OUT",
-        "C_OUT",
-        "D_OUT",
-        "A",
-        "B",
-        "C",
-        "D"
+    local memes = {
+        ["U_I_"] = "UI_"
     }
 
-    local function enumNameIsValid(name)
-        for _, invalidName in ipairs(invalidNames) do
-            if name == invalidName then
-                return false
-            end
+    local function fixMemes(text)
+        for k, v in pairs(memes) do
+            text = text:gsub(k, v)
         end
-        return true
+        return text
     end
 
     add([[
@@ -85,26 +69,18 @@ local function generateHeader(definitionName, tagDefinition, dependencies)
     end
 
     for _, enum in ipairs(tagDefinition.enums) do
+        local enumPrefix = fixMemes(parser.camelCaseToSnakeCase(enum.name):upper() .. "_")
         add("typedef enum PACKED_ENUM " .. enum.name .. " {\n")
         for index, value in ipairs(enum.values) do
-            local valueName = parser.normalToSnakeCase(value.name:upper())
-            if not enumNameIsValid(valueName) then
-                valueName = parser.camelCaseToSnakeCase(enum.name):upper() .. "_" .. valueName
-            elseif valueName == "DOUBLE_CLICK" then
-                add("#pragma push_macro(\"DOUBLE_CLICK\") \n")
-                add("#undef DOUBLE_CLICK\n")
-            end
+            local valueName = enumPrefix .. parser.normalToSnakeCase(value.name:upper())
             ident(1)
             if index == 1 then
                 add(valueName .. " = 0,\n")
             else
                 add(valueName .. ",\n")
             end
-            if valueName == "DOUBLE_CLICK" then
-                add("#pragma pop_macro(\"DOUBLE_CLICK\") \n")
-            end
         end
-        local enum_size = parser.camelCaseToSnakeCase(enum.name):upper() .. "_SIZE"
+        local enum_size = enumPrefix .. "SIZE"
         ident(1)
         add(enum_size .. " = 0xFFFF \n")
         add("} " .. enum.name .. ";\n\n")

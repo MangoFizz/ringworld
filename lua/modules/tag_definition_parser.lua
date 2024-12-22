@@ -65,7 +65,7 @@ local commonTypes = {
     quaternion = { alias = "Quaternion", size = 4*4 },
     point2_d_int = { alias = "VectorXYInt", size = 2*2 },
     pointer = { alias = "void *", size = 4 },
-    tag_i_d = { alias = "TableID", size = 4 },
+    tag_i_d = { alias = "TagHandle", size = 4 },
     string32 = { alias = "String32", size = 32 },
     index = { alias = "uint16_t", size = 2 },
     color_r_g_b = { alias = "ColorRGB", size = 4*3 },

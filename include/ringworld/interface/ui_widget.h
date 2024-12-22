@@ -162,7 +162,7 @@ bool ui_widget_load_children_recursive(UIWidgetDefinition *definition_tag_data, 
 /**
  * Load a widget by name or tag.
  * @param definition_tag_path path to the widget definition tag
- * @param definition_tag_handle handle of the widget definition tag
+ * @param definition_tag handle of the widget definition tag
  * @param parent pointer to the parent widget
  * @param controller_index controller index
  * @param topmost_widget_definition_handle handle of the topmost widget definition tag
@@ -170,17 +170,17 @@ bool ui_widget_load_children_recursive(UIWidgetDefinition *definition_tag_data, 
  * @param child_index_from_parent index of the child widget from the parent widget
  * @return pointer to the loaded widget; NULL if the widget could not be loaded
  */
-Widget *ui_widget_load_by_name_or_tag(const char *definition_tag_path, TagHandle definition_tag_handle, Widget *parent, int16_t controller_index, TagHandle topmost_widget_definition_handle, TagHandle parent_widget_definition_handle, uint16_t child_index_from_parent);
+Widget *ui_widget_load_by_name_or_tag(const char *definition_tag_path, TagHandle definition_tag, Widget *parent, int16_t controller_index, TagHandle topmost_widget_definition_handle, TagHandle parent_widget_definition_handle, uint16_t child_index_from_parent);
 
 /**
  * Dispatch an event to a widget.
  * @param widget pointer to the widget
- * @param definition_tag_data pointer to the widget definition tag data
+ * @param widget_definition pointer to the widget definition tag data
  * @param event_record pointer to the event record
  * @param event_handler pointer to the event handler
  * @param controller_index controller index
  */
-void ui_widget_event_handler_dispatch(Widget *widget, UIWidgetDefinition *definition_tag_data, UIWidgetEventRecord *event_record, EventHandlerReference *event_handler, int16_t *controller_index);
+void ui_widget_event_handler_dispatch(Widget *widget, UIWidgetDefinition *widget_definition, UIWidgetEventRecord *event_record, EventHandlerReference *event_handler, int16_t *controller_index);
 
 /**
  * Give focus to a widget instance.
@@ -188,6 +188,20 @@ void ui_widget_event_handler_dispatch(Widget *widget, UIWidgetDefinition *defini
  * @param child pointer to the child widget
  */
 void ui_widget_instance_give_focus_directly(Widget *widget, Widget *child);
+
+/**
+ * Check if a widget is a list.
+ * @param widget pointer to the widget
+ * @return true if the widget is a list, false otherwise
+ */
+bool ui_widget_is_list(Widget *widget);
+
+/**
+ * Get the last child of a widget.
+ * @param widget pointer to the widget
+ * @return pointer to the last child of the widget
+ */
+Widget *ui_widget_get_last_child(Widget *widget);
 
 #ifdef __cplusplus
 }

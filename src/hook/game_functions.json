@@ -20,7 +20,7 @@
     "ui_widget_new_history_node": {"address": "0x49c3c0", "replace": false, "arguments": ["esi", "edi"]},
     "ui_widget_new_instance": {"address": "0x49c710", "replace": true, "arguments": ["0", "4", "ecx", "eax", "edx"]},
     "ui_widget_load_by_name_or_tag": {"address": "0x49aa00", "replace": true, "use_return_value": true, "arguments": ["0", "4", "8", "12", "16", "20", "24"]},
-    "ui_widget_load_children_recursive": {"address": "0x49c4d0", "replace": false, "use_return_value": true, "arguments": ["0", "esi"]},
+    "ui_widget_load_children_recursive": {"address": "0x49c4d0", "replace": true, "use_return_value": true, "arguments": ["0", "esi"]},
     "ui_widget_event_handler_dispatch": {"address": "0x49d3c0", "replace": false, "arguments": ["0", "4", "8", "12"]},
     "ui_widget_instance_give_focus_directly": {"address": "0x49eb30", "replace": false, "arguments": ["eax", "ecx"]},
     "memory_pool_new_block": {"address": "0x4d5310", "replace": false, "use_return_value": true, "arguments": ["ecx", "eax"]},

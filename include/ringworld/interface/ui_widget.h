@@ -1,7 +1,5 @@
-
-
-#ifndef RINGWORLD__UI__UI_WIDGET_H
-#define RINGWORLD__UI__UI_WIDGET_H
+#ifndef RINGWORLD__INTERFACE__UI_WIDGET_H
+#define RINGWORLD__INTERFACE__UI_WIDGET_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -32,6 +30,7 @@ _Static_assert(sizeof(DeferredErrorDescriptor) == 0x04);
 typedef struct WidgetTextBoxParameters {
     wchar_t *text;
     int16_t string_list_index;
+    int16_t pad1;
     ColorARGB text_color;
     Bool flashing;
 } WidgetTextBoxParameters;
@@ -63,7 +62,7 @@ typedef struct Widget {
     char *name;
     uint16_t local_player_index;
     VectorXYInt position;
-    uint16_t type;
+    UIWidgetType type;
     Bool visible;
     Bool render_regardless_of_controller_index;
     Bool never_receive_events;
@@ -119,6 +118,12 @@ typedef struct WidgetGlobals {
 } WidgetGlobals;
 _Static_assert(sizeof(WidgetGlobals) == 0x34);
 
+typedef struct UIWidgetEventRecord {
+    int16_t type;
+    int32_t controller_index;
+    int16_t unk1;
+} UIWidgetEventRecord;
+
 /**
  * Initialize the UI widgets.
  */
@@ -145,6 +150,44 @@ WidgetHistoryNode *ui_widget_new_history_node();
  * @param parent pointer to the parent widget
  */
 void ui_widget_new_instance(int16_t controller_index, UIWidgetDefinition *definition_tag_data, Widget *widget, TagHandle definition_tag_handle, Widget *parent);
+
+/**
+ * Load widget children recursively.
+ * @param definition_tag_data pointer to the widget definition tag data
+ * @param widget pointer to the widget block where the new widget will be instantiated
+ * @return true if the children were loaded successfully, false otherwise
+ */
+bool ui_widget_load_children_recursive(UIWidgetDefinition *definition_tag_data, Widget *widget);
+
+/**
+ * Load a widget by name or tag.
+ * @param definition_tag_path path to the widget definition tag
+ * @param definition_tag_handle handle of the widget definition tag
+ * @param parent pointer to the parent widget
+ * @param controller_index controller index
+ * @param topmost_widget_definition_handle handle of the topmost widget definition tag
+ * @param parent_widget_definition_handle handle of the parent widget definition tag
+ * @param child_index_from_parent index of the child widget from the parent widget
+ * @return pointer to the loaded widget; NULL if the widget could not be loaded
+ */
+Widget *ui_widget_load_by_name_or_tag(const char *definition_tag_path, TagHandle definition_tag_handle, Widget *parent, int16_t controller_index, TagHandle topmost_widget_definition_handle, TagHandle parent_widget_definition_handle, uint16_t child_index_from_parent);
+
+/**
+ * Dispatch an event to a widget.
+ * @param widget pointer to the widget
+ * @param definition_tag_data pointer to the widget definition tag data
+ * @param event_record pointer to the event record
+ * @param event_handler pointer to the event handler
+ * @param controller_index controller index
+ */
+void ui_widget_event_handler_dispatch(Widget *widget, UIWidgetDefinition *definition_tag_data, UIWidgetEventRecord *event_record, EventHandlerReference *event_handler, int16_t *controller_index);
+
+/**
+ * Give focus to a widget instance.
+ * @param widget pointer to the widget instance
+ * @param child pointer to the child widget
+ */
+void ui_widget_instance_give_focus_directly(Widget *widget, Widget *child);
 
 #ifdef __cplusplus
 }

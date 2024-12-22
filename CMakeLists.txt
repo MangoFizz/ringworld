@@ -57,14 +57,16 @@ add_library(ringworld STATIC
     src/ringworld.cpp
     src/impl/console/console.c
     src/impl/exception/exception.c
+    src/impl/game/game_time.c
     src/impl/math/math.c
     src/impl/input/mouse.c
+    src/impl/interface/ui_widget.c
     src/impl/memory/memory.c
+    src/impl/multiplayer/mode.c
     src/impl/memory/table.c
     src/impl/player/player.c
     src/impl/script/hsc.c
     src/impl/tag/tag.c
-    src/impl/ui/ui_widget.c
 
     ${CMAKE_CURRENT_BINARY_DIR}/game_function_hooks.cpp
     ${CMAKE_CURRENT_BINARY_DIR}/game_functions.S

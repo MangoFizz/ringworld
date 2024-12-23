@@ -164,10 +164,8 @@ void ui_widget_new_instance(int16_t controller_index, UIWidgetDefinition *widget
     if(widget->focused_child == NULL) {
         for(Widget *child = widget->child; child != NULL; child = child->next) {
             UIWidgetDefinition *child_definition = get_tag_data(child->definition_tag_handle);
-            if(child->visible == false) {
-                if(child_definition->event_handlers.count > 0 || child->type == UI_WIDGET_TYPE_SPINNER_LIST || child->type == UI_WIDGET_TYPE_COLUMN_LIST) {
-                    ui_widget_instance_give_focus_directly(widget, child);
-                }
+            if(child->never_receive_events == false && child_definition->event_handlers.count > 0 || ui_widget_is_list(child)) {
+                ui_widget_instance_give_focus_directly(widget, child);
             }
         }
     } 
@@ -279,7 +277,9 @@ bool ui_widget_load_children_recursive(UIWidgetDefinition *widget_definition, Wi
         Widget *child = widget->child;
         if(child != NULL) {
             UIWidgetDefinition *child_definition = get_tag_data(child->definition_tag_handle);
-            while(widget->child->never_receive_events || (child_definition->event_handlers.count == 0 && !ui_widget_is_list(child))) {
+            while(!ui_widget_is_list(widget) && (widget->child->never_receive_events || 
+                  (child_definition->event_handlers.count == 0 && !ui_widget_is_list(child)))) {
+                
                 child = child->next;
                 if(child == NULL) {
                     return result;
@@ -290,4 +290,73 @@ bool ui_widget_load_children_recursive(UIWidgetDefinition *widget_definition, Wi
     }
 
     return result;
+}
+
+Widget *ui_widget_get_topmost_parent(Widget *widget) {
+    Widget *parent = widget;
+    for(Widget *aux = widget->parent; aux != NULL; aux = aux->parent) {
+        parent = aux;
+    }
+    return parent;
+}
+
+void ui_widget_instance_give_focus_directly(Widget *widget, Widget *child) {
+    Widget *topmost_parent = ui_widget_get_topmost_parent(widget);
+    Widget *focused = topmost_parent->focused_child;
+
+    // If the child is set to never receive events, find the next/previous child that can receive events
+    if(child->never_receive_events) {
+        Widget *aux;
+        for(aux = child->next; aux != NULL; aux = aux->next) {
+            UIWidgetDefinition *definition = get_tag_data(aux->definition_tag_handle);
+            if(aux->never_receive_events == false) {
+                if(definition->event_handlers.count > 0 || ui_widget_is_list(aux)) {
+                    child = aux;
+                    break;
+                }
+            }
+        }
+        if(child != aux) {
+            Widget *first_child = child->parent;
+            if(first_child != NULL) {
+                for(aux = first_child->child; aux != NULL; aux = aux->next) {
+                    UIWidgetDefinition *definition = get_tag_data(aux->definition_tag_handle);
+                    if(aux->never_receive_events == false && definition->event_handlers.count > 0 || ui_widget_is_list(aux)) {
+                        break;
+                    }
+                }
+                if(aux == first_child->focused_child) {
+                    for(aux = child->previous; aux != NULL; aux = aux->previous) {
+                        UIWidgetDefinition *definition = get_tag_data(aux->definition_tag_handle);
+                        if(aux->never_receive_events == false && definition->event_handlers.count > 0 || ui_widget_is_list(aux)) {
+                            if(aux != NULL) {
+                                child = aux;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    if(focused != NULL) {
+        if(child != NULL) {
+            if(focused->parent == child->parent && focused->parent != NULL) {
+                child->parent->focused_child = child;
+                return;
+            }
+        }
+        while(focused != NULL) {
+            focused->parent->focused_child = NULL;
+            focused = focused->focused_child;
+        }
+    }
+    
+    Widget *aux = child->parent;
+    while(aux != NULL) {
+        child->parent->focused_child = child;
+        child = child->parent;
+        aux = child->parent;
+    }
 }

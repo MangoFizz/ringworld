@@ -1,2 +1,2 @@
 -- Set modules path
-package.path = "lua/modules/?.lua;./?.lua" .. package.path
+package.path = "lua/lua_modules/?.lua;lua/?.lua;" .. package.path

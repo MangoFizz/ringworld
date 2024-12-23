@@ -17,7 +17,7 @@
     "update_menu_cursor_coords": {"address": "0x49a220", "replace": false},
     "ui_widgets_initialize": {"address": "0x49a940", "replace": true},
     "ui_widget_delete_recursive": {"address": "0x49ab90", "replace": false, "arguments": ["0"]},
-    "ui_widget_new_history_node": {"address": "0x49c3c0", "replace": false, "arguments": ["esi", "edi"]},
+    "ui_widget_new_history_node": {"address": "0x49c3c0", "replace": true, "arguments": ["esi", "edi"]},
     "ui_widget_new_instance": {"address": "0x49c710", "replace": true, "arguments": ["0", "4", "ecx", "eax", "edx"]},
     "ui_widget_load_by_name_or_tag": {"address": "0x49aa00", "replace": true, "use_return_value": true, "arguments": ["0", "4", "8", "12", "16", "20", "24"]},
     "ui_widget_load_children_recursive": {"address": "0x49c4d0", "replace": true, "use_return_value": true, "arguments": ["0", "esi"]},

@@ -9,6 +9,8 @@
 #include <ringworld/multiplayer/mode.h>
 #include <ringworld/game/game_time.h>
 
+#include "../exception/exception.h"
+
 #define UI_WIDGET_MEMORY_POOL_SIZE 0x20000
 #define UI_WIDGET_MEMORY_POOL_BLOCKS_NUMBER 0x1000
 
@@ -52,8 +54,7 @@ Widget *ui_widget_load_by_name_or_tag(const char *definition_tag_path, TagHandle
         if(definition_tag_path) {
             definition_tag = lookup_tag(definition_tag_path, TAG_GROUP_UI_WIDGET_DEFINITION);
             if(HANDLE_IS_NULL(definition_tag)) {
-                console_printf_debug_err("ui_widget_load_by_name_or_tag(): tag not found: %s", definition_tag_path);
-                return NULL;
+                CRASHF_DEBUG("failed to find widget definition tag");                
             }
         }
         else {
@@ -64,8 +65,7 @@ Widget *ui_widget_load_by_name_or_tag(const char *definition_tag_path, TagHandle
     UIWidgetDefinition *definition = get_tag_data(definition_tag);
     Widget *widget = memory_pool_new_block(*ui_widget_memory_pool, sizeof(Widget));
     if(widget == NULL) {
-        console_printf_debug_err("ui_widget_load_by_name_or_tag(): failed to allocate memory for widget");
-        return NULL;
+        CRASHF_DEBUG("failed to allocate memory for widget");
     }
 
     if(parent == NULL) {
@@ -144,7 +144,7 @@ void ui_widget_new_instance(int16_t controller_index, UIWidgetDefinition *widget
     
     if(ui_widget_globals->dont_load_children_recursive == false) {
         if(!ui_widget_load_children_recursive(widget_definition, widget)) {
-            console_printf_debug_err("ui_widget_new_instance(): failed to load children for widget %s", widget->name);
+            CRASHF_DEBUG("failed to load children for widget");
         }
     }
     
@@ -360,3 +360,18 @@ void ui_widget_instance_give_focus_directly(Widget *widget, Widget *child) {
         aux = child->parent;
     }
 }
+
+void ui_widget_new_history_node(WidgetHistoryNode *history_node_data, WidgetHistoryNode **history_top_node) {
+    WidgetHistoryNode *new_node = memory_pool_new_block(*ui_widget_memory_pool, sizeof(WidgetHistoryNode));
+    if(new_node == NULL) {
+        CRASHF_DEBUG("failed to allocate memory for history node");
+    }
+    new_node->previous_menu = history_node_data->previous_menu;
+    new_node->previous_menu_list = history_node_data->previous_menu_list;
+    new_node->focused_item_index = history_node_data->focused_item_index;
+    new_node->local_player_index = history_node_data->local_player_index;
+    new_node->previous = *history_top_node;
+    *history_top_node = new_node;
+}
+
+

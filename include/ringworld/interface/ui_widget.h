@@ -30,7 +30,7 @@ _Static_assert(sizeof(DeferredErrorDescriptor) == 0x04);
 typedef struct WidgetTextBoxParameters {
     wchar_t *text;
     int16_t string_list_index;
-    int16_t pad1;
+    char pad1[2];
     ColorARGB text_color;
     Bool flashing;
 } WidgetTextBoxParameters;
@@ -138,8 +138,10 @@ void ui_widget_delete_recursive(Widget *widget);
 
 /**
  * Create a new widget history node.
+ * @param history_node_data pointer to the history node data to copy to the new node
+ * @param history_top_node pointer to the top node of the history
  */
-WidgetHistoryNode *ui_widget_new_history_node();
+void ui_widget_new_history_node(WidgetHistoryNode *history_node_data, WidgetHistoryNode **history_top_node);
 
 /**
  * Create a new widget instance
@@ -202,6 +204,13 @@ bool ui_widget_is_list(Widget *widget);
  * @return pointer to the last child of the widget
  */
 Widget *ui_widget_get_last_child(Widget *widget);
+
+/**
+ * Get the topmost parent of a widget.
+ * @param widget pointer to the widget
+ * @return pointer to the topmost parent of the widget
+ */
+Widget *ui_widget_get_topmost_parent(Widget *widget);
 
 #ifdef __cplusplus
 }

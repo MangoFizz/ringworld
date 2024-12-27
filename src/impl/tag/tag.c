@@ -3,6 +3,8 @@
 #include <ringworld/console/console.h>
 #include <ringworld/tag/tag.h>
 
+#include "../exception/exception.h"
+
 extern bool *map_is_loaded;
 extern TagDataHeader **tag_data_header_loaded;
 
@@ -28,6 +30,19 @@ TagHandle lookup_tag(const char *path, TagGroupFourCC group) {
 
 void *get_tag_data(TagHandle tag_handle) {
     return (*tag_data_header_loaded)->tags[tag_handle.index].data;
+}
+
+void *tag_get_data(TagHandle tag_handle, TagGroupFourCC group) {
+    ASSERT(tag_handle.index != NULL_HANDLE.index);
+    TagEntry *tag = &(*tag_data_header_loaded)->tags[tag_handle.index];
+    ASSERT(tag->primary_group == group);
+    return tag->data;
+}
+
+void *tag_get_block(GenericTagBlock *block, uint32_t index, uint32_t size) {
+    ASSERT(block);
+    ASSERT(index < block->count);
+    return block->elements + index * size;
 }
 
 const char *group_fourcc_to_name(TagGroupFourCC group_fourcc) {

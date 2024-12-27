@@ -167,6 +167,31 @@ TagHandle lookup_tag(const char *path, TagGroupFourCC group);
 void *get_tag_data(TagHandle tag_handle);
 
 /**
+ * Get the data for the tag.
+ * @param tag_handle tag handle
+ * @param group group of the tag
+ * @return pointer to tag data
+ */
+void *tag_get_data(TagHandle tag_handle, TagGroupFourCC group);
+
+/**
+ * Get an element from a reflexive block.
+ * @param block reflexive block
+ * @param index element index
+ * @param size size of each element
+ * @return pointer to element
+ */
+void *tag_get_block(GenericTagBlock *block, uint32_t index, uint32_t size);
+
+/**
+ * Get an element from a reflexive block.
+ * @param block reflexive block
+ * @param index element index
+ * @return pointer to element
+ */
+#define TAG_BLOCK_GET_ELEMENT(block, index) (tag_get_block(&block, index, sizeof(block.elements[0])))
+
+/**
  * Convert a tag group FourCC to a name.
  * @param group_fourcc fourcc to look up
  * @return tag group or "???" if unknown

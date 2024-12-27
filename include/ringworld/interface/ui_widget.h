@@ -125,6 +125,12 @@ typedef struct UIWidgetEventRecord {
 } UIWidgetEventRecord;
 
 /**
+ * Get the UI widget globals.
+ * @return pointer to the UI widget globals
+ */
+WidgetGlobals *get_ui_widget_globals(void);
+
+/**
  * Initialize the UI widgets.
  */
 void ui_widgets_initialize(void);

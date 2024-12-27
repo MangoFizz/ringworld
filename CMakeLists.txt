@@ -73,3 +73,5 @@ add_library(ringworld STATIC
     ${CMAKE_CURRENT_BINARY_DIR}/game_variables.cpp
     ${CMAKE_CURRENT_BINARY_DIR}/dedicated_function_hooks.cpp
 )
+
+add_dependencies(ringworld ringworld-tag-definitions-headers)

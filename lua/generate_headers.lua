@@ -80,6 +80,9 @@ local function generateHeader(definitionName, tagDefinition, dependencies)
                 add(valueName .. ",\n")
             end
         end
+        local enum_count = enumPrefix .. "MAX"
+        ident(1)
+        add(enum_count .. ", \n")
         local enum_size = enumPrefix .. "SIZE"
         ident(1)
         add(enum_size .. " = 0xFFFF \n")

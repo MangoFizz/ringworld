@@ -1,0 +1,130 @@
+#ifndef RINGWORLD__RASTERIZER__RASTERIZER_TRANSPARENT_GEOMETRY_GROUP_H
+#define RINGWORLD__RASTERIZER__RASTERIZER_TRANSPARENT_GEOMETRY_GROUP_H
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+#include <stdint.h>
+#include "../object/object.h"
+#include "../tag/definitions/shader.h"
+#include "../tag/definitions/bitmap.h"
+
+typedef struct RenderAnimation {
+    ColorRGB *colors;
+    float *values;
+} RenderAnimation;
+_Static_assert(sizeof(RenderAnimation) == 0x8);
+
+typedef struct RenderModelEffect {
+    int16_t type;
+    float intensity;
+    float parameter;
+    int source_object_index;
+    VectorXYZ source_object_centroid;
+    Shader *modifier_shader;
+    RenderAnimation modifier_animation;
+} RenderModelEffect;
+_Static_assert(sizeof(RenderModelEffect) == 0x28);
+
+typedef struct TriangleBuffer {
+    int16_t type;
+    uint32_t count;
+    uint32_t offset;
+    void *data;
+} TriangleBuffer;
+_Static_assert(sizeof(TriangleBuffer) == 0x10);
+
+typedef struct VertexBuffer {
+    int16_t type;
+    int count;
+    int offset;
+    void *base_address;
+    void *vertex_buffer;
+} VertexBuffer;
+_Static_assert(sizeof(VertexBuffer) == 0x14);
+
+typedef struct RenderDistantLight {
+    ColorRGB color;
+    VectorXYZ direction;
+} RenderDistantLight;
+_Static_assert(sizeof(RenderDistantLight) == 0x18);
+
+typedef struct RenderLighting {
+    ColorRGB ambient_color;
+    int16_t distant_light_count;
+    RenderDistantLight distant_lights[2];
+    int16_t point_light_count;
+    int point_light_indices[2];
+    ColorARGB reflection_tint_color;
+    VectorXYZ shadow_vector;
+    ColorRGB shadow_color;
+} RenderLighting;
+_Static_assert(sizeof(RenderLighting) == 0x74);
+
+typedef struct RenderAnimation {
+    ColorRGB *colors;
+    float *values;
+} RenderAnimation;
+_Static_assert(sizeof(RenderAnimation) == 0x8);
+
+typedef struct GeometryFlags {
+    Bool no_sort : 1;
+    Bool no_queue : 1;
+    Bool no_fog : 1;
+    Bool no_zbuffer : 1;
+    Bool sky : 1;
+    Bool viewspace : 1;
+    Bool atmospheric_fog_but_no_planar_fog : 1;
+    Bool first_person : 1;
+    Bool parts_define_local_nodes : 1;
+    Bool dont_skin : 1;
+    Bool pad[2];
+} GeometryFlags;
+_Static_assert(sizeof(GeometryFlags) == sizeof(uint32_t));
+
+typedef struct TransparentGeometryGroup {
+    GeometryFlags geometry_flags;
+    ObjectHandle object_index;
+    ObjectHandle source_object_index;
+    Shader *shader;
+    int16_t shader_permutation_index;
+    RenderModelEffect effect;
+    VectorXY model_base_map_scale;
+    uint32_t dynamic_triangle_buffer_index;
+    TriangleBuffer *triangle_buffer;
+    int first_triangle_index;
+    int triangle_count;
+    int dynamic_vertex_buffer_index;
+    VertexBuffer *vertex_buffers;
+    BitmapData *lightmap;
+    Matrix4x3 *node_matrices;
+    int16_t node_matrix_count;
+    uint16_t *local_node_remap_table;
+    unsigned int local_node_remap_table_size;
+    RenderLighting *lighting;
+    RenderAnimation *animation;
+    float z_sort;
+    VectorXYZ centroid;
+    Plane3D plane;
+    int sorted_index;
+    int16_t prev_group_presorted_index;
+    int16_t next_group_presorted_index;
+    int active_camouflage_transparent_source_object_index;
+    uint8_t sort_last;
+    uint8_t cortana_hack;
+} TransparentGeometryGroup;
+_Static_assert(sizeof(TransparentGeometryGroup) == 0xA8);
+
+/**
+ * Get the vertex buffer type of a transparent geometry group
+ * @param group transparent geometry group
+ * @return vertex buffer type
+ */
+uint16_t rasterizer_get_vertex_buffer_type(TransparentGeometryGroup *group);
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif

@@ -11,6 +11,7 @@ typedef uint32_t FourCC;
 typedef uint32_t TickCount32;
 typedef uint16_t TickCount16;
 typedef uint32_t ColorARGBInt;
+typedef float Angle;
 
 typedef union ScenarioScriptNodeValue {
     float f;
@@ -135,12 +136,26 @@ typedef struct Plane3D {
 } Plane3D;
 _Static_assert(sizeof(Plane3D) == 0x10);
 
-typedef struct GenericReflexive {
+// TODO: REPLACE WITH RINGWORLD DEFINITION
+struct Matrix {
+    VectorXYZ m[3];
+};
+
+typedef struct Matrix4x3 {
+    float scale;
+    VectorIJK forward;
+    VectorIJK left;
+    VectorIJK up;
+    VectorXYZ position;
+} Matrix4x3;
+_Static_assert(sizeof(Matrix4x3) == 0x34);
+
+typedef struct GenericTagBlock {
     uint32_t count;
-    void *pointer;
+    void *elements;
     uint8_t padding[4];
-} GenericReflexive;
-_Static_assert(sizeof(GenericReflexive) == 0xC);
+} GenericTagBlock;
+_Static_assert(sizeof(GenericTagBlock) == 0xC);
 
 #ifdef __cplusplus
 }

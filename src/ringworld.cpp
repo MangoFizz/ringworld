@@ -5,7 +5,7 @@
 #include <cstdio>
 #include <vector>
 #include <stdexcept>
-#include <ringworld/ringworld.hpp>
+#include <ringworld/ringworld.h>
 
 extern "C" {
     #include "impl/exception/exception.h"
@@ -19,7 +19,7 @@ static std::byte *hook_heap;
 static const std::size_t hook_heap_size = 512 * 1024;
 static std::size_t hook_heap_usage;
 
-void set_up_ringworld_hooks(Platform platform) {
+extern "C" void set_up_ringworld_hooks(Platform platform) {
     // Enable DEP (if doable) because executing code not marked as executable is bad
     SetProcessDEPPolicy(PROCESS_DEP_ENABLE);
 
@@ -31,10 +31,10 @@ void set_up_ringworld_hooks(Platform platform) {
 
     try {
         switch(platform) {
-            case PLATFORM_CLIENT: 
+            case RW_PLATFORM_GAME: 
                 set_up_game_hooks();
                 break;
-            case PLATFORM_DEDICATED_SERVER:
+            case RW_PLATFORM_DEDICATED_SERVER:
                 set_up_dedicated_hooks();
                 break;
         }
@@ -48,7 +48,7 @@ void set_up_ringworld_hooks(Platform platform) {
     VirtualProtect(hook_heap, hook_heap_size, PAGE_EXECUTE_READ, &old_protection);
 }
 
-void release_ringworld_hooks() {
+extern "C" void dispose_ringworld_heap() {
     VirtualFree(hook_heap, hook_heap_size, MEM_DECOMMIT | MEM_RELEASE);
 }
 

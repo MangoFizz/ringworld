@@ -21,4 +21,9 @@ void crash_forbidden_function(const char *function_name, void *from);
 
 #define CRASHF_DEBUG(...) crashf(__FILE__ ":" STR(__LINE__) ": " __VA_ARGS__)
 
+#define ASSERT(expr) \
+    if(!(expr)) { \
+        CRASHF_DEBUG("assertion failed: " #expr); \
+    }
+
 #endif

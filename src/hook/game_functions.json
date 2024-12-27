@@ -25,5 +25,9 @@
     "ui_widget_instance_give_focus_directly": {"address": "0x49eb30", "replace": true, "arguments": ["eax", "ecx"]},
     "memory_pool_new_block": {"address": "0x4d5310", "replace": false, "use_return_value": true, "arguments": ["ecx", "eax"]},
 
-    "console_printf_in": {"address": "0x499ab0", "replace": false, "arguments": ["eax", "4", "8"], "comment": "takes variable args but the bridge doesn't support varargs so two are passed for now plus color"}
+    "console_printf_in": {"address": "0x499ab0", "replace": false, "arguments": ["eax", "4", "8"], "comment": "takes variable args but the bridge doesn't support varargs so two are passed for now plus color"},
+
+    "shader_get_vertex_shader_permutation": {"address": "0x543160", "replace": false, "use_return_value": true, "arguments": ["ecx"]},
+    "rasterizer_dx9_set_framebuffer_blend_function": {"address": "0x51be80", "replace": false, "arguments": ["ecx"]},
+    "rasterizer_dx9_set_bitmap_data_texture": {"address": "0x51c060", "replace": false, "use_return_value": true, "arguments": ["0", "4", "8", "12", "eax"]}
 }

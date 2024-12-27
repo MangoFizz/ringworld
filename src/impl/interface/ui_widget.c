@@ -20,6 +20,10 @@ extern TagHandle *cursor_bitmap_tag_handle;
 extern bool *ui_widgets_unknown_1;
 extern bool *is_main_menu;
 
+WidgetGlobals *get_ui_widget_globals(void) {
+    return ui_widget_globals;
+}
+
 void ui_widgets_initialize(void) {
     size_t memory_pool_size = UI_WIDGET_MEMORY_POOL_SIZE;
     void *allocated_memory = GlobalAlloc(GMEM_FIXED, memory_pool_size);

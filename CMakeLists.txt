@@ -65,7 +65,11 @@ add_library(ringworld STATIC
     src/impl/multiplayer/mode.c
     src/impl/memory/table.c
     src/impl/player/player.c
+    src/impl/rasterizer/rasterizer_dx9.c
+    src/impl/rasterizer/rasterizer_geometry_group.c
+    src/impl/rasterizer/rasterizer_transparent_generic.c
     src/impl/script/hsc.c
+    src/impl/shader/shader.c
     src/impl/tag/tag.c
 
     ${CMAKE_CURRENT_BINARY_DIR}/game_function_hooks.cpp

@@ -189,7 +189,7 @@ void *tag_get_block(GenericTagBlock *block, uint32_t index, uint32_t size);
  * @param index element index
  * @return pointer to element
  */
-#define TAG_BLOCK_GET_ELEMENT(block, index) (tag_get_block(&block, index, sizeof(block.elements[0])))
+#define TAG_BLOCK_GET_ELEMENT(block, index) (tag_get_block((GenericTagBlock *)&block, index, sizeof(block.elements[0])))
 
 /**
  * Convert a tag group FourCC to a name.

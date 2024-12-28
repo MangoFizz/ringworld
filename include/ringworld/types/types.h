@@ -121,6 +121,16 @@ typedef struct Rectangle2DF {
 } Rectangle2DF;
 _Static_assert(sizeof(Rectangle2DF) == 0x10);
 
+typedef struct Rectangle3DF {
+    float top;
+    float left;
+    float bottom;
+    float right;
+    float front;
+    float back;
+} Rectangle3DF;
+_Static_assert(sizeof(Rectangle3DF) == 0x18);
+
 typedef struct Plane2D {
     float i;
     float j;

@@ -16,8 +16,15 @@ typedef struct RenderAnimation {
 } RenderAnimation;
 _Static_assert(sizeof(RenderAnimation) == 0x8);
 
+typedef enum RenderModelEffectType {
+    RENDER_MODEL_EFFECT_TYPE_NONE,
+    RENDER_MODEL_EFFECT_TYPE_ACTIVE_CAMOUFLAGE,
+    RENDER_MODEL_EFFECT_TYPE_TRANSPARENT_ZBUFFERED,
+    RENDER_MODEL_EFFECT_TYPE_MAX
+} RenderModelEffectType;
+
 typedef struct RenderModelEffect {
-    int16_t type;
+    RenderModelEffectType type;
     float intensity;
     float parameter;
     int source_object_index;
@@ -61,12 +68,6 @@ typedef struct RenderLighting {
     ColorRGB shadow_color;
 } RenderLighting;
 _Static_assert(sizeof(RenderLighting) == 0x74);
-
-typedef struct RenderAnimation {
-    ColorRGB *colors;
-    float *values;
-} RenderAnimation;
-_Static_assert(sizeof(RenderAnimation) == 0x8);
 
 typedef struct GeometryFlags {
     Bool no_sort : 1;
@@ -122,6 +123,20 @@ _Static_assert(sizeof(TransparentGeometryGroup) == 0xA8);
  * @return vertex buffer type
  */
 uint16_t rasterizer_get_vertex_buffer_type(TransparentGeometryGroup *group);
+
+/**
+ * Draw a transparent geometry group
+ * @param group transparent geometry group
+ * @param param_2 unknown parameter
+ */
+void rasterizer_transparent_geometry_group_draw(TransparentGeometryGroup *group, uint32_t *param_2);
+
+/**
+ * Draw the vertices of a transparent geometry group
+ * @param group transparent geometry group
+ * @param has_lightmap whether the group has a lightmap
+ */
+void rasterizer_transparent_geometry_group_draw_vertices(bool has_lightmap, TransparentGeometryGroup *group);
 
 #ifdef __cplusplus
 }

@@ -10,6 +10,11 @@ extern PixelShader *pixel_shaders;
 extern VertexShader *vertex_shaders;
 extern short *vertex_shader_permutations;
 extern VertexDeclaration *vertex_declarations;
+extern RenderGlobals *render_globals;
+
+RenderGlobals *get_render_globals(void) {
+    return render_globals;
+}
 
 IDirect3DDevice9 *rasterizer_dx9_device(void) {
     return **d3d9_device;
@@ -57,4 +62,19 @@ void rasterizer_dx9_set_render_state(D3DRENDERSTATETYPE state, DWORD value) {
 void rasterizer_dx9_set_sampler_state(uint16_t sampler, D3DSAMPLERSTATETYPE type, DWORD value) {
     ASSERT(**d3d9_device);
     IDirect3DDevice9_SetSamplerState(**d3d9_device, sampler, type, value);
+}
+
+void rasterizer_dx9_set_texture(uint16_t stage, IDirect3DTexture9 *texture) {
+    ASSERT(**d3d9_device);
+    IDirect3DDevice9_SetTexture(**d3d9_device, stage, (IDirect3DBaseTexture9 *)texture);
+}
+
+bool rasterizer_dx9_set_vertex_shader_constant_f(uint16_t start_register, const float *data, uint16_t count) {
+    ASSERT(**d3d9_device);
+    return IDirect3DDevice9_SetVertexShaderConstantF(**d3d9_device, start_register, data, count) == D3D_OK;
+}
+
+bool rasterizer_dx9_set_pixel_shader_constant_f(uint16_t start_register, const float *data, uint16_t count) {
+    ASSERT(**d3d9_device);
+    return IDirect3DDevice9_SetPixelShaderConstantF(**d3d9_device, start_register, data, count) == D3D_OK;
 }

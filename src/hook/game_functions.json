@@ -29,5 +29,8 @@
 
     "shader_get_vertex_shader_permutation": {"address": "0x543160", "replace": false, "use_return_value": true, "arguments": ["ecx"]},
     "rasterizer_dx9_set_framebuffer_blend_function": {"address": "0x51be80", "replace": false, "arguments": ["ecx"]},
-    "rasterizer_dx9_set_bitmap_data_texture": {"address": "0x51c060", "replace": false, "use_return_value": true, "arguments": ["0", "4", "8", "12", "eax"]}
+    "rasterizer_dx9_set_bitmap_data_texture": {"address": "0x51c060", "replace": false, "use_return_value": true, "arguments": ["0", "4", "8", "12", "eax"]},
+    "shader_texture_animation_evaluate": {"address": "0x543250", "replace": false, "arguments": ["0", "4", "8", "12", "16", "20", "esi", "ecx", "ebx", "edi"]},
+    "math_periodic_function_evaluate": {"address": "0x5ccf80", "replace": false, "use_return_value": true, "arguments": ["0", "4", "eax"]},
+    "rasterizer_transparent_geometry_group_draw_vertices": {"address": "0x51c3b0", "replace": false, "arguments": ["0", "ecx"]}
 }

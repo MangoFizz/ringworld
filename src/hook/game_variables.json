@@ -32,5 +32,8 @@
     "vertex_shaders": {"type": "VertexShader", "address": "0x639248"},
     "vertex_shader_permutations": {"type": "short", "address": "0x639450"},
     "vertex_shader_declarations": {"type": "VertexDeclaration", "address": "0xe101e8"},
-    "shader_transparent_generic_vertex_contants": {"type": "float", "address": "0x75c624"}
+    "shader_transparent_generic_vertex_contants": {"type": "float", "address": "0x75c624"},
+    "render_globals": {"type": "RenderGlobals", "address": "0x75E460"},
+    "fog_enable": {"type": "bool", "address": "0x6249dc"},
+    "frame_parameters": {"type": "FrameParameters", "address": "0x75C570"}
 }

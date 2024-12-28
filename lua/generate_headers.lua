@@ -175,5 +175,5 @@ for definitionName, definition in pairs(definitions) do
 
     -- Generate little endian header
     local header = generateHeader(definitionName, definition, definitionDependencies)
-    glue.writefile(outputDirectory .. "/ringworld/tag/definitions/" .. definitionName .. ".h", header, "t")
+    glue.writefile(outputDirectory .. "/impl/tag/definitions/" .. definitionName .. ".h", header, "t")
 end

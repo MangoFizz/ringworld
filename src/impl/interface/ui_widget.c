@@ -10,7 +10,6 @@
 #include "../exception/exception.h"
 #include "ui_widget.h"
 
-
 #define UI_WIDGET_MEMORY_POOL_SIZE 0x20000
 #define UI_WIDGET_MEMORY_POOL_BLOCKS_NUMBER 0x1000
 

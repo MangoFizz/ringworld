@@ -1,7 +1,7 @@
 #include <math.h>
 
-#include <ringworld/math/math.h>
-#include <ringworld/types/types.h>
+#include "../types/types.h"
+#include "math.h"
 
 double pow_float(double base, double exp) {
     return pow(base, exp);

@@ -1,13 +1,12 @@
 #include <math.h>
 
-#include <ringworld/console/console.h>
-#include <ringworld/shader/shader.h>
-#include <ringworld/tag/definitions/shader_transparent_generic.h>
-#include <ringworld/rasterizer/rasterizer_geometry_group.h>
-#include <ringworld/rasterizer/rasterizer_dx9.h>
-#include <ringworld/math/math.h>
-
+#include "../console/console.h"
 #include "../exception/exception.h"
+#include "../shader/shader.h"
+#include "../tag/definitions/shader_transparent_generic.h"
+#include "../math/math.h"
+#include "rasterizer_geometry_group.h"
+#include "rasterizer_dx9.h"
 
 extern float *shader_transparent_generic_vertex_contants;
 extern bool *fog_enable;

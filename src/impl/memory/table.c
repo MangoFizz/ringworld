@@ -1,10 +1,9 @@
 #include <windows.h>
 #include <string.h>
 
-#include <ringworld/memory/memory.h>
-#include <ringworld/memory/table.h>
-
 #include "../exception/exception.h"
+#include "memory.h"
+#include "table.h"
 
 #define ITERATOR_FOURCC 0x69746572 // 'iter'
 

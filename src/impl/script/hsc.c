@@ -1,4 +1,4 @@
-#include <ringworld/script/hsc.h>
+#include "hsc.h"
 
 extern uint16_t *structure_bsp_index;
 

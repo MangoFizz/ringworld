@@ -1,15 +1,15 @@
 #include <windows.h>
 
-#include <ringworld/console/console.h>
-#include <ringworld/interface/ui_widget.h>
-#include <ringworld/memory/pool.h>
-#include <ringworld/math/math.h>
-#include <ringworld/tag/definitions/bitmap.h>
-#include <ringworld/tag/definitions/unicode_string_list.h>
-#include <ringworld/multiplayer/mode.h>
-#include <ringworld/game/game_time.h>
-
+#include "../console/console.h"
+#include "../memory/pool.h"
+#include "../math/math.h"
+#include "../tag/definitions/bitmap.h"
+#include "../tag/definitions/unicode_string_list.h"
+#include "../multiplayer/mode.h"
+#include "../game/game_time.h"
 #include "../exception/exception.h"
+#include "ui_widget.h"
+
 
 #define UI_WIDGET_MEMORY_POOL_SIZE 0x20000
 #define UI_WIDGET_MEMORY_POOL_BLOCKS_NUMBER 0x1000

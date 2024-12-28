@@ -1,6 +1,6 @@
 #include <stdint.h>
 
-#include <ringworld/multiplayer/mode.h>
+#include "mode.h"
 
 extern MultiplayerMode *current_multiplayer_mode;
 

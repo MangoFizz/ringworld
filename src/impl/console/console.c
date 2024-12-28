@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <stdarg.h>
 
-#include <ringworld/console/console.h>
-#include <ringworld/types/types.h>
+#include "../types/types.h"
+#include "console.h"
 
 void console_printf_in(const ColorARGB *color, const char *fmt, const char *str);
 

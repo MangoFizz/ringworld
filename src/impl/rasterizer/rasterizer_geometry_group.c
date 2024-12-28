@@ -1,7 +1,7 @@
-#include <ringworld/rasterizer/rasterizer_geometry_group.h>
-#include <ringworld/rasterizer/rasterizer_dx9.h>
-
 #include "../exception/exception.h"
+#include "rasterizer_geometry_group.h"
+#include "rasterizer_dx9.h"
+
 
 extern uint16_t *dynamic_vertices;
 

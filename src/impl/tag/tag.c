@@ -1,9 +1,8 @@
 #include <string.h>
 
-#include <ringworld/console/console.h>
-#include <ringworld/tag/tag.h>
-
+#include "../console/console.h"
 #include "../exception/exception.h"
+#include "tag.h"
 
 extern bool *map_is_loaded;
 extern TagDataHeader **tag_data_header_loaded;

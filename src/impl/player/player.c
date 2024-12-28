@@ -1,6 +1,6 @@
-#include <ringworld/player/player.h>
-#include <ringworld/memory/memory.h>
-#include <ringworld/memory/table.h>
+#include "../memory/memory.h"
+#include "../memory/table.h"
+#include "player.h"
 
 extern PlayersGlobals **players_globals;
 extern PlayersTable **players_data;

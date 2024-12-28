@@ -1,8 +1,8 @@
 #include <math.h>
 #include <stdbool.h>
 
-#include <ringworld/math/math.h>
-#include <ringworld/input/mouse.h>
+#include "../math/math.h"
+#include "mouse.h"
 
 extern int32_t *menu_cursor_x;
 extern int32_t *menu_cursor_y;

@@ -5,13 +5,10 @@
 #include <cstdio>
 #include <vector>
 #include <stdexcept>
-#include <ringworld/ringworld.h>
-
-extern "C" {
-    #include "impl/exception/exception.h"
-}
 
 #include "hook/hook.hpp"
+#include "impl/exception/exception.h"
+#include "ringworld.h"
 
 using namespace Demon;
 

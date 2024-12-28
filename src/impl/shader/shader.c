@@ -1,6 +1,5 @@
-#include <ringworld/shader/shader.h>
-
 #include "../exception/exception.h"
+#include "shader.h"
 
 void *shader_type_assert(Shader *shader, ShaderType type) {
     ASSERT(shader);

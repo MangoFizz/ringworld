@@ -1,9 +1,8 @@
 #include <stdint.h>
 #include <d3d9.h>
 
-#include <ringworld/rasterizer/rasterizer_dx9.h>
-
 #include "../exception/exception.h"
+#include "rasterizer_dx9.h"
 
 extern IDirect3DDevice9 ***d3d9_device;
 extern PixelShader *pixel_shaders;

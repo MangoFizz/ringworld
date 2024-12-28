@@ -1,4 +1,4 @@
-#include <ringworld/game/game_time.h>
+#include "game_time.h"
 
 extern GameTimeGlobals *game_time_globals;
 

@@ -2,10 +2,9 @@
 #include <stdint.h>
 #include <stdio.h>
 
-#include <ringworld/memory/memory.h>
-#include <ringworld/memory/table.h>
-
 #include "../exception/exception.h"
+#include "memory.h"
+#include "table.h"
 
 extern void **managed_heap;
 extern void **tag_data;

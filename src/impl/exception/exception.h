@@ -1,6 +1,10 @@
 #ifndef DEMON__IMPL_EXCEPTION_EXCEPTION_H
 #define DEMON__IMPL_EXCEPTION_EXCEPTION_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /**
  * Terminate the process with a format.
  *
@@ -25,5 +29,9 @@ void crash_forbidden_function(const char *function_name, void *from);
     if(!(expr)) { \
         CRASHF_DEBUG("assertion failed: " #expr); \
     }
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

@@ -56,6 +56,8 @@ include_directories(
 add_library(ringworld STATIC
     src/ringworld.cpp
     src/impl/console/console.c
+    src/impl/crypto/md5.c
+    src/impl/crypto/xtea.c
     src/impl/exception/exception.c
     src/impl/game/game_time.c
     src/impl/math/math.c
@@ -65,6 +67,7 @@ add_library(ringworld STATIC
     src/impl/multiplayer/mode.c
     src/impl/memory/table.c
     src/impl/player/player.c
+    src/impl/rasterizer/rasterizer_dx9_shader.c
     src/impl/rasterizer/rasterizer_dx9.c
     src/impl/rasterizer/rasterizer_geometry_group.c
     src/impl/rasterizer/rasterizer_transparent_generic.c

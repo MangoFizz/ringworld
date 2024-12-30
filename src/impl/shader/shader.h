@@ -36,7 +36,7 @@ uint16_t shader_get_vertex_shader_permutation(Shader *shader);
  * @param u_transform_reference The U transform reference.
  * @param v_transform_reference The V transform reference.
  */
-void shader_texture_animation_evaluate(float map_u_scale, float map_v_scale, float map_u_offset, float map_v_offset, float map_rotation, float frame_params, void *texture_animation, RenderAnimation *render_animation, float u_transform_reference, float v_transform_reference);
+void shader_texture_animation_evaluate(float map_u_scale, float map_v_scale, float map_u_offset, float map_v_offset, float map_rotation, float frame_params, void *texture_animation, RenderAnimation *render_animation, float *u_transform_reference, float *v_transform_reference);
 
 #ifdef __cplusplus
 }

@@ -26,14 +26,17 @@
     "game_time_globals": {"type": "GameTimeGlobals", "address": "0x68cd70"},
     "current_multiplayer_mode": {"type": "MultiplayerMode", "address": "0x6b47b0"},
     "is_main_menu": {"type": "bool", "address": "0x6b4051"},
-    "d3d9_device": {"type": "IDirect3DDevice9 **", "address": "0x6b840c"},
+    "d3d9_device": {"type": "IDirect3DDevice9 *", "address": "0x6b840c"},
     "dynamic_vertices": {"type": "uint16_t", "address": "0x674908"},
-    "pixel_shaders": {"type": "PixelShader", "address": "0x638ac8"},
+    "shader_effects": {"type": "RasterizerDx9ShaderEffectEntry", "address": "0x638ac8"},
     "vertex_shaders": {"type": "VertexShader", "address": "0x639248"},
     "vertex_shader_permutations": {"type": "short", "address": "0x639450"},
-    "vertex_shader_declarations": {"type": "VertexDeclaration", "address": "0xe101e8"},
-    "shader_transparent_generic_vertex_contants": {"type": "float", "address": "0x75c624"},
+    "vertex_declarations": {"type": "VertexDeclaration", "address": "0x67ca50"},
+    "shader_transparent_generic_vertex_constants": {"type": "float", "address": "0x75c624"},
     "render_globals": {"type": "RenderGlobals", "address": "0x75E460"},
     "fog_enable": {"type": "bool", "address": "0x6249dc"},
-    "frame_parameters": {"type": "FrameParameters", "address": "0x75C570"}
+    "frame_parameters": {"type": "FrameParameters", "address": "0x75C570"},
+    "shader_transparent_chicago_unk1": {"type": "uint32_t", "address": "0x75c4b8"},
+    "effect_collection_effect_count": {"type": "uint32_t", "address": "0x75b720"},
+    "effect_collection_buffer": {"type": "RasterizerDx9ShaderEffect *", "address": "0x75b724"}
 }

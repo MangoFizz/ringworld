@@ -9,6 +9,13 @@ void exception_handler(void) {
     CRASHF_DEBUG("Exception handler tripped. Possible segfault detected.");
 }
 
+void debugf(const char *fmt, ...) {
+    va_list args;
+    va_start(args, fmt);
+    vfprintf(stderr, fmt, args);
+    va_end(args);
+}
+
 void crashf(const char *fmt, ...) {
     // Don't print another crash message
     static bool printed = false;

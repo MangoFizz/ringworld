@@ -1,13 +1,21 @@
+#include <stdio.h>
 #include <windows.h>
+#include <d3d9.h>
 
 #include "../crypto/md5.h"
 #include "../crypto/xtea.h"
 #include "../exception/exception.h"
+#include "rasterizer_dx9.h"
 #include "rasterizer_dx9_shader.h"
 
 #ifndef RASTERIZER_DX9_SHADER_DECRYPT_KEY
 #define RASTERIZER_DX9_SHADER_DECRYPT_KEY 0x3FFFFFDD, 0x00007FC3, 0x000000E5, 0x003FFFEF
 #endif
+
+extern RasterizerDx9ShaderEffectEntry *shader_effects;
+extern RasterizerDx9ShaderEffect **effect_collection_buffer;
+extern uint32_t *effect_collection_effect_count;
+extern IDirect3DDevice9 **d3d9_device;
 
 bool rasterizer_dx9_shader_decrypt_binary_file(void *data, size_t data_size) {
     ASSERT(data != NULL);
@@ -32,7 +40,7 @@ bool rasterizer_dx9_shader_decrypt_binary_file(void *data, size_t data_size) {
     return true;
 }
 
-bool rasterizer_dx9_shader_read_binary_file(char **buffer, size_t *bytes_read, const char *filename) {
+bool rasterizer_dx9_shader_read_binary_file(void **buffer, size_t *bytes_read, const char *filename) {
     *buffer = NULL;
     *bytes_read = 0;
 
@@ -63,4 +71,74 @@ bool rasterizer_dx9_shader_read_binary_file(char **buffer, size_t *bytes_read, c
 
     CloseHandle(file);
     return false;
+}
+
+static uint32_t pop_count(char **data) {
+    uint32_t value = *(uint32_t *)*data;
+    *data += 4;
+    return value;
+}
+
+static void pop_string(char **data, char *buffer) {
+    uint32_t size = pop_count(data);
+    memcpy(buffer, *data, size);
+    buffer[size] = '\0';
+    *data += size;
+}
+
+static unsigned char *pop_function_blob(char **data) {
+    uint32_t size = pop_count(data);
+    unsigned char *value = *data;
+    *data += size * 4;
+    return value;
+}
+
+bool rasterizer_dx9_shader_load_effect_collection_from_binary(void) {
+    void *buffer;
+    size_t bytes_read;
+    ASSERT(rasterizer_dx9_shader_read_binary_file(&buffer, &bytes_read, "shaders/EffectCollection_ps_2_0.enc"));
+
+    char name[256];
+    char *data = buffer;
+    uint32_t shaders_count = pop_count(&data);
+
+    IDirect3DDevice9 *device = rasterizer_dx9_device();
+    ASSERT(device != NULL);
+
+    *effect_collection_buffer = GlobalAlloc(GPTR, sizeof(RasterizerDx9ShaderEffect) * shaders_count);
+    *effect_collection_effect_count = shaders_count;
+    if(*effect_collection_buffer == NULL) {
+        fprintf(stderr, "Failed to allocate memory for shader effects.\n");
+        return false;
+    }
+
+    for(size_t i = 0; i < shaders_count; i++) {
+        RasterizerDx9ShaderEffect *effect = &(*effect_collection_buffer)[i];
+        pop_string(&data, effect->name);
+        effect->pixel_shader_count = pop_count(&data);
+        effect->pixel_shaders = GlobalAlloc(GPTR, sizeof(RasterizerDx9PixelShader) * effect->pixel_shader_count);
+        if(effect->pixel_shaders == NULL) {
+            fprintf(stderr, "Failed to allocate memory for pixel shaders.\n");
+            return false;
+        }
+        for(size_t j = 0; j < effect->pixel_shader_count; j++) {
+            RasterizerDx9PixelShader *shader = &effect->pixel_shaders[j];
+            pop_string(&data, shader->name);
+            unsigned char *shader_function = pop_function_blob(&data);
+            ASSERT(IDirect3DDevice9_CreatePixelShader(device, (DWORD *)shader_function, &shader->pixel_shader) == D3D_OK);
+        }
+    }
+
+    GlobalFree(buffer);
+
+    return true;
+}
+
+bool rasterizer_dx9_shader_load_effect_collection_from_sources(void) {
+    
+}
+
+RasterizerDx9ShaderEffect *rasterizer_dx9_get_shader_effect(uint16_t index) {
+    ASSERT(index < SHADER_EFFECT_MAX);
+    return shader_effects[index].effect;
 }

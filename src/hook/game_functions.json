@@ -33,6 +33,10 @@
     "shader_texture_animation_evaluate": {"address": "0x543250", "replace": false, "arguments": ["0", "4", "8", "12", "16", "20", "esi", "ecx", "ebx", "edi"]},
     "math_periodic_function_evaluate": {"address": "0x5ccf80", "replace": false, "use_return_value": true, "arguments": ["0", "4", "eax"]},
     "rasterizer_transparent_geometry_group_draw_vertices": {"address": "0x536550", "replace": false, "arguments": ["0", "ecx"]},
+    "rasterizer_transparent_geometry_group_draw": {"address": "0x536740", "replace": false, "arguments": ["0", "4"]},
+    "numeric_countdown_timer_get": {"address": "0x5434c0", "replace": false, "use_return_value": true, "arguments": ["eax"]},
+    "rasterizer_shader_transparent_chicago_preprocess": {"address": "0x53ae90", "replace": false, "use_return_value": true, "arguments": ["ebx"]},
     "rasterizer_dx9_shader_decrypt_binary_file": {"address": "0x51d080", "replace": true, "use_return_value": true, "arguments": ["ebx", "eax"]},
-    "rasterizer_dx9_shader_read_binary_file": {"address": "0x51d0f0", "replace": true, "use_return_value": true, "arguments": ["0", "4", "ecx"]}
+    "rasterizer_dx9_shader_read_binary_file": {"address": "0x51d0f0", "replace": true, "use_return_value": true, "arguments": ["0", "4", "ecx"]},
+    "rasterizer_dx9_shader_load_effect_collection_from_binary": {"address": "0x532c20", "replace": true, "use_return_value": true}
 }

@@ -68,18 +68,33 @@ Depending on your system, you may need to modify the toolchain file to match you
 There are some projects and sites that have been used as a reference for understanding the game and creating this project. Some of them are:
 
 - [Demon](https://github.com/Aerocatia/demon) 
-    - Halo PC Demo re-implementation project.
+
+    Halo PC Demo re-implementation project.
+
 - [Ringhopper](https://github.com/FishAndRips/ringhopper)
-    - A toolkit for creating and manipulating tag data for Halo CE.
+    
+    A toolkit for creating and manipulating tag data for Halo CE.
+
 - [Chimera](https://github.com/SnowyMouse/chimera) 
-    - A mod for Halo Custom Edition that adds new features and fixes bugs.
+    
+    A mod for Halo Custom Edition that adds new features and fixes bugs.
+
 - [OpenSauce](https://github.com/MirisWisdom/OpenSauce) 
-    - Another mod for Halo Custom Edition that extends the game's engine capabilities.
+    
+    Another mod for Halo Custom Edition that extends the game's engine capabilities.
+
 - [C20](https://c20.reclaimers.net/) 
-    - A wiki with a lot of knowledge about Halo CE.
+     
+    A wiki with a lot of knowledge about Halo CE.
+
 - [butcher.doc](http://game-tech.com/Talks/Butcher.doc) 
-    - A document that seems to be some kind of report about the Halo 2 engine.
+    
+    A document that seems to be some kind of report about the Halo 2 engine.
+
 - [Tempera](https://github.com/Dwood15/Tempera) 
-    - Another reverse engineering project for Halo PC.
+    
+    Another reverse engineering project for Halo PC.
+
 - [halo-re](https://github.com/halo-re/halo) 
-    - A project that aims to reverse engineer the original release of Halo: Combat Evolved on Xbox.
+    
+    A project that aims to reverse engineer the original release of Halo: Combat Evolved on Xbox.

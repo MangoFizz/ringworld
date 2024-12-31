@@ -27,14 +27,12 @@ TagHandle lookup_tag(const char *path, TagGroupFourCC group) {
     return NULL_HANDLE;
 }
 
-void *get_tag_data(TagHandle tag_handle) {
-    return (*tag_data_header_loaded)->tags[tag_handle.index].data;
-}
-
-void *tag_get_data(TagHandle tag_handle, TagGroupFourCC group) {
+void *tag_get_data(TagGroupFourCC group, TagHandle tag_handle) {
     ASSERT(tag_handle.index != NULL_HANDLE.index);
     TagEntry *tag = &(*tag_data_header_loaded)->tags[tag_handle.index];
-    ASSERT(tag->primary_group == group);
+    if(tag->primary_group != group && tag->secondary_group != group && tag->tertiary_group != group) {
+        crashf("tag group mismatch: %s is not a %s", tag->path, group_fourcc_to_name(group));
+    }
     return tag->data;
 }
 

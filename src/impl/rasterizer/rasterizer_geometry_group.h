@@ -9,6 +9,8 @@ extern "C" {
 #include "../object/object.h"
 #include "../tag/definitions/shader.h"
 #include "../tag/definitions/bitmap.h"
+#include "rasterizer_dx9_vertex.h"
+#include "rasterizer_dx9.h"
 
 typedef struct RenderAnimation {
     ColorRGB *colors;
@@ -34,23 +36,6 @@ typedef struct RenderModelEffect {
 } RenderModelEffect;
 _Static_assert(sizeof(RenderModelEffect) == 0x28);
 
-typedef struct TriangleBuffer {
-    int16_t type;
-    uint32_t count;
-    uint32_t offset;
-    void *data;
-} TriangleBuffer;
-_Static_assert(sizeof(TriangleBuffer) == 0x10);
-
-typedef struct VertexBuffer {
-    int16_t type;
-    int count;
-    int offset;
-    void *base_address;
-    void *vertex_buffer;
-} VertexBuffer;
-_Static_assert(sizeof(VertexBuffer) == 0x14);
-
 typedef struct RenderDistantLight {
     ColorRGB color;
     VectorXYZ direction;
@@ -62,7 +47,7 @@ typedef struct RenderLighting {
     int16_t distant_light_count;
     RenderDistantLight distant_lights[2];
     int16_t point_light_count;
-    int point_light_indices[2];
+    int32_t point_light_indices[2];
     ColorARGB reflection_tint_color;
     VectorXYZ shadow_vector;
     ColorRGB shadow_color;
@@ -122,7 +107,7 @@ _Static_assert(sizeof(TransparentGeometryGroup) == 0xA8);
  * @param group transparent geometry group
  * @return vertex buffer type
  */
-uint16_t rasterizer_get_vertex_buffer_type(TransparentGeometryGroup *group);
+VertexBufferType rasterizer_geometry_group_get_vertex_buffer_type(TransparentGeometryGroup *group);
 
 /**
  * Draw a transparent geometry group

@@ -65,7 +65,7 @@ Widget *ui_widget_load_by_name_or_tag(const char *definition_tag_path, TagHandle
         }
     }
 
-    UIWidgetDefinition *definition = get_tag_data(definition_tag);
+    UIWidgetDefinition *definition = tag_get_data(TAG_GROUP_UI_WIDGET_DEFINITION, definition_tag);
     Widget *widget = memory_pool_new_block(*ui_widget_memory_pool, sizeof(Widget));
     if(widget == NULL) {
         CRASHF_DEBUG("failed to allocate memory for widget");
@@ -84,7 +84,7 @@ Widget *ui_widget_load_by_name_or_tag(const char *definition_tag_path, TagHandle
         ui_widget_globals->active_widget[0] = widget;
         
         if(!HANDLE_IS_NULL(topmost_widget_definition_handle)) {
-            UIWidgetDefinition *topmost_definition = get_tag_data(topmost_widget_definition_handle);
+            UIWidgetDefinition *topmost_definition = tag_get_data(TAG_GROUP_UI_WIDGET_DEFINITION, topmost_widget_definition_handle);
             if(topmost_definition->flags.dont_push_history == false) {
                 WidgetHistoryNode history_node;
                 history_node.previous_menu = topmost_widget_definition_handle;
@@ -141,7 +141,7 @@ void ui_widget_new_instance(int16_t controller_index, UIWidgetDefinition *widget
     }
 
     if(!HANDLE_IS_NULL(widget_definition->background_bitmap.tag_handle)) {
-        Bitmap *background_bitmap = get_tag_data(widget_definition->background_bitmap.tag_handle);
+        Bitmap *background_bitmap = tag_get_data(TAG_GROUP_BITMAP, widget_definition->background_bitmap.tag_handle);
         widget->animation_data.number_of_sprite_frames = background_bitmap->bitmap_group_sequence.elements[0].bitmap_count;
     }
     
@@ -166,7 +166,7 @@ void ui_widget_new_instance(int16_t controller_index, UIWidgetDefinition *widget
 
     if(widget->focused_child == NULL) {
         for(Widget *child = widget->child; child != NULL; child = child->next) {
-            UIWidgetDefinition *child_definition = get_tag_data(child->definition_tag_handle);
+            UIWidgetDefinition *child_definition = tag_get_data(TAG_GROUP_UI_WIDGET_DEFINITION, child->definition_tag_handle);
             if(child->never_receive_events == false && child_definition->event_handlers.count > 0 || ui_widget_is_list(child)) {
                 ui_widget_instance_give_focus_directly(widget, child);
             }
@@ -198,7 +198,7 @@ bool ui_widget_load_children_recursive(UIWidgetDefinition *widget_definition, Wi
     bool result = true;
     
     if(widget_definition->flags_2.list_items_from_string_list_tag) {
-        UnicodeStringList *string_list = get_tag_data(widget_definition->text_label_unicode_strings_list.tag_handle);
+        UnicodeStringList *string_list = tag_get_data(TAG_GROUP_UNICODE_STRING_LIST, widget_definition->text_label_unicode_strings_list.tag_handle);
         ui_widget_globals->dont_load_children_recursive = true;
         for(size_t i = 0; i < string_list->strings.count; i++) {
             Widget *child = ui_widget_load_by_name_or_tag(NULL, widget->definition_tag_handle, widget, widget->local_player_index, NULL_HANDLE, NULL_HANDLE, -1);
@@ -279,7 +279,7 @@ bool ui_widget_load_children_recursive(UIWidgetDefinition *widget_definition, Wi
 
         Widget *child = widget->child;
         if(child != NULL) {
-            UIWidgetDefinition *child_definition = get_tag_data(child->definition_tag_handle);
+            UIWidgetDefinition *child_definition = tag_get_data(TAG_GROUP_UI_WIDGET_DEFINITION, child->definition_tag_handle);
             while(!ui_widget_is_list(widget) && (widget->child->never_receive_events || 
                   (child_definition->event_handlers.count == 0 && !ui_widget_is_list(child)))) {
                 
@@ -311,7 +311,7 @@ void ui_widget_instance_give_focus_directly(Widget *widget, Widget *child) {
     if(child->never_receive_events) {
         Widget *aux;
         for(aux = child->next; aux != NULL; aux = aux->next) {
-            UIWidgetDefinition *definition = get_tag_data(aux->definition_tag_handle);
+            UIWidgetDefinition *definition = tag_get_data(TAG_GROUP_UI_WIDGET_DEFINITION, aux->definition_tag_handle);
             if(aux->never_receive_events == false) {
                 if(definition->event_handlers.count > 0 || ui_widget_is_list(aux)) {
                     child = aux;
@@ -323,14 +323,14 @@ void ui_widget_instance_give_focus_directly(Widget *widget, Widget *child) {
             Widget *first_child = child->parent;
             if(first_child != NULL) {
                 for(aux = first_child->child; aux != NULL; aux = aux->next) {
-                    UIWidgetDefinition *definition = get_tag_data(aux->definition_tag_handle);
+                    UIWidgetDefinition *definition = tag_get_data(TAG_GROUP_UI_WIDGET_DEFINITION, aux->definition_tag_handle);
                     if(aux->never_receive_events == false && definition->event_handlers.count > 0 || ui_widget_is_list(aux)) {
                         break;
                     }
                 }
                 if(aux == first_child->focused_child) {
                     for(aux = child->previous; aux != NULL; aux = aux->previous) {
-                        UIWidgetDefinition *definition = get_tag_data(aux->definition_tag_handle);
+                        UIWidgetDefinition *definition = tag_get_data(TAG_GROUP_UI_WIDGET_DEFINITION, aux->definition_tag_handle);
                         if(aux->never_receive_events == false && definition->event_handlers.count > 0 || ui_widget_is_list(aux)) {
                             if(aux != NULL) {
                                 child = aux;

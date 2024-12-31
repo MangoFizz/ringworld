@@ -15,7 +15,8 @@
 extern RasterizerDx9ShaderEffectEntry *shader_effects;
 extern RasterizerDx9ShaderEffect **effect_collection_buffer;
 extern uint32_t *effect_collection_effect_count;
-extern IDirect3DDevice9 **d3d9_device;
+extern short *vertex_shader_permutations;
+extern VertexShader *vertex_shaders;
 
 bool rasterizer_dx9_shader_decrypt_binary_file(void *data, size_t data_size) {
     ASSERT(data != NULL);
@@ -93,6 +94,11 @@ static unsigned char *pop_function_blob(char **data) {
     return value;
 }
 
+/**
+ * @note The original function used to check the hardware capabilities to determine 
+ * which shader effect collection to load. This implementation assumes the hardware
+ * is capable of running the highest shader effect collection available at the time.
+ */
 bool rasterizer_dx9_shader_load_effect_collection_from_binary(void) {
     void *buffer;
     size_t bytes_read;
@@ -134,11 +140,32 @@ bool rasterizer_dx9_shader_load_effect_collection_from_binary(void) {
     return true;
 }
 
-bool rasterizer_dx9_shader_load_effect_collection_from_sources(void) {
-    
+void rasterizer_dx9_shader_dispose_effects(void) {
+    for(size_t i = 0; i < *effect_collection_effect_count; i++) {
+        RasterizerDx9ShaderEffect *effect = &(*effect_collection_buffer)[i];
+        for(size_t j = 0; j < effect->pixel_shader_count; j++) {
+            RasterizerDx9PixelShader *shader = &effect->pixel_shaders[j];
+            if(shader->pixel_shader != NULL) {
+                IDirect3DPixelShader9_Release(shader->pixel_shader);
+            }
+        }
+        GlobalFree(effect->pixel_shaders);
+    }
+    GlobalFree(*effect_collection_buffer);
+    *effect_collection_buffer = NULL;
 }
 
-RasterizerDx9ShaderEffect *rasterizer_dx9_get_shader_effect(uint16_t index) {
-    ASSERT(index < SHADER_EFFECT_MAX);
+RasterizerDx9ShaderEffect *rasterizer_dx9_shader_get_effect(uint16_t index) {
+    ASSERT(index < NUM_OF_SHADER_EFFECTS);
     return shader_effects[index].effect;
+}
+
+IDirect3DVertexShader9 *rasterizer_dx9_get_vertex_shader(uint16_t index) {
+    ASSERT(index < NUM_OF_VERTEX_SHADERS);
+    return vertex_shaders[index].shader;
+}
+
+
+IDirect3DVertexShader9 *rasterizer_dx9_shader_get_vertex_shader_for_permutation(uint16_t vertex_shader_permutation, VertexBufferType vertex_buffer_type) {
+    return rasterizer_dx9_get_vertex_shader(vertex_shader_permutations[vertex_shader_permutation + vertex_buffer_type * 6]);
 }

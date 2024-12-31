@@ -67,9 +67,12 @@ add_library(ringworld STATIC
     src/impl/multiplayer/mode.c
     src/impl/memory/table.c
     src/impl/player/player.c
+    src/impl/rasterizer/rasterizer_dx9_shader_compiler.c
     src/impl/rasterizer/rasterizer_dx9_shader.c
+    src/impl/rasterizer/rasterizer_dx9_vertex.c
     src/impl/rasterizer/rasterizer_dx9.c
     src/impl/rasterizer/rasterizer_geometry_group.c
+    src/impl/rasterizer/rasterizer_shader_transparent_chicago.c
     src/impl/script/hsc.c
     src/impl/shader/shader.c
     src/impl/tag/tag.c
@@ -81,3 +84,9 @@ add_library(ringworld STATIC
 )
 
 add_dependencies(ringworld ringworld-tag-definitions-headers)
+
+add_executable(ringworld-tool
+    src/tool/main.c
+)
+
+target_link_libraries(ringworld-tool d3d9 d3dx9)

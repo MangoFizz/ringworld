@@ -146,10 +146,10 @@ typedef struct Plane3D {
 } Plane3D;
 _Static_assert(sizeof(Plane3D) == 0x10);
 
-// TODO: REPLACE WITH RINGWORLD DEFINITION
-struct Matrix {
+// TODO: REPLACE THIS STRUCTURE WITH A NEW ONE
+typedef struct Matrix {
     VectorXYZ m[3];
-};
+} Matrix;
 
 typedef struct Matrix4x3 {
     float scale;

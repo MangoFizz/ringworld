@@ -9,110 +9,8 @@ extern "C" {
 
 #include "../tag/definitions/enum.h"
 #include "../tag/definitions/bitmap.h"
+#include "../tag/definitions/shader.h"
 #include "../tag/tag.h"
-
-enum VertexShaderIndex {
-    VSFUNC_CONVOLUTION = 0,
-    VSFUNC_DEBUG,
-    VSFUNC_DECAL,
-    VSFUNC_DETAIL_OBJECT_TYPE0,
-    VSFUNC_DETAIL_OBJECT_TYPE1,
-    VSFUNC_EFFECT,
-    VSFUNC_EFFECT_MULTITEXTURE,
-    VSFUNC_EFFECT_MULTITEXTURE_SCREENSPACE,
-    VSFUNC_EFFECT_ZSPRITE,
-    VSFUNC_ENVIRONMENT_DIFFUSE_LIGHT,
-    VSFUNC_ENVIRONMENT_DIFFUSE_LIGHT_FF,
-    VSFUNC_ENVIRONMENT_FOG,
-    VSFUNC_ENVIRONMENT_FOG_SCREEN,
-    VSFUNC_ENVIRONMENT_LIGHTMAP,
-    VSFUNC_ENVIRONMENT_REFLECTION_BUMPED,
-    VSFUNC_ENVIRONMENT_REFLECTION_FLAT,
-    VSFUNC_ENVIRONMENT_REFLECTION_LIGHTMAP_MASK,
-    VSFUNC_ENVIRONMENT_REFLECTION_MIRROR,
-    VSFUNC_ENVIRONMENT_REFLECTION_RADIOSITY,
-    VSFUNC_ENVIRONMENT_SHADOW,
-    VSFUNC_ENVIRONMENT_SPECULAR_LIGHT,
-    VSFUNC_ENVIRONMENT_SPECULAR_SPOT_LIGHT,
-    VSFUNC_ENVIRONMENT_SPECULAR_LIGHTMAP,
-    VSFUNC_ENVIRONMENT_TEXTURE,
-    VSFUNC_LENS_FLARE,
-    VSFUNC_MODEL_FOGGED,
-    VSFUNC_MODEL,
-    VSFUNC_MODEL_FF,
-    VSFUNC_MODEL_FAST,
-    VSFUNC_MODEL_SCENERY,
-    VSFUNC_MODEL_ACTIVE_CAMOUFLAGE,
-    VSFUNC_MODEL_ACTIVE_CAMOUFLAGE_FF,
-    VSFUNC_MODEL_FOG_SCREEN,
-    VSFUNC_MODEL_SHADOW,
-    VSFUNC_MODEL_ZBUFFER,
-    VSFUNC_SCREEN,
-    VSFUNC_SCREEN2,
-    VSFUNC_TRANSPARENT_GENERIC,
-    VSFUNC_TRANSPARENT_GENERIC_LIT_M,
-    VSFUNC_TRANSPARENT_GENERIC_M,
-    VSFUNC_TRANSPARENT_GENERIC_OBJECT_CENTERED,
-    VSFUNC_TRANSPARENT_GENERIC_OBJECT_CENTERED_M,
-    VSFUNC_TRANSPARENT_GENERIC_REFLECTION,
-    VSFUNC_TRANSPARENT_GENERIC_REFLECTION_M,
-    VSFUNC_TRANSPARENT_GENERIC_SCREENSPACE,
-    VSFUNC_TRANSPARENT_GENERIC_SCREENSPACE_M,
-    VSFUNC_TRANSPARENT_GENERIC_VIEWER_CENTERED,
-    VSFUNC_TRANSPARENT_GENERIC_VIEWER_CENTERED_M,
-    VSFUNC_TRANSPARENT_GLASS_DIFFUSE_LIGHT,
-    VSFUNC_TRANSPARENT_GLASS_DIFFUSE_LIGHT_M,
-    VSFUNC_TRANSPARENT_GLASS_REFLECTION_BUMPED,
-    VSFUNC_TRANSPARENT_GLASS_REFLECTION_BUMPED_M,
-    VSFUNC_TRANSPARENT_GLASS_REFLECTION_FLAT,
-    VSFUNC_TRANSPARENT_GLASS_REFLECTION_FLAT_M,
-    VSFUNC_TRANSPARENT_GLASS_REFLECTION_MIRROR,
-    VSFUNC_TRANSPARENT_GLASS_TINT,
-    VSFUNC_TRANSPARENT_GLASS_TINT_M,
-    VSFUNC_TRANSPARENT_METER,
-    VSFUNC_TRANSPARENT_METER_M,
-    VSFUNC_TRANSPARENT_PLASMA_M,
-    VSFUNC_TRANSPARENT_WATER_OPACITY,
-    VSFUNC_TRANSPARENT_WATER_OPACITY_M,
-    VSFUNC_TRANSPARENT_WATER_REFLECTION,
-    VSFUNC_TRANSPARENT_WATER_REFLECTION_M,
-    VERTEX_SHADER_FUNCTIONS_MAX
-};
-
-enum VertexShaderDeclaration {
-    VSDECL_ENVIRONMENT,
-    VSDECL_ENVIRONMENT_C,
-    VSDECL_ENVIRONMENT_LIGHTMAP,
-    VSDECL_ENVIRONMENT_LIGHTMAP_C,
-    VSDECL_MODEL,
-    VSDECL_MODEL_C,
-    VSDECL_UNLIT,
-    VSDECL_DYNAMIC_UNLIT,
-    VSDECL_SCREEN,
-    VSDECL_DEBUG,
-    VSDECL_DECAL,
-    VSDECL_DETAIL_OBJECT,
-    VSDECL_ENVIRONMENT_FF,
-    VSDECL_ENVIRONMENT_LIGHTMAP_FF,
-    VSDECL_MODEL_UNCOMPRESSED_FF,
-    VSDECL_MODEL_PROCESSED,
-    VSDECL_UNLIT_ZSPRITE,
-    VSDECL_WIDGET,
-    VERTEX_SHADER_DECLARATIONS_MAX,
-};
-
-typedef struct VertexShader {
-    IDirect3DVertexShader9 *shader;
-    const char *filepath;
-} VertexShader;
-_Static_assert(sizeof(VertexShader) == 0x8);
-
-typedef struct VertexDeclaration {
-    IDirect3DVertexDeclaration9 *declaration;
-    uint32_t fvf;
-    uint32_t vertex_processing_method;
-} VertexDeclaration;
-_Static_assert(sizeof(VertexDeclaration) == 0xC);
 
 typedef struct RenderCamera {
     VectorXYZ position;
@@ -221,38 +119,28 @@ _Static_assert(sizeof(FrameParameters) == 0x10);
 RenderGlobals *get_render_globals(void);
 
 /**
+ * Get the frame parameters.
+ * @return The frame parameters.
+ */
+FrameParameters *get_frame_parameters(void);
+
+/**
  * Get the pointer to the Direct3D 9 device.
 * @return pointer to D3D9 device
 */
 IDirect3DDevice9 *rasterizer_dx9_device(void);
 
 /**
- * Get the vertex shader for the given index.
- * @param index The index of the vertex shader.
- * @return The vertex shader.
+ * Get the pointer to the Direct3D 9 device capabilities.
+ * @return pointer to D3D9 device capabilities
  */
-IDirect3DVertexShader9 *rasterizer_dx9_get_vertex_shader(uint16_t vsf_index);
-
-/**
- * Get the vertex shader for the given index.
- * @param vertex_shader_permutation 
- * @param vertex_buffer_type 
- * @return Pointer to the vertex shader.
- */
-IDirect3DVertexShader9 *rasterizer_dx9_get_vertex_shader_for_permutation(uint16_t vertex_shader_permutation, uint16_t vertex_buffer_type);
+D3DCAPS9 *rasterizer_dx9_device_caps(void);
 
 /**
  * Set the vertex shader.
  * @param vertex_shader The vertex shader to set.
  */
 void rasterizer_dx9_set_vertex_shader(IDirect3DVertexShader9 *vertex_shader);
-
-/**
- * Get the vertex declaration at the given index
- * @param vertex_buffer_type The index of the vertex declaration.
- * @return The vertex declaration interface.
- */
-IDirect3DVertexDeclaration9 *rasterizer_dx9_get_vertex_declaration(uint16_t vertex_buffer_type);
 
 /**
  * Set the vertex declaration.
@@ -287,7 +175,7 @@ void rasterizer_dx9_set_framebuffer_blend_function(FramebufferBlendFunction blen
  * @param bitmap_tag The tag handle of the bitmap.
  * @return True if the texture was set successfully, false otherwise.
  */
-bool rasterizer_dx9_set_bitmap_data_texture(uint16_t stage, BitmapType bitmap_type, BitmapUsage bitmap_usage, uint16_t bitmap_data_index, TagHandle bitmap_tag);
+bool rasterizer_dx9_set_bitmap_data_texture(uint16_t stage, ShaderFirstMapType first_map_type, BitmapUsage bitmap_usage, uint16_t bitmap_data_index, TagHandle bitmap_tag);
 
 /**
  * Set the sampler state

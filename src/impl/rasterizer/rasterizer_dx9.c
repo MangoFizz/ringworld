@@ -3,29 +3,28 @@
 #include <d3d9.h>
 
 #include "../exception/exception.h"
+#include "rasterizer_dx9_vertex.h"
 #include "rasterizer_dx9.h"
 
 extern IDirect3DDevice9 **d3d9_device;
-extern VertexShader *vertex_shaders;
-extern short *vertex_shader_permutations;
-extern VertexDeclaration **vertex_declarations;
+extern D3DCAPS9 *d3d9_device_caps;
 extern RenderGlobals *render_globals;
+extern FrameParameters *frame_parameters;
 
 RenderGlobals *get_render_globals(void) {
     return render_globals;
+}
+
+FrameParameters *get_frame_parameters(void) {
+    return frame_parameters;
 }
 
 IDirect3DDevice9 *rasterizer_dx9_device(void) {
     return *d3d9_device;
 }
 
-IDirect3DVertexShader9 *rasterizer_dx9_get_vertex_shader(uint16_t index) {
-    ASSERT(index < VERTEX_SHADER_FUNCTIONS_MAX);
-    return vertex_shaders[index].shader;
-}
-
-IDirect3DVertexShader9 *rasterizer_dx9_get_vertex_shader_for_permutation(uint16_t vertex_shader_permutation, uint16_t vertex_buffer_type) {
-    return rasterizer_dx9_get_vertex_shader(vertex_shader_permutations[vertex_shader_permutation + vertex_buffer_type * 6]);
+D3DCAPS9 *rasterizer_dx9_device_caps(void) {
+    return d3d9_device_caps;
 }
 
 void rasterizer_dx9_set_vertex_shader(IDirect3DVertexShader9 *vertex_shader) {
@@ -33,14 +32,9 @@ void rasterizer_dx9_set_vertex_shader(IDirect3DVertexShader9 *vertex_shader) {
     IDirect3DDevice9_SetVertexShader(*d3d9_device, vertex_shader);
 }
 
-IDirect3DVertexDeclaration9 *rasterizer_dx9_get_vertex_declaration(uint16_t vertex_buffer_type) {
-    ASSERT(vertex_buffer_type < VERTEX_SHADER_DECLARATIONS_MAX);
-    return (*vertex_declarations)[vertex_buffer_type].declaration;
-}
-
 void rasterizer_dx9_set_vertex_declaration(uint16_t vertex_buffer_type) {
     ASSERT(*d3d9_device != NULL);
-    IDirect3DDevice9_SetVertexDeclaration(*d3d9_device, rasterizer_dx9_get_vertex_declaration(vertex_buffer_type));
+    IDirect3DDevice9_SetVertexDeclaration(*d3d9_device, rasterizer_dx9_vertex_get_declaration(vertex_buffer_type));
 }
 
 void rasterizer_dx9_set_pixel_shader(IDirect3DPixelShader9 *pixel_shader) {

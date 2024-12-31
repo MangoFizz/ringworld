@@ -9,7 +9,7 @@ void exception_handler(void) {
     CRASHF_DEBUG("Exception handler tripped. Possible segfault detected.");
 }
 
-void debugf(const char *fmt, ...) {
+void debug_printf(const char *fmt, ...) {
     va_list args;
     va_start(args, fmt);
     vfprintf(stderr, fmt, args);

@@ -11,12 +11,6 @@ extern "C" {
 
 typedef union TableResourceHandle ObjectHandle;
 
-typedef struct ModelNode {
-    float scale;
-    VectorXYZ rotation[3];
-    VectorXYZ position;
-} ModelNode;
-
 typedef struct BaseObjectFlags {
     Bool no_collision : 1;
     Bool on_ground : 1;

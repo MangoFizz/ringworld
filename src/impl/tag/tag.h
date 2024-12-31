@@ -161,18 +161,11 @@ TagHandle lookup_tag(const char *path, TagGroupFourCC group);
 
 /**
  * Get the data for the tag.
+ * @param tag_group group of the tag
  * @param tag_handle tag handle
  * @return pointer to tag data
  */
-void *get_tag_data(TagHandle tag_handle);
-
-/**
- * Get the data for the tag.
- * @param tag_handle tag handle
- * @param group group of the tag
- * @return pointer to tag data
- */
-void *tag_get_data(TagHandle tag_handle, TagGroupFourCC group);
+void *tag_get_data(TagGroupFourCC tag_group, TagHandle tag_handle);
 
 /**
  * Get an element from a reflexive block.

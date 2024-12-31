@@ -25,7 +25,7 @@ void crash_forbidden_function(const char *function_name, void *from);
  *
  * @param fmt format
  */
-void debugf(const char *fmt, ...);
+void debug_printf(const char *fmt, ...);
 
 #define STR2(s) # s
 #define STR(s) STR2(s)

@@ -6,6 +6,7 @@ extern "C" {
 #endif
 
 #include "../tag/definitions/shader.h"
+#include "../tag/definitions/bitmap.h"
 #include "../rasterizer/rasterizer_geometry_group.h"
 
 /**
@@ -37,6 +38,13 @@ uint16_t shader_get_vertex_shader_permutation(Shader *shader);
  * @param v_transform_reference The V transform reference.
  */
 void shader_texture_animation_evaluate(float map_u_scale, float map_v_scale, float map_u_offset, float map_v_offset, float map_rotation, float frame_params, void *texture_animation, RenderAnimation *render_animation, float *u_transform_reference, float *v_transform_reference);
+
+/**
+ * Get the bitmap type for a shader transparent generic first map.
+ * @param first_map_type The first map type.
+ * @return The bitmap type.
+ */
+BitmapType shader_bitmap_type_for_shader_transparent_generic_first_map(ShaderFirstMapType first_map_type);
 
 #ifdef __cplusplus
 }

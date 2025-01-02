@@ -87,6 +87,8 @@ add_library(ringworld STATIC
 
 add_dependencies(ringworld ringworld-tag-definitions-headers)
 
+target_link_libraries(ringworld d3dcompiler)
+
 add_executable(ringworld-tool
     src/tool/main.c
 )

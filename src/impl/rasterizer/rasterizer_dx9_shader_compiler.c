@@ -1,9 +1,8 @@
 #include <stdio.h>
-#define COBJMACROS 
 
 #include "rasterizer_dx9_shader_compiler.h"
 
-bool rasterizer_dx9_shader_compiler_compile_psh(const char *source, const char *entry, const char *profile, D3D_SHADER_MACRO *defines, ID3DBlob **compiled_shader) {
+bool rasterizer_dx9_shader_compiler_compile_shader_from_blob(const char *source, const char *entry, const char *profile, D3D_SHADER_MACRO *defines, ID3DBlob **compiled_shader) {
     ID3DBlob *error_messages = NULL;
     HRESULT result = D3DCompile(source, strlen(source), NULL, defines, NULL, entry, profile, 0, 0, compiled_shader, &error_messages);
     if(FAILED(result)) {
@@ -14,4 +13,33 @@ bool rasterizer_dx9_shader_compiler_compile_psh(const char *source, const char *
         return false;
     }
     return true;
+}
+
+bool rasterizer_dx9_shader_compiler_compile_shader_from_file(const char *filename, const char *entry, const char *profile, D3D_SHADER_MACRO *defines, ID3DBlob **compiled_shader) {
+    void *buffer = NULL;
+    int bytes_read = 0;
+
+    HANDLE file = CreateFileA(filename, GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_SUPPORTS_EXTENDED_ATTRIBUTES, NULL);
+    if(file == INVALID_HANDLE_VALUE) {
+        return false;
+    }
+    
+    size_t file_size = GetFileSize(file, NULL);
+    if(file_size == INVALID_FILE_SIZE) {
+        CloseHandle(file);
+        return false;
+    }
+
+    HGLOBAL buffer_handle = GlobalAlloc(GMEM_FIXED, file_size);
+    if(buffer_handle != NULL) {
+        bool success = ReadFile(file, buffer_handle, file_size, (LPDWORD)&bytes_read, NULL);
+        if(success) {
+            CloseHandle(file);
+            rasterizer_dx9_shader_compiler_compile_shader_from_blob(buffer, entry, profile, defines, compiled_shader);
+        }
+        GlobalFree(buffer_handle);
+    }
+
+    CloseHandle(file);
+    return false;
 }

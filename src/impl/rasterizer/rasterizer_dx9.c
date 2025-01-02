@@ -8,16 +8,6 @@
 
 extern IDirect3DDevice9 **d3d9_device;
 extern D3DCAPS9 *d3d9_device_caps;
-extern RenderGlobals *render_globals;
-extern FrameParameters *frame_parameters;
-
-RenderGlobals *get_render_globals(void) {
-    return render_globals;
-}
-
-FrameParameters *get_frame_parameters(void) {
-    return frame_parameters;
-}
 
 IDirect3DDevice9 *rasterizer_dx9_device(void) {
     return *d3d9_device;

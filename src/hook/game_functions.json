@@ -31,7 +31,7 @@
     "rasterizer_dx9_set_framebuffer_blend_function": {"address": "0x51be80", "replace": false, "arguments": ["ecx"]},
     "rasterizer_dx9_set_bitmap_data_texture": {"address": "0x51c060", "replace": false, "use_return_value": true, "arguments": ["0", "4", "8", "12", "eax"]},
     "shader_texture_animation_evaluate": {"address": "0x543250", "replace": false, "arguments": ["0", "4", "8", "12", "16", "20", "esi", "ecx", "ebx", "edi"]},
-    "math_periodic_function_evaluate": {"address": "0x5ccf80", "replace": false, "use_return_value": true, "arguments": ["0", "4", "eax"]},
+    "math_periodic_function_evaluate": {"address": "0x4cfdb0", "replace": false, "use_return_value": true, "return_64_bit_value": true, "arguments": ["0", "4", "eax"]},
     "rasterizer_transparent_geometry_group_draw_vertices": {"address": "0x536550", "replace": false, "arguments": ["0", "ecx"]},
     "rasterizer_transparent_geometry_group_draw": {"address": "0x536740", "replace": false, "arguments": ["0", "4"]},
     "numeric_countdown_timer_get": {"address": "0x5434c0", "replace": false, "use_return_value": true, "arguments": ["eax"]},

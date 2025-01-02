@@ -71,8 +71,10 @@ add_library(ringworld STATIC
     src/impl/rasterizer/rasterizer_dx9_shader.c
     src/impl/rasterizer/rasterizer_dx9_vertex.c
     src/impl/rasterizer/rasterizer_dx9.c
+    src/impl/rasterizer/rasterizer_render.c
     src/impl/rasterizer/rasterizer_geometry_group.c
     src/impl/rasterizer/rasterizer_shader_transparent_chicago.c
+    src/impl/rasterizer/rasterizer_shader_transparent_generic.c
     src/impl/script/hsc.c
     src/impl/shader/shader.c
     src/impl/tag/tag.c

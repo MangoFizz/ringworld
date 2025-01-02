@@ -11,11 +11,13 @@
 #include "rasterizer_dx9.h"
 #include "rasterizer_dx9_shader.h"
 #include "rasterizer_dx9_vertex.h"
+#include "rasterizer_render.h"
 #include "rasterizer_shader_transparent_chicago.h"
 
 extern float *shader_transparent_generic_vertex_constants;
 
 void rasterizer_shader_transparent_chicago_draw(TransparentGeometryGroup *group, uint32_t *param_2) {
+    RenderGlobals *render_globals = rasterizer_render_get_globals();
     ShaderTransparentChicago *shader_data = shader_type_assert(group->shader, SHADER_TYPE_SHADER_TRANSPARENT_CHICAGO);
 
     // Not sure about this 
@@ -77,28 +79,28 @@ void rasterizer_shader_transparent_chicago_draw(TransparentGeometryGroup *group,
     }
 
     if(shader_data->maps.count > 0) {
-        float vertex_shader_constants[8 * 4] = {0};
+        float animation_vsh_constants[4][8] = {0};
 
         for(size_t map_index = 0; map_index < 4; map_index++) {
-            if(shader_data->maps.count > map_index) {
+            if(map_index < shader_data->maps.count) {
                 bool is_first_map = map_index == 0;
                 ShaderTransparentChicagoMap *map = TAG_BLOCK_GET_ELEMENT(shader_data->maps, map_index);
                 ShaderFirstMapType first_map_type = shader_data->first_map_type;
-                BitmapType first_map_bitmap_type;
+                BitmapType bitmap_type;
                 if(is_first_map) {
-                    first_map_bitmap_type = shader_bitmap_type_for_shader_transparent_generic_first_map(first_map_type);
+                    bitmap_type = shader_bitmap_type_for_shader_transparent_generic_first_map(first_map_type);
                 }
                 else {
-                    first_map_bitmap_type = 0;
+                    bitmap_type = BITMAP_TYPE_2D_TEXTURES;
                 }
 
                 ASSERT(first_map_type >= 0 && first_map_type < SHADER_FIRST_MAP_TYPE_MAX);
                 ASSERT(shader_data->base.shader_flags.transparent_lit == false || first_map_type == SHADER_FIRST_MAP_TYPE_2D_MAP);
 
-                rasterizer_dx9_set_bitmap_data_texture(map_index, first_map_bitmap_type, BITMAP_USAGE_ALPHA_BLEND, bitmap_data_index, map->map.tag_handle);
+                rasterizer_dx9_set_bitmap_data_texture(map_index, bitmap_type, BITMAP_USAGE_ALPHA_BLEND, bitmap_data_index, map->map.tag_handle);
 
                 D3DTEXTUREADDRESS fisrt_map_texture_mode;
-                switch(first_map_bitmap_type) {
+                switch(bitmap_type) {
                     case BITMAP_TYPE_2D_TEXTURES:
                         fisrt_map_texture_mode = D3DTADDRESS_WRAP;
                         break;
@@ -106,7 +108,7 @@ void rasterizer_shader_transparent_chicago_draw(TransparentGeometryGroup *group,
                         fisrt_map_texture_mode = D3DTADDRESS_CLAMP;
                         break;
                     default:
-                        CRASHF_DEBUG("Unknown bitmap type: %d", first_map_bitmap_type);
+                        CRASHF_DEBUG("Invalid bitmap type: %d", bitmap_type);
                         break;
                 }
 
@@ -114,14 +116,14 @@ void rasterizer_shader_transparent_chicago_draw(TransparentGeometryGroup *group,
                     (is_first_map ? fisrt_map_texture_mode : val)
 
                 #define SELECT_TEXTURE_MODE_IF_CLAMPED(is_clamped, clamp_val, default_val) \
-                    (first_map_bitmap_type == BITMAP_TYPE_2D_TEXTURES && is_clamped ? clamp_val : SELECT_TEXTURE_MODE_IF_FIRST_MAP(default_val))
+                    (bitmap_type == BITMAP_TYPE_2D_TEXTURES && is_clamped ? clamp_val : SELECT_TEXTURE_MODE_IF_FIRST_MAP(default_val))
 
                 D3DTEXTUREADDRESS u_texture_mode = SELECT_TEXTURE_MODE_IF_CLAMPED(map->flags.u_clamped, D3DTADDRESS_CLAMP, D3DTADDRESS_WRAP);
                 D3DTEXTUREADDRESS v_texture_mode = SELECT_TEXTURE_MODE_IF_CLAMPED(map->flags.v_clamped, D3DTADDRESS_CLAMP, D3DTADDRESS_WRAP);
                 D3DTEXTUREADDRESS w_texture_mode = SELECT_TEXTURE_MODE_IF_FIRST_MAP(D3DTADDRESS_WRAP);
 
-                #undef SELECT_TEXTURE_MODE_IF_FIRST_MAP
                 #undef SELECT_TEXTURE_MODE_IF_CLAMPED
+                #undef SELECT_TEXTURE_MODE_IF_FIRST_MAP
 
                 rasterizer_dx9_set_sampler_state(map_index, D3DSAMP_ADDRESSU, u_texture_mode);
                 rasterizer_dx9_set_sampler_state(map_index, D3DSAMP_ADDRESSV, v_texture_mode);
@@ -133,24 +135,24 @@ void rasterizer_shader_transparent_chicago_draw(TransparentGeometryGroup *group,
                 uint32_t maps_count = shader_data->maps.count;
                 if(is_first_map && shader_data->first_map_type != SHADER_FIRST_MAP_TYPE_2D_MAP) {
                     if(shader_data->shader_transparent_chicago_flags.first_map_is_in_screenspace == false) {
-                        vertex_shader_constants[map_index * 8 + 0] = 1.0;
-                        vertex_shader_constants[map_index * 8 + 1] = 0.0;
-                        vertex_shader_constants[map_index * 8 + 2] = 0.0;
-                        vertex_shader_constants[map_index * 8 + 3] = 0.0;
-                        vertex_shader_constants[map_index * 8 + 4] = 0.0;
-                        vertex_shader_constants[map_index * 8 + 5] = 1.0;
-                        vertex_shader_constants[map_index * 8 + 6] = 0.0;
-                        vertex_shader_constants[map_index * 8 + 7] = 0.0;
+                        animation_vsh_constants[map_index][0] = 1.0;
+                        animation_vsh_constants[map_index][1] = 0.0;
+                        animation_vsh_constants[map_index][2] = 0.0;
+                        animation_vsh_constants[map_index][3] = 0.0;
+                        animation_vsh_constants[map_index][4] = 0.0;
+                        animation_vsh_constants[map_index][5] = 1.0;
+                        animation_vsh_constants[map_index][6] = 0.0;
+                        animation_vsh_constants[map_index][7] = 0.0;
                     } 
                     else {
-                        vertex_shader_constants[map_index * 8 + 0] = shader_transparent_generic_vertex_constants[0];
-                        vertex_shader_constants[map_index * 8 + 1] = shader_transparent_generic_vertex_constants[1];
-                        vertex_shader_constants[map_index * 8 + 2] = shader_transparent_generic_vertex_constants[2];
-                        vertex_shader_constants[map_index * 8 + 3] = 0.0;
-                        vertex_shader_constants[map_index * 8 + 4] = shader_transparent_generic_vertex_constants[3];
-                        vertex_shader_constants[map_index * 8 + 5] = shader_transparent_generic_vertex_constants[4];
-                        vertex_shader_constants[map_index * 8 + 6] = shader_transparent_generic_vertex_constants[5];
-                        vertex_shader_constants[map_index * 8 + 7] = 0.0;
+                        animation_vsh_constants[map_index][0] = render_globals->frustum.world_to_view.position.z;
+                        animation_vsh_constants[map_index][1] = render_globals->frustum.world_to_view.scale;
+                        animation_vsh_constants[map_index][2] = render_globals->frustum.world_to_view.forward.i;
+                        animation_vsh_constants[map_index][3] = 0.0;
+                        animation_vsh_constants[map_index][4] = render_globals->frustum.world_to_view.forward.j;
+                        animation_vsh_constants[map_index][5] = render_globals->frustum.world_to_view.forward.k;
+                        animation_vsh_constants[map_index][6] = render_globals->frustum.world_to_view.left.i;
+                        animation_vsh_constants[map_index][7] = 0.0;
                     }
                 }
                 else {
@@ -163,38 +165,38 @@ void rasterizer_shader_transparent_chicago_draw(TransparentGeometryGroup *group,
                     }
 
                     if(!is_first_map || shader_data->shader_transparent_chicago_flags.first_map_is_in_screenspace == false) {
-                        map_v_scale = map_v_scale * group->model_base_map_scale.x;
-                        map_u_scale = map_u_scale * group->model_base_map_scale.y;
+                        map_u_scale = map_u_scale * group->model_base_map_scale.x;
+                        map_v_scale = map_v_scale * group->model_base_map_scale.y;
                     }
 
                     void *texture_animation = &map->u_animation_source;
                     float map_u_offset = map->map_u_offset;
                     float map_v_offset = map->map_v_offset;
                     float map_rotation = map->map_rotation;
-                    FrameParameters *frame_parameters = get_frame_parameters();
+                    FrameParameters *frame_parameters = rasterizer_render_get_frame_parameters();
                     shader_texture_animation_evaluate(map_u_scale, map_v_scale, map_u_offset, map_v_offset, map_rotation,
                                                         frame_parameters->elapsed_time, texture_animation, group->animation, 
-                                                        &vertex_shader_constants[map_index * 8],
-                                                        &vertex_shader_constants[map_index * 8 + 4]);
+                                                        &animation_vsh_constants[map_index][0],
+                                                        &animation_vsh_constants[map_index][4]);
                 }
             }
             else {
-                vertex_shader_constants[map_index * 8 + 0] = 1.0;
-                vertex_shader_constants[map_index * 8 + 1] = 0.0;
-                vertex_shader_constants[map_index * 8 + 2] = 0.0;
-                vertex_shader_constants[map_index * 8 + 3] = 0.0;
-                vertex_shader_constants[map_index * 8 + 4] = 0.0;
-                vertex_shader_constants[map_index * 8 + 5] = 1.0;
-                vertex_shader_constants[map_index * 8 + 6] = 0.0;
-                vertex_shader_constants[map_index * 8 + 7] = 0.0;
+                animation_vsh_constants[map_index][0] = 1.0;
+                animation_vsh_constants[map_index][1] = 0.0;
+                animation_vsh_constants[map_index][2] = 0.0;
+                animation_vsh_constants[map_index][3] = 0.0;
+                animation_vsh_constants[map_index][4] = 0.0;
+                animation_vsh_constants[map_index][5] = 1.0;
+                animation_vsh_constants[map_index][6] = 0.0;
+                animation_vsh_constants[map_index][7] = 0.0;
+                rasterizer_dx9_set_texture(map_index, NULL);
             }
 
         }
 
-        bool success = rasterizer_dx9_set_vertex_shader_constant_f(13, vertex_shader_constants, 8);
-        if(success) {
-           rasterizer_shader_transparent_chicago_preprocess(shader_data);
-        }
+        rasterizer_dx9_set_vertex_shader_constant_f(13, animation_vsh_constants[0], 8);
+        
+        rasterizer_shader_transparent_chicago_preprocess(shader_data);
     
         uint16_t maps_count = shader_data->maps.count;
         if(group->geometry_flags.sky && shader_data->framebuffer_blend_function == FRAMEBUFFER_BLEND_FUNCTION_ALPHA_BLEND) {
@@ -206,30 +208,30 @@ void rasterizer_shader_transparent_chicago_draw(TransparentGeometryGroup *group,
             return;
         }
 
-        float vertex_constants_2[12];
-        vertex_constants_2[0] = 0.0f;
-        vertex_constants_2[1] = 0.0f;
-        vertex_constants_2[2] = 0.0f;
-        vertex_constants_2[3] = 0.0f;
-        vertex_constants_2[4] = 0.0f;
-        vertex_constants_2[5] = 0.0f;
-        vertex_constants_2[6] = 0.0f;
-        vertex_constants_2[7] = 0.0f;
-        vertex_constants_2[8] = 0.0f;
-        vertex_constants_2[9] = 0.0f;
-        vertex_constants_2[10] = 1.0f;
-        vertex_constants_2[11] = 0.0f;
+        float vertex_constants[3 * 4];
+        vertex_constants[0] = 0.0f;
+        vertex_constants[1] = 0.0f;
+        vertex_constants[2] = 0.0f;
+        vertex_constants[3] = 0.0f;
+        vertex_constants[4] = 0.0f;
+        vertex_constants[5] = 0.0f;
+        vertex_constants[6] = 0.0f;
+        vertex_constants[7] = 0.0f;
+        vertex_constants[8] = 0.0f;
+        vertex_constants[9] = 0.0f;
+        vertex_constants[10] = 1.0f;
+        vertex_constants[11] = 0.0f;
 
         if(group->effect.type == RENDER_MODEL_EFFECT_TYPE_ACTIVE_CAMOUFLAGE && shader_data->extra_flags.dont_fade_active_camouflage == false) {
-            vertex_constants_2[10] = max_f32(0.0f, min_f32(1.0f, group->effect.intensity));
+            vertex_constants[10] = max_f32(0.0f, min_f32(1.0f, 1.0f - group->effect.intensity));
         }
 
         if(shader_data->framebuffer_fade_source > 0 && group->animation != NULL && group->animation->values != NULL) {
-            vertex_constants_2[10] *= group->animation->values[shader_data->framebuffer_fade_source - 1];
-            ASSERT(vertex_constants_2[10] == vertex_constants_2[10]); // check for NaN, just in case
+            vertex_constants[10] *= group->animation->values[shader_data->framebuffer_fade_source - 1];
+            ASSERT(vertex_constants[10] == vertex_constants[10]); // check for NaN, just in case
         }
 
-        rasterizer_dx9_set_vertex_shader_constant_f(10, vertex_constants_2, 3);
+        rasterizer_dx9_set_vertex_shader_constant_f(10, vertex_constants, 3);
 
         int tss_option_argument;
         switch(shader_data->framebuffer_fade_mode) {

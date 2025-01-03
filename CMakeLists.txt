@@ -55,6 +55,7 @@ include_directories(
 
 add_library(ringworld STATIC
     src/ringworld.cpp
+    src/event/events.cpp
     src/impl/console/console.c
     src/impl/crypto/md5.c
     src/impl/crypto/xtea.c

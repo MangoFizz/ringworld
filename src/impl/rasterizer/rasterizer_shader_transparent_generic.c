@@ -657,7 +657,7 @@ void rasterizer_dx9_transparent_generic_preprocess(TransparentGeometryGroup *gro
             }
             else {
                 FrameParameters *frame_parameters = rasterizer_render_get_frame_parameters();
-                progress = wave_function_calculate_value(frame_parameters->elapsed_time / stage->color0_animation_period, stage->color0_animation_function);
+                progress = wave_function_calculate_value_og(frame_parameters->elapsed_time / stage->color0_animation_period, stage->color0_animation_function);
             } 
 
             ColorARGB constant_color0;

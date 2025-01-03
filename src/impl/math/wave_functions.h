@@ -12,5 +12,6 @@
  * @todo Implement support for 64-bit parameters in the hooks system.
  */
 double wave_function_calculate_value(double period, WaveFunction function);
+double wave_function_calculate_value_og(double period, WaveFunction function);
 
 #endif

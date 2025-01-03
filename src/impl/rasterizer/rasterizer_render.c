@@ -1,6 +1,6 @@
 #include <stdint.h>
-#include <stdio.h>
 
+#include "../exception/exception.h"
 #include "rasterizer_render.h"
 
 extern RenderGlobals *render_globals;
@@ -12,6 +12,7 @@ RenderGlobals *rasterizer_render_get_globals(void) {
 }
 
 FrameParameters *rasterizer_render_get_frame_parameters(void) {
+    ASSERT(frame_parameters != NULL);
     return frame_parameters;
 }
 

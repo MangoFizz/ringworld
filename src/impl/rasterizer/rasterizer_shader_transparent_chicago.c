@@ -79,7 +79,7 @@ void rasterizer_shader_transparent_chicago_draw(TransparentGeometryGroup *group,
     }
 
     if(shader_data->maps.count > 0) {
-        float animation_vsh_constants[4][8] = {0};
+        float animation_vsh_constants[4 * 8] = {0};
 
         for(size_t map_index = 0; map_index < 4; map_index++) {
             if(map_index < shader_data->maps.count) {
@@ -135,24 +135,24 @@ void rasterizer_shader_transparent_chicago_draw(TransparentGeometryGroup *group,
                 uint32_t maps_count = shader_data->maps.count;
                 if(is_first_map && shader_data->first_map_type != SHADER_FIRST_MAP_TYPE_2D_MAP) {
                     if(shader_data->shader_transparent_chicago_flags.first_map_is_in_screenspace == false) {
-                        animation_vsh_constants[map_index][0] = 1.0;
-                        animation_vsh_constants[map_index][1] = 0.0;
-                        animation_vsh_constants[map_index][2] = 0.0;
-                        animation_vsh_constants[map_index][3] = 0.0;
-                        animation_vsh_constants[map_index][4] = 0.0;
-                        animation_vsh_constants[map_index][5] = 1.0;
-                        animation_vsh_constants[map_index][6] = 0.0;
-                        animation_vsh_constants[map_index][7] = 0.0;
+                        animation_vsh_constants[map_index * 8 + 0] = 1.0;
+                        animation_vsh_constants[map_index * 8 + 1] = 0.0;
+                        animation_vsh_constants[map_index * 8 + 2] = 0.0;
+                        animation_vsh_constants[map_index * 8 + 3] = 0.0;
+                        animation_vsh_constants[map_index * 8 + 4] = 0.0;
+                        animation_vsh_constants[map_index * 8 + 5] = 1.0;
+                        animation_vsh_constants[map_index * 8 + 6] = 0.0;
+                        animation_vsh_constants[map_index * 8 + 7] = 0.0;
                     } 
                     else {
-                        animation_vsh_constants[map_index][0] = render_globals->frustum.world_to_view.position.z;
-                        animation_vsh_constants[map_index][1] = render_globals->frustum.world_to_view.scale;
-                        animation_vsh_constants[map_index][2] = render_globals->frustum.world_to_view.forward.i;
-                        animation_vsh_constants[map_index][3] = 0.0;
-                        animation_vsh_constants[map_index][4] = render_globals->frustum.world_to_view.forward.j;
-                        animation_vsh_constants[map_index][5] = render_globals->frustum.world_to_view.forward.k;
-                        animation_vsh_constants[map_index][6] = render_globals->frustum.world_to_view.left.i;
-                        animation_vsh_constants[map_index][7] = 0.0;
+                        animation_vsh_constants[map_index * 8 + 0] = render_globals->frustum.world_to_view.position.z;
+                        animation_vsh_constants[map_index * 8 + 1] = render_globals->frustum.world_to_view.scale;
+                        animation_vsh_constants[map_index * 8 + 2] = render_globals->frustum.world_to_view.forward.i;
+                        animation_vsh_constants[map_index * 8 + 3] = 0.0;
+                        animation_vsh_constants[map_index * 8 + 4] = render_globals->frustum.world_to_view.forward.j;
+                        animation_vsh_constants[map_index * 8 + 5] = render_globals->frustum.world_to_view.forward.k;
+                        animation_vsh_constants[map_index * 8 + 6] = render_globals->frustum.world_to_view.left.i;
+                        animation_vsh_constants[map_index * 8 + 7] = 0.0;
                     }
                 }
                 else {
@@ -176,25 +176,25 @@ void rasterizer_shader_transparent_chicago_draw(TransparentGeometryGroup *group,
                     FrameParameters *frame_parameters = rasterizer_render_get_frame_parameters();
                     shader_texture_animation_evaluate(map_u_scale, map_v_scale, map_u_offset, map_v_offset, map_rotation,
                                                         frame_parameters->elapsed_time, texture_animation, group->animation, 
-                                                        &animation_vsh_constants[map_index][0],
-                                                        &animation_vsh_constants[map_index][4]);
+                                                        &animation_vsh_constants[map_index * 8 + 0],
+                                                        &animation_vsh_constants[map_index * 8 + 4]);
                 }
             }
             else {
-                animation_vsh_constants[map_index][0] = 1.0;
-                animation_vsh_constants[map_index][1] = 0.0;
-                animation_vsh_constants[map_index][2] = 0.0;
-                animation_vsh_constants[map_index][3] = 0.0;
-                animation_vsh_constants[map_index][4] = 0.0;
-                animation_vsh_constants[map_index][5] = 1.0;
-                animation_vsh_constants[map_index][6] = 0.0;
-                animation_vsh_constants[map_index][7] = 0.0;
+                animation_vsh_constants[map_index * 8 + 0] = 1.0;
+                animation_vsh_constants[map_index * 8 + 1] = 0.0;
+                animation_vsh_constants[map_index * 8 + 2] = 0.0;
+                animation_vsh_constants[map_index * 8 + 3] = 0.0;
+                animation_vsh_constants[map_index * 8 + 4] = 0.0;
+                animation_vsh_constants[map_index * 8 + 5] = 1.0;
+                animation_vsh_constants[map_index * 8 + 6] = 0.0;
+                animation_vsh_constants[map_index * 8 + 7] = 0.0;
                 rasterizer_dx9_set_texture(map_index, NULL);
             }
 
         }
 
-        rasterizer_dx9_set_vertex_shader_constant_f(13, animation_vsh_constants[0], 8);
+        rasterizer_dx9_set_vertex_shader_constant_f(13, animation_vsh_constants, 8);
         
         rasterizer_shader_transparent_chicago_preprocess(shader_data);
     
@@ -223,7 +223,7 @@ void rasterizer_shader_transparent_chicago_draw(TransparentGeometryGroup *group,
         vertex_constants[11] = 0.0f;
 
         if(group->effect.type == RENDER_MODEL_EFFECT_TYPE_ACTIVE_CAMOUFLAGE && shader_data->extra_flags.dont_fade_active_camouflage == false) {
-            vertex_constants[10] = max_f32(0.0f, min_f32(1.0f, 1.0f - group->effect.intensity));
+            vertex_constants[10] = clamp_f32(1.0f - group->effect.intensity, 0.0f, 1.0f);
         }
 
         if(shader_data->framebuffer_fade_source > 0 && group->animation != NULL && group->animation->values != NULL) {

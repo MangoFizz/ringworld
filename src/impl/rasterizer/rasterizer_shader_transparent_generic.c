@@ -353,7 +353,7 @@ IDirect3DPixelShader9 *rasterizer_shader_transparent_generic_get_instance(Shader
     char *hash = generate_hash(defines);
     for(size_t i = 0; i < shader_instances->current_size; i++) {
         ShaderTransparentGenericInstance *instance = shader_instances->first_element + i;
-        if(strcmp(instance->hash, hash) == 0) {
+        if(strncmp(instance->hash, hash, 32) == 0) {
             ShaderInstancesMapEntry *entry = &shader_instances_map->first_element[shader_instances_map->current_size];
             entry->shader_data = tag;
             entry->shader = instance->shader;
@@ -655,12 +655,10 @@ void rasterizer_dx9_transparent_generic_preprocess(TransparentGeometryGroup *gro
             } 
 
             ColorARGB constant_color0;
-            constant_color0.a = stage->color0_animation_upper_bound.a - stage->color0_animation_lower_bound.a;
             constant_color0.r = stage->color0_animation_upper_bound.r - stage->color0_animation_lower_bound.r;
             constant_color0.g = stage->color0_animation_upper_bound.g - stage->color0_animation_lower_bound.g;
             constant_color0.b = stage->color0_animation_upper_bound.b - stage->color0_animation_lower_bound.b;
 
-            constant_color0.a = stage->color0_animation_lower_bound.a + constant_color0.a * progress;
             constant_color0.r = stage->color0_animation_lower_bound.r + constant_color0.r * progress;
             constant_color0.g = stage->color0_animation_lower_bound.g + constant_color0.g * progress;
             constant_color0.b = stage->color0_animation_lower_bound.b + constant_color0.b * progress;

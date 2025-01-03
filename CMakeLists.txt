@@ -61,6 +61,7 @@ add_library(ringworld STATIC
     src/impl/exception/exception.c
     src/impl/game/game_time.c
     src/impl/math/math.c
+    src/impl/math/wave_functions.c
     src/impl/input/mouse.c
     src/impl/interface/ui_widget.c
     src/impl/memory/memory.c

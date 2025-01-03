@@ -37,5 +37,7 @@
     "fog_enable": {"type": "bool", "address": "0x6249dc"},
     "frame_parameters": {"type": "FrameParameters", "address": "0x75C570"},
     "effect_collection_effect_count": {"type": "uint32_t", "address": "0x75b720"},
-    "effect_collection_buffer": {"type": "RasterizerDx9ShaderEffect *", "address": "0x75b724"}
+    "effect_collection_buffer": {"type": "RasterizerDx9ShaderEffect *", "address": "0x75b724"},
+    "wave_functions_initialized": {"type": "bool", "address": "0xd85a94"},
+    "wave_functions": {"type": "uint8_t *[12]", "address": "0xd85a4c"}
 }

@@ -114,6 +114,10 @@ static const char *get_shader_source() {
 }
 
 void rasterizer_shader_transparent_generic_clear_instances(void) {
+    if(shader_instances == NULL || shader_instances_map == NULL) {
+        return;
+    }
+
     for(size_t i = 0; i < shader_instances_map->current_size; i++) {
         ShaderInstancesMapEntry *entry = shader_instances_map->first_element + i;
         entry->shader_data = NULL;

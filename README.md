@@ -18,7 +18,6 @@ Some of the features we plan to implement are:
 
 - Interpolation (60+ FPS support)
 - Multiplayer chat replacement
-- Shader transparent generic support
 - HUD meters xbox shader restoration
 - Loading screen from the Xbox version
 - Extended limits for game state resources
@@ -28,6 +27,7 @@ Currently, the project has the following features:
 
 - Tag data buffer upgraded to 64MiB
 - New assertions for debugging
+- Shader transparent generic support
 
 ## Installation
 

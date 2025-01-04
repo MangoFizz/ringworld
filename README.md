@@ -29,6 +29,9 @@ Currently, the project has the following features:
 - New assertions for debugging
 - Shader transparent generic support
 
+
+**NOTE:** Since the original game does not have shader transparent generic support, this feature cannot be used as-is. It needs to be attached to the game by the "host" mod of ringworld, [Balltze](https://github.com/MangoFizz/balltze) has already implemented it.
+
 ## Installation
 
 At this point, the project is in a very early stage of development, so it can be installed as any other mod. It can be loaded with the Chimera's mod loader, which is the recommended way to use it by now. See the [Chimera's repository](https://github.com/SnowyMouse/chimera?tab=readme-ov-file#mod-support) for more information.

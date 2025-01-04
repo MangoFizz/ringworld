@@ -7,26 +7,26 @@
 
 D3DFORMAT rasterizer_dx9_texture_get_d3d_format(BitmapDataFormat format) {
     switch(format) {
-        case BITMAP_DATA_FORMAT_BITMAP_DATA_FORMAT__R5_G6_B5: 
+        case BITMAP_DATA_FORMAT_R5G6B5: 
             return D3DFMT_R5G6B5;
-        case BITMAP_DATA_FORMAT_BITMAP_DATA_FORMAT__A1_R5_G5_B5:
+        case BITMAP_DATA_FORMAT_A1R5G5B5:
             return D3DFMT_A1R5G5B5;
-        case BITMAP_DATA_FORMAT_BITMAP_DATA_FORMAT__A4_R4_G4_B4:
+        case BITMAP_DATA_FORMAT_A4R4G4B4:
             return D3DFMT_A4R4G4B4;
-        case BITMAP_DATA_FORMAT_BITMAP_DATA_FORMAT__X8_R8_G8_B8:
+        case BITMAP_DATA_FORMAT_X8R8G8B8:
             return D3DFMT_X8R8G8B8;
-        case BITMAP_DATA_FORMAT_BITMAP_DATA_FORMAT__A8_R8_G8_B8:
+        case BITMAP_DATA_FORMAT_A8R8G8B8:
             return D3DFMT_A8R8G8B8;
-        case BITMAP_DATA_FORMAT_BITMAP_DATA_FORMAT__D_X_T1:
+        case BITMAP_DATA_FORMAT_DXT1:
             return D3DFMT_DXT1;
-        case BITMAP_DATA_FORMAT_BITMAP_DATA_FORMAT__D_X_T3: 
+        case BITMAP_DATA_FORMAT_DXT3: 
             return D3DFMT_DXT3;
-        case BITMAP_DATA_FORMAT_BITMAP_DATA_FORMAT__D_X_T5:
+        case BITMAP_DATA_FORMAT_DXT5:
             return D3DFMT_DXT5;
 #ifdef RINGWORLD_ENABLE_ENHANCEMENTS
-        case BITMAP_DATA_FORMAT_BITMAP_DATA_FORMAT__Y8:
+        case BITMAP_DATA_FORMAT_Y8:
             return D3DFMT_L8;
-        case BITMAP_DATA_FORMAT_BITMAP_DATA_FORMAT__A8_Y8:
+        case BITMAP_DATA_FORMAT_A8Y8:
             return D3DFMT_A8L8;
 #endif
         default:

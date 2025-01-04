@@ -1,5 +1,7 @@
 -- SPDX-License-Identifier: GPL-3.0-only
 
+local naming = require "naming"
+
 ---@class DefinitionElement
 ---@field name string
 ---@field class string
@@ -292,7 +294,7 @@ local function parseEnum(enumDefinition)
             if type(value) == "table" then
                 local val = value
                 if val.name then
-                    val.name = camelCaseToSnakeCase(enumDefinition.name) .. "_" .. dashAndSentenceToSnakeCase(val.name)
+                    val.name = naming.toSnakeCase(val.name)
                 end
                 enum.values[index] = val
             else 

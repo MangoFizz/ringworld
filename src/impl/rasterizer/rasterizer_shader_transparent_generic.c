@@ -110,6 +110,10 @@ static const char *get_shader_source() {
         CloseHandle(file);
     }
 
+    if(shader_source == NULL) {
+        CRASHF_DEBUG("failed to read shader transparent generic source; make sure the file shaders/shader_transparent_generic.hlsl exists.");
+    }
+
     return shader_source;
 }
 

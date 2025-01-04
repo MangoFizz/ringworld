@@ -24,15 +24,11 @@ D3DFORMAT rasterizer_dx9_texture_get_d3d_format(BitmapDataFormat format) {
         case BITMAP_DATA_FORMAT_BITMAP_DATA_FORMAT__D_X_T5:
             return D3DFMT_DXT5;
 #ifdef RINGWORLD_ENABLE_ENHANCEMENTS
-        case BITMAP_DATA_FORMAT_BITMAP_DATA_FORMAT__A8:
-            return D3DFMT_A8;
         case BITMAP_DATA_FORMAT_BITMAP_DATA_FORMAT__Y8:
-        case BITMAP_DATA_FORMAT_BITMAP_DATA_FORMAT__A_Y8:
             return D3DFMT_L8;
         case BITMAP_DATA_FORMAT_BITMAP_DATA_FORMAT__A8_Y8:
             return D3DFMT_A8L8;
 #endif
-        case BITMAP_DATA_FORMAT_BITMAP_DATA_FORMAT__B_C7:
         default:
             printf("Unsupported bitmap format: %d\n", format);
             return D3DFMT_UNKNOWN;            

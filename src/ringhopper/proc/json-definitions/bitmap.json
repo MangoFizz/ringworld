@@ -281,8 +281,9 @@
                 "cache_only": true
             },
             {
-                "type": "pad",
-                "size": 4
+                "name": "hardware_format",
+                "type": "Pointer",
+                "cache_only": true
             },
             {
                 "type": "pad",

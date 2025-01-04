@@ -28,9 +28,10 @@ Currently, the project has the following features:
 - Tag data buffer upgraded to 64MiB
 - New assertions for debugging
 - Shader transparent generic support
+- Monochrome bitmaps support (A8Y8/Y8 formats)
 
 
-**NOTE:** Since the original game does not have shader transparent generic support, this feature cannot be used as-is. It needs to be attached to the game by the "host" mod of ringworld, [Balltze](https://github.com/MangoFizz/balltze) has already implemented it.
+**NOTE:** Since the original game does not have shader transparent generic support, it cannot be used as-is. It needs to be attached to the game by the "host" mod of ringworld, [Balltze](https://github.com/MangoFizz/balltze) has already implemented it.
 
 ## Installation
 

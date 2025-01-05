@@ -27,7 +27,7 @@
     "current_multiplayer_mode": {"type": "MultiplayerMode", "address": "0x6b47b0"},
     "is_main_menu": {"type": "bool", "address": "0x6b4051"},
     "d3d9_device": {"type": "IDirect3DDevice9 *", "address": "0x6b840c"},
-    "d3d9_device_caps": {"type": "D3DCAPS9", "address": "0x75c4b8"},
+    "d3d9_device_caps": {"type": "D3DCAPS9", "address": "0x75c420"},
     "dynamic_vertices": {"type": "DynamicVertices", "address": "0x674824"},
     "shader_effects": {"type": "RasterizerDx9ShaderEffectEntry", "address": "0x638ac8"},
     "vertex_shaders": {"type": "VertexShader", "address": "0x639248"},

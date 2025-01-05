@@ -39,5 +39,9 @@
     "effect_collection_effect_count": {"type": "uint32_t", "address": "0x75b720"},
     "effect_collection_buffer": {"type": "RasterizerDx9ShaderEffect *", "address": "0x75b724"},
     "wave_functions_initialized": {"type": "bool", "address": "0xd85a94"},
-    "wave_functions": {"type": "uint8_t *[12]", "address": "0xd85a4c"}
+    "wave_functions": {"type": "uint8_t *[12]", "address": "0xd85a4c"},
+    "shader_transparent_water_unk1": {"type": "bool", "address": "0x637d41"},
+    "shader_transparent_water_unk2": {"type": "bool", "address": "0x6b8505"},
+    "shader_transparent_water_unk3": {"type": "IDirect3DTexture9 *", "address": "0x638ac0"},
+    "globals_rasterizer_data": {"type": "GlobalsRasterizerData *", "address": "0x6b83fc"}
 }

@@ -13,6 +13,7 @@
 #include "rasterizer_dx9.h"
 #include "rasterizer_dx9_shader.h"
 #include "rasterizer_dx9_vertex.h"
+#include "rasterizer_dx9_texture.h"
 #include "rasterizer_dx9_shader_compiler.h"
 #include "rasterizer_render.h"
 #include "rasterizer_geometry_group.h"
@@ -512,7 +513,7 @@ void rasterizer_shader_transparent_generic_draw(TransparentGeometryGroup *group,
                 rasterizer_dx9_set_sampler_state(map_index, D3DSAMP_MINFILTER, map->flags.unfiltered ? D3DTEXF_POINT : D3DTEXF_LINEAR);
                 rasterizer_dx9_set_sampler_state(map_index, D3DSAMP_MIPFILTER, map->flags.unfiltered ? D3DTEXF_POINT : D3DTEXF_LINEAR);
 
-                rasterizer_dx9_set_bitmap_data_texture(map_index, bitmap_type, BITMAP_USAGE_ALPHA_BLEND, bitmap_data_index, map->map.tag_handle);
+                rasterizer_dx9_texture_set_bitmap_data_texture(map_index, bitmap_type, BITMAP_USAGE_ALPHA_BLEND, bitmap_data_index, map->map.tag_handle);
 
                 uint32_t maps_count = shader_data->maps.count;
                 if(is_first_map && shader_data->first_map_type != SHADER_FIRST_MAP_TYPE_2D_MAP) {

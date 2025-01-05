@@ -29,7 +29,7 @@
 
     "shader_get_vertex_shader_permutation": {"address": "0x543160", "replace": false, "use_return_value": true, "arguments": ["ecx"]},
     "rasterizer_dx9_set_framebuffer_blend_function": {"address": "0x51be80", "replace": false, "arguments": ["ecx"]},
-    "rasterizer_dx9_set_bitmap_data_texture": {"address": "0x51c060", "replace": false, "use_return_value": true, "arguments": ["0", "4", "8", "12", "eax"]},
+    "rasterizer_dx9_texture_set_bitmap_data_texture": {"address": "0x51c060", "replace": false, "use_return_value": true, "arguments": ["0", "4", "8", "12", "eax"]},
     "shader_texture_animation_evaluate": {"address": "0x543250", "replace": false, "arguments": ["0", "4", "8", "12", "16", "20", "esi", "ecx", "ebx", "edi"]},
     "wave_function_calculate_value_og": {"address": "0x4cfdb0", "replace": false, "use_return_value": true, "return_64_bit_value": true, "arguments": ["0", "4", "eax"]},
     "rasterizer_transparent_geometry_group_draw_vertices": {"address": "0x536550", "replace": false, "arguments": ["0", "ecx"]},
@@ -40,5 +40,8 @@
     "rasterizer_dx9_shader_read_binary_file": {"address": "0x51d0f0", "replace": true, "use_return_value": true, "arguments": ["0", "4", "ecx"]},
     "rasterizer_dx9_shader_load_effect_collection_from_binary": {"address": "0x532c20", "replace": true, "use_return_value": true},
     "rasterizer_dx9_texture_calculate_mipmaps_levels": {"address": "0x527230", "replace": false, "use_return_value": true, "arguments": ["0", "eax", "ebx"]},
-    "rasterizer_dx9_texture_create": {"address": "0x5272c0", "replace": true, "use_return_value": true, "arguments": ["esi"]}
+    "rasterizer_dx9_texture_create": {"address": "0x5272c0", "replace": true, "use_return_value": true, "arguments": ["esi"]},
+    "rasterizer_dx9_texture_load_bitmap": {"address": "0x444eb0", "replace": false, "use_return_value": true, "arguments": ["0", "4", "eax"]},
+    "rasterizer_shader_transparent_water_draw": {"address": "0x539310", "replace": true, "arguments": ["0"]},
+    "rasterizer_shader_transparent_water_debug_unk1": {"address": "0x538380", "replace": false, "arguments": ["0"]}
 }

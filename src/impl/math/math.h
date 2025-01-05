@@ -59,4 +59,26 @@ static inline float normalize_f32(float x, float min, float max) {
     return (x - min) / (max - min);
 }
 
+/**
+ * Calculate the dot product of two vectors
+ * @param a The first vector 
+ * @param b The second vector 
+ * @return a.i * b.i + a.j * b.j + a.k * b.k.
+ */
+double math_vector_dot_product(VectorIJK *a, VectorIJK *b);
+
+/**
+ * Calculate the squared magnitude of a vector 
+ * @param v The vector
+ * @return vector.i^2 + vector.j^2 + vector.k^2.
+ */
+double math_vector_squared_magnitude(VectorIJK *v);
+
+/**
+ * Calculate the length of a vector 
+ * @param v The vector
+ * @return sqrt(vector.i^2 + vector.j^2 + vector.k^2).
+ */
+double math_vector_normalize(VectorIJK *v);
+
 #endif

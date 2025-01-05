@@ -1,8 +1,9 @@
 #include <stdbool.h>
 #include <stdio.h>
 
-#include "../tag/definitions/bitmap.h"
 #include "../exception/exception.h"
+#include "../bitmap/bitmap.h"
+#include "rasterizer_dx9_texture.h"
 #include "rasterizer_dx9.h"
 
 D3DFORMAT rasterizer_dx9_texture_get_d3d_format(BitmapDataFormat format) {
@@ -34,8 +35,6 @@ D3DFORMAT rasterizer_dx9_texture_get_d3d_format(BitmapDataFormat format) {
             return D3DFMT_UNKNOWN;            
     }
 }
-
-uint32_t rasterizer_dx9_texture_calculate_mipmaps_levels(uint16_t *height, BitmapData *bitmap, uint16_t *width);
 
 bool rasterizer_dx9_texture_create(BitmapData *bitmap) {
     ASSERT(bitmap != NULL);
@@ -104,5 +103,26 @@ bool rasterizer_dx9_texture_create(BitmapData *bitmap) {
         return false;
     }
 
+    return true;
+}
+
+bool rasterizer_dx9_texture_set_bitmap_data_texture_directly(uint32_t stage, uint16_t bitmap_data_index, TagHandle bitmap_tag) {
+    ASSERT(stage >= 0 && stage < 4);
+
+    Bitmap *bitmap = tag_get_data(TAG_GROUP_BITMAP, bitmap_tag);
+    if(bitmap == NULL) {
+        return false;
+    }
+    if(bitmap->bitmap_data.count > 0) {
+        BitmapData *bitmap_data = bitmap_get_data(bitmap_tag, bitmap_data_index % bitmap->bitmap_data.count);
+        if(bitmap_data != NULL) {
+            bool loaded = rasterizer_dx9_texture_load_bitmap(true, true, bitmap_data);
+            if(loaded) {
+                IDirect3DTexture9 *texture = (IDirect3DTexture9 *)bitmap_data->hardware_format;
+                rasterizer_dx9_set_texture(stage, texture);
+                return true;
+            }
+        }
+    }
     return true;
 }

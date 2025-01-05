@@ -54,17 +54,6 @@ void rasterizer_dx9_set_render_state(D3DRENDERSTATETYPE state, DWORD value);
 void rasterizer_dx9_set_framebuffer_blend_function(FramebufferBlendFunction blend_function);
 
 /**
- * Set the bitmap data texture
- * @param stage The stage to set the texture to.
- * @param bitmap_type The type of the bitmap.
- * @param bitmap_usage The usage of the bitmap.
- * @param bitmap_data_index The index of the bitmap data.
- * @param bitmap_tag The tag handle of the bitmap.
- * @return True if the texture was set successfully, false otherwise.
- */
-bool rasterizer_dx9_set_bitmap_data_texture(uint16_t stage, ShaderFirstMapType first_map_type, BitmapUsage bitmap_usage, uint16_t bitmap_data_index, TagHandle bitmap_tag);
-
-/**
  * Set the sampler state
  * @param sampler The sampler to set the state of.
  * @param type The type of the sampler state.

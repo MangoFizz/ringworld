@@ -6,6 +6,7 @@ extern "C" {
 #endif
 
 #include "../tag/definitions/enum.h"
+#include "../tag/definitions/globals.h"
 #include "../tag/tag.h"
 
 typedef struct RenderCamera {
@@ -125,6 +126,11 @@ FrameParameters *rasterizer_render_get_frame_parameters(void);
  */
 bool rasterizer_render_get_fog_enabled(void);
 
+/**
+ * Get the rasterizer data.
+ * @return The rasterizer data.
+ */
+GlobalsRasterizerData *rasterizer_render_get_globals_rasterizer_data(void);
 
 #ifdef __cplusplus
 }

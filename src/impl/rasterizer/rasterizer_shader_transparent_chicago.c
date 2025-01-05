@@ -11,6 +11,7 @@
 #include "rasterizer_dx9.h"
 #include "rasterizer_dx9_shader.h"
 #include "rasterizer_dx9_vertex.h"
+#include "rasterizer_dx9_texture.h"
 #include "rasterizer_render.h"
 #include "rasterizer_shader_transparent_chicago.h"
 
@@ -97,7 +98,7 @@ void rasterizer_shader_transparent_chicago_draw(TransparentGeometryGroup *group,
                 ASSERT(first_map_type >= 0 && first_map_type < SHADER_FIRST_MAP_TYPE_MAX);
                 ASSERT(shader_data->base.shader_flags.transparent_lit == false || first_map_type == SHADER_FIRST_MAP_TYPE_2D_MAP);
 
-                rasterizer_dx9_set_bitmap_data_texture(map_index, bitmap_type, BITMAP_USAGE_ALPHA_BLEND, bitmap_data_index, map->map.tag_handle);
+                rasterizer_dx9_texture_set_bitmap_data_texture(map_index, bitmap_type, BITMAP_USAGE_ALPHA_BLEND, bitmap_data_index, map->map.tag_handle);
 
                 D3DTEXTUREADDRESS fisrt_map_texture_mode;
                 switch(bitmap_type) {

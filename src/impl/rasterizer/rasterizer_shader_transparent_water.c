@@ -1,21 +1,204 @@
 #include <stdio.h>
 #include <math.h>
 
-#include "../tag/definitions/shader_transparent_water.h"
 #include "../exception/exception.h"
 #include "../shader/shader.h"
 #include "../math/math.h"
+#include "rasterizer_dx9_render_target.h"
 #include "rasterizer_dx9_shader.h"
 #include "rasterizer_dx9_texture.h"
 #include "rasterizer_render.h"
-#include "rasterizer_geometry_group.h"
+#include "rasterizer_shader_transparent_water.h"
 
 extern bool *shader_transparent_water_unk1;
-extern bool *shader_transparent_water_unk2;
-extern IDirect3DTexture9 **shader_transparent_water_unk3;
+extern bool *shader_transparent_water_should_update_bumpmap;
 bool shader_transparent_water_enabled = true;
 
-void rasterizer_shader_transparent_water_debug_unk1(ShaderTransparentWater *shader);
+void rasterizer_shader_transparent_water_render_bumpmap(ShaderTransparentWater *shader) {
+    ASSERT(shader != NULL);
+
+    IDirect3DDevice9 *device = rasterizer_dx9_device();
+    ASSERT(device != NULL);
+
+    if(shader_transparent_water_enabled) {
+        RasterizerDx9ShaderEffect *water_bumpmap_effect = rasterizer_dx9_shader_get_effect(SHADER_EFFECT_TRANSPARENT_WATER_BUMPMAP_CONVOLUTION);
+        if(water_bumpmap_effect != NULL && water_bumpmap_effect->pixel_shaders != NULL) {
+            DynamicVertex vertices[4];
+
+            vertices[0].position.x = -1.007813f;
+            vertices[0].position.y = 1.007813f;
+            vertices[0].position.z = 0.0f;
+            vertices[0].texture_pos.x = 0.0f;
+            vertices[0].texture_pos.y = 0.0f;
+            vertices[0].color = D3DCOLOR_ARGB(255, 255, 255, 255);
+            
+            vertices[1].position.x = 0.9921875f;
+            vertices[1].position.y = 1.007813f;
+            vertices[1].position.z = 0.0f;
+            vertices[1].texture_pos.x = 1.0f;
+            vertices[1].texture_pos.y = 0.0f;
+            vertices[1].color = D3DCOLOR_ARGB(255, 255, 255, 255);
+            
+            vertices[2].position.x = 0.9921875f;
+            vertices[2].position.y = -0.9921875f;
+            vertices[2].position.z = 0.0f;
+            vertices[2].texture_pos.x = 1.0f;
+            vertices[2].texture_pos.y = 1.0f;
+            vertices[2].color = D3DCOLOR_ARGB(255, 255, 255, 255);
+            
+            vertices[3].position.x = -1.007813f;
+            vertices[3].position.y = -0.9921875f;
+            vertices[3].position.z = 0.0f;
+            vertices[3].texture_pos.x = 0.0f;
+            vertices[3].texture_pos.y = 1.0f;
+            vertices[3].color = D3DCOLOR_ARGB(255, 255, 255, 255);
+
+            rasterizer_dx9_set_render_state(D3DRS_CULLMODE, D3DCULL_CCW);
+            rasterizer_dx9_set_render_state(D3DRS_COLORWRITEENABLE, D3DCOLORWRITEENABLE_RED | D3DCOLORWRITEENABLE_GREEN | D3DCOLORWRITEENABLE_BLUE);
+            rasterizer_dx9_set_render_state(D3DRS_ALPHABLENDENABLE, FALSE);
+            rasterizer_dx9_set_render_state(D3DRS_ALPHATESTENABLE, FALSE);
+            rasterizer_dx9_set_render_state(D3DRS_ZENABLE, D3DZB_FALSE);
+            rasterizer_dx9_set_render_state(D3DRS_FOGENABLE, FALSE);
+
+            rasterizer_dx9_set_sampler_state(0, D3DSAMP_ADDRESSU, D3DTADDRESS_WRAP);
+            rasterizer_dx9_set_sampler_state(0, D3DSAMP_ADDRESSV, D3DTADDRESS_WRAP);
+            rasterizer_dx9_set_sampler_state(0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
+            rasterizer_dx9_set_sampler_state(0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR);
+            rasterizer_dx9_set_sampler_state(0, D3DSAMP_MIPFILTER, D3DTEXF_LINEAR);
+
+            rasterizer_dx9_set_vertex_declaration(VERTEX_DECLARATION_DYNAMIC_SCREEN);
+
+            uint32_t vertex_processing_method = rasterizer_dx9_vertex_get_processing_method(VERTEX_DECLARATION_DYNAMIC_SCREEN);
+            bool software_processing = vertex_processing_method & D3DUSAGE_SOFTWAREPROCESSING != 0;
+            IDirect3DDevice9_SetSoftwareVertexProcessing(device, software_processing);
+
+            IDirect3DVertexShader9 *vertex_shader = rasterizer_dx9_shader_get_vertex_shader(VERTEX_SHADER_CONVOLUTION);
+            rasterizer_dx9_set_vertex_shader(vertex_shader);
+
+            rasterizer_dx9_set_sampler_state(1, D3DSAMP_ADDRESSU, D3DTADDRESS_WRAP);
+            rasterizer_dx9_set_sampler_state(1, D3DSAMP_ADDRESSV, D3DTADDRESS_WRAP);
+            rasterizer_dx9_set_sampler_state(1, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
+            rasterizer_dx9_set_sampler_state(1, D3DSAMP_MINFILTER, D3DTEXF_LINEAR);
+            rasterizer_dx9_set_sampler_state(1, D3DSAMP_MIPFILTER, D3DTEXF_LINEAR);
+
+            rasterizer_dx9_set_sampler_state(2, D3DSAMP_ADDRESSU, D3DTADDRESS_WRAP);
+            rasterizer_dx9_set_sampler_state(2, D3DSAMP_ADDRESSV, D3DTADDRESS_WRAP);
+            rasterizer_dx9_set_sampler_state(2, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
+            rasterizer_dx9_set_sampler_state(2, D3DSAMP_MINFILTER, D3DTEXF_LINEAR);
+            rasterizer_dx9_set_sampler_state(2, D3DSAMP_MIPFILTER, D3DTEXF_LINEAR);
+
+            rasterizer_dx9_set_sampler_state(3, D3DSAMP_ADDRESSU, D3DTADDRESS_WRAP);
+            rasterizer_dx9_set_sampler_state(3, D3DSAMP_ADDRESSV, D3DTADDRESS_WRAP);
+            rasterizer_dx9_set_sampler_state(3, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
+            rasterizer_dx9_set_sampler_state(3, D3DSAMP_MINFILTER, D3DTEXF_LINEAR);
+            rasterizer_dx9_set_sampler_state(3, D3DSAMP_MIPFILTER, D3DTEXF_LINEAR);
+
+            ShaderTransparentWaterRipple ripples[4];
+            for(size_t i = 0; i < 4; i++) {
+                if(i < shader->ripples.count) {
+                    ShaderTransparentWaterRipple *ripple = TAG_BLOCK_GET_ELEMENT(shader->ripples, i);
+                    ripples[i] = *ripple;
+                }
+                else {
+                    memset(&ripples[i], 0, sizeof(ShaderTransparentWaterRipple));
+                    ripples[i].map_repeats = 1;
+                }
+            }
+
+            if(nan_f32(ripples[0].contribution_factor) || ripples[0].contribution_factor == 0.0f) {
+                if(nan_f32(ripples[1].contribution_factor) || ripples[1].contribution_factor == 0.0f) {
+                    ripples[1].contribution_factor = 1.0f;
+                }
+            }
+            if(nan_f32(ripples[2].contribution_factor) || ripples[2].contribution_factor == 0.0f) {
+                if(nan_f32(ripples[3].contribution_factor) || ripples[3].contribution_factor == 0.0f) {
+                    ripples[3].contribution_factor = 1.0f;
+                }
+            }
+
+            FrameParameters *frame_parameters = rasterizer_render_get_frame_parameters();
+            float vs_constants[4 * 8] = {0};
+            for(size_t i = 0; i < 4; i++) {
+                float cos = cosf(ripples[i].animation_angle);
+                float sin = sinf(ripples[i].animation_angle);
+                vs_constants[i * 8 + 0] = ripples[i].map_repeats;
+                vs_constants[i * 8 + 1] = 0.0f;
+                vs_constants[i * 8 + 2] = 0.0f;
+                vs_constants[i * 8 + 3] = cos * ripples[i].animation_velocity * frame_parameters->elapsed_time + ripples[i].map_offset.i;
+                vs_constants[i * 8 + 4] = 0.0f;
+                vs_constants[i * 8 + 5] = ripples[i].map_repeats;
+                vs_constants[i * 8 + 6] = 0.0f;
+                vs_constants[i * 8 + 7] = sin * ripples[i].animation_velocity * frame_parameters->elapsed_time + ripples[i].map_offset.j;
+            }
+
+            rasterizer_dx9_set_vertex_shader_constant_f(13, vs_constants, 8);
+
+            float ps_constants[4 * 4];
+            ps_constants[0] = 0.0f;
+            ps_constants[1] = 0.0f;
+            ps_constants[2] = 0.0f;
+            ps_constants[3] = ripples[0].contribution_factor / (ripples[0].contribution_factor + ripples[1].contribution_factor);
+            ps_constants[4] = 0.0f;
+            ps_constants[5] = 0.0f;
+            ps_constants[6] = 0.0f;
+            ps_constants[8] = 0.0f;
+            ps_constants[7] = ripples[2].contribution_factor / (ripples[2].contribution_factor + ripples[3].contribution_factor);
+            ps_constants[9] = 0.0f;
+            ps_constants[10] = 0.0f;
+            ps_constants[11] = (ripples[0].contribution_factor + ripples[1].contribution_factor) / (ripples[0].contribution_factor + 
+                                ripples[1].contribution_factor + ripples[2].contribution_factor + ripples[3].contribution_factor);
+            ps_constants[12] = 0.0f;
+            ps_constants[13] = 0.0f;
+            ps_constants[14] = 0.0f;
+            ps_constants[15] = 0.0f;
+
+            rasterizer_dx9_set_stencil_mode(0);
+
+            size_t mipmap_levels = 4;
+            if(shader->ripple_mipmap_levels < 5) {
+                mipmap_levels = shader->ripple_mipmap_levels;
+            }
+
+            for(size_t i = 0; i < mipmap_levels; i++) {
+                ps_constants[12] = 0.5f;
+                ps_constants[13] = 0.5f;
+                ps_constants[14] = 1.0f;
+                
+                if(shader->ripple_mipmap_levels < 2) {
+                    ps_constants[15] = 0.0f;
+                }
+                else {
+                    float alpha = (float)i / (float)(shader->ripple_mipmap_levels - 1);
+                    ps_constants[15] = alpha * shader->ripple_mipmap_fade_factor;
+                }
+
+                rasterizer_dx9_render_target_set(0x00000000, 0, 8);
+
+                for(size_t j = 0; j < 4; j++) {
+                    TagHandle ripple_map_handle = NULL_HANDLE;
+                    if(j < shader->ripples.count) {
+                        ripple_map_handle = shader->ripple_maps.tag_handle;
+                    }
+                    rasterizer_dx9_texture_set_bitmap_data_texture_no_assert(j, ripples[j].map_index, ripple_map_handle);
+                }
+
+                rasterizer_dx9_set_pixel_shader(water_bumpmap_effect->pixel_shaders[0].pixel_shader);
+                rasterizer_dx9_set_texture_stage_state(0, D3DTSS_COLOROP, D3DTOP_DISABLE);
+                rasterizer_dx9_set_texture_stage_state(0, D3DTSS_ALPHAOP, D3DTOP_DISABLE);
+                rasterizer_dx9_set_pixel_shader_constant_f(0, ps_constants, 4);
+                HRESULT res = IDirect3DDevice9_DrawPrimitiveUP(device, D3DPT_TRIANGLEFAN, 2, vertices, sizeof(DynamicVertex));
+                if(FAILED(res)) {
+                    CRASHF_DEBUG("failed to draw shader transparent water bumpmap");
+                }
+            }
+
+            IDirect3DDevice9_SetSoftwareVertexProcessing(device, rasterizer_dx9_device_supports_software_vertex_processing());
+        }
+
+        rasterizer_dx9_render_target_set(0x00000000, 0, rasterizer_dx9_render_target_current_index());
+        rasterizer_dx9_set_stencil_mode(2);
+    }
+}
 
 void rasterizer_shader_transparent_water_draw(TransparentGeometryGroup *group) {
     ASSERT(group != NULL);
@@ -62,9 +245,9 @@ void rasterizer_shader_transparent_water_draw(TransparentGeometryGroup *group) {
             z_write_enable = true;
         }
 
-        if(*shader_transparent_water_unk2) {
-            rasterizer_shader_transparent_water_debug_unk1(shader);
-            *shader_transparent_water_unk2 = false; // ????
+        if(*shader_transparent_water_should_update_bumpmap) {
+            rasterizer_shader_transparent_water_render_bumpmap(shader);
+            *shader_transparent_water_should_update_bumpmap = false;
         }
 
         RasterizerDx9ShaderEffect *water_opacity_effect = rasterizer_dx9_shader_get_effect(SHADER_EFFECT_TRANSPARENT_WATER_OPACITY);
@@ -73,13 +256,13 @@ void rasterizer_shader_transparent_water_draw(TransparentGeometryGroup *group) {
             float view_parallel_brightness = shader->view_parallel_brightness;
             float ps_constants[8] = {0};
             ps_constants[0] = view_perpendicular_brightness;
-            ps_constants[1] = view_perpendicular_brightness;
-            ps_constants[2] = view_perpendicular_brightness;
-            ps_constants[3] = view_perpendicular_brightness;
+            ps_constants[1] = ps_constants[0];
+            ps_constants[2] = ps_constants[0];
+            ps_constants[3] = ps_constants[0];
             ps_constants[4] = view_parallel_brightness;
-            ps_constants[5] = view_parallel_brightness;
-            ps_constants[6] = view_parallel_brightness;
-            ps_constants[7] = view_parallel_brightness;
+            ps_constants[5] = ps_constants[4];
+            ps_constants[6] = ps_constants[4];
+            ps_constants[7] = ps_constants[4];
 
             rasterizer_dx9_set_vertex_declaration(vertex_buffer_type);
             IDirect3DVertexShader9 *vertex_shader = rasterizer_dx9_shader_get_vertex_shader(use_m_vertex_shader ? VERTEX_SHADER_TRANSPARENT_WATER_OPACITY_M : VERTEX_SHADER_TRANSPARENT_WATER_OPACITY);
@@ -102,7 +285,7 @@ void rasterizer_shader_transparent_water_draw(TransparentGeometryGroup *group) {
                 rasterizer_dx9_set_sampler_state(0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR);
                 rasterizer_dx9_set_sampler_state(0, D3DSAMP_MIPFILTER, D3DTEXF_LINEAR);
                 
-                rasterizer_dx9_texture_set_bitmap_data_texture_directly(1, 0, globals_rasterizer_data->vector_normalization.tag_handle);
+                rasterizer_dx9_texture_set_bitmap_data_texture_no_assert(1, 0, globals_rasterizer_data->vector_normalization.tag_handle);
                 rasterizer_dx9_set_sampler_state(1, D3DSAMP_ADDRESSU, D3DTADDRESS_CLAMP);
                 rasterizer_dx9_set_sampler_state(1, D3DSAMP_ADDRESSV, D3DTADDRESS_CLAMP);
                 rasterizer_dx9_set_sampler_state(1, D3DSAMP_ADDRESSW, D3DTADDRESS_CLAMP);
@@ -183,7 +366,7 @@ void rasterizer_shader_transparent_water_draw(TransparentGeometryGroup *group) {
 
             D3DCAPS9 *caps = rasterizer_dx9_device_caps();
             if(caps->PixelShaderVersion < D3DPS_VERSION(1, 1)) {
-                rasterizer_dx9_texture_set_bitmap_data_texture_directly(0, 0, globals_rasterizer_data->test_0.tag_handle);
+                rasterizer_dx9_texture_set_bitmap_data_texture_no_assert(0, 0, globals_rasterizer_data->test_0.tag_handle);
                 rasterizer_dx9_set_sampler_state(0, D3DSAMP_ADDRESSU, D3DTADDRESS_WRAP);
                 rasterizer_dx9_set_sampler_state(0, D3DSAMP_ADDRESSV, D3DTADDRESS_WRAP);
                 rasterizer_dx9_set_sampler_state(0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
@@ -193,8 +376,8 @@ void rasterizer_shader_transparent_water_draw(TransparentGeometryGroup *group) {
                 return;
             }
 
-            // rasterizer_dx9_texture_set_bitmap_data_texture_directly(0, 0, shader->ripple_maps.tag_handle);
-            rasterizer_dx9_set_texture(0, *shader_transparent_water_unk3);
+            IDirect3DTexture9 *render_target_texture = rasterizer_dx9_render_target_get_texture(8);
+            rasterizer_dx9_set_texture(0, render_target_texture);
             rasterizer_dx9_set_sampler_state(0, D3DSAMP_ADDRESSU, D3DTADDRESS_WRAP);
             rasterizer_dx9_set_sampler_state(0, D3DSAMP_ADDRESSV, D3DTADDRESS_WRAP);
             rasterizer_dx9_set_sampler_state(0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);

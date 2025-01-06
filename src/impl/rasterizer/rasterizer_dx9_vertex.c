@@ -14,7 +14,16 @@ VertexBufferType rasterizer_dx9_vertex_get_dynamic_buffer_type(uint16_t dynamic_
     return dynamic_vertices->buffers[dynamic_vertex_index].type;
 }
 
-IDirect3DVertexDeclaration9 *rasterizer_dx9_vertex_get_declaration(uint16_t vertex_buffer_type) {
-    ASSERT(vertex_buffer_type < NUM_OF_VERTEX_DECLARATIONS);
+IDirect3DVertexDeclaration9 *rasterizer_dx9_vertex_get_declaration(VertexDeclarationIndex vertex_buffer_type) {
+    ASSERT(vertex_buffer_type >= 0 && vertex_buffer_type < NUM_OF_VERTEX_DECLARATIONS);
     return vertex_declarations[vertex_buffer_type].declaration;
+}
+
+uint32_t rasterizer_dx9_vertex_get_processing_method(VertexDeclarationIndex vertex_buffer_type) {
+    ASSERT(vertex_buffer_type >= 0 && vertex_buffer_type < NUM_OF_VERTEX_DECLARATIONS);
+    int mask = 0;
+    if(rasterizer_dx9_device_supports_software_vertex_processing()) {
+        mask = D3DUSAGE_SOFTWAREPROCESSING; 
+    }
+    return vertex_declarations[vertex_buffer_type].vertex_processing_method | mask;
 }

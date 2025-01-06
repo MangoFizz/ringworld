@@ -165,7 +165,6 @@ IDirect3DVertexShader9 *rasterizer_dx9_shader_get_vertex_shader(uint16_t index) 
     return vertex_shaders[index].shader;
 }
 
-
 IDirect3DVertexShader9 *rasterizer_dx9_shader_get_vertex_shader_for_permutation(uint16_t vertex_shader_permutation, VertexBufferType vertex_buffer_type) {
     return rasterizer_dx9_shader_get_vertex_shader(vertex_shader_permutations[vertex_shader_permutation + vertex_buffer_type * 6]);
 }

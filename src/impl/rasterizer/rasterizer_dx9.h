@@ -24,6 +24,12 @@ IDirect3DDevice9 *rasterizer_dx9_device(void);
 D3DCAPS9 *rasterizer_dx9_device_caps(void);
 
 /**
+ * Check if the Direct3D 9 device supports software vertex processing.
+ * @return True if the device supports software vertex processing, false otherwise.
+ */
+bool rasterizer_dx9_device_supports_software_vertex_processing(void);
+
+/**
  * Set the vertex shader.
  * @param vertex_shader The vertex shader to set.
  */
@@ -91,6 +97,12 @@ bool rasterizer_dx9_set_pixel_shader_constant_f(uint16_t start_register, const f
  * @param value The value to set the texture stage state to.
  */
 void rasterizer_dx9_set_texture_stage_state(uint16_t stage, D3DTEXTURESTAGESTATETYPE type, DWORD value);
+
+/**
+ * Set the stencil mode
+ * @param stencil_mode The stencil mode to set.
+ */
+void rasterizer_dx9_set_stencil_mode(uint16_t stencil_mode);
 
 #ifdef __cplusplus
 }

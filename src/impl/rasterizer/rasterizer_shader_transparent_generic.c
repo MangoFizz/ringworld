@@ -638,7 +638,7 @@ void rasterizer_dx9_transparent_generic_preprocess(TransparentGeometryGroup *gro
         
             if(shader_data->framebuffer_fade_source > 0 && group->animation != NULL && group->animation->values != NULL) {
                 vertex_constants[10] *= group->animation->values[shader_data->framebuffer_fade_source - 1];
-                ASSERT(vertex_constants[10] == vertex_constants[10]); // check for NaN, just in case
+                ASSERT(!nan_f32(vertex_constants[10])); 
             }
             
             rasterizer_dx9_set_vertex_shader_constant_f(10, vertex_constants, 3);
@@ -668,6 +668,7 @@ void rasterizer_dx9_transparent_generic_preprocess(TransparentGeometryGroup *gro
                 FrameParameters *frame_parameters = rasterizer_render_get_frame_parameters();
                 progress = wave_function_calculate_value_og(frame_parameters->elapsed_time / stage->color0_animation_period, stage->color0_animation_function);
             } 
+            ASSERT(!nan_f32(progress));
 
             ColorARGB constant_color0;
             constant_color0.a = stage->color0_animation_upper_bound.a - stage->color0_animation_lower_bound.a;

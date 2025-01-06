@@ -106,7 +106,7 @@ bool rasterizer_dx9_texture_create(BitmapData *bitmap) {
     return true;
 }
 
-bool rasterizer_dx9_texture_set_bitmap_data_texture_directly(uint32_t stage, uint16_t bitmap_data_index, TagHandle bitmap_tag) {
+bool rasterizer_dx9_texture_set_bitmap_data_texture_no_assert(uint32_t stage, uint16_t bitmap_data_index, TagHandle bitmap_tag) {
     ASSERT(stage >= 0 && stage < 4);
 
     Bitmap *bitmap = tag_get_data(TAG_GROUP_BITMAP, bitmap_tag);

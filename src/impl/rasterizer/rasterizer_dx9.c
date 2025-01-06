@@ -8,6 +8,9 @@
 
 extern IDirect3DDevice9 **d3d9_device;
 extern D3DCAPS9 *d3d9_device_caps;
+extern bool *d3d9_device_supports_software_vertex_processing;
+extern uint16_t *d3d9_stencil_mode;
+extern uint32_t *d3d9_stencil_mode_unk1;
 
 IDirect3DDevice9 *rasterizer_dx9_device(void) {
     return *d3d9_device;
@@ -15,6 +18,10 @@ IDirect3DDevice9 *rasterizer_dx9_device(void) {
 
 D3DCAPS9 *rasterizer_dx9_device_caps(void) {
     return d3d9_device_caps;
+}
+
+bool rasterizer_dx9_device_supports_software_vertex_processing(void) {
+    return *d3d9_device_supports_software_vertex_processing;
 }
 
 void rasterizer_dx9_set_vertex_shader(IDirect3DVertexShader9 *vertex_shader) {
@@ -60,4 +67,72 @@ bool rasterizer_dx9_set_pixel_shader_constant_f(uint16_t start_register, const f
 void rasterizer_dx9_set_texture_stage_state(uint16_t stage, D3DTEXTURESTAGESTATETYPE type, DWORD value) {
     ASSERT(*d3d9_device != NULL);
     IDirect3DDevice9_SetTextureStageState(*d3d9_device, stage, type, value);
+}
+
+/**
+ * @todo Verify that this function is correct.
+ */
+void rasterizer_dx9_set_stencil_mode(uint16_t stencil_mode) {
+    if(*d3d9_stencil_mode_unk1 == 0) {
+        stencil_mode = 0;
+    }
+    if(*d3d9_stencil_mode == stencil_mode) {
+        return;
+    }
+    switch(stencil_mode) {
+        case 0:
+            rasterizer_dx9_set_render_state(D3DRS_STENCILENABLE, FALSE);
+            break;
+        case 1:
+            rasterizer_dx9_set_render_state(D3DRS_STENCILENABLE, TRUE);
+            rasterizer_dx9_set_render_state(D3DRS_STENCILFAIL, D3DSTENCILOP_KEEP);
+            rasterizer_dx9_set_render_state(D3DRS_STENCILZFAIL, D3DSTENCILOP_KEEP);
+            rasterizer_dx9_set_render_state(D3DRS_STENCILPASS, D3DSTENCILOP_REPLACE);
+            rasterizer_dx9_set_render_state(D3DRS_STENCILFUNC, D3DCMP_ALWAYS);
+            rasterizer_dx9_set_render_state(D3DRS_STENCILREF, 1);
+            rasterizer_dx9_set_render_state(D3DRS_STENCILMASK, 1);
+            rasterizer_dx9_set_render_state(D3DRS_STENCILWRITEMASK, 1);
+            break;
+        case 2:
+            rasterizer_dx9_set_render_state(D3DRS_STENCILENABLE, TRUE);
+            rasterizer_dx9_set_render_state(D3DRS_STENCILFAIL, D3DSTENCILOP_KEEP);
+            rasterizer_dx9_set_render_state(D3DRS_STENCILZFAIL, D3DSTENCILOP_KEEP);
+            rasterizer_dx9_set_render_state(D3DRS_STENCILPASS, D3DSTENCILOP_KEEP);
+            rasterizer_dx9_set_render_state(D3DRS_STENCILFUNC, D3DCMP_EQUAL);
+            rasterizer_dx9_set_render_state(D3DRS_STENCILREF, 0);
+            rasterizer_dx9_set_render_state(D3DRS_STENCILMASK, 1);
+            rasterizer_dx9_set_render_state(D3DRS_STENCILWRITEMASK, 0);
+            break;
+        case 3:
+            rasterizer_dx9_set_render_state(D3DRS_STENCILENABLE, TRUE);
+            rasterizer_dx9_set_render_state(D3DRS_STENCILFAIL, D3DSTENCILOP_KEEP);
+            rasterizer_dx9_set_render_state(D3DRS_STENCILZFAIL, D3DSTENCILOP_KEEP);
+            rasterizer_dx9_set_render_state(D3DRS_STENCILPASS, D3DSTENCILOP_KEEP);
+            rasterizer_dx9_set_render_state(D3DRS_STENCILFUNC, D3DCMP_NOTEQUAL);
+            rasterizer_dx9_set_render_state(D3DRS_STENCILREF, 0);
+            rasterizer_dx9_set_render_state(D3DRS_STENCILMASK, 1);
+            rasterizer_dx9_set_render_state(D3DRS_STENCILWRITEMASK, 0);
+            break;
+        case 4:
+            rasterizer_dx9_set_render_state(D3DRS_STENCILENABLE, TRUE);
+            rasterizer_dx9_set_render_state(D3DRS_STENCILFAIL, D3DSTENCILOP_KEEP);
+            rasterizer_dx9_set_render_state(D3DRS_STENCILZFAIL, D3DSTENCILOP_KEEP);
+            rasterizer_dx9_set_render_state(D3DRS_STENCILPASS, D3DSTENCILOP_REPLACE);
+            rasterizer_dx9_set_render_state(D3DRS_STENCILFUNC, D3DCMP_EQUAL);
+            rasterizer_dx9_set_render_state(D3DRS_STENCILREF, 2);
+            rasterizer_dx9_set_render_state(D3DRS_STENCILMASK, 1);
+            rasterizer_dx9_set_render_state(D3DRS_STENCILWRITEMASK, 2);
+            break;
+        case 5:
+            rasterizer_dx9_set_render_state(D3DRS_STENCILENABLE, TRUE);
+            rasterizer_dx9_set_render_state(D3DRS_STENCILFAIL, D3DSTENCILOP_KEEP);
+            rasterizer_dx9_set_render_state(D3DRS_STENCILZFAIL, D3DSTENCILOP_KEEP);
+            rasterizer_dx9_set_render_state(D3DRS_STENCILPASS, D3DSTENCILOP_KEEP);
+            rasterizer_dx9_set_render_state(D3DRS_STENCILFUNC, D3DCMP_EQUAL);
+            rasterizer_dx9_set_render_state(D3DRS_STENCILREF, 0);
+            rasterizer_dx9_set_render_state(D3DRS_STENCILMASK, 3);
+            rasterizer_dx9_set_render_state(D3DRS_STENCILWRITEMASK, 0);
+            break;
+    }
+    *d3d9_stencil_mode = stencil_mode;
 }

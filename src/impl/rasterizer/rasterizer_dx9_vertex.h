@@ -42,27 +42,30 @@ enum {
     MAX_DYNAMIC_VERTICES_BUFFERS = 0x400,
 };
 
-enum VertexDeclarationIndex {
-    VERTEX_DECLARATION_ENVIRONMENT,
-    VERTEX_DECLARATION_ENVIRONMENT_C,
-    VERTEX_DECLARATION_ENVIRONMENT_LIGHTMAP,
-    VERTEX_DECLARATION_ENVIRONMENT_LIGHTMAP_C,
-    VERTEX_DECLARATION_MODEL,
-    VERTEX_DECLARATION_MODEL_C,
+typedef enum VertexDeclarationIndex {
+    VERTEX_DECLARATION_ENVIRONMENT_UNCOMPRESSED,
+    VERTEX_DECLARATION_ENVIRONMENT_COMPRESSED,
+    VERTEX_DECLARATION_ENVIRONMENT_LIGHTMAP_UNCOMPRESSED,
+    VERTEX_DECLARATION_ENVIRONMENT_LIGHTMAP_COMPRESSED,
+    VERTEX_DECLARATION_MODEL_UNCOMPRESSED,
+    VERTEX_DECLARATION_MODEL_COMPRESSED,
     VERTEX_DECLARATION_UNLIT,
     VERTEX_DECLARATION_DYNAMIC_UNLIT,
-    VERTEX_DECLARATION_SCREEN,
+    VERTEX_DECLARATION_DYNAMIC_SCREEN,
     VERTEX_DECLARATION_DEBUG,
     VERTEX_DECLARATION_DECAL,
     VERTEX_DECLARATION_DETAIL_OBJECT,
-    VERTEX_DECLARATION_ENVIRONMENT_FF,
-    VERTEX_DECLARATION_ENVIRONMENT_LIGHTMAP_FF,
+    VERTEX_DECLARATION_ENVIRONMENT_UNCOMPRESSED_FF,
+    VERTEX_DECLARATION_ENVIRONMENT_LIGHTMAP_UNCOMPRESSED_FF,
     VERTEX_DECLARATION_MODEL_UNCOMPRESSED_FF,
     VERTEX_DECLARATION_MODEL_PROCESSED,
     VERTEX_DECLARATION_UNLIT_ZSPRITE,
-    VERTEX_DECLARATION_WIDGET,
-    NUM_OF_VERTEX_DECLARATIONS,
-};
+    VERTEX_DECLARATION_SCREEN_TRANSFORMED_LIT,
+    VERTEX_DECLARATION_SCREEN_TRANSFORMED_LIT_SPECULAR,
+    VERTEX_DECLARATION_ENVIRONMENT_SINGLE_STREAM_FF,
+
+    NUM_OF_VERTEX_DECLARATIONS
+} VertexDeclarationIndex;
 
 typedef struct RasterizerTriangle {
     uint16_t vertex_indices[3];
@@ -115,6 +118,13 @@ typedef struct VertexDeclaration {
 } VertexDeclaration;
 _Static_assert(sizeof(VertexDeclaration) == 0xC);
 
+typedef struct DynamicVertex {
+    VectorXYZ position;
+    ColorARGBInt color;
+    VectorXY texture_pos;
+} DynamicVertex;
+_Static_assert(sizeof(DynamicVertex) == 0x18);
+
 /**
  * Get the dynamic vertex buffer type
  * @param dynamic_vertex_index  The index of the dynamic vertex buffer.
@@ -127,7 +137,14 @@ VertexBufferType rasterizer_dx9_vertex_get_dynamic_buffer_type(uint16_t dynamic_
  * @param vertex_buffer_type The index of the vertex buffer.
  * @return The vertex declaration interface.
  */
-IDirect3DVertexDeclaration9 *rasterizer_dx9_vertex_get_declaration(uint16_t vertex_buffer_type);
+IDirect3DVertexDeclaration9 *rasterizer_dx9_vertex_get_declaration(VertexDeclarationIndex vertex_buffer_type);
+
+/**
+ * Get the processing method of a vertex buffer type.
+ * @param vertex_buffer_type The index of the vertex buffer.
+ * @return The processing method of the vertex buffer.
+ */
+uint32_t rasterizer_dx9_vertex_get_processing_method(VertexDeclarationIndex vertex_buffer_type);
 
 #ifdef __cplusplus
 }

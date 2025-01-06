@@ -229,7 +229,7 @@ void rasterizer_shader_transparent_chicago_draw(TransparentGeometryGroup *group,
 
         if(shader_data->framebuffer_fade_source > 0 && group->animation != NULL && group->animation->values != NULL) {
             vertex_constants[10] *= group->animation->values[shader_data->framebuffer_fade_source - 1];
-            ASSERT(vertex_constants[10] == vertex_constants[10]); // check for NaN, just in case
+            ASSERT(!nan_f32(vertex_constants[10])); // check for NaN, just in case
         }
 
         rasterizer_dx9_set_vertex_shader_constant_f(10, vertex_constants, 3);

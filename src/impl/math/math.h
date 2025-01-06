@@ -4,6 +4,14 @@
 #include "../tag/definitions/enum.h"
 
 /**
+ * Check if a float is NaN.
+ * @return true if the float is NaN, or false otherwise.
+ */
+static inline bool nan_f32(float f) {
+    return f != f;
+}
+
+/**
  * Calculate the greater of the two integers.
  * @return a if a > b, or b otherwise.
  */

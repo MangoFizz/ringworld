@@ -70,6 +70,7 @@ add_library(ringworld STATIC
     src/impl/multiplayer/mode.c
     src/impl/memory/table.c
     src/impl/player/player.c
+    src/impl/rasterizer/rasterizer_dx9_render_target.c
     src/impl/rasterizer/rasterizer_dx9_texture.c
     src/impl/rasterizer/rasterizer_dx9_shader_compiler.c
     src/impl/rasterizer/rasterizer_dx9_shader.c

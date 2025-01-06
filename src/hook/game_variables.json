@@ -28,6 +28,11 @@
     "is_main_menu": {"type": "bool", "address": "0x6b4051"},
     "d3d9_device": {"type": "IDirect3DDevice9 *", "address": "0x6b840c"},
     "d3d9_device_caps": {"type": "D3DCAPS9", "address": "0x75c420"},
+    "d3d9_device_supports_software_vertex_processing": {"type": "bool", "address": "0x637d38"},
+    "d3d9_stencil_mode": {"type": "uint16_t", "address": "0x637d64"},
+    "d3d9_stencil_mode_unk1": {"type": "uint32_t", "address": "0x6249cf"},
+    "render_targets": {"type": "RasterizerRenderTarget[9]", "address": "0x638a10"},
+    "current_render_target_index": {"type": "uint16_t", "address": "0x75c580"},
     "dynamic_vertices": {"type": "DynamicVertices", "address": "0x674824"},
     "shader_effects": {"type": "RasterizerDx9ShaderEffectEntry", "address": "0x638ac8"},
     "vertex_shaders": {"type": "VertexShader", "address": "0x639248"},
@@ -41,7 +46,6 @@
     "wave_functions_initialized": {"type": "bool", "address": "0xd85a94"},
     "wave_functions": {"type": "uint8_t *[12]", "address": "0xd85a4c"},
     "shader_transparent_water_unk1": {"type": "bool", "address": "0x637d41"},
-    "shader_transparent_water_unk2": {"type": "bool", "address": "0x6b8505"},
-    "shader_transparent_water_unk3": {"type": "IDirect3DTexture9 *", "address": "0x638ac0"},
+    "shader_transparent_water_should_update_bumpmap": {"type": "bool", "address": "0x6b8505"},
     "globals_rasterizer_data": {"type": "GlobalsRasterizerData *", "address": "0x6b83fc"}
 }

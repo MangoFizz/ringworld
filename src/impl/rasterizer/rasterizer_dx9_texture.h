@@ -40,7 +40,7 @@ bool rasterizer_dx9_texture_load_bitmap(bool block, bool load, BitmapData *bitma
  * @param bitmap_tag The tag handle of the bitmap.
  * @return True if the texture was set successfully, false otherwise.
  */
-bool rasterizer_dx9_texture_set_bitmap_data_texture_directly(uint32_t stage, uint16_t bitmap_data_index, TagHandle bitmap_tag);
+bool rasterizer_dx9_texture_set_bitmap_data_texture_no_assert(uint32_t stage, uint16_t bitmap_data_index, TagHandle bitmap_tag);
 
 /**
  * Set the bitmap data texture; if the bitmap is not loaded, it will be loaded.

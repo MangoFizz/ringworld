@@ -152,12 +152,10 @@ void rasterizer_shader_transparent_water_render_bumpmap(ShaderTransparentWater *
             ps_constants[14] = 0.0f;
             ps_constants[15] = 0.0f;
 
+            rasterizer_dx9_render_target_set(0x00000000, 0, 8);
             rasterizer_dx9_set_stencil_mode(0);
 
-            size_t mipmap_levels = 4;
-            if(shader->ripple_mipmap_levels < 5) {
-                mipmap_levels = shader->ripple_mipmap_levels;
-            }
+            size_t mipmap_levels = min_i32(shader->ripple_mipmap_levels, 4);
 
             for(size_t i = 0; i < mipmap_levels; i++) {
                 ps_constants[12] = 0.5f;
@@ -171,8 +169,6 @@ void rasterizer_shader_transparent_water_render_bumpmap(ShaderTransparentWater *
                     float alpha = (float)i / (float)(shader->ripple_mipmap_levels - 1);
                     ps_constants[15] = alpha * shader->ripple_mipmap_fade_factor;
                 }
-
-                rasterizer_dx9_render_target_set(0x00000000, 0, 8);
 
                 for(size_t j = 0; j < 4; j++) {
                     TagHandle ripple_map_handle = NULL_HANDLE;

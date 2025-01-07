@@ -384,14 +384,18 @@ _Static_assert(sizeof(PlayerProfile) == 0x2000);
 bool saved_games_read_player_profile(uint32_t profile_name, PlayerProfile *profile_data);
 
 /**
- * Gets the current player profile ID.
+ * Gets the ID of the player profile for the specified local player index.
+ * @param local_player_index The local player index.
+ * @return The ID of the player profile.
  */
-uint32_t saved_games_get_current_profile_id(void);
+uint32_t saved_games_get_current_profile_id(uint16_t local_player_index);
 
 /**
- * Gets the current player profile.
+ * Gets the player profile for the specified local player index.
+ * @param local_player_index The local player index.
+ * @return Pointer to the player profile.
  */
-PlayerProfile *saved_games_get_current_profile(void);
+PlayerProfile *saved_games_get_player_profile(uint16_t local_player_index);
 
 
 #pragma pack(pop)

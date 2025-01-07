@@ -47,5 +47,7 @@
     "wave_functions": {"type": "uint8_t *[12]", "address": "0xd85a4c"},
     "shader_transparent_water_unk1": {"type": "bool", "address": "0x637d41"},
     "shader_transparent_water_should_update_bumpmap": {"type": "bool", "address": "0x6b8505"},
-    "globals_rasterizer_data": {"type": "GlobalsRasterizerData *", "address": "0x6b83fc"}
+    "globals_rasterizer_data": {"type": "GlobalsRasterizerData *", "address": "0x6b83fc"},
+    "saved_games_current_profile_id": {"type": "uint32_t", "address": "0x629c5c"},
+    "saved_games_player_profiles": {"type": "PlayerProfile *", "address": "0x6afe1c"}
 }

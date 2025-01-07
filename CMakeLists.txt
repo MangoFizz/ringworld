@@ -81,6 +81,7 @@ add_library(ringworld STATIC
     src/impl/rasterizer/rasterizer_shader_transparent_chicago.c
     src/impl/rasterizer/rasterizer_shader_transparent_generic.c
     src/impl/rasterizer/rasterizer_shader_transparent_water.c
+    src/impl/saved_games/player_profile.c
     src/impl/script/hsc.c
     src/impl/shader/shader.c
     src/impl/tag/tag.c

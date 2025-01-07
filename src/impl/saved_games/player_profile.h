@@ -377,18 +377,25 @@ _Static_assert(sizeof(PlayerProfile) == 0x2000);
 
 /**
  * Reads the player profile data from the saved games directory.
- * @param profile_name The name of the player profile.
+ * @param profile_id The name of the player profile.
  * @param profile_data Pointer to a buffer to store the player profile data.
  * @return True if the player profile was successfully read, false otherwise.
  */
-bool saved_games_read_player_profile(uint32_t profile_name, PlayerProfile *profile_data);
+bool saved_games_read_player_profile(uint32_t profile_id, PlayerProfile *profile_data);
+
+/**
+ * Writes the player profile data to the saved games directory.
+ * @param profile_id The name of the player profile.
+ * @param profile_data Pointer to the player profile data.
+ */
+void saved_games_write_player_profile(uint32_t profile_id, PlayerProfile *profile_data);
 
 /**
  * Gets the ID of the player profile for the specified local player index.
  * @param local_player_index The local player index.
  * @return The ID of the player profile.
  */
-uint32_t saved_games_get_current_profile_id(uint16_t local_player_index);
+uint32_t saved_games_get_player_profile_id(uint16_t local_player_index);
 
 /**
  * Gets the player profile for the specified local player index.

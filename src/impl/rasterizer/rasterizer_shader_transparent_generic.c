@@ -74,14 +74,14 @@ typedef struct ShaderStageParams {
 } ShaderStageParams;
 _Static_assert(sizeof(ShaderStageParams) == sizeof(int16_t) * 29);
 
+char *shader_transparent_generic_source = NULL; // let Balltze handle this
+
 static ShaderTransparentGenericInstances *shader_instances = NULL;
 static ShaderTransparentGenericInstancesMap *shader_instances_map = NULL;
 
-static const char *get_shader_source() {
-    static char *shader_source = NULL;
-    
-    if(shader_source != NULL) {
-        return shader_source;
+static const char *get_shader_source() {    
+    if(shader_transparent_generic_source != NULL) {
+        return shader_transparent_generic_source;
     }
 
     void *buffer = NULL;
@@ -89,14 +89,13 @@ static const char *get_shader_source() {
 
     HANDLE file = CreateFileA("shaders/shader_transparent_generic.hlsl", GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_SUPPORTS_EXTENDED_ATTRIBUTES, NULL);
     if(file == INVALID_HANDLE_VALUE) {
-        return false;
+        const char *error = "Failed to read shader transparent generic source; make sure the file \"shaders/shader_transparent_generic.hlsl\" exists.";
+        MessageBoxA(NULL, error, "Ringworld", MB_OK | MB_ICONERROR);
+        CRASHF_DEBUG("%s", error);
     }
     
     size_t file_size = GetFileSize(file, NULL);
-    if(file_size == INVALID_FILE_SIZE) {
-        CloseHandle(file);
-        return false;
-    }
+    ASSERT(file_size != INVALID_FILE_SIZE);
 
     HGLOBAL buffer_handle = GlobalAlloc(GMEM_FIXED, file_size);
     if(buffer_handle != NULL) {
@@ -105,17 +104,13 @@ static const char *get_shader_source() {
             GlobalFree(buffer_handle);
         }
         else {
-            shader_source = buffer_handle;
-            shader_source[bytes_read] = '\0';
+            shader_transparent_generic_source = buffer_handle;
+            shader_transparent_generic_source[bytes_read] = '\0';
         }
         CloseHandle(file);
     }
 
-    if(shader_source == NULL) {
-        CRASHF_DEBUG("failed to read shader transparent generic source; make sure the file shaders/shader_transparent_generic.hlsl exists.");
-    }
-
-    return shader_source;
+    return shader_transparent_generic_source;
 }
 
 void rasterizer_shader_transparent_generic_clear_instances(void) {

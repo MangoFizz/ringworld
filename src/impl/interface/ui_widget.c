@@ -176,10 +176,10 @@ void ui_widget_new_instance(int16_t controller_index, UIWidgetDefinition *widget
         }
     } 
 
-    if(widget->render_regardless_of_controller_index == true && get_multiplayer_mode() != MULTIPLAYER_MODE_HOST) {
+    if(widget->pauses_game_time == true && get_multiplayer_mode() != MULTIPLAYER_MODE_HOST) {
         ui_widget_globals->pause_time_count++;
         bool game_paused = game_time_get_paused();
-        if(is_main_menu == false && game_paused == false) {
+        if(*is_main_menu == false && game_paused == false) {
             game_time_set_paused(true);
         }
     }

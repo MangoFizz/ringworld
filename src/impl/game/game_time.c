@@ -1,14 +1,19 @@
 #include "game_time.h"
 
-extern GameTimeGlobals *game_time_globals;
+extern GameTimeGlobals **game_time_globals;
+
+GameTimeGlobals *get_game_time_globals(void) {
+    return *game_time_globals;
+}
 
 bool game_time_get_paused(void) {
-    return game_time_globals->paused;
+    return (*game_time_globals)->paused;
 }
 
 void game_time_set_paused(bool paused) {
-    if (game_time_globals->initialized != false) {
-        game_time_globals->active = !paused;
+    GameTimeGlobals *globals = get_game_time_globals();
+    if(globals->initialized != false) {
+        globals->active = !paused;
     }
-    game_time_globals->paused = paused;
+    globals->paused = paused;
 }

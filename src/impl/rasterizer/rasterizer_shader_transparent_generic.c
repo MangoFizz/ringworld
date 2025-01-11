@@ -221,12 +221,13 @@ IDirect3DPixelShader9 *rasterizer_shader_transparent_generic_get_instance(Shader
         // if there are no stages, set up the default stage
         params.input_a = SHADER_TRANSPARENT_GENERIC_STAGE_INPUT_COLOR_MAP_COLOR_0;
         params.input_b = SHADER_TRANSPARENT_GENERIC_STAGE_INPUT_COLOR_ONE;
-        params.output_ab = SHADER_TRANSPARENT_GENERIC_STAGE_OUTPUT_ALPHA_SCRATCH_ALPHA_0_FINAL_ALPHA ;
+        params.output_ab = SHADER_TRANSPARENT_GENERIC_STAGE_OUTPUT_ALPHA_SCRATCH_ALPHA_0_FINAL_ALPHA;
         params.input_a_alpha = SHADER_TRANSPARENT_GENERIC_STAGE_INPUT_ALPHA_MAP_ALPHA_0;
         params.input_b_alpha = SHADER_TRANSPARENT_GENERIC_STAGE_INPUT_ALPHA_ONE;
         params.output_ab_alpha = SHADER_TRANSPARENT_GENERIC_STAGE_OUTPUT_ALPHA_SCRATCH_ALPHA_0_FINAL_ALPHA;
         params.is_fog_stage = false;
         defines[stage_index] = generate_stage_macro(stage_index, params);
+        stage_index++;
     }
     else {
         for(stage_index = 0; stage_index < tag->stages.count && stage_index < 7; stage_index++) {

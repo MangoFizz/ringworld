@@ -58,7 +58,7 @@ Widget *ui_widget_load_by_name_or_tag(const char *definition_tag_path, TagHandle
         if(definition_tag_path) {
             definition_tag = lookup_tag(definition_tag_path, TAG_GROUP_UI_WIDGET_DEFINITION);
             if(HANDLE_IS_NULL(definition_tag)) {
-                CRASHF_DEBUG("failed to find widget definition tag");                
+                return NULL;
             }
         }
         else {

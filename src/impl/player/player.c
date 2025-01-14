@@ -8,8 +8,8 @@ extern TeamsTable **teams_data;
 extern PlayerControlGlobals **player_control_globals;
 
 void players_data_initialize(void) {
-    *players_data = (PlayersTable *)create_table("players", 16, sizeof(Player));
-    *teams_data = (TeamsTable *)create_table("teams", 16, sizeof(Team));
+    *players_data = (PlayersTable *)table_new("players", 16, sizeof(Player));
+    *teams_data = (TeamsTable *)table_new("teams", 16, sizeof(Team));
     
     PlayersGlobals *p_globals = (PlayersGlobals *)allocate_heap(sizeof(PlayersGlobals));
     p_globals->local_player_network_id = 0xFFFFFFFF;

@@ -7,6 +7,10 @@
 extern bool *map_is_loaded;
 extern TagDataHeader **tag_data_header_loaded;
 
+TagDataHeader *tag_get_data_header(void) {
+    return *tag_data_header_loaded;
+}
+
 TagHandle lookup_tag(const char *path, TagGroupFourCC group) {
     if(!*map_is_loaded) {
         return NULL_HANDLE;

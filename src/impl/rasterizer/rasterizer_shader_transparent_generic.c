@@ -7,7 +7,6 @@
 #include "../interface/numeric_countdown.h"
 #include "../math/math.h"
 #include "../math/wave_functions.h"
-#include "../memory/table.h"
 #include "../exception/exception.h"
 #include "../crypto/md5.h"
 #include "rasterizer_dx9.h"
@@ -20,22 +19,8 @@
 #include "rasterizer_shader_transparent_generic.h"
 
 enum {
-    MAX_SHADER_TRANSPARENT_GENERIC_INSTANCES = 0x80,
-    MAX_SHADER_TRANSPARENT_GENERIC_INSTANCES_MAP_ENTRIES = 0x100
+    NUM_OF_SHADER_COMPILE_DEFINES = 10
 };
-
-typedef struct ShaderTransparentGenericInstance {
-    char *hash;
-    IDirect3DPixelShader9 *shader;
-} ShaderTransparentGenericInstance;
-
-typedef struct ShaderInstancesMapEntry {
-    ShaderTransparentGeneric *shader_data;
-    IDirect3DPixelShader9 *shader;
-} ShaderInstancesMapEntry;
-
-MAKE_TABLE_STRUCT(ShaderTransparentGenericInstances, ShaderTransparentGenericInstance);
-MAKE_TABLE_STRUCT(ShaderTransparentGenericInstancesMap, ShaderInstancesMapEntry);
 
 typedef struct ShaderStageParams {
     int16_t input_a;
@@ -69,17 +54,16 @@ typedef struct ShaderStageParams {
     int16_t output_cd_alpha;
     int16_t output_ab_cd_mux_sum_alpha;
     int16_t output_mapping_alpha;
-
+    
     int16_t is_fog_stage;
 } ShaderStageParams;
 _Static_assert(sizeof(ShaderStageParams) == sizeof(int16_t) * 29);
 
-char *shader_transparent_generic_source = NULL; // let Balltze handle this
+char *shader_transparent_generic_source = NULL; 
+ShaderTransparentGenericInstances *shader_transparent_generic_instances = NULL;
+ShaderTransparentGenericTagsCache *shader_transparent_generic_tags_cache = NULL;
 
-static ShaderTransparentGenericInstances *shader_instances = NULL;
-static ShaderTransparentGenericInstancesMap *shader_instances_map = NULL;
-
-static const char *get_shader_source() {    
+static const char *get_shader_source() {
     if(shader_transparent_generic_source != NULL) {
         return shader_transparent_generic_source;
     }
@@ -113,29 +97,7 @@ static const char *get_shader_source() {
     return shader_transparent_generic_source;
 }
 
-void rasterizer_shader_transparent_generic_clear_instances(void) {
-    if(shader_instances == NULL || shader_instances_map == NULL) {
-        return;
-    }
-
-    for(size_t i = 0; i < shader_instances_map->current_size; i++) {
-        ShaderInstancesMapEntry *entry = shader_instances_map->first_element + i;
-        entry->shader_data = NULL;
-        entry->shader = NULL;   
-    }
-    shader_instances_map->current_size = 0;
-    
-    for(size_t i = 0; i < shader_instances->current_size; i++) {
-        ShaderTransparentGenericInstance *instance = shader_instances->first_element + i;
-        IDirect3DPixelShader9_Release(instance->shader);
-        instance->shader = NULL;
-        GlobalFree(instance->hash);
-        instance->hash = NULL;
-    }
-    shader_instances->current_size = 0;
-}
-
-static D3D_SHADER_MACRO generate_stage_macro(size_t stage_index, ShaderStageParams params) {
+static D3D_SHADER_MACRO generate_stage_define(size_t stage_index, ShaderStageParams params) {
     char buffer[128];
     sprintf(buffer, "%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d", 
         stage_index, 
@@ -179,46 +141,28 @@ static D3D_SHADER_MACRO generate_stage_macro(size_t stage_index, ShaderStagePara
     return result;
 }
 
-static char *generate_hash(D3D_SHADER_MACRO *defines) {
+static char *generate_defines_hash(D3D_SHADER_MACRO *defines) {
+    char buffer[1024] = {0};
+    for(size_t i = 0; i < NUM_OF_SHADER_COMPILE_DEFINES; i++) {
+        if(defines[i].Name != NULL) {
+            strcat(buffer, defines[i].Name);
+        }
+        if(defines[i].Definition != NULL) {
+            strcat(buffer, defines[i].Definition);
+        }
+    }
     char *hash = GlobalAlloc(GMEM_FIXED, 32);
-    generate_md5_hash((char *)defines, sizeof(defines[0]) * 10, hash);
+    generate_md5_hash(buffer, sizeof(buffer), hash);
     return hash;
 }
 
-/**
- * Funfact: Setting the function below as static causes the compiler to ignore the calling convention.
- * It will store the tag argument in a register instead of the stack, causing the "create_table" 
- * function to overwrite the tag parameter with another value.
- * 
- * Be careful when using static functions!
- */
-
-IDirect3DPixelShader9 *rasterizer_shader_transparent_generic_get_instance(ShaderTransparentGeneric *tag) {
-    ASSERT(tag != NULL);
-
-    if(shader_instances == NULL) {
-        shader_instances = create_table("transparent_generic_instances", MAX_SHADER_TRANSPARENT_GENERIC_INSTANCES, sizeof(ShaderTransparentGenericInstance));
-        ASSERT(shader_instances != NULL);
-    }
-
-    if(shader_instances_map == NULL) {
-        shader_instances_map = create_table("transparent_generic_tags", MAX_SHADER_TRANSPARENT_GENERIC_INSTANCES, sizeof(ShaderInstancesMapEntry));
-        ASSERT(shader_instances_map != NULL);
-    }
-
-    for(size_t i = 0; i < shader_instances_map->current_size; i++) {
-        ShaderInstancesMapEntry *entry = shader_instances_map->first_element + i;
-        if(entry->shader_data == tag) {
-            return entry->shader;
-        }
-    }
-
-    D3D_SHADER_MACRO defines[10] = {0};
+static D3D_SHADER_MACRO *generate_defines(ShaderTransparentGeneric *tag) {
+    D3D_SHADER_MACRO *defines = GlobalAlloc(GPTR, sizeof(D3D_SHADER_MACRO) * 10);
+    size_t defines_count = 0;
     ShaderStageParams params = {0};
 
-    size_t stage_index = 0;
+    // if there are no stages, set up the default stage
     if(tag->stages.count == 0) {
-        // if there are no stages, set up the default stage
         params.input_a = SHADER_TRANSPARENT_GENERIC_STAGE_INPUT_COLOR_MAP_COLOR_0;
         params.input_b = SHADER_TRANSPARENT_GENERIC_STAGE_INPUT_COLOR_ONE;
         params.output_ab = SHADER_TRANSPARENT_GENERIC_STAGE_OUTPUT_ALPHA_SCRATCH_ALPHA_0_FINAL_ALPHA;
@@ -226,12 +170,12 @@ IDirect3DPixelShader9 *rasterizer_shader_transparent_generic_get_instance(Shader
         params.input_b_alpha = SHADER_TRANSPARENT_GENERIC_STAGE_INPUT_ALPHA_ONE;
         params.output_ab_alpha = SHADER_TRANSPARENT_GENERIC_STAGE_OUTPUT_ALPHA_SCRATCH_ALPHA_0_FINAL_ALPHA;
         params.is_fog_stage = false;
-        defines[stage_index] = generate_stage_macro(stage_index, params);
-        stage_index++;
+        defines[defines_count] = generate_stage_define(defines_count, params);
+        defines_count++;
     }
     else {
-        for(stage_index = 0; stage_index < tag->stages.count && stage_index < 7; stage_index++) {
-            ShaderTransparentGenericStage *stage = TAG_BLOCK_GET_ELEMENT(tag->stages, stage_index);
+        for(size_t current_stage = 0; current_stage < tag->stages.count && current_stage < 7; current_stage++) {
+            ShaderTransparentGenericStage *stage = TAG_BLOCK_GET_ELEMENT(tag->stages, current_stage);
             
             params.input_a = stage->input_a;
             params.input_a_mapping = stage->input_a_mapping;
@@ -266,8 +210,10 @@ IDirect3DPixelShader9 *rasterizer_shader_transparent_generic_get_instance(Shader
 
             params.is_fog_stage = false;
 
-            defines[stage_index] = generate_stage_macro(stage_index, params);
+            defines[defines_count] = generate_stage_define(current_stage, params);
+            defines_count++;
 
+            // Wipe the params for the next iteration
             memset(&params, 0, sizeof(ShaderStageParams));
         }
     }
@@ -341,59 +287,27 @@ IDirect3DPixelShader9 *rasterizer_shader_transparent_generic_get_instance(Shader
             break;
     }
     params.is_fog_stage = true;
-    defines[stage_index] = generate_stage_macro(stage_index, params);
-    stage_index++;
+    defines[defines_count] = generate_stage_define(defines_count, params);
+    defines_count++;
 
     if(tag->first_map_type != SHADER_FIRST_MAP_TYPE_2D_MAP) {
         const char *first_map_is_cube = "FIRST_MAP_IS_CUBE";
         char *first_map_type_macro = GlobalAlloc(GMEM_FIXED, strlen(first_map_is_cube) + 1);
         strcpy(first_map_type_macro, first_map_is_cube);
-        defines[stage_index].Name = first_map_type_macro;
-        defines[stage_index].Definition = NULL;
-        stage_index++;
+        defines[defines_count].Name = first_map_type_macro;
+        defines[defines_count].Definition = NULL;
+        defines_count++;
     }
 
-    defines[stage_index].Name = NULL;
-    defines[stage_index].Definition = NULL;
+    defines[defines_count].Name = NULL;
+    defines[defines_count].Definition = NULL;
 
-    IDirect3DPixelShader9 *shader = NULL;
+    return defines;
+}
 
-    char *hash = generate_hash(defines);
-    for(size_t i = 0; i < shader_instances->current_size; i++) {
-        ShaderTransparentGenericInstance *instance = shader_instances->first_element + i;
-        if(strncmp(instance->hash, hash, 32) == 0) {
-            ShaderInstancesMapEntry *entry = &shader_instances_map->first_element[shader_instances_map->current_size];
-            entry->shader_data = tag;
-            entry->shader = instance->shader;
-            shader_instances_map->current_size++;
-            shader = instance->shader;
-        }
-    }
-
-    if(shader == NULL) {
-        ID3DBlob *compiled_shader = NULL;
-        if(!rasterizer_dx9_shader_compiler_compile_shader_from_blob(get_shader_source(), "main", "ps_3_0", defines, &compiled_shader)) {
-            CRASHF_DEBUG("failed to compile shader transparent generic\n");
-        }
-        if(FAILED(IDirect3DDevice9_CreatePixelShader(rasterizer_dx9_device(), (DWORD *)ID3D10Blob_GetBufferPointer(compiled_shader), &shader))) {
-            CRASHF_DEBUG("failed to create pixel shader for shader transparent generic\n");
-        }
-
-        ShaderTransparentGenericInstance *instance = &shader_instances->first_element[shader_instances->current_size];
-        instance->shader = shader;
-        instance->hash = hash;
-        shader_instances->current_size++;
-
-        ShaderInstancesMapEntry *entry = &shader_instances_map->first_element[shader_instances_map->current_size];
-        entry->shader_data = tag;
-        entry->shader = shader;
-        shader_instances_map->current_size++;
-        
-        ID3D10Blob_Release(compiled_shader);
-    }
-
+static void free_defines(D3D_SHADER_MACRO *defines) {
     // al manejo de memoria no hay que tenerle miedo, hay que tenerle respeto
-    for(size_t i = 0; i < (sizeof(defines) / sizeof(defines[0])); i++) {
+    for(size_t i = 0; i < NUM_OF_SHADER_COMPILE_DEFINES; i++) {
         if(defines[i].Name != NULL) {
             GlobalFree((void *)defines[i].Name);
         }
@@ -401,8 +315,110 @@ IDirect3DPixelShader9 *rasterizer_shader_transparent_generic_get_instance(Shader
             GlobalFree((void *)defines[i].Definition);
         }
     }
+    GlobalFree(defines);
+}
 
-    return shader;
+ID3DBlob *rasterizer_shader_transparent_generic_compile_shader(D3D_SHADER_MACRO *defines) {
+    ID3DBlob *compiled_shader = NULL;
+    if(!rasterizer_dx9_shader_compiler_compile_shader_from_blob(get_shader_source(), "main", "ps_3_0", defines, &compiled_shader)) {
+        CRASHF_DEBUG("failed to compile shader transparent generic\n");
+    }
+    return compiled_shader;
+}
+
+ShaderTransparentGenericInstance *rasterizer_shader_transparent_generic_get_or_create_instance(ShaderTransparentGeneric *tag) {
+    if(shader_transparent_generic_instances == NULL) {
+        shader_transparent_generic_instances = table_new("transparent generic instances", MAX_SHADER_TRANSPARENT_GENERIC_INSTANCES, sizeof(ShaderTransparentGenericInstance));
+    }
+    if(shader_transparent_generic_tags_cache == NULL) {
+        shader_transparent_generic_tags_cache = table_new("transparent generic tags cache", MAX_SHADER_TRANSPARENT_GENERIC_PER_MAP, sizeof(ShaderTransparentGenericTagCache));
+    }
+    
+    // Look for the instance in the cache
+    TableIterator it;
+    table_init_iterator(&it, shader_transparent_generic_tags_cache);
+    ShaderTransparentGenericTagCache *cache_entry;
+    while(cache_entry = table_iterate(&it), cache_entry != NULL) {
+        if(cache_entry->shader_data == tag) {
+            ShaderTransparentGenericInstance *instance = table_get_element((GenericTable *)shader_transparent_generic_instances, cache_entry->shader_instance);
+            if(instance == NULL) {
+                CRASHF_DEBUG("shader transparent generic instance not found in the instance table");
+            }
+            return instance;
+        }
+    }
+    
+    if(shader_transparent_generic_instances->count == MAX_SHADER_TRANSPARENT_GENERIC_INSTANCES) {
+        CRASHF_DEBUG("maximum number of shader transparent generic instances reached");
+    }
+
+    D3D_SHADER_MACRO *defines = generate_defines(tag);
+    char *hash = generate_defines_hash(defines);
+    ShaderTransparentGenericInstance *instance = NULL;
+
+    table_init_iterator(&it, shader_transparent_generic_instances);
+    while(instance = table_iterate(&it), instance != NULL) {
+        if(strncmp(instance->hash, hash, 32) == 0) {
+            break;
+        }
+    }
+
+    if(instance == NULL) {
+        size_t instance_index = shader_transparent_generic_instances->next_free_element_index;
+        instance = table_add_element((GenericTable *)shader_transparent_generic_instances);
+        table_init_element((GenericTable *)shader_transparent_generic_instances, instance);
+        instance->compiled_shader = rasterizer_shader_transparent_generic_compile_shader(defines);
+        instance->handle = MAKE_HANDLE(instance->id, instance_index);
+        memcpy(instance->hash, hash, 32);
+    }
+
+    cache_entry = table_add_element((GenericTable *)shader_transparent_generic_tags_cache);
+    table_init_element((GenericTable *)shader_transparent_generic_tags_cache, cache_entry);
+    cache_entry->shader_data = tag;
+    cache_entry->shader_instance = instance->handle;
+
+    free_defines(defines);
+    GlobalFree(hash);
+
+    return instance;
+}
+
+void rasterizer_shader_transparent_generic_create_instances_for_current_map(void) {
+    TagDataHeader *tag_data_header = tag_get_data_header();
+    if(tag_data_header == NULL) {
+        CRASHF_DEBUG("tag data header is NULL");
+    }
+    
+    for(size_t i = 0; i < tag_data_header->tag_count; i++) {
+        TagEntry *tag_entry = tag_data_header->tags + i;
+        if(tag_entry->primary_group == TAG_GROUP_SHADER_TRANSPARENT_GENERIC) {
+            rasterizer_shader_transparent_generic_get_or_create_instance(tag_entry->data);
+        }
+    }
+}
+
+void rasterizer_shader_transparent_generic_clear_tags_cache(void) {
+    if(shader_transparent_generic_tags_cache != NULL) {
+        table_clear((GenericTable *)shader_transparent_generic_tags_cache);
+    }
+}
+
+IDirect3DPixelShader9 *rasterizer_shader_transparent_generic_get_pixel_shader(ShaderTransparentGeneric *tag) {
+    ASSERT(tag != NULL);
+
+    ShaderTransparentGenericInstance *instance = rasterizer_shader_transparent_generic_get_or_create_instance(tag);
+    if(instance->shader == NULL) {
+        ID3DBlob *compiled_shader = instance->compiled_shader;
+        IDirect3DPixelShader9 *shader;
+        if(FAILED(IDirect3DDevice9_CreatePixelShader(rasterizer_dx9_device(), (DWORD *)ID3D10Blob_GetBufferPointer(compiled_shader), &shader))) {
+            CRASHF_DEBUG("failed to create pixel shader for shader transparent generic\n");
+        }
+        ID3D10Blob_Release(compiled_shader);
+        instance->compiled_shader = NULL;
+        instance->shader = shader;
+    }
+
+    return instance->shader;
 }
 
 void rasterizer_shader_transparent_generic_draw(TransparentGeometryGroup *group, uint32_t *param_2) {
@@ -575,7 +591,7 @@ void rasterizer_shader_transparent_generic_draw(TransparentGeometryGroup *group,
         rasterizer_dx9_set_vertex_shader_constant_f(13, animation_vsh_constants, 8);
         
         rasterizer_dx9_transparent_generic_preprocess(group); 
-        IDirect3DPixelShader9 *shader = rasterizer_shader_transparent_generic_get_instance((ShaderTransparentGeneric *)group->shader);
+        IDirect3DPixelShader9 *shader = rasterizer_shader_transparent_generic_get_pixel_shader(shader_data);
         rasterizer_dx9_set_pixel_shader(shader);
         rasterizer_transparent_geometry_group_draw_vertices(false, group);
         rasterizer_dx9_set_render_state(D3DRS_BLENDOP, D3DBLENDOP_ADD);

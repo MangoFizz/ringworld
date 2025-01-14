@@ -64,8 +64,8 @@ typedef union TableResourceHandle {
     /** d@t@ fourcc - unused */ \
     uint32_t data_fourcc; \
     \
-    /** Unknown what this does */ \
-    uint16_t unknown_2c; \
+    /** Index of the next not-active element of the table */ \
+    int16_t next_free_element_index; \
     \
     /** Current size of the table, even including elements not active */ \
     uint16_t current_size; \
@@ -98,25 +98,63 @@ typedef struct TableIterator {
     /** Current index the iterator is on */
     uint16_t index;
 
-    uint8_t padding[2];
-
     /** Handle of the object found - not valid if init_iterator returned NULL */
     TableResourceHandle handle;
 
     /** Unused */
     uint32_t salt;
 } TableIterator;
+_Static_assert(sizeof(TableIterator) == 0x10);
 
 /**
  * Allocate a table of objects.
- *
  * @param name          name of table
  * @param maximum_count maximum element count
  * @param element_size  size of each element
- *
  * @return table
  */
-void *create_table(const char *name, uint16_t maximum_count, uint16_t element_size);
+void *table_new(const char *name, uint16_t maximum_count, uint16_t element_size);
+
+/**
+ * Get the element of a table by its handle.
+ * If the input handle has a salt of 0x0000, then the salt will not be checked.
+ * @param table     table pointer
+ * @param handle    Handle of the element
+ * @return pointer if the handle corresponds to a valid table index, NULL if not
+ */
+void *table_get_element(GenericTable *table, TableResourceHandle handle);
+
+/**
+ * Initialize a table element.
+ * @param table                table pointer
+ * @param new_element_location pointer to the new element
+ */
+void table_init_element(GenericTable *table, void *new_element_location);
+
+/**
+ * Add a new element to a table.
+ * @param table table pointer
+ * @return pointer to the new element, or NULL if the table is full
+ */
+void *table_add_element(GenericTable *table);
+
+/**
+ * Clear the contents of a table.
+ * @param table table pointer
+ */
+void table_clear(GenericTable *table);
+
+/**
+ * Prepare a TableIterator.
+ */
+void table_init_iterator(TableIterator *iterator, const void *table);
+
+/**
+ * Iterate through a table to get the next valid instance.
+ * @param iterator to use (must be initialized with init_iterator)
+ * @return next valid instance, or NULL if none
+ */
+void *table_iterate(TableIterator *iterator);
 
 #ifdef __cplusplus
 }

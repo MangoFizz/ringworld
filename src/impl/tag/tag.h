@@ -152,6 +152,12 @@ typedef struct TagBlockDefinition {
 _Static_assert(sizeof(TagBlockDefinition) == 0x14);
 
 /**
+ * Get the tag data header.
+ * @return pointer to tag data header
+ */
+TagDataHeader *tag_get_data_header(void);
+
+/**
  * Lookup the tag.
  * @param path  path of the tag (not including file extension)
  * @param group group of the tag

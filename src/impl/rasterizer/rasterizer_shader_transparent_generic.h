@@ -8,8 +8,34 @@ extern "C" {
 #include <stdbool.h>
 #include <d3d9.h>
 
+#include "../memory/table.h"
 #include "../tag/definitions/shader_transparent_generic.h"
 #include "rasterizer_geometry_group.h"
+
+enum {
+    MAX_SHADER_TRANSPARENT_GENERIC_INSTANCES = 256,
+    MAX_SHADER_TRANSPARENT_GENERIC_PER_MAP = 128,
+    MAX_SHADER_TRANSPARENT_GENERIC_STAGES = 7,
+    MAX_SHADER_TRANSPARENT_GENERIC_MAPS = 4
+};
+
+typedef struct ShaderTransparentGenericInstance {
+    uint16_t id;
+    TableResourceHandle handle;
+    char hash[32];
+    void *compiled_shader;
+    IDirect3DPixelShader9 *shader;
+} ShaderTransparentGenericInstance;
+
+MAKE_TABLE_STRUCT(ShaderTransparentGenericInstances, ShaderTransparentGenericInstance);
+
+typedef struct ShaderTransparentGenericTagCache {
+    uint16_t id;
+    TableResourceHandle shader_instance;
+    ShaderTransparentGeneric *shader_data;
+} ShaderTransparentGenericTagCache;
+
+MAKE_TABLE_STRUCT(ShaderTransparentGenericTagsCache, ShaderTransparentGenericTagCache);
 
 /**
  * Draw the shader transparent generic geometry.
@@ -19,23 +45,20 @@ extern "C" {
 void rasterizer_shader_transparent_generic_draw(TransparentGeometryGroup *group, uint32_t *param_2);
 
 /**
- * Get the instance of the shader transparent generic pixel shader.
- * If the instance does not exist, it will be compiled against the given shader parameters.
- * @param tag The shader transparent generic tag.
- * @return The pixel shader instance.
- */
-IDirect3DPixelShader9 *rasterizer_shader_transparent_generic_get_instance(ShaderTransparentGeneric *tag);
-
-/**
  * Set up the pixel shader constants for rendering the shader transparent generic.
  * @param group The transparent geometry group.
  */
 void rasterizer_dx9_transparent_generic_preprocess(TransparentGeometryGroup *group);
 
 /**
- * Clear the instances of the shader transparent generic.
+ * Create an instance of the shader transparent generic for each tag in the current map.
  */
-void rasterizer_shader_transparent_generic_clear_instances(void);
+void rasterizer_shader_transparent_generic_create_instances_for_current_map(void);
+
+/**
+ * Clear the shader transparent generic tags cache.
+ */
+void rasterizer_shader_transparent_generic_clear_tags_cache(void);
 
 #ifdef __cplusplus
 }

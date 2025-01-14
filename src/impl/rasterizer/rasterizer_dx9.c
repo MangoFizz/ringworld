@@ -1,6 +1,5 @@
 #include <stdint.h>
 #include <stdio.h>
-#include <d3d9.h>
 
 #include "../exception/exception.h"
 #include "rasterizer_dx9_vertex.h"

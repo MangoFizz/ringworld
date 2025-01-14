@@ -14,7 +14,7 @@ extern "C" {
 
 enum {
     MAX_SHADER_TRANSPARENT_GENERIC_INSTANCES = 256,
-    MAX_SHADER_TRANSPARENT_GENERIC_PER_MAP = 128,
+    MAX_SHADER_TRANSPARENT_GENERIC_PER_MAP = 256,
     MAX_SHADER_TRANSPARENT_GENERIC_STAGES = 7,
     MAX_SHADER_TRANSPARENT_GENERIC_MAPS = 4
 };
@@ -56,9 +56,9 @@ void rasterizer_dx9_transparent_generic_preprocess(TransparentGeometryGroup *gro
 void rasterizer_shader_transparent_generic_create_instances_for_current_map(void);
 
 /**
- * Clear the shader transparent generic tags cache.
+ * Clear all shader transparent generic instances.
  */
-void rasterizer_shader_transparent_generic_clear_tags_cache(void);
+void rasterizer_shader_transparent_generic_clear_instances(void);
 
 #ifdef __cplusplus
 }

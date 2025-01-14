@@ -137,3 +137,14 @@ void *table_iterate(TableIterator *iterator) {
 
     return NULL;
 }
+
+void table_iterate_simple(void *table, table_iterator_callback callback, void *user_data) {
+    TableIterator iterator;
+    table_init_iterator(&iterator, table);
+
+    for(void *value = table_iterate(&iterator); value != NULL; value = table_iterate(&iterator)) {
+        if(!callback(&iterator, value, user_data)) {
+            return;
+        }
+    }
+}

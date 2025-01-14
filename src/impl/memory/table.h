@@ -156,6 +156,23 @@ void table_init_iterator(TableIterator *iterator, const void *table);
  */
 void *table_iterate(TableIterator *iterator);
 
+/**
+ * Iterator callback for the iterate_table_simple function.
+ * @param iterator  current iterator value
+ * @param item      pointer to item in table
+ * @param user_data user data passed in iterate function
+ * @return true if the iterator should continue, false if not
+ */
+typedef bool (*table_iterator_callback)(const TableIterator *iterator, void *item, void *user_data);
+
+/**
+ * Iterate a table from start to the end.
+ * @param table     table to iterate
+ * @param callback  callback to call
+ * @param user_data user data to pass into the callback
+ */
+void table_iterate_simple(void *table, table_iterator_callback callback, void *user_data);
+
 #ifdef __cplusplus
 }
 #endif

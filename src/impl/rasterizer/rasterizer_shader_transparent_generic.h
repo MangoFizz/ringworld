@@ -13,8 +13,8 @@ extern "C" {
 #include "rasterizer_geometry_group.h"
 
 enum {
-    MAX_SHADER_TRANSPARENT_GENERIC_INSTANCES = 256,
-    MAX_SHADER_TRANSPARENT_GENERIC_PER_MAP = 256,
+    MAX_SHADER_TRANSPARENT_GENERIC_INSTANCES = 255,
+    MAX_SHADER_TRANSPARENT_GENERIC_PER_MAP = 255,
     MAX_SHADER_TRANSPARENT_GENERIC_STAGES = 7,
     MAX_SHADER_TRANSPARENT_GENERIC_MAPS = 4
 };
@@ -26,6 +26,7 @@ typedef struct ShaderTransparentGenericInstance {
     void *compiled_shader;
     IDirect3DPixelShader9 *shader;
 } ShaderTransparentGenericInstance;
+_Static_assert(sizeof(ShaderTransparentGenericInstance) == 48);
 
 MAKE_TABLE_STRUCT(ShaderTransparentGenericInstances, ShaderTransparentGenericInstance);
 
@@ -34,6 +35,7 @@ typedef struct ShaderTransparentGenericTagCache {
     TableResourceHandle shader_instance;
     ShaderTransparentGeneric *shader_data;
 } ShaderTransparentGenericTagCache;
+_Static_assert(sizeof(ShaderTransparentGenericTagCache) == 12);
 
 MAKE_TABLE_STRUCT(ShaderTransparentGenericTagsCache, ShaderTransparentGenericTagCache);
 

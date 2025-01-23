@@ -8,8 +8,9 @@
     "object_attach_to_marker": {"address": "0x4f9a90", "replace": false, "arguments": ["0", "4", "esi", "edi"]},
 
     "memory_map_initialize": {"address": "0x445230", "replace": true},
-    "table_new": {"address": "0x53b3b0", "replace": true, "use_return_value": true, "arguments": ["0", "4", "ebx"]},
-    "malloc_crc_checksum_buffer": {"address": "0x4d36d0", "replace": false, "arguments": ["0", "4", "8"]},
+    "game_state_table_new": {"address": "0x53b3b0", "replace": true, "use_return_value": true, "arguments": ["0", "4", "ebx"]},
+    "table_new": {"address": "0x4d3770", "replace": true, "use_return_value": true, "arguments": ["0", "4", "ebx"]},
+    "crc32_calculate": {"address": "0x4d36d0", "replace": false, "arguments": ["0", "4", "8"]},
     "players_data_initialize": {"address": "0x476170", "replace": true},
 
     "pow_float": {"address": "0x5ccf80", "replace": true, "arguments": ["st1", "st0"]},
@@ -44,8 +45,6 @@
     "rasterizer_dx9_texture_calculate_mipmaps_levels": {"address": "0x527230", "replace": false, "use_return_value": true, "arguments": ["0", "eax", "ebx"]},
     "rasterizer_dx9_texture_create": {"address": "0x5272c0", "replace": true, "use_return_value": true, "arguments": ["esi"]},
     "rasterizer_dx9_texture_load_bitmap": {"address": "0x444eb0", "replace": false, "use_return_value": true, "arguments": ["0", "4", "eax"]},
-    "rasterizer_shader_transparent_water_draw": {"address": "0x539310", "replace": true, "arguments": ["0"]},
-    "rasterizer_shader_transparent_water_render_bumpmap": {"address": "0x538380", "replace": true, "arguments": ["0"]},
     "rasterizer_dx9_set_stencil_mode": {"address": "0x51c900", "replace": true, "arguments": ["eax"]},
     "rasterizer_dx9_render_target_set": {"address": "0x52fda0", "replace": false, "arguments": ["0", "4", "eax"]},
 

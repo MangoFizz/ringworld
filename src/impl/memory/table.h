@@ -9,6 +9,8 @@ extern "C" {
 #include <stdbool.h>
 #include "memory.h"
 
+#define CALCULATE_ALLOCATION_SIZE(maximum_count, element_size) (sizeof(GenericTable) + (size_t)(maximum_count) * (size_t)(element_size))
+
 typedef union TableResourceHandle {
     uint32_t value;
     struct {
@@ -105,6 +107,15 @@ typedef struct TableIterator {
     uint32_t salt;
 } TableIterator;
 _Static_assert(sizeof(TableIterator) == 0x10);
+
+/**
+ * Initialize a table.
+ * @param table         table pointer
+ * @param name          name of table
+ * @param maximum_count maximum element count
+ * @param element_size  size of each element
+ */
+void table_initialize(GenericTable *table, const char *name, uint16_t maximum_count, uint16_t element_size);
 
 /**
  * Allocate a table of objects.

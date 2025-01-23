@@ -6,8 +6,6 @@
 #include "table.h"
 
 #define ITERATOR_FOURCC 0x69746572 // 'iter'
-
-#define CALCULATE_ALLOCATION_SIZE(maximum_count, element_size) (sizeof(GenericTable) + (size_t)(maximum_count) * (size_t)(element_size))
 #define INIT_TABLE_NEXT_ID(table) table->next_id = *(uint16_t *)(table->name) | 0x8000
 
 void table_initialize(GenericTable *table, const char *name, uint16_t maximum_count, uint16_t element_size) {
@@ -22,7 +20,7 @@ void table_initialize(GenericTable *table, const char *name, uint16_t maximum_co
 
 void *table_new(const char *name, uint16_t maximum_count, uint16_t element_size) {
     size_t allocation_amount = CALCULATE_ALLOCATION_SIZE(maximum_count, element_size);
-    GenericTable *table = (GenericTable *)(allocate_heap(allocation_amount));
+    GenericTable *table = GlobalAlloc(GPTR, allocation_amount);
     table_initialize(table, name, maximum_count, element_size);
     return table;
 }

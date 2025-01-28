@@ -2,7 +2,7 @@
     "structure_bsp_index": {"type": "uint16_t", "address": "0x6397d0"},
     "managed_heap": {"type": "void *", "address": "0x647478"},
     "tag_data": {"type": "void *", "address": "0x64747c"},
-    "texture_cache_unk1": {"type": "void *", "address": "0x647480"},
+    "texture_cache": {"type": "void *", "address": "0x647480"},
     "sound_cache": {"type": "void *", "address": "0x647484"},
     "sound_cache_mib": {"type": "uint16_t *", "address": "0x621f84"},
     "game_state_base_address": {"type": "void *", "address": "0x67dd88"},

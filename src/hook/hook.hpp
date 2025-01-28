@@ -113,7 +113,9 @@ namespace Demon {
     };
 
     void set_up_game_hooks();
-    void set_up_dedicated_hooks();
+    void set_up_server_hooks();
+    void set_game_variables();
+    void set_server_variables();
 }
 
 #endif

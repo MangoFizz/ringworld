@@ -16,6 +16,8 @@ static std::byte *hook_heap;
 static const std::size_t hook_heap_size = 512 * 1024;
 static std::size_t hook_heap_usage;
 
+bool ringworld_server_mode = false;
+
 extern "C" void set_up_ringworld_hooks(Platform platform) {
     // Enable DEP (if doable) because executing code not marked as executable is bad
     SetProcessDEPPolicy(PROCESS_DEP_ENABLE);
@@ -29,10 +31,14 @@ extern "C" void set_up_ringworld_hooks(Platform platform) {
     try {
         switch(platform) {
             case RW_PLATFORM_GAME: 
+                ringworld_server_mode = false;
+                set_game_variables();
                 set_up_game_hooks();
                 break;
             case RW_PLATFORM_DEDICATED_SERVER:
-                set_up_dedicated_hooks();
+                ringworld_server_mode = true;
+                set_server_variables();
+                set_up_server_hooks();
                 break;
         }
     }

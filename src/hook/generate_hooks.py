@@ -1,8 +1,8 @@
 import json
 import sys
 
-if len(sys.argv) != 5:
-    print("Usage: {} <hooks.json> <function-name> <hooks-out.cpp> <functions-out.cpp>")
+if len(sys.argv) != 6:
+    print("Usage: {} <hooks.json> <function-name> <hooks-out.cpp> <functions-out.cpp> <extern-functions>")
     sys.exit(1)
 
 with open(sys.argv[1], "r") as f:
@@ -12,7 +12,7 @@ lib_fns = ""
 hook_fn = ""
 for hook in hooks:
     hook_info = hooks[hook]
-    if "disabled" in hook_info and hook_info["disabled"]:
+    if ("disabled" in hook_info and hook_info["disabled"]) or not hook_info["address"]:
         continue
 
     if "flag" in hook_info:
@@ -30,7 +30,10 @@ for hook in hooks:
             print("Unknown replace value: ", hook_info["replace"])
             sys.exit(1)
     else:
-        lib_fns += "    void *{}_address = nullptr;\n".format(hook)
+        if sys.argv[5] == "true":
+            lib_fns += "    extern void *{}_address;\n".format(hook)
+        else:
+            lib_fns += "    void *{}_address = nullptr;\n".format(hook)
         hook_fn += "        {hook}_address = Hook(\"{hook}\", {address})".format(hook=hook, address=hook_info["address"])
 
     if "arguments" in hook_info:
@@ -67,20 +70,24 @@ namespace Demon {
 with open(sys.argv[3], "w") as f:
     f.write(cpp_source_code)
 
-asm_source_code = """;# AUTO-GENERATED! DO NOT EDIT UNLESS YOU LIKE REGRETTING THINGS!
-.intel_syntax noprefix
+if sys.argv[5] == "false":
+    asm_source_code = """;# AUTO-GENERATED! DO NOT EDIT UNLESS YOU LIKE REGRETTING THINGS!
+    .intel_syntax noprefix
 
-.text
-"""
+    .text
+    """
 
-for hook in hooks:
-    hook_info = hooks[hook]
-    if hook_info["replace"] == False:
-        asm_source_code += """
-.globl _{hook}
-_{hook}:
-    jmp dword ptr [_{hook}_address]
-""".format(hook=hook)
+    for hook in hooks:
+        if ("disabled" in hooks[hook] and hooks[hook]["disabled"]) or not hooks[hook]["address"]:
+            continue
+        hook_info = hooks[hook]
+        if hook_info["replace"] == False:
+            asm_source_code += """
+    .globl _{hook}
+    _{hook}:
+        jmp dword ptr [_{hook}_address]
+    """.format(hook=hook)
 
-with open(sys.argv[4], "w") as f:
-    f.write(asm_source_code)
+    with open(sys.argv[4], "w") as f:
+        f.write(asm_source_code)
+        

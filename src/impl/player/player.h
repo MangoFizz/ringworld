@@ -37,7 +37,7 @@ typedef struct Team {
 _Static_assert(sizeof(Team) == 0x40);
 
 typedef struct PlayerControl {
-    ObjectHandle unit_index; 
+    ObjectHandle unit_handle; 
     uint32_t control_flags; 
     uint16_t pad_1;
     uint16_t pad_2;

@@ -237,10 +237,10 @@ void rasterizer_shader_transparent_chicago_draw(TransparentGeometryGroup *group,
         int tss_option_argument;
         switch(shader_data->framebuffer_fade_mode) {
             case FRAMEBUFFER_FADE_MODE_NONE:
-                tss_option_argument = D3DTA_ALPHAREPLICATE | D3DTA_SPECULAR;
+                tss_option_argument = D3DTA_ALPHAREPLICATE;
                 break;
             case FRAMEBUFFER_FADE_MODE_FADE_WHEN_PERPENDICULAR:
-                tss_option_argument = D3DTA_ALPHAREPLICATE;
+                tss_option_argument = D3DTA_ALPHAREPLICATE | D3DTA_SPECULAR;
                 break;
             case FRAMEBUFFER_FADE_MODE_FADE_WHEN_PARALLEL:
                 tss_option_argument = D3DTA_SPECULAR;

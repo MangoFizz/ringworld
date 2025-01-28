@@ -23,7 +23,7 @@ void *game_state_allocate_heap(size_t size) {
 
 void *game_state_table_new(const char *name, uint16_t maximum_count, uint16_t element_size) {
     size_t allocation_amount = CALCULATE_ALLOCATION_SIZE(maximum_count, element_size);
-    GenericTable *table = (GenericTable *)(game_state_allocate_heap(allocation_amount));
+    GenericTable *table = game_state_allocate_heap(allocation_amount);
     table_initialize(table, name, maximum_count, element_size);
     return table;
 }

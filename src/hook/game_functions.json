@@ -42,6 +42,7 @@
     "rasterizer_dx9_shader_decrypt_binary_file": {"address": "0x51d080", "replace": true, "use_return_value": true, "arguments": ["ebx", "eax"]},
     "rasterizer_dx9_shader_read_binary_file": {"address": "0x51d0f0", "replace": true, "use_return_value": true, "arguments": ["0", "4", "ecx"]},
     "rasterizer_dx9_shader_load_effect_collection_from_binary": {"address": "0x532c20", "replace": true, "use_return_value": true},
+    "rasterizer_dx9_shader_load_vertex_shaders_from_binary": {"address": "0x5336f0", "replace": true, "use_return_value": true},
     "rasterizer_dx9_texture_calculate_mipmaps_levels": {"address": "0x527230", "replace": false, "use_return_value": true, "arguments": ["0", "eax", "ebx"]},
     "rasterizer_dx9_texture_create": {"address": "0x5272c0", "replace": true, "use_return_value": true, "arguments": ["esi"]},
     "rasterizer_dx9_texture_load_bitmap": {"address": "0x444eb0", "replace": false, "use_return_value": true, "arguments": ["0", "4", "eax"]},

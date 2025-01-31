@@ -155,6 +155,49 @@ void rasterizer_dx9_shader_dispose_effects(void) {
     *effect_collection_buffer = NULL;
 }
 
+bool rasterizer_dx9_shader_load_vertex_shaders_from_binary(void) {
+    void *buffer;
+    size_t buffer_size;
+    ASSERT(rasterizer_dx9_shader_read_binary_file(&buffer, &buffer_size, "shaders/vsh.enc"));
+
+    IDirect3DDevice9 *device = rasterizer_dx9_device();
+    ASSERT(device != NULL);
+
+    void *buffer_pointer = buffer;
+    size_t i = 0;
+    while(i < NUM_OF_VERTEX_SHADERS && buffer_pointer < buffer + buffer_size) {
+        size_t shader_size = *(uint32_t *)(buffer_pointer);
+        void *current_shader = buffer_pointer + sizeof(uint32_t);
+        buffer_pointer = current_shader + shader_size;
+
+        if(buffer_pointer > buffer + buffer_size) {
+            break;
+        }
+
+        IDirect3DVertexShader9 *shader;
+        HRESULT res = IDirect3DDevice9_CreateVertexShader(device, (DWORD *)current_shader, &shader);
+        if(res != D3D_OK) {
+            break;
+        }
+
+        vertex_shaders[i].shader = shader;
+        i++;
+    }
+
+    GlobalFree(buffer);
+
+    if(i < NUM_OF_VERTEX_SHADERS) {
+        for(size_t j = 0; j < i; j++) {
+            if(vertex_shaders[j].shader != NULL) {
+                IDirect3DVertexShader9_Release(vertex_shaders[j].shader);
+            }
+        }
+        return false;
+    }
+
+    return true;
+}
+
 RasterizerDx9ShaderEffect *rasterizer_dx9_shader_get_effect(uint16_t index) {
     ASSERT(index < NUM_OF_SHADER_EFFECTS);
     return shader_effects[index].effect;

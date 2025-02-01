@@ -4,7 +4,7 @@ As other similar projects, the goal of this project is to study and create a fre
 
 Ringworld works like any other mod, patching functions in the game executable to redirect them to its reimplementations. This allows us to add new features, fix bugs, and improve the game in general. 
 
-This project comes from the codebase of [Demon](https://github.com/Aerocatia/demon), a project with the same goal, but focused on the Halo PC Demo executable. 
+This project comes from the codebase of [Demon](https://github.com/Aerocatia/demon-old), a project with the same goal, but focused on the Halo PC Demo executable. 
 
 ## Disclaimer
 

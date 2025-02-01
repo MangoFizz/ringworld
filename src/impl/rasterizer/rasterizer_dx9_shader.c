@@ -41,6 +41,22 @@ bool rasterizer_dx9_shader_decrypt_binary_file(void *data, size_t data_size) {
     return true;
 }
 
+void rasterizer_dx9_shader_encrypt_binary_file(void *data, size_t data_size, void **encrypted_data, size_t *encrypted_data_size) {
+    ASSERT(data != NULL);
+
+    char hash_buffer[32];
+    generate_md5_hash((char *)data, data_size, hash_buffer);
+
+    *encrypted_data = GlobalAlloc(GPTR, data_size + 33);
+    *encrypted_data_size = data_size + 33;
+
+    memcpy(*encrypted_data, data, data_size);
+    memcpy((char *)*encrypted_data + data_size, hash_buffer, 32);
+
+    uint32_t key[4] = { RASTERIZER_DX9_SHADER_DECRYPT_KEY };
+    xtea_encrypt(*encrypted_data_size, *encrypted_data, key);
+}
+
 bool rasterizer_dx9_shader_read_binary_file(void **buffer, size_t *bytes_read, const char *filename) {
     *buffer = NULL;
     *bytes_read = 0;

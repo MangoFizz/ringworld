@@ -15,6 +15,14 @@ extern "C" {
  */
 void xtea_decrypt(size_t data_size, unsigned char *data, uint32_t *key);
 
+/**
+ * Encrypt data using XTEA
+ * @param data_size size of data
+ * @param data      data to encrypt
+ * @param key       key to use for encryption
+ */
+void xtea_encrypt(size_t data_size, unsigned char *data, uint32_t *key);
+
 #ifdef __cplusplus
 }
 #endif

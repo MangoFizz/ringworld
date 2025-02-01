@@ -99,16 +99,10 @@ add_dependencies(ringworld ringworld-tag-definitions-headers)
 target_link_libraries(ringworld d3dcompiler)
 
 add_executable(ringworld-tool
+    src/tool/d3d_shader.c
+    src/tool/vsh_file.c
     src/tool/main.c
 )
 
-target_link_libraries(ringworld-tool d3d9 d3dx9)
-
-add_library(ringworld-host MODULE
-    src/main.c
-)
-
-target_link_libraries(ringworld-host ringworld)
-set_target_properties(ringworld-host PROPERTIES PREFIX "")
-set_target_properties(ringworld-host PROPERTIES OUTPUT_NAME "ringworld")
-set_target_properties(ringworld-host PROPERTIES LINK_FLAGS "-static -static-libgcc -static-libstdc++")
+set_target_properties(ringworld-tool PROPERTIES LINK_FLAGS "-static -static-libgcc -static-libstdc++")
+target_link_libraries(ringworld-tool ringworld d3d9 d3dx9)

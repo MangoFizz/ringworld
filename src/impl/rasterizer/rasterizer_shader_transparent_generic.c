@@ -639,10 +639,12 @@ void rasterizer_dx9_transparent_generic_preprocess(TransparentGeometryGroup *gro
 
     bool is_fog_enabled = rasterizer_render_get_fog_enabled();
     if(is_fog_enabled) {
-        uint16_t stage = 1;
+        uint16_t fog_stage = 1;
         if(shader_data->stages.count > 0) {
-            stage = shader_data->stages.count;
+            fog_stage = shader_data->stages.count;
         }
+
+        fog_config[0] = 1.0f;
 
         if(group->geometry_flags.sky == false || shader_data->framebuffer_blend_function != FRAMEBUFFER_BLEND_FUNCTION_ALPHA_BLEND) {
             float vertex_constants[3 * 4];
@@ -676,10 +678,12 @@ void rasterizer_dx9_transparent_generic_preprocess(TransparentGeometryGroup *gro
             VectorXYZ *camera = &render_globals->camera.position;
             float product = plane->i * camera->x + plane->j * camera->y + plane->k * camera->z - plane->w;
             float res = clamp_f32((product * -1.0f) / render_globals->fog.planar_maximum_depth, 0.0f, 1.0f);
-            stage_color0[stage * 4 + 0] = render_globals->fog.planar_color.r;
-            stage_color0[stage * 4 + 1] = render_globals->fog.planar_color.g;
-            stage_color0[stage * 4 + 2] = render_globals->fog.planar_color.b;
-            stage_color0[stage * 4 + 3] = render_globals->fog.planar_maximum_density * res;
+            stage_color0[fog_stage * 4 + 0] = render_globals->fog.planar_color.r;
+            stage_color0[fog_stage * 4 + 1] = render_globals->fog.planar_color.g;
+            stage_color0[fog_stage * 4 + 2] = render_globals->fog.planar_color.b;
+            stage_color0[fog_stage * 4 + 3] = render_globals->fog.planar_maximum_density * res;
+
+            fog_config[1] = 1.0f;
         }
     }
 

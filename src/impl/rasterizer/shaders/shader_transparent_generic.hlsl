@@ -409,5 +409,9 @@ half4 main(PSInput i) : COLOR {
     STAGE(S6_CONFIGURATION)
     #endif
 
+    #ifdef S7_CONFIGURATION
+    STAGE(S7_CONFIGURATION)
+    #endif
+
     return r0;
 };

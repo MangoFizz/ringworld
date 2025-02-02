@@ -95,12 +95,7 @@ void *table_add_element(GenericTable *table) {
 }
 
 void table_clear(GenericTable *table) {
-    size_t count = table->max_elements;
-
-    for(size_t i = 0; i < count; i++) {
-        *(uint16_t *)(table->first_element + i * table->element_size) = 0;
-    }
-
+    memset(table->first_element, 0, table->current_size * table->element_size);
     table->next_free_element_index = 0;
     table->current_size = 0;
     table->count = 0;

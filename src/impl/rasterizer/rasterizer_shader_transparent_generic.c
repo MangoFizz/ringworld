@@ -397,13 +397,15 @@ void rasterizer_shader_transparent_generic_create_instances_for_current_map(void
     }
 }
 
-static bool release_pixel_shaders(const TableIterator *iterator, void *element, void *) {
+static bool release_instances(const TableIterator *iterator, void *element, void *) {
     ShaderTransparentGenericInstance *instance = (ShaderTransparentGenericInstance *)element;
     if(instance->shader != NULL) {
         IDirect3DPixelShader9_Release(instance->shader);
+        instance->shader = NULL;
     }
     if(instance->compiled_shader != NULL) {
         ID3D10Blob_Release((ID3DBlob *)instance->compiled_shader);
+        instance->compiled_shader = NULL;
     }
     return true;
 }
@@ -413,7 +415,7 @@ void rasterizer_shader_transparent_generic_clear_instances(void) {
         table_clear((GenericTable *)shader_transparent_generic_tags_cache);
     }
     if(shader_transparent_generic_instances != NULL) {
-        table_iterate_simple((GenericTable *)shader_transparent_generic_instances, release_pixel_shaders, NULL);
+        table_iterate_simple((GenericTable *)shader_transparent_generic_instances, release_instances, NULL);
         table_clear((GenericTable *)shader_transparent_generic_instances);
     }
 }

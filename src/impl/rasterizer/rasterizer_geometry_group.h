@@ -18,12 +18,14 @@ typedef struct RenderAnimation {
 } RenderAnimation;
 _Static_assert(sizeof(RenderAnimation) == 0x8);
 
-typedef enum RenderModelEffectType {
+typedef enum PACKED_ENUM RenderModelEffectType {
     RENDER_MODEL_EFFECT_TYPE_NONE,
     RENDER_MODEL_EFFECT_TYPE_ACTIVE_CAMOUFLAGE,
     RENDER_MODEL_EFFECT_TYPE_TRANSPARENT_ZBUFFERED,
-    RENDER_MODEL_EFFECT_TYPE_MAX
+    RENDER_MODEL_EFFECT_TYPE_MAX,
+    RENDER_MODEL_EFFECT_TYPE_SIZE = 0xFFFF
 } RenderModelEffectType;
+_Static_assert(sizeof(RenderModelEffectType) == sizeof(uint16_t));
 
 typedef struct RenderModelEffect {
     RenderModelEffectType type;

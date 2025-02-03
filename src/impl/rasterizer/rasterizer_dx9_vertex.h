@@ -11,7 +11,14 @@ extern "C" {
 #include "../memory/memory.h"
 #include "rasterizer_dx9.h"
 
-typedef enum VertexBufferType {
+enum {
+    MAX_DYNAMIC_VERTICES_BUFFER_GROUPS = 0x13,
+    MAX_DYNAMIC_VERTICES_BUFFERS = 0x400,
+    MAX_DYNAMIC_TRIANGLES = 0x8000,
+    MAX_DYNAMIC_TRIANGLES_BUFFERS = MAX_DYNAMIC_VERTICES_BUFFERS
+};
+
+typedef enum PACKED_ENUM VertexBufferType {
     VERTEX_BUFFER_TYPE_ENVIRONMENT_UNCOMPRESSED,
     VERTEX_BUFFER_TYPE_ENVIRONMENT_COMPRESSED,
     VERTEX_BUFFER_TYPE_ENVIRONMENT_LIGHTMAP_UNCOMPRESSED,
@@ -32,17 +39,12 @@ typedef enum VertexBufferType {
     VERTEX_BUFFER_TYPE_SCREEN_TRANSFORMED_LIT,
     VERTEX_BUFFER_TYPE_SCREEN_TRANSFORMED_LIT_SPECULAR,
     VERTEX_BUFFER_TYPE_ENVIRONMENT_SINGLE_STREAM_FF,
-    NUMBER_OF_VERTEX_BUFFER_TYPES
+    NUMBER_OF_VERTEX_BUFFER_TYPES,
+    SIZE_OF_VERTEX_BUFFER_TYPE = 0xFFFF
 } VertexBufferType;
+_Static_assert(sizeof(VertexBufferType) == sizeof(uint16_t));
 
-enum {
-    MAX_DYNAMIC_TRIANGLES = 0x8000,
-    MAX_DYNAMIC_TRIANGLES_BUFFERS = 0x400,
-    MAX_DYNAMIC_VERTICES_BUFFER_GROUPS = 0x13,
-    MAX_DYNAMIC_VERTICES_BUFFERS = 0x400,
-};
-
-typedef enum VertexDeclarationIndex {
+typedef enum PACKED_ENUM VertexDeclarationIndex {
     VERTEX_DECLARATION_ENVIRONMENT_UNCOMPRESSED,
     VERTEX_DECLARATION_ENVIRONMENT_COMPRESSED,
     VERTEX_DECLARATION_ENVIRONMENT_LIGHTMAP_UNCOMPRESSED,
@@ -63,9 +65,10 @@ typedef enum VertexDeclarationIndex {
     VERTEX_DECLARATION_SCREEN_TRANSFORMED_LIT,
     VERTEX_DECLARATION_SCREEN_TRANSFORMED_LIT_SPECULAR,
     VERTEX_DECLARATION_ENVIRONMENT_SINGLE_STREAM_FF,
-
-    NUM_OF_VERTEX_DECLARATIONS
+    NUM_OF_VERTEX_DECLARATIONS,
+    SIZE_OF_VERTEX_DECLARATION_INDEX = 0xFFFF
 } VertexDeclarationIndex;
+_Static_assert(sizeof(VertexDeclarationIndex) == sizeof(uint16_t));
 
 typedef struct RasterizerTriangle {
     uint16_t vertex_indices[3];
@@ -126,11 +129,11 @@ typedef struct DynamicVertex {
 _Static_assert(sizeof(DynamicVertex) == 0x18);
 
 /**
- * Get the dynamic vertex buffer type
+ * Get the triangles buffer type corresponding to a dynamic vertex buffer.
  * @param dynamic_vertex_index  The index of the dynamic vertex buffer.
- * @return The dynamic vertex buffer type.
+ * @return The dynamic triangles buffer type.
  */
-VertexBufferType rasterizer_dx9_vertex_get_dynamic_buffer_type(uint16_t dynamic_vertex_index);
+TriangleBufferType rasterizer_dx9_vertex_get_dynamic_buffer_type(uint16_t dynamic_vertex_index);
 
 /**
  * Get the vertex declaration of a vertex buffer type.

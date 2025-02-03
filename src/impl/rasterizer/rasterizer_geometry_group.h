@@ -23,7 +23,7 @@ typedef enum PACKED_ENUM RenderModelEffectType {
     RENDER_MODEL_EFFECT_TYPE_ACTIVE_CAMOUFLAGE,
     RENDER_MODEL_EFFECT_TYPE_TRANSPARENT_ZBUFFERED,
     RENDER_MODEL_EFFECT_TYPE_MAX,
-    RENDER_MODEL_EFFECT_TYPE_SIZE = 0xFFFF
+    SIZE_OF_RENDER_MODEL_EFFECT_TYPE = 0xFFFF
 } RenderModelEffectType;
 _Static_assert(sizeof(RenderModelEffectType) == sizeof(uint16_t));
 

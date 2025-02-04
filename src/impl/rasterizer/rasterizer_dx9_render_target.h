@@ -8,6 +8,7 @@ extern "C" {
 #include <stdint.h>
 #include <d3d9.h>
 
+#include "../types/types.h"
 #include "../memory/memory.h"
 
 enum {

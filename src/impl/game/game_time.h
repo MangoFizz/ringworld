@@ -22,6 +22,12 @@ typedef struct GameTimeGlobals {
 } GameTimeGlobals;
 
 /**
+ * Get the game time globals.
+ * @return the game time globals
+ */
+GameTimeGlobals *game_time_get_globals(void);
+
+/**
  * Get whether the game is paused.
  * @return true if the game is paused, false otherwise
  */

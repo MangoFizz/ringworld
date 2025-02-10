@@ -2,7 +2,7 @@
 
 extern GameTimeGlobals **game_time_globals;
 
-GameTimeGlobals *get_game_time_globals(void) {
+GameTimeGlobals *game_time_get_globals(void) {
     return *game_time_globals;
 }
 
@@ -11,7 +11,7 @@ bool game_time_get_paused(void) {
 }
 
 void game_time_set_paused(bool paused) {
-    GameTimeGlobals *globals = get_game_time_globals();
+    GameTimeGlobals *globals = game_time_get_globals();
     if(globals->initialized != false) {
         globals->active = !paused;
     }

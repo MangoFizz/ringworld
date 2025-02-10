@@ -442,11 +442,6 @@ void rasterizer_shader_transparent_generic_draw(TransparentGeometryGroup *group,
     RenderGlobals *render_globals = rasterizer_render_get_globals();
     ShaderTransparentGeneric *shader_data = shader_type_assert(group->shader, SHADER_TYPE_SHADER_TRANSPARENT_GENERIC);
 
-    // Not sure about this 
-    if(shader_data->maps.count == 0 || shader_data->maps.elements[0].map.path == NULL) {
-        return;
-    }
-
     uint16_t vertex_permutation = shader_get_vertex_shader_permutation(group->shader);
     uint16_t vertex_buffer_type = rasterizer_geometry_group_get_vertex_buffer_type(group);
     IDirect3DVertexShader9 *vertex_shader = rasterizer_dx9_shader_get_vertex_shader_for_permutation(vertex_permutation, vertex_buffer_type);
@@ -557,13 +552,13 @@ void rasterizer_shader_transparent_generic_draw(TransparentGeometryGroup *group,
                         animation_vsh_constants[map_index * 8 + 7] = 0.0;
                     } 
                     else {
-                        animation_vsh_constants[map_index * 8 + 0] = render_globals->frustum.world_to_view.position.z;
-                        animation_vsh_constants[map_index * 8 + 1] = render_globals->frustum.world_to_view.scale;
-                        animation_vsh_constants[map_index * 8 + 2] = render_globals->frustum.world_to_view.forward.i;
+                        animation_vsh_constants[map_index * 8 + 0] = render_globals->frustum.world_to_view.forward.i;
+                        animation_vsh_constants[map_index * 8 + 1] = render_globals->frustum.world_to_view.forward.j;
+                        animation_vsh_constants[map_index * 8 + 2] = render_globals->frustum.world_to_view.forward.k;
                         animation_vsh_constants[map_index * 8 + 3] = 0.0;
-                        animation_vsh_constants[map_index * 8 + 4] = render_globals->frustum.world_to_view.forward.j;
-                        animation_vsh_constants[map_index * 8 + 5] = render_globals->frustum.world_to_view.forward.k;
-                        animation_vsh_constants[map_index * 8 + 6] = render_globals->frustum.world_to_view.left.i;
+                        animation_vsh_constants[map_index * 8 + 4] = render_globals->frustum.world_to_view.left.i;
+                        animation_vsh_constants[map_index * 8 + 5] = render_globals->frustum.world_to_view.left.j;
+                        animation_vsh_constants[map_index * 8 + 6] = render_globals->frustum.world_to_view.left.k;
                         animation_vsh_constants[map_index * 8 + 7] = 0.0;
                     }
                 }
@@ -620,6 +615,10 @@ void rasterizer_dx9_transparent_generic_preprocess(TransparentGeometryGroup *gro
     ASSERT(group->shader != NULL);
 
     ShaderTransparentGeneric *shader_data = shader_type_assert(group->shader, SHADER_TYPE_SHADER_TRANSPARENT_GENERIC);
+
+    if(shader_data->stages.count == 0 && shader_data->maps.count == 0) {
+        return;
+    }
 
     float ps_constants_buffer[8*4 + 8*4 + 4] = {0};
 

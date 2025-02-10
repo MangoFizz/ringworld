@@ -146,13 +146,13 @@ void rasterizer_shader_transparent_chicago_draw(TransparentGeometryGroup *group,
                         animation_vsh_constants[map_index * 8 + 7] = 0.0;
                     } 
                     else {
-                        animation_vsh_constants[map_index * 8 + 0] = render_globals->frustum.world_to_view.position.z;
-                        animation_vsh_constants[map_index * 8 + 1] = render_globals->frustum.world_to_view.scale;
-                        animation_vsh_constants[map_index * 8 + 2] = render_globals->frustum.world_to_view.forward.i;
+                        animation_vsh_constants[map_index * 8 + 0] = render_globals->frustum.world_to_view.forward.i;
+                        animation_vsh_constants[map_index * 8 + 1] = render_globals->frustum.world_to_view.forward.j;
+                        animation_vsh_constants[map_index * 8 + 2] = render_globals->frustum.world_to_view.forward.k;
                         animation_vsh_constants[map_index * 8 + 3] = 0.0;
-                        animation_vsh_constants[map_index * 8 + 4] = render_globals->frustum.world_to_view.forward.j;
-                        animation_vsh_constants[map_index * 8 + 5] = render_globals->frustum.world_to_view.forward.k;
-                        animation_vsh_constants[map_index * 8 + 6] = render_globals->frustum.world_to_view.left.i;
+                        animation_vsh_constants[map_index * 8 + 4] = render_globals->frustum.world_to_view.left.i;
+                        animation_vsh_constants[map_index * 8 + 5] = render_globals->frustum.world_to_view.left.j;
+                        animation_vsh_constants[map_index * 8 + 6] = render_globals->frustum.world_to_view.left.k;
                         animation_vsh_constants[map_index * 8 + 7] = 0.0;
                     }
                 }

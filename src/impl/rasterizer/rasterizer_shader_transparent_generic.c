@@ -504,13 +504,13 @@ void rasterizer_shader_transparent_generic_draw(TransparentGeometryGroup *group,
                 else {
                     bitmap_type = BITMAP_TYPE_2D_TEXTURES;
                 }
-                D3DTEXTUREADDRESS fisrt_map_texture_mode;
+                D3DTEXTUREADDRESS first_map_texture_mode;
                 switch(bitmap_type) {
                     case BITMAP_TYPE_2D_TEXTURES:
-                        fisrt_map_texture_mode = D3DTADDRESS_WRAP;
+                        first_map_texture_mode = D3DTADDRESS_WRAP;
                         break;
                     case BITMAP_TYPE_CUBE_MAPS:
-                        fisrt_map_texture_mode = D3DTADDRESS_CLAMP;
+                        first_map_texture_mode = D3DTADDRESS_CLAMP;
                         break;
                     default:
                         CRASHF_DEBUG("Invalid bitmap type: %d", bitmap_type);
@@ -518,7 +518,7 @@ void rasterizer_shader_transparent_generic_draw(TransparentGeometryGroup *group,
                 }
 
                 #define SELECT_TEXTURE_MODE_IF_FIRST_MAP(val) \
-                    (is_first_map ? fisrt_map_texture_mode : val)
+                    (is_first_map ? first_map_texture_mode : val)
 
                 #define SELECT_TEXTURE_MODE_IF_CLAMPED(is_clamped, clamp_val, default_val) \
                     (bitmap_type == BITMAP_TYPE_2D_TEXTURES && is_clamped ? clamp_val : SELECT_TEXTURE_MODE_IF_FIRST_MAP(default_val))

@@ -72,8 +72,15 @@ const char *vertex_shaders_files[] = {
     "transparent_water_opacity",
     "transparent_water_opacity_m",
     "transparent_water_reflection",
-    "transparent_water_reflection_m"
+    "transparent_water_reflection_m",
+#ifndef ENABLE_DEBUG_SHADERS
+    "model_fast_prepass",
+    "model_scenery_prepass",
+    "environment_prepass"
+#endif
 };
+
+#define VERTEX_SHADER_FILES_COUNT (sizeof(vertex_shaders_files) / sizeof(vertex_shaders_files[0]))
 
 bool unpack_vsh_file(const char *vsh_file, const char *path) {
     void *data;
@@ -89,7 +96,7 @@ bool unpack_vsh_file(const char *vsh_file, const char *path) {
     }
 
     void *ptr = data;
-    for(size_t i = 0; i < NUM_OF_VERTEX_SHADERS; i++) {
+    for(size_t i = 0; i < VERTEX_SHADER_FILES_COUNT; i++) {
         VariableLenghtChunk *chunk = ptr;
         size_t size = sizeof(VariableLenghtChunk) + chunk->lenght;
 
@@ -112,9 +119,9 @@ bool unpack_vsh_file(const char *vsh_file, const char *path) {
 }
 
 bool pack_vsh_file(const char *path, const char *vsh_file) {
-    VariableLenghtChunk *shaders[NUM_OF_VERTEX_SHADERS];
+    VariableLenghtChunk *shaders[VERTEX_SHADER_FILES_COUNT];
 
-    for(size_t i = 0; i < NUM_OF_VERTEX_SHADERS; i++) {
+    for(size_t i = 0; i < VERTEX_SHADER_FILES_COUNT; i++) {
         char file_path[MAX_PATH];
         snprintf(file_path, MAX_PATH, "%s/%s.cso", path, vertex_shaders_files[i]);
 
@@ -148,13 +155,13 @@ bool pack_vsh_file(const char *path, const char *vsh_file) {
     }
 
     size_t total_size = 0;
-    for(size_t i = 0; i < NUM_OF_VERTEX_SHADERS; i++) {
+    for(size_t i = 0; i < VERTEX_SHADER_FILES_COUNT; i++) {
         total_size += sizeof(VariableLenghtChunk) + shaders[i]->lenght;
     }
 
     void *data = GlobalAlloc(GPTR, total_size);
     void *ptr = data;
-    for(size_t i = 0; i < NUM_OF_VERTEX_SHADERS; i++) {
+    for(size_t i = 0; i < VERTEX_SHADER_FILES_COUNT; i++) {
         VariableLenghtChunk *chunk = ptr;
         size_t size = sizeof(VariableLenghtChunk) + shaders[i]->lenght;
         memcpy(chunk, shaders[i], size);

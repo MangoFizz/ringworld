@@ -23,7 +23,7 @@ void memory_map_initialize(void) {
     if(!ringworld_server_mode) {
         *sound_cache_mib = 64;
         *sound_cache = VirtualAlloc(0, *sound_cache_mib * 1024 * 1024, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
-        *texture_cache = VirtualAlloc(0, TEXTURE_CACHE_UNK1_SIZE, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
+        *texture_cache = VirtualAlloc(0, TEXTURE_CACHE_SIZE, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
     }
 
     if(*managed_heap == NULL) {

@@ -69,6 +69,7 @@ add_library(ringworld STATIC
     src/impl/interface/ui_widget.c
     src/impl/memory/memory.c
     src/impl/multiplayer/mode.c
+    src/impl/object/object.c
     src/impl/memory/table.c
     src/impl/player/player.c
     src/impl/rasterizer/rasterizer_dx9_render_target.c

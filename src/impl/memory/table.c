@@ -15,6 +15,8 @@ void table_initialize(GenericTable *table, const char *name, uint16_t maximum_co
     table->element_size = element_size;
     table->data_fourcc = 0x64407440;
     table->first_element = (void *)(table) + sizeof(*table);
+    table->valid = true;
+    table->identifier_zero_invalid = true;
     INIT_TABLE_NEXT_ID(table);
 }
 
@@ -30,24 +32,23 @@ void *table_get_element(GenericTable *table, TableResourceHandle handle) {
         return NULL;
     }
 
-    size_t index = handle.index;
+    if(!table->valid) {
+        CRASHF_DEBUG("Invalid access of element in table 0x%08X (%s) that is not valid", (uintptr_t)(table), table->name);
+        return NULL;
+    }
+
     size_t max_elements = table->max_elements;
-
-    // Out of bounds? (If so then something really needs fixed!)
-    if(index >= max_elements) {
-        CRASHF_DEBUG("Out-of-bounds access of element %zu / %zu for table 0x%08X (%s) with ID 0x%08X", index, max_elements, (uintptr_t)(table), table->name, handle.value);
+    if(handle.index >= max_elements) {
+        CRASHF_DEBUG("Out-of-bounds access of element %zu / %zu for table 0x%08X (%s) with ID 0x%08X", handle.index, max_elements, (uintptr_t)(table), table->name, handle.value);
+        return NULL;
+    }
+    
+    void *element = table->first_element + handle.index * table->element_size;
+    uint16_t identifier = *(uint16_t *)(element);
+    if((identifier == 0 && table->identifier_zero_invalid) || (handle.id != 0 && identifier != handle.id)) {
         return NULL;
     }
 
-    // Match the salt
-    uint16_t salt = handle.salt;
-    void *element = table->first_element + index * table->element_size;
-    uint16_t element_salt = *(uint16_t *)(element);
-    if(element_salt == 0 || (salt != 0 && element_salt != salt)) {
-        return NULL;
-    }
-
-    // Done!
     return element;
 }
 

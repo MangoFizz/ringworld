@@ -50,5 +50,6 @@
     "shader_transparent_water_should_update_bumpmap": {"type": "bool", "address": "0x6b8505"},
     "globals_rasterizer_data": {"type": "GlobalsRasterizerData *", "address": "0x6b83fc"},
     "saved_games_current_profile_id": {"type": "uint32_t", "address": "0x6afe1c"},
-    "saved_games_player_profiles": {"type": "PlayerProfile *", "address": "0x6ade20"}
+    "saved_games_player_profiles": {"type": "PlayerProfile *", "address": "0x6ade20"},
+    "object_table": {"type": "ObjectTable *", "address": "0x7fb710"}
 }

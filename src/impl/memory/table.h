@@ -15,7 +15,7 @@ typedef union TableResourceHandle {
     uint32_t value;
     struct {
         uint16_t index;
-        uint16_t salt;
+        uint16_t id;
     };
 } TableResourceHandle;
 
@@ -32,7 +32,7 @@ typedef union TableResourceHandle {
 /**
  * Make a handle from a salt and index
  *
- * @param salt  salt to use
+ * @param id    identifier to use
  * @param index index to use
  *
  * @return handle
@@ -57,11 +57,14 @@ typedef union TableResourceHandle {
     /** Size of each element in the table */ \
     uint16_t element_size; \
     \
-    /** Unknown */ \
-    uint8_t unknown_24; \
+    /** Valid if non-zero */ \
+    bool valid; \
+    \
+    /** Zeroed identifiers are not allowed */ \
+    bool identifier_zero_invalid; \
     \
     /** Unknown? */ \
-    uint8_t unknown1[3]; \
+    uint8_t unknown1[2]; \
     \
     /** d@t@ fourcc - unused */ \
     uint32_t data_fourcc; \

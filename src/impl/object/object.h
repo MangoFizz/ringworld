@@ -7,11 +7,13 @@ extern "C" {
 
 #include "../memory/table.h"
 #include "../types/types.h"
+#include "../tag/definitions/object.h"
 #include "../tag/tag.h"
 
 typedef union TableResourceHandle ObjectHandle;
+typedef union TableResourceHandle PlayerHandle;
 
-typedef struct BaseObjectFlags {
+typedef struct BaseDynamicObjectFlags {
     Bool no_collision : 1;
     Bool on_ground : 1;
     Bool ignore_gravity : 1;
@@ -41,8 +43,8 @@ typedef struct BaseObjectFlags {
     Bool opensauce_is_transforming_in : 1;
     Bool opensauce_is_transforming_out : 1;
     Bool pad_6 : 2;
-} BaseObjectFlags;
-_Static_assert(sizeof(BaseObjectFlags) == sizeof(uint32_t));
+} BaseDynamicObjectFlags;
+_Static_assert(sizeof(BaseDynamicObjectFlags) == sizeof(uint32_t));
 
 typedef struct BaseObjectNetwork {
     Bool valid_position;
@@ -137,7 +139,7 @@ typedef struct DynamicObjectBase {
     uint32_t network_role;
     uint32_t flags_0;
     TickCount32 existence_time;
-    BaseObjectFlags flags_1;
+    BaseDynamicObjectFlags flags_1;
     uint32_t object_marker_id;
     BaseObjectNetwork network;
     VectorXYZ position;
@@ -426,6 +428,48 @@ typedef struct DeviceLightFixtureObject {
     float light_cutoff_angle;
 } DeviceLightFixtureObject;
 _Static_assert(sizeof(DeviceLightFixtureObject) == 0x18 + sizeof(DeviceObject));
+
+enum {
+    NUMBER_OF_OBJECT_CHANGE_COLORS = 4
+};
+
+typedef struct ObjectPlacementData {
+  TagHandle tag_handle;
+  uint32_t flags;
+  PlayerHandle player;
+  ObjectHandle parent_object_handle;
+  TagHandle parent_tag_handle; 
+  int16_t team_index; 
+  int16_t region_permutation;
+  VectorXYZ position; 
+  float unk1; 
+  VectorIJK translational_velocity; 
+  VectorIJK forward; 
+  VectorIJK up; 
+  VectorIJK angular_velocity; 
+  ColorRGB change_colors[NUMBER_OF_OBJECT_CHANGE_COLORS]; 
+} ObjectCreationData;
+_Static_assert(sizeof(ObjectCreationData) == 0x88);
+
+typedef struct DynamicObjectHeader {
+  int16_t id;
+  uint8_t flags;
+  uint8_t object_type;
+  int16_t cluster_index;
+  int16_t data_size;
+  void *address;
+} DynamicObjectHeader;
+_Static_assert(sizeof(DynamicObjectHeader) == 0xC);
+
+MAKE_TABLE_STRUCT(ObjectTable, DynamicObjectHeader);
+
+/**
+ * Initialize object placement data.
+ * @param data The object placement data to initialize.
+ * @param tag_handle The tag handle of the object.
+ * @param parent_handle The parent object handle.
+ */ 
+void object_placement_data_new(ObjectCreationData *data, TagHandle tag_handle, ObjectHandle parent_handle);
 
 /**
  * Attach an object to another object by its markers.

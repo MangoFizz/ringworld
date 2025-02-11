@@ -50,5 +50,8 @@
     "rasterizer_dx9_render_target_set": {"address": "0x52fda0", "replace": false, "arguments": ["0", "4", "eax"]},
 
     "saved_games_read_player_profile": {"address": "0x53dad0", "replace": false, "use_return_value": true, "arguments": ["0", "ecx"]},
-    "saved_games_write_player_profile": {"address": "0x53dcb0", "replace": false, "arguments": ["0", "4"]}
+    "saved_games_write_player_profile": {"address": "0x53dcb0", "replace": false, "arguments": ["0", "4"]},
+
+    "object_get_and_verify_type": {"address": "0x4fa7d0", "replace": true, "use_return_value": true, "arguments": ["ecx", "0"]},
+    "object_placement_data_new": {"address": "0x4f8cb0", "replace": true, "use_return_value": true, "arguments": ["eax", "0", "4"]}
 }

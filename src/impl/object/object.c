@@ -14,7 +14,7 @@ ObjectTable *object_table_get() {
 
 DynamicObjectBase *object_get_and_verify_type(ObjectHandle object_handle, uint32_t types) {
     ObjectTable *object_table = object_table_get();
-    DynamicObjectHeader *object_header = table_get_element((GenericTable *)object_table, object_handle);
+    DynamicObjectHeader *object_header = table_get_element(object_table, object_handle);
     if(object_header == NULL || !TEST_BIT(types, object_header->object_type)) {
         return NULL;
     }

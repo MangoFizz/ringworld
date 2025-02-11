@@ -434,30 +434,30 @@ enum {
 };
 
 typedef struct ObjectPlacementData {
-  TagHandle tag_handle;
-  uint32_t flags;
-  PlayerHandle player;
-  ObjectHandle parent_object_handle;
-  TagHandle parent_tag_handle; 
-  int16_t team_index; 
-  int16_t region_permutation;
-  VectorXYZ position; 
-  float unk1; 
-  VectorIJK translational_velocity; 
-  VectorIJK forward; 
-  VectorIJK up; 
-  VectorIJK angular_velocity; 
-  ColorRGB change_colors[NUMBER_OF_OBJECT_CHANGE_COLORS]; 
+    TagHandle tag_handle;
+    uint32_t flags;
+    PlayerHandle player;
+    ObjectHandle parent_object_handle;
+    TagHandle parent_tag_handle; 
+    int16_t team_index; 
+    int16_t region_permutation;
+    VectorXYZ position; 
+    float unk1; 
+    VectorIJK translational_velocity; 
+    VectorIJK forward; 
+    VectorIJK up; 
+    VectorIJK angular_velocity; 
+    ColorRGB change_colors[NUMBER_OF_OBJECT_CHANGE_COLORS]; 
 } ObjectCreationData;
 _Static_assert(sizeof(ObjectCreationData) == 0x88);
 
 typedef struct DynamicObjectHeader {
-  int16_t id;
-  uint8_t flags;
-  uint8_t object_type;
-  int16_t cluster_index;
-  int16_t data_size;
-  void *address;
+    int16_t id;
+    uint8_t flags;
+    uint8_t object_type;
+    int16_t cluster_index;
+    int16_t data_size;
+    void *address;
 } DynamicObjectHeader;
 _Static_assert(sizeof(DynamicObjectHeader) == 0xC);
 

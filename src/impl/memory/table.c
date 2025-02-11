@@ -27,7 +27,9 @@ void *table_new(const char *name, uint16_t maximum_count, uint16_t element_size)
     return table;
 }
 
-void *table_get_element(GenericTable *table, TableResourceHandle handle) {
+void *table_get_element(void *table_data, TableResourceHandle handle) {
+    GenericTable *table = (GenericTable *)(table_data);
+
     if(HANDLE_IS_NULL(handle)) {
         return NULL;
     }
@@ -52,7 +54,8 @@ void *table_get_element(GenericTable *table, TableResourceHandle handle) {
     return element;
 }
 
-void table_init_element(GenericTable *table, void *new_element_location) {
+void table_init_element(void *table_data, void *new_element_location) {
+    GenericTable *table = (GenericTable *)(table_data);
     memset(new_element_location, 0, table->element_size);
     *(uint16_t *)(new_element_location) = (table->next_id)++;
     if(table->next_id == 0) {
@@ -60,7 +63,8 @@ void table_init_element(GenericTable *table, void *new_element_location) {
     }
 }
 
-void *table_add_element(GenericTable *table) {
+void *table_add_element(void *table_data) {
+    GenericTable *table = (GenericTable *)(table_data);
     if(table->next_free_element_index == -1) {
         return NULL;
     }
@@ -95,7 +99,8 @@ void *table_add_element(GenericTable *table) {
     return element;
 }
 
-void table_clear(GenericTable *table) {
+void table_clear(void *table_data) {
+    GenericTable *table = (GenericTable *)(table_data);
     memset(table->first_element, 0, table->current_size * table->element_size);
     table->next_free_element_index = 0;
     table->current_size = 0;

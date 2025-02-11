@@ -340,7 +340,7 @@ ShaderTransparentGenericInstance *rasterizer_shader_transparent_generic_get_or_c
     ShaderTransparentGenericTagCache *cache_entry;
     while(cache_entry = table_iterate(&it), cache_entry != NULL) {
         if(cache_entry->shader_data == tag) {
-            ShaderTransparentGenericInstance *instance = table_get_element((GenericTable *)shader_transparent_generic_instances, cache_entry->shader_instance);
+            ShaderTransparentGenericInstance *instance = table_get_element(shader_transparent_generic_instances, cache_entry->shader_instance);
             if(instance == NULL) {
                 CRASHF_DEBUG("shader transparent generic instance not found in the instance table");
             }
@@ -365,15 +365,15 @@ ShaderTransparentGenericInstance *rasterizer_shader_transparent_generic_get_or_c
 
     if(instance == NULL) {
         size_t instance_index = shader_transparent_generic_instances->next_free_element_index;
-        instance = table_add_element((GenericTable *)shader_transparent_generic_instances);
-        table_init_element((GenericTable *)shader_transparent_generic_instances, instance);
+        instance = table_add_element(shader_transparent_generic_instances);
+        table_init_element(shader_transparent_generic_instances, instance);
         instance->compiled_shader = rasterizer_shader_transparent_generic_compile_shader(defines);
         instance->handle = MAKE_HANDLE(instance->id, instance_index);
         memcpy(instance->hash, hash, 32);
     }
 
-    cache_entry = table_add_element((GenericTable *)shader_transparent_generic_tags_cache);
-    table_init_element((GenericTable *)shader_transparent_generic_tags_cache, cache_entry);
+    cache_entry = table_add_element(shader_transparent_generic_tags_cache);
+    table_init_element(shader_transparent_generic_tags_cache, cache_entry);
     cache_entry->shader_data = tag;
     cache_entry->shader_instance = instance->handle;
 
@@ -412,11 +412,11 @@ static bool release_instances(const TableIterator *iterator, void *element, void
 
 void rasterizer_shader_transparent_generic_clear_instances(void) {
     if(shader_transparent_generic_tags_cache != NULL) {
-        table_clear((GenericTable *)shader_transparent_generic_tags_cache);
+        table_clear(shader_transparent_generic_tags_cache);
     }
     if(shader_transparent_generic_instances != NULL) {
-        table_iterate_simple((GenericTable *)shader_transparent_generic_instances, release_instances, NULL);
-        table_clear((GenericTable *)shader_transparent_generic_instances);
+        table_iterate_simple(shader_transparent_generic_instances, release_instances, NULL);
+        table_clear(shader_transparent_generic_instances);
     }
 }
 

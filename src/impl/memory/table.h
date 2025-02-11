@@ -136,27 +136,27 @@ void *table_new(const char *name, uint16_t maximum_count, uint16_t element_size)
  * @param handle    Handle of the element
  * @return pointer if the handle corresponds to a valid table index, NULL if not
  */
-void *table_get_element(GenericTable *table, TableResourceHandle handle);
+void *table_get_element(void *table, TableResourceHandle handle);
 
 /**
  * Initialize a table element.
  * @param table                table pointer
  * @param new_element_location pointer to the new element
  */
-void table_init_element(GenericTable *table, void *new_element_location);
+void table_init_element(void *table, void *new_element_location);
 
 /**
  * Add a new element to a table.
  * @param table table pointer
  * @return pointer to the new element, or NULL if the table is full
  */
-void *table_add_element(GenericTable *table);
+void *table_add_element(void *table);
 
 /**
  * Clear the contents of a table.
  * @param table table pointer
  */
-void table_clear(GenericTable *table);
+void table_clear(void *table);
 
 /**
  * Prepare a TableIterator.

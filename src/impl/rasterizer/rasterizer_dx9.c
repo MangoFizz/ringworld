@@ -5,11 +5,17 @@
 #include "rasterizer_dx9_vertex.h"
 #include "rasterizer_dx9.h"
 
+extern RasterizerGlobals *rasterizer_globals;
 extern IDirect3DDevice9 **d3d9_device;
 extern D3DCAPS9 *d3d9_device_caps;
 extern bool *d3d9_device_supports_software_vertex_processing;
 extern uint16_t *d3d9_stencil_mode;
 extern uint32_t *d3d9_stencil_mode_unk1;
+extern uint32_t *d3d9_pixel_shader_version;
+
+RasterizerGlobals *rasterizer_dx9_get_globals(void) {
+    return rasterizer_globals;
+}
 
 IDirect3DDevice9 *rasterizer_dx9_device(void) {
     return *d3d9_device;
@@ -53,12 +59,12 @@ void rasterizer_dx9_set_texture(uint16_t stage, IDirect3DTexture9 *texture) {
     IDirect3DDevice9_SetTexture(*d3d9_device, stage, (IDirect3DBaseTexture9 *)texture);
 }
 
-bool rasterizer_dx9_set_vertex_shader_constant_f(uint16_t start_register, const float *data, uint16_t count) {
+bool rasterizer_dx9_set_vertex_shader_constant_f(uint16_t start_register, const void *data, uint16_t count) {
     ASSERT(*d3d9_device != NULL);
     return IDirect3DDevice9_SetVertexShaderConstantF(*d3d9_device, start_register, data, count) == D3D_OK;
 }
 
-bool rasterizer_dx9_set_pixel_shader_constant_f(uint16_t start_register, const float *data, uint16_t count) {
+bool rasterizer_dx9_set_pixel_shader_constant_f(uint16_t start_register, const void *data, uint16_t count) {
     ASSERT(*d3d9_device != NULL);
     return IDirect3DDevice9_SetPixelShaderConstantF(*d3d9_device, start_register, data, count) == D3D_OK;
 }
@@ -134,4 +140,9 @@ void rasterizer_dx9_set_stencil_mode(uint16_t stencil_mode) {
             break;
     }
     *d3d9_stencil_mode = stencil_mode;
+}
+
+bool rasterizer_dx9_draw_primitive_up(D3DPRIMITIVETYPE primitive_type, UINT primitive_count, const void *vertex_data, UINT vertex_stride) {
+    ASSERT(*d3d9_device != NULL);
+    return IDirect3DDevice9_DrawPrimitiveUP(*d3d9_device, primitive_type, primitive_count, vertex_data, vertex_stride) == D3D_OK;
 }

@@ -11,6 +11,42 @@ extern "C" {
 #include "../tag/definitions/shader.h"
 #include "../tag/tag.h"
 
+typedef struct RasterizerGlobals {
+    Bool initialized;
+    int16_t unk1;
+    Rectangle2D screen_bounds;
+    Rectangle2D frame_bounds;
+    int64_t frame_index;
+    uint32_t flip_index;
+    uint8_t use_floating_point_zbuffer;
+    uint8_t use_rasterizer_frame_rate_throttle;
+    uint8_t use_rasterizer_frame_rate_stabilization;
+    int16_t refresh_rate;
+    float z_near;
+    float z_far;
+    float z_near_first_person;
+    float z_far_first_person;
+    IDirect3DBaseTexture9 **default_texture_white;
+    IDirect3DBaseTexture9 **default_texture_2d_texture;
+    IDirect3DBaseTexture9 **default_texture_3d_texture; // engine actually uses 2d for 3d cases
+    IDirect3DBaseTexture9 **default_texture_cubemap;
+    int16_t lightmap_mode;
+    int16_t maximum_nodes_per_model;
+    Bool using_software_vertex_processing;
+    int16_t unk2;
+    uint32_t fixed_function_ambient; // ambient light value for FF
+    Bool use_cheap_active_camo;
+    Bool render_targets_disabled;
+    Bool alpha_render_targets_disabled;
+} RasterizerGlobals; 
+_Static_assert(sizeof(RasterizerGlobals) == 0x60);
+
+/**
+ * Get the pointer to the rasterizer globals.
+ * @return pointer to rasterizer globals
+ */
+RasterizerGlobals *rasterizer_dx9_get_globals(void);
+
 /**
  * Get the pointer to the Direct3D 9 device.
 * @return pointer to D3D9 device
@@ -80,7 +116,7 @@ void rasterizer_dx9_set_texture(uint16_t stage, IDirect3DTexture9 *texture);
  * @param data The data to set the constant to.
  * @param count The number of constants to set.
  */
-bool rasterizer_dx9_set_vertex_shader_constant_f(uint16_t start_register, const float *data, uint16_t count);
+bool rasterizer_dx9_set_vertex_shader_constant_f(uint16_t start_register, const void *data, uint16_t count);
 
 /**
  * Set the pixel shader constant
@@ -88,7 +124,7 @@ bool rasterizer_dx9_set_vertex_shader_constant_f(uint16_t start_register, const 
  * @param data The data to set the constant to.
  * @param count The number of constants to set.
  */
-bool rasterizer_dx9_set_pixel_shader_constant_f(uint16_t start_register, const float *data, uint16_t count);
+bool rasterizer_dx9_set_pixel_shader_constant_f(uint16_t start_register, const void *data, uint16_t count);
 
 /**
  * Set the texture stage state
@@ -103,6 +139,11 @@ void rasterizer_dx9_set_texture_stage_state(uint16_t stage, D3DTEXTURESTAGESTATE
  * @param stencil_mode The stencil mode to set.
  */
 void rasterizer_dx9_set_stencil_mode(uint16_t stencil_mode);
+
+/**
+ * Draw a primitive with the given vertex data
+ */
+bool rasterizer_dx9_draw_primitive_up(D3DPRIMITIVETYPE primitive_type, UINT primitive_count, const void *vertex_data, UINT vertex_stride);
 
 #ifdef __cplusplus
 }

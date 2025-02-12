@@ -1,7 +1,19 @@
 #ifndef RINGWORLD__MATH__MATH_H
 #define RINGWORLD__MATH__MATH_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include "../tag/definitions/enum.h"
+
+typedef struct ProjectionMatrix {
+    float x[4];
+    float y[4];
+    float z[4];
+    float w[4];
+} ProjectionMatrix;
+_Static_assert(sizeof(ProjectionMatrix) == sizeof(float) * 4 * 4);
 
 /**
  * Check if a float is NaN.
@@ -88,5 +100,9 @@ double math_vector_squared_magnitude(VectorIJK *v);
  * @return sqrt(vector.i^2 + vector.j^2 + vector.k^2).
  */
 double math_vector_normalize(VectorIJK *v);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

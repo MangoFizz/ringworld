@@ -90,7 +90,7 @@ typedef struct RenderGlobals {
     int32_t scene_index;
     int16_t local_player_index;
     int16_t window_index;
-    float time_delta_since_tick_sec;
+    uint32_t time_delta_since_tick;
     float time_delta_since_frame_sec;
     RenderCamera camera;
     RenderFrustum frustum;

@@ -1,6 +1,10 @@
 #ifndef RINGWORLD__MATH__WAVE_FUNCTIONS_H
 #define RINGWORLD__MATH__WAVE_FUNCTIONS_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include "../tag/definitions/enum.h"
 
 /**
@@ -13,5 +17,9 @@
  */
 double wave_function_calculate_value(double period, WaveFunction function);
 double wave_function_calculate_value_og(double period, WaveFunction function);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

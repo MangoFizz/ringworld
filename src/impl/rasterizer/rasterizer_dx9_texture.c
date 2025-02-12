@@ -126,3 +126,13 @@ bool rasterizer_dx9_texture_set_bitmap_data_texture_no_assert(uint32_t stage, ui
     }
     return true;
 }
+
+bool rasterizer_dx9_texture_set_bitmap_data_directly(uint16_t stage, BitmapData *bitmap_data) {
+    ASSERT(stage >= 0 && stage < RASTERIZER_DX9_MAX_TEXTURE_STAGES);
+    if(bitmap_data != NULL) {
+        rasterizer_dx9_texture_load_bitmap(true, true, bitmap_data);
+        rasterizer_dx9_set_texture(stage, bitmap_data->hardware_format);
+        return true;
+    }
+    return false;
+}

@@ -63,6 +63,7 @@ add_library(ringworld STATIC
     src/impl/exception/exception.c
     src/impl/game/game_state.c
     src/impl/game/game_time.c
+    src/impl/math/color.c
     src/impl/math/math.c
     src/impl/math/wave_functions.c
     src/impl/input/mouse.c
@@ -83,6 +84,7 @@ add_library(ringworld STATIC
     src/impl/rasterizer/rasterizer_geometry_group.c
     src/impl/rasterizer/rasterizer_render.c
     src/impl/rasterizer/rasterizer_screen.c
+    src/impl/rasterizer/rasterizer_screen_geometry.c
     src/impl/rasterizer/rasterizer_shader_transparent_chicago.c
     src/impl/rasterizer/rasterizer_shader_transparent_generic.c
     src/impl/rasterizer/rasterizer_shader_transparent_water.c

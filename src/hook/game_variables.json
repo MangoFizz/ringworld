@@ -39,6 +39,7 @@
     "vertex_shaders": {"type": "VertexShader", "address": "0x639248"},
     "vertex_shader_permutations": {"type": "short", "address": "0x639450"},
     "vertex_declarations": {"type": "VertexDeclaration", "address": "0x67ca50"},
+    "rasterizer_globals": {"type": "RasterizerGlobals", "address": "0x637ce8"},
     "render_globals": {"type": "RenderGlobals", "address": "0x75c574"},
     "fog_enable": {"type": "bool", "address": "0x6249dc"},
     "frame_parameters": {"type": "FrameParameters", "address": "0x75C570"},

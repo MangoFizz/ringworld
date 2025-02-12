@@ -8,6 +8,10 @@ extern "C" {
 #include "../bitmap/bitmap.h"
 #include "../tag/tag.h"
 
+enum {
+    RASTERIZER_DX9_MAX_TEXTURE_STAGES = 4,
+};
+
 /**
  * Calculate the number of mipmaps levels for a texture.
  * @param height The height of the texture.
@@ -52,6 +56,14 @@ bool rasterizer_dx9_texture_set_bitmap_data_texture_no_assert(uint32_t stage, ui
  * @return True if the texture was set successfully, false otherwise.
  */
 bool rasterizer_dx9_texture_set_bitmap_data_texture(uint16_t stage, BitmapType bitmap_type, BitmapUsage bitmap_usage, uint16_t bitmap_data_index, TagHandle bitmap_tag);
+
+/**
+ * Set the bitmap data texture directly.
+ * @param stage The stage to set the texture to.
+ * @param bitmap_data The bitmap data.
+ * @return True if the texture was set successfully, false otherwise.
+ */
+bool rasterizer_dx9_texture_set_bitmap_data_directly(uint16_t stage, BitmapData *bitmap_data);
 
 #ifdef __cplusplus
 }

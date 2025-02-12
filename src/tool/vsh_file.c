@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <windows.h>
-#include "../impl/rasterizer/rasterizer_dx9_shader.h"
+#include "../impl/rasterizer/rasterizer_dx9_shader_blob_file.h"
 
 typedef struct VariableLenghtChunk {
     uint32_t lenght;

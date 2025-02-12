@@ -9,7 +9,8 @@
 #include "../math/math.h"
 #include "rasterizer_geometry_group.h"
 #include "rasterizer_dx9.h"
-#include "rasterizer_dx9_shader.h"
+#include "rasterizer_dx9_shader_effect.h"
+#include "rasterizer_dx9_vertex_shader.h"
 #include "rasterizer_dx9_vertex.h"
 #include "rasterizer_dx9_texture.h"
 #include "rasterizer_render.h"
@@ -195,7 +196,7 @@ void rasterizer_shader_transparent_chicago_draw(TransparentGeometryGroup *group,
 
         }
 
-        rasterizer_dx9_set_vertex_shader_constant_f(13, animation_vsh_constants, 8);
+        rasterizer_dx9_set_vertex_shader_constant_f(VSH_CONSTANTS_TEXANIM_OFFSET, animation_vsh_constants, VSH_CONSTANTS_TEXANIM_COUNT);
         
         rasterizer_shader_transparent_chicago_preprocess(shader_data);
     

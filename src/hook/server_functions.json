@@ -41,7 +41,7 @@
     "rasterizer_shader_transparent_chicago_preprocess": {"address": null, "replace": false, "use_return_value": true, "arguments": ["ebx"]},
     "rasterizer_dx9_shader_decrypt_binary_file": {"address": null, "replace": true, "use_return_value": true, "arguments": ["ebx", "eax"]},
     "rasterizer_dx9_shader_read_binary_file": {"address": null, "replace": true, "use_return_value": true, "arguments": ["0", "4", "ecx"]},
-    "rasterizer_dx9_shader_load_effect_collection_from_binary": {"address": null, "replace": true, "use_return_value": true},
+    "rasterizer_dx9_shader_effect_load_collection_from_binary": {"address": null, "replace": true, "use_return_value": true},
     "rasterizer_dx9_texture_calculate_mipmaps_levels": {"address": null, "replace": false, "use_return_value": true, "arguments": ["0", "eax", "ebx"]},
     "rasterizer_dx9_texture_create": {"address": null, "replace": true, "use_return_value": true, "arguments": ["esi"]},
     "rasterizer_dx9_texture_load_bitmap": {"address": null, "replace": false, "use_return_value": true, "arguments": ["0", "4", "eax"]},

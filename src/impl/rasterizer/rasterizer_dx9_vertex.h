@@ -121,12 +121,12 @@ typedef struct VertexDeclaration {
 } VertexDeclaration;
 _Static_assert(sizeof(VertexDeclaration) == 0xC);
 
-typedef struct DynamicVertex {
+typedef struct RasterizerDynamicVertex {
     VectorXYZ position;
     ColorARGBInt color;
     VectorXY texture_pos;
-} DynamicVertex;
-_Static_assert(sizeof(DynamicVertex) == 0x18);
+} RasterizerDynamicVertex;
+_Static_assert(sizeof(RasterizerDynamicVertex) == 0x18);
 
 /**
  * Get the triangles buffer type corresponding to a dynamic vertex buffer.

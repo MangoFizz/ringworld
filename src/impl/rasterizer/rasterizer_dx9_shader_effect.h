@@ -1,16 +1,15 @@
-#ifndef RINGWORLD__RASTERIZER__RASTERIZER_DX9_SHADER_H
-#define RINGWORLD__RASTERIZER__RASTERIZER_DX9_SHADER_H
+#ifndef RINGWORLD__RASTERIZER__RASTERIZER_DX9_EFFECT_H
+#define RINGWORLD__RASTERIZER__RASTERIZER_DX9_EFFECT_H
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 #include <stdbool.h>
-#include <stddef.h>
+#include <stdint.h>
 #include <d3d9.h>
 
-#include "../memory/memory.h"
-#include "rasterizer_dx9_vertex.h"
+#include "rasterizer_dx9_pixel_shader_constants.h"
 
 typedef struct RasterizerDx9PixelShader {
     char name[128];
@@ -32,12 +31,6 @@ typedef struct RasterizerDx9ShaderEffectEntry {
     const char *name;
 } RasterizerDx9ShaderEffectEntry;
 _Static_assert(sizeof(RasterizerDx9ShaderEffectEntry) == 0x10);
-
-typedef struct VertexShader {
-    IDirect3DVertexShader9 *shader;
-    const char *filepath;
-} VertexShader;
-_Static_assert(sizeof(VertexShader) == 0x8);
 
 enum ShaderEffectIndex {
     SHADER_EFFECT_ENVIRONMENT_LIGHTMAP_NORMAL = 0,
@@ -163,132 +156,23 @@ enum ShaderEffectIndex {
     NUM_OF_SHADER_EFFECTS
 };
 
-enum VertexShaderIndex {
-    VERTEX_SHADER_CONVOLUTION = 0,
-    VERTEX_SHADER_DEBUG,
-    VERTEX_SHADER_DECAL,
-    VERTEX_SHADER_DETAIL_OBJECT_TYPE0,
-    VERTEX_SHADER_DETAIL_OBJECT_TYPE1,
-    VERTEX_SHADER_EFFECT,
-    VERTEX_SHADER_EFFECT_MULTITEXTURE,
-    VERTEX_SHADER_EFFECT_MULTITEXTURE_SCREENSPACE,
-    VERTEX_SHADER_EFFECT_ZSPRITE,
-    VERTEX_SHADER_ENVIRONMENT_DIFFUSE_LIGHT,
-    VERTEX_SHADER_ENVIRONMENT_DIFFUSE_LIGHT_FF,
-    VERTEX_SHADER_ENVIRONMENT_FOG,
-    VERTEX_SHADER_ENVIRONMENT_FOG_SCREEN,
-    VERTEX_SHADER_ENVIRONMENT_LIGHTMAP,
-    VERTEX_SHADER_ENVIRONMENT_REFLECTION_BUMPED,
-    VERTEX_SHADER_ENVIRONMENT_REFLECTION_FLAT,
-    VERTEX_SHADER_ENVIRONMENT_REFLECTION_LIGHTMAP_MASK,
-    VERTEX_SHADER_ENVIRONMENT_REFLECTION_MIRROR,
-    VERTEX_SHADER_ENVIRONMENT_REFLECTION_RADIOSITY,
-    VERTEX_SHADER_ENVIRONMENT_SHADOW,
-    VERTEX_SHADER_ENVIRONMENT_SPECULAR_LIGHT,
-    VERTEX_SHADER_ENVIRONMENT_SPECULAR_SPOT_LIGHT,
-    VERTEX_SHADER_ENVIRONMENT_SPECULAR_LIGHTMAP,
-    VERTEX_SHADER_ENVIRONMENT_TEXTURE,
-    VERTEX_SHADER_LENS_FLARE,
-    VERTEX_SHADER_MODEL_FOGGED,
-    VERTEX_SHADER_MODEL,
-    VERTEX_SHADER_MODEL_FF,
-    VERTEX_SHADER_MODEL_FAST,
-    VERTEX_SHADER_MODEL_SCENERY,
-    VERTEX_SHADER_MODEL_ACTIVE_CAMOUFLAGE,
-    VERTEX_SHADER_MODEL_ACTIVE_CAMOUFLAGE_FF,
-    VERTEX_SHADER_MODEL_FOG_SCREEN,
-    VERTEX_SHADER_MODEL_SHADOW,
-    VERTEX_SHADER_MODEL_ZBUFFER,
-    VERTEX_SHADER_SCREEN,
-    VERTEX_SHADER_SCREEN2,
-    VERTEX_SHADER_TRANSPARENT_GENERIC,
-    VERTEX_SHADER_TRANSPARENT_GENERIC_LIT_M,
-    VERTEX_SHADER_TRANSPARENT_GENERIC_M,
-    VERTEX_SHADER_TRANSPARENT_GENERIC_OBJECT_CENTERED,
-    VERTEX_SHADER_TRANSPARENT_GENERIC_OBJECT_CENTERED_M,
-    VERTEX_SHADER_TRANSPARENT_GENERIC_REFLECTION,
-    VERTEX_SHADER_TRANSPARENT_GENERIC_REFLECTION_M,
-    VERTEX_SHADER_TRANSPARENT_GENERIC_SCREENSPACE,
-    VERTEX_SHADER_TRANSPARENT_GENERIC_SCREENSPACE_M,
-    VERTEX_SHADER_TRANSPARENT_GENERIC_VIEWER_CENTERED,
-    VERTEX_SHADER_TRANSPARENT_GENERIC_VIEWER_CENTERED_M,
-    VERTEX_SHADER_TRANSPARENT_GLASS_DIFFUSE_LIGHT,
-    VERTEX_SHADER_TRANSPARENT_GLASS_DIFFUSE_LIGHT_M,
-    VERTEX_SHADER_TRANSPARENT_GLASS_REFLECTION_BUMPED,
-    VERTEX_SHADER_TRANSPARENT_GLASS_REFLECTION_BUMPED_M,
-    VERTEX_SHADER_TRANSPARENT_GLASS_REFLECTION_FLAT,
-    VERTEX_SHADER_TRANSPARENT_GLASS_REFLECTION_FLAT_M,
-    VERTEX_SHADER_TRANSPARENT_GLASS_REFLECTION_MIRROR,
-    VERTEX_SHADER_TRANSPARENT_GLASS_TINT,
-    VERTEX_SHADER_TRANSPARENT_GLASS_TINT_M,
-    VERTEX_SHADER_TRANSPARENT_METER,
-    VERTEX_SHADER_TRANSPARENT_METER_M,
-    VERTEX_SHADER_TRANSPARENT_PLASMA_M,
-    VERTEX_SHADER_TRANSPARENT_WATER_OPACITY,
-    VERTEX_SHADER_TRANSPARENT_WATER_OPACITY_M,
-    VERTEX_SHADER_TRANSPARENT_WATER_REFLECTION,
-    VERTEX_SHADER_TRANSPARENT_WATER_REFLECTION_M,
-    NUM_OF_VERTEX_SHADERS
-};
-
-/**
- * Decrypts a shader file.
- * @param data          A pointer to the shader file data.
- * @param data_size     The size of the shader file data.
- * @return              true if successful, false if not.
- */
-bool rasterizer_dx9_shader_decrypt_binary_file(void *data, size_t data_size);
-
-/**
- * Encrypts a shader file.
- * @param data                  A pointer to the shader file data.
- * @param data_size             The size of the shader file data.
- * @param encrypted_data        A pointer to a buffer that will be allocated and filled with the encrypted shader file data.
- * @param encrypted_data_size   A pointer to a size_t that will be filled with the size of the encrypted shader file data.
- */
-void rasterizer_dx9_shader_encrypt_binary_file(void *data, size_t data_size, void **encrypted_data, size_t *encrypted_data_size);
-
-/**
- * Reads a shader file from disk and decrypts it.
- * @param filename      The filename of the shader file.
- * @param buffer        A pointer to a buffer that will be allocated and filled with the shader file data.
- * @param bytes_read    A pointer to a size_t that will be filled with the size of the shader file data.
- * @return              true if successful, false if not.
- */
-bool rasterizer_dx9_shader_read_binary_file(void **buffer, size_t *bytes_read, const char *filename);
-
 /**
  * Loads the shader effects from a binary file.
  * @return true if successful, false if not.
  */
-bool rasterizer_dx9_shader_load_effect_collection_from_binary(void);
+bool rasterizer_dx9_shader_effect_load_collection_from_binary(void);
 
 /**
  * Disposes of all shader effects.
  */
-void rasterizer_dx9_shader_dispose_effects(void);
+void rasterizer_dx9_shader_effects_dispose(void);
 
 /**
  * Get the shader effect for the given index.
  * @param index The index of the shader effect.
  * @return The pixel shader.
  */
-RasterizerDx9ShaderEffect *rasterizer_dx9_shader_get_effect(uint16_t index);
-
-/**
- * Get the vertex shader for the given index.
- * @param index The index of the vertex shader.
- * @return The vertex shader.
- */
-IDirect3DVertexShader9 *rasterizer_dx9_shader_get_vertex_shader(uint16_t vsf_index);
-
-/**
- * Get the vertex shader for the given index.
- * @param vertex_shader_permutation 
- * @param vertex_buffer_type 
- * @return Pointer to the vertex shader.
- */
-IDirect3DVertexShader9 *rasterizer_dx9_shader_get_vertex_shader_for_permutation(uint16_t vertex_shader_permutation, VertexBufferType vertex_buffer_type);
+RasterizerDx9ShaderEffect *rasterizer_dx9_shader_effect_get(uint16_t index);
 
 #ifdef __cplusplus
 }

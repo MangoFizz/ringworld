@@ -30,6 +30,9 @@
 
     "console_printf_in": {"address": "0x499ab0", "replace": false, "arguments": ["eax", "4", "8"], "comment": "takes variable args but the bridge doesn't support varargs so two are passed for now plus color"},
 
+    "bitmap_load": {"address": "0x444eb0", "replace": false, "use_return_value": true, "arguments": ["0", "4", "eax"]},
+    "bitmap_group_get_bitmap_from_sequence": {"address": "0x43f290", "replace": false, "use_return_value": true, "arguments": ["eax", "0"]},
+    
     "shader_get_vertex_shader_permutation": {"address": "0x543160", "replace": false, "use_return_value": true, "arguments": ["ecx"]},
     "rasterizer_dx9_set_framebuffer_blend_function": {"address": "0x51be80", "replace": false, "arguments": ["ecx"]},
     "rasterizer_dx9_texture_set_bitmap_data_texture": {"address": "0x51c060", "replace": false, "use_return_value": true, "arguments": ["0", "4", "8", "12", "eax"]},
@@ -39,17 +42,16 @@
     "rasterizer_transparent_geometry_group_draw": {"address": "0x536740", "replace": false, "arguments": ["0", "4"]},
     "numeric_countdown_timer_get": {"address": "0x5434c0", "replace": false, "use_return_value": true, "arguments": ["eax"]},
     "rasterizer_shader_transparent_chicago_preprocess": {"address": "0x53ae90", "replace": false, "use_return_value": true, "arguments": ["ebx"]},
-    "rasterizer_dx9_shader_decrypt_binary_file": {"address": "0x51d080", "replace": true, "use_return_value": true, "arguments": ["ebx", "eax"]},
-    "rasterizer_dx9_shader_read_binary_file": {"address": "0x51d0f0", "replace": true, "use_return_value": true, "arguments": ["0", "4", "ecx"]},
+    "rasterizer_shaders_blob_decrypt": {"address": "0x51d080", "replace": true, "use_return_value": true, "arguments": ["ebx", "eax"]},
+    "rasterizer_shaders_blob_read_file": {"address": "0x51d0f0", "replace": true, "use_return_value": true, "arguments": ["0", "4", "ecx"]},
     "rasterizer_dx9_shader_effect_load_collection_from_binary": {"address": "0x532c20", "replace": true, "use_return_value": true},
     "rasterizer_dx9_shader_load_vertex_shaders_from_binary": {"address": "0x5336f0", "replace": true, "use_return_value": true},
     "rasterizer_dx9_texture_calculate_mipmaps_levels": {"address": "0x527230", "replace": false, "use_return_value": true, "arguments": ["0", "eax", "ebx"]},
     "rasterizer_dx9_texture_create": {"address": "0x5272c0", "replace": true, "use_return_value": true, "arguments": ["esi"]},
-    "rasterizer_dx9_texture_load_bitmap": {"address": "0x444eb0", "replace": false, "use_return_value": true, "arguments": ["0", "4", "eax"]},
     "rasterizer_dx9_set_stencil_mode": {"address": "0x51c900", "replace": true, "arguments": ["eax"]},
     "rasterizer_dx9_render_target_set": {"address": "0x52fda0", "replace": false, "arguments": ["0", "4", "eax"]},
 
-    "rasterizer_screen_geometry_draw": {"address": "0x5200a0", "replace": true, "arguments": ["eax", "0"]},
+    "rasterizer_screen_geometry_draw": {"address": "0x5200a0", "disabled": true, "replace": true, "arguments": ["eax", "0"]},
 
     "saved_games_read_player_profile": {"address": "0x53dad0", "replace": false, "use_return_value": true, "arguments": ["0", "ecx"]},
     "saved_games_write_player_profile": {"address": "0x53dcb0", "replace": false, "arguments": ["0", "4"]},

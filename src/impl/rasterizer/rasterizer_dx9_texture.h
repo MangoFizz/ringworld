@@ -29,15 +29,6 @@ uint32_t rasterizer_dx9_texture_calculate_mipmaps_levels(uint16_t *height, Bitma
 bool rasterizer_dx9_texture_create(BitmapData *bitmap);
 
 /**
- * Load a bitmap into a texture.
- * @param block True if the load should block the thread, false otherwise.
- * @param load True if the bitmap should be loaded, false otherwise.
- * @param bitmap The bitmap data.
- * @return True if the bitmap was loaded successfully, false otherwise.
- */
-bool rasterizer_dx9_texture_load_bitmap(bool block, bool load, BitmapData *bitmap);
-
-/**
  * Set the bitmap data texture; if the bitmap is not loaded, it will be loaded.
  * @param stage The stage to set the texture to.
  * @param bitmap_data_index The index of the bitmap data.

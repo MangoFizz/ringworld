@@ -5,20 +5,20 @@
 #include "../crypto/md5.h"
 #include "../crypto/xtea.h"
 #include "../exception/exception.h"
-#include "rasterizer_dx9_shader_blob_file.h"
+#include "rasterizer_shaders_blob.h"
 
-#ifndef RASTERIZER_DX9_SHADER_DECRYPT_KEY
-#define RASTERIZER_DX9_SHADER_DECRYPT_KEY 0x3FFFFFDD, 0x00007FC3, 0x000000E5, 0x003FFFEF
+#ifndef RASTERIZER_SHADER_BLOB_XTEA_KEY
+#define RASTERIZER_SHADER_BLOB_XTEA_KEY 0x3FFFFFDD, 0x00007FC3, 0x000000E5, 0x003FFFEF
 #endif
 
-bool rasterizer_dx9_shader_decrypt_binary_file(void *data, size_t data_size) {
+bool rasterizer_shaders_blob_decrypt(void *data, size_t data_size) {
     ASSERT(data != NULL);
     
     if(data_size < 34) {
         return false;
     }
 
-    uint32_t key[4] = { RASTERIZER_DX9_SHADER_DECRYPT_KEY };
+    uint32_t key[4] = { RASTERIZER_SHADER_BLOB_XTEA_KEY };
     xtea_decrypt(data_size, data, key);
 
     char hash_buffer[32];
@@ -34,7 +34,7 @@ bool rasterizer_dx9_shader_decrypt_binary_file(void *data, size_t data_size) {
     return true;
 }
 
-void rasterizer_dx9_shader_encrypt_binary_file(void *data, size_t data_size, void **encrypted_data, size_t *encrypted_data_size) {
+void rasterizer_shaders_blob_encrypt(void *data, size_t data_size, void **encrypted_data, size_t *encrypted_data_size) {
     ASSERT(data != NULL);
 
     char hash_buffer[32];
@@ -46,11 +46,11 @@ void rasterizer_dx9_shader_encrypt_binary_file(void *data, size_t data_size, voi
     memcpy(*encrypted_data, data, data_size);
     memcpy((char *)*encrypted_data + data_size, hash_buffer, 32);
 
-    uint32_t key[4] = { RASTERIZER_DX9_SHADER_DECRYPT_KEY };
+    uint32_t key[4] = { RASTERIZER_SHADER_BLOB_XTEA_KEY };
     xtea_encrypt(*encrypted_data_size, *encrypted_data, key);
 }
 
-bool rasterizer_dx9_shader_read_binary_file(void **buffer, size_t *bytes_read, const char *filename) {
+bool rasterizer_shaders_blob_read_file(void **buffer, size_t *bytes_read, const char *filename) {
     *buffer = NULL;
     *bytes_read = 0;
 
@@ -70,7 +70,7 @@ bool rasterizer_dx9_shader_read_binary_file(void **buffer, size_t *bytes_read, c
         bool success = ReadFile(file, buffer_handle, file_size, (LPDWORD)bytes_read, NULL);
         if(success) {
             CloseHandle(file);
-            bool decrypt_success = rasterizer_dx9_shader_decrypt_binary_file(buffer_handle, *bytes_read);
+            bool decrypt_success = rasterizer_shaders_blob_decrypt(buffer_handle, *bytes_read);
             if(decrypt_success) {
                 *buffer = buffer_handle;
                 return true;

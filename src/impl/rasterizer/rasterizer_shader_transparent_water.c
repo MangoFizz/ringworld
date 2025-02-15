@@ -8,7 +8,7 @@
 #include "rasterizer_dx9_shader_effect.h"
 #include "rasterizer_dx9_vertex_shader.h"
 #include "rasterizer_dx9_texture.h"
-#include "rasterizer_render.h"
+#include "../render/render.h"
 #include "rasterizer_shader_transparent_water.h"
 
 extern bool *shader_transparent_water_unk1;
@@ -117,7 +117,7 @@ void rasterizer_shader_transparent_water_render_bumpmap(ShaderTransparentWater *
                 }
             }
 
-            FrameParameters *frame_parameters = rasterizer_render_get_frame_parameters();
+            FrameParameters *frame_parameters = render_get_frame_parameters();
             float vs_constants[4 * 8] = {0};
             for(size_t i = 0; i < 4; i++) {
                 float cos = cosf(ripples[i].animation_angle);
@@ -202,7 +202,7 @@ void rasterizer_shader_transparent_water_draw(TransparentGeometryGroup *group) {
 
     if(*shader_transparent_water_unk1 == false && shader_transparent_water_enabled) {
         ShaderTransparentWater *shader = shader_type_assert(group->shader, SHADER_TYPE_SHADER_TRANSPARENT_WATER);
-        GlobalsRasterizerData *globals_rasterizer_data = rasterizer_render_get_globals_rasterizer_data();
+        GlobalsRasterizerData *globals_rasterizer_data = render_get_globals_rasterizer_data();
         
         int vertex_buffer_type = rasterizer_geometry_group_get_vertex_buffer_type(group);
         bool use_m_vertex_shader = false;
@@ -328,7 +328,7 @@ void rasterizer_shader_transparent_water_draw(TransparentGeometryGroup *group) {
 
         water_opacity_effect = rasterizer_dx9_shader_effect_get(SHADER_EFFECT_TRANSPARENT_WATER_REFLECTION);
         if(water_opacity_effect != NULL) {
-            FrameParameters *frame_params = rasterizer_render_get_frame_parameters();
+            FrameParameters *frame_params = render_get_frame_parameters();
             float ripple_scale = shader->ripple_scale;
             float vs_constants[12] = {0};
             vs_constants[0] = ripple_scale;
@@ -390,7 +390,7 @@ void rasterizer_shader_transparent_water_draw(TransparentGeometryGroup *group) {
             rasterizer_dx9_set_sampler_state(3, D3DSAMP_MIPFILTER, D3DTEXF_LINEAR);
 
             float ps_constants[4] = {0};
-            RenderGlobals *render_globals = rasterizer_render_get_globals();
+            RenderGlobals *render_globals = render_get_globals();
             Plane3D *plane = &group->plane;
             double norm = math_vector_normalize((VectorIJK *)plane);
             if(norm > 0.0) {

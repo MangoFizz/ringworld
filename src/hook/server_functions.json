@@ -30,6 +30,8 @@
 
     "console_printf_in": {"address": "0x48eb40", "replace": false, "arguments": ["eax", "4", "8"], "comment": "takes variable args but the bridge doesn't support varargs so two are passed for now plus color"},
     
+    "bitmap_load": {"address": null, "replace": false, "use_return_value": true, "arguments": ["eax", "0", "4"]},
+    
     "shader_get_vertex_shader_permutation": {"address": null, "replace": false, "use_return_value": true, "arguments": ["ecx"]},
     "rasterizer_dx9_set_framebuffer_blend_function": {"address": null, "replace": false, "arguments": ["ecx"]},
     "rasterizer_dx9_texture_set_bitmap_data_texture": {"address": null, "replace": false, "use_return_value": true, "arguments": ["0", "4", "8", "12", "eax"]},
@@ -44,7 +46,6 @@
     "rasterizer_dx9_shader_effect_load_collection_from_binary": {"address": null, "replace": true, "use_return_value": true},
     "rasterizer_dx9_texture_calculate_mipmaps_levels": {"address": null, "replace": false, "use_return_value": true, "arguments": ["0", "eax", "ebx"]},
     "rasterizer_dx9_texture_create": {"address": null, "replace": true, "use_return_value": true, "arguments": ["esi"]},
-    "rasterizer_dx9_texture_load_bitmap": {"address": null, "replace": false, "use_return_value": true, "arguments": ["0", "4", "eax"]},
     "rasterizer_dx9_set_stencil_mode": {"address": null, "replace": true, "arguments": ["eax"]},
     "rasterizer_dx9_render_target_set": {"address": null, "replace": false, "arguments": ["0", "4", "eax"]},
 

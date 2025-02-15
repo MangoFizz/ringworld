@@ -74,7 +74,6 @@ add_library(ringworld STATIC
     src/impl/memory/table.c
     src/impl/player/player.c
     src/impl/rasterizer/rasterizer_dx9_render_target.c
-    src/impl/rasterizer/rasterizer_dx9_shader_blob_file.c
     src/impl/rasterizer/rasterizer_dx9_shader_compiler.c
     src/impl/rasterizer/rasterizer_dx9_shader_effect.c
     src/impl/rasterizer/rasterizer_dx9_texture.c
@@ -82,12 +81,13 @@ add_library(ringworld STATIC
     src/impl/rasterizer/rasterizer_dx9_vertex.c
     src/impl/rasterizer/rasterizer_dx9.c
     src/impl/rasterizer/rasterizer_geometry_group.c
-    src/impl/rasterizer/rasterizer_render.c
     src/impl/rasterizer/rasterizer_screen.c
     src/impl/rasterizer/rasterizer_screen_geometry.c
     src/impl/rasterizer/rasterizer_shader_transparent_chicago.c
     src/impl/rasterizer/rasterizer_shader_transparent_generic.c
     src/impl/rasterizer/rasterizer_shader_transparent_water.c
+    src/impl/rasterizer/rasterizer_shaders_blob.c
+    src/impl/render/render.c
     src/impl/saved_games/player_profile.c
     src/impl/script/hsc.c
     src/impl/shader/shader.c

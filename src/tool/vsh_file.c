@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <windows.h>
-#include "../impl/rasterizer/rasterizer_dx9_shader_blob_file.h"
+#include "../impl/rasterizer/rasterizer_shaders_blob.h"
 
 typedef struct VariableLenghtChunk {
     uint32_t lenght;
@@ -85,7 +85,7 @@ const char *vertex_shaders_files[] = {
 bool unpack_vsh_file(const char *vsh_file, const char *path) {
     void *data;
     size_t data_size;
-    bool success = rasterizer_dx9_shader_read_binary_file(&data, &data_size, vsh_file);
+    bool success = rasterizer_shaders_blob_read_file(&data, &data_size, vsh_file);
     if(!success) {
         return NULL;
     }
@@ -170,7 +170,7 @@ bool pack_vsh_file(const char *path, const char *vsh_file) {
 
     void *encrypted_data = NULL;
     size_t encrypted_data_size = 0;
-    rasterizer_dx9_shader_encrypt_binary_file(data, total_size, &encrypted_data, &encrypted_data_size);
+    rasterizer_shaders_blob_encrypt(data, total_size, &encrypted_data, &encrypted_data_size);
 
     HANDLE file = CreateFileA(vsh_file, GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
     if(file == INVALID_HANDLE_VALUE) {

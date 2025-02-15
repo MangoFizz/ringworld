@@ -5,7 +5,7 @@
 #include "rasterizer_dx9_vertex.h"
 #include "rasterizer_dx9_vertex_shader.h"
 #include "rasterizer_dx9_texture.h"
-#include "rasterizer_render.h"
+#include "../render/render.h"
 #include "rasterizer_screen.h"
 #include "rasterizer_screen_geometry.h"
 
@@ -51,7 +51,7 @@ static void rasterizer_screen_geometry_hud_meter_draw(BitmapData **meter_maps, R
 
 void rasterizer_screen_geometry_draw(RasterizerDynamicScreenQuadParams *params, RasterizerDynamicVertex *vertices) {
     IDirect3DDevice9 *device = rasterizer_dx9_device();
-    RenderGlobals *render_globals = rasterizer_render_get_globals();
+    RenderGlobals *render_globals = render_get_globals();
     RasterizerGlobals *rasterizer_globals = rasterizer_dx9_get_globals();
     D3DCAPS9 *device_caps = rasterizer_dx9_device_caps();
 

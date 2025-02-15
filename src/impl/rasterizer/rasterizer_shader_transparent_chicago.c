@@ -13,13 +13,13 @@
 #include "rasterizer_dx9_vertex_shader.h"
 #include "rasterizer_dx9_vertex.h"
 #include "rasterizer_dx9_texture.h"
-#include "rasterizer_render.h"
+#include "../render/render.h"
 #include "rasterizer_shader_transparent_chicago.h"
 
 extern float *shader_transparent_generic_vertex_constants;
 
 void rasterizer_shader_transparent_chicago_draw(TransparentGeometryGroup *group, uint32_t *param_2) {
-    RenderGlobals *render_globals = rasterizer_render_get_globals();
+    RenderGlobals *render_globals = render_get_globals();
     ShaderTransparentChicago *shader_data = shader_type_assert(group->shader, SHADER_TYPE_SHADER_TRANSPARENT_CHICAGO);
 
     // Not sure about this 
@@ -175,7 +175,7 @@ void rasterizer_shader_transparent_chicago_draw(TransparentGeometryGroup *group,
                     float map_u_offset = map->map_u_offset;
                     float map_v_offset = map->map_v_offset;
                     float map_rotation = map->map_rotation;
-                    FrameParameters *frame_parameters = rasterizer_render_get_frame_parameters();
+                    FrameParameters *frame_parameters = render_get_frame_parameters();
                     shader_texture_animation_evaluate(map_u_scale, map_v_scale, map_u_offset, map_v_offset, map_rotation,
                                                         frame_parameters->elapsed_time, texture_animation, group->animation, 
                                                         &animation_vsh_constants[map_index * 8 + 0],

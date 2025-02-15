@@ -4,7 +4,7 @@
 
 #include "../exception/exception.h"
 #include "rasterizer_dx9.h"
-#include "rasterizer_dx9_shader_blob_file.h"
+#include "rasterizer_shaders_blob.h"
 #include "rasterizer_dx9_shader_effect.h"
 
 extern RasterizerDx9ShaderEffectEntry *shader_effects;
@@ -39,7 +39,7 @@ static unsigned char *pop_function_blob(char **data) {
 bool rasterizer_dx9_shader_effect_load_collection_from_binary(void) {
     void *buffer;
     size_t bytes_read;
-    ASSERT(rasterizer_dx9_shader_read_binary_file(&buffer, &bytes_read, "shaders/EffectCollection_ps_2_0.enc"));
+    ASSERT(rasterizer_shaders_blob_read_file(&buffer, &bytes_read, "shaders/EffectCollection_ps_2_0.enc"));
 
     char name[256];
     char *data = buffer;

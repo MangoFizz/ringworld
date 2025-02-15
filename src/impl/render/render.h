@@ -1,5 +1,5 @@
-#ifndef RINGWORLD__RASTERIZER__RASTERIZER_RENDER_H
-#define RINGWORLD__RASTERIZER__RASTERIZER_RENDER_H
+#ifndef RINGWORLD__RENDER_RENDER_H
+#define RINGWORLD__RENDER_RENDER_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -24,7 +24,7 @@ typedef struct RenderCamera {
 _Static_assert(sizeof(RenderCamera) == 0x54);
 
 typedef struct RenderFrustum {
-    Rectangle2DF frustum_bounds;
+    Bounds2D frustum_bounds;
     Matrix4x3 world_to_view;
     Matrix4x3 view_to_world;
     Plane3D world_planes[6];
@@ -109,28 +109,36 @@ typedef struct FrameParameters {
 } FrameParameters;
 _Static_assert(sizeof(FrameParameters) == 0x10);
 
+typedef struct RenderWindow {
+    int16_t local_player_index;
+    uint8_t console_window;
+    RenderCamera render_camera;
+    RenderCamera rasterizer_camera;
+} RenderWindow;
+_Static_assert(sizeof(struct RenderWindow) == 0xAC);
+
 /**
  * Get the window render parameters.
  * @return The window render parameters.
  */
-RenderGlobals *rasterizer_render_get_globals(void);
+RenderGlobals *render_get_globals(void);
 
 /**
  * Get the frame parameters.
  * @return The frame parameters.
  */
-FrameParameters *rasterizer_render_get_frame_parameters(void);
+FrameParameters *render_get_frame_parameters(void);
 
 /**
  * Get whether the fog is enabled.
  */
-bool rasterizer_render_get_fog_enabled(void);
+bool render_get_fog_enabled(void);
 
 /**
  * Get the rasterizer data.
  * @return The rasterizer data.
  */
-GlobalsRasterizerData *rasterizer_render_get_globals_rasterizer_data(void);
+GlobalsRasterizerData *render_get_globals_rasterizer_data(void);
 
 #ifdef __cplusplus
 }

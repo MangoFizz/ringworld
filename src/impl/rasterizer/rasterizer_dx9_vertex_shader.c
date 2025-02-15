@@ -4,7 +4,7 @@
 
 #include "../exception/exception.h"
 #include "rasterizer_dx9.h"
-#include "rasterizer_dx9_shader_blob_file.h"
+#include "rasterizer_shaders_blob.h"
 #include "rasterizer_dx9_vertex_shader.h"
 
 extern short *vertex_shader_permutations;
@@ -13,7 +13,7 @@ extern VertexShader *vertex_shaders;
 bool rasterizer_dx9_shader_load_vertex_shaders_from_binary(void) {
     void *buffer;
     size_t buffer_size;
-    ASSERT(rasterizer_dx9_shader_read_binary_file(&buffer, &buffer_size, "shaders/vsh.enc"));
+    ASSERT(rasterizer_shaders_blob_read_file(&buffer, &buffer_size, "shaders/vsh.enc"));
 
     IDirect3DDevice9 *device = rasterizer_dx9_device();
     ASSERT(device != NULL);

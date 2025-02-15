@@ -55,8 +55,7 @@ local function generateHeader(definitionName, tagDefinition, dependencies)
 #include "enum.h"
 #include "bitfield.h"
 
-#pragma pack(push)
-#pragma pack(1)
+#pragma pack(push, 1)
 
 ]])
 

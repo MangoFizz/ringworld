@@ -67,6 +67,22 @@ static inline int32_t clamp_i32(int32_t x, int32_t min, int32_t max) {
  * Clamp a value between a minimum and maximum.
  * @return min if x < min, max if x > max, or x otherwise.
  */
+static inline int32_t clamp_i8(int8_t x, int8_t min, int8_t max) {
+    return x < min ? min : (x > max ? max : x);
+}
+
+/**
+ * Clamp a value between a minimum and maximum.
+ * @return min if x < min, max if x > max, or x otherwise.
+ */
+static inline int32_t clamp_u8(uint8_t x, uint8_t min, uint8_t max) {
+    return x < min ? min : (x > max ? max : x);
+}
+
+/**
+ * Clamp a value between a minimum and maximum.
+ * @return min if x < min, max if x > max, or x otherwise.
+ */
 static inline float clamp_f32(float x, float min, float max) {
     return x < min ? min : (x > max ? max : x);
 }
@@ -100,6 +116,14 @@ double math_vector_squared_magnitude(VectorIJK *v);
  * @return sqrt(vector.i^2 + vector.j^2 + vector.k^2).
  */
 double math_vector_normalize(VectorIJK *v);
+
+/**
+ * Scale a 2D vector by a scalar
+ * @param v The vector to scale
+ * @param scale The scalar to scale by
+ * @param result The result of the scaling
+ */
+void math_vector_2d_scale(void *v, float scale, void *result);
 
 #ifdef __cplusplus
 }

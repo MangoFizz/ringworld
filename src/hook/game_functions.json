@@ -31,7 +31,7 @@
     "console_printf_in": {"address": "0x499ab0", "replace": false, "arguments": ["eax", "4", "8"], "comment": "takes variable args but the bridge doesn't support varargs so two are passed for now plus color"},
 
     "bitmap_load": {"address": "0x444eb0", "replace": false, "use_return_value": true, "arguments": ["0", "4", "eax"]},
-    "bitmap_group_get_bitmap_from_sequence": {"address": "0x43f290", "replace": false, "use_return_value": true, "arguments": ["eax", "0"]},
+    "bitmap_group_sequence_get_bitmap_for_frame": {"address": "0x43f290", "replace": true, "use_return_value": true, "arguments": ["eax", "0", "edi"]},
     
     "shader_get_vertex_shader_permutation": {"address": "0x543160", "replace": false, "use_return_value": true, "arguments": ["ecx"]},
     "rasterizer_dx9_set_framebuffer_blend_function": {"address": "0x51be80", "replace": false, "arguments": ["ecx"]},
@@ -51,11 +51,22 @@
     "rasterizer_dx9_set_stencil_mode": {"address": "0x51c900", "replace": true, "arguments": ["eax"]},
     "rasterizer_dx9_render_target_set": {"address": "0x52fda0", "replace": false, "arguments": ["0", "4", "eax"]},
 
-    "rasterizer_screen_geometry_draw": {"address": "0x5200a0", "disabled": true, "replace": true, "arguments": ["eax", "0"]},
+    "rasterizer_screen_geometry_draw": {"address": "0x5200a0", "replace": true, "arguments": ["eax", "0"]},
 
     "saved_games_read_player_profile": {"address": "0x53dad0", "replace": false, "use_return_value": true, "arguments": ["0", "ecx"]},
     "saved_games_write_player_profile": {"address": "0x53dcb0", "replace": false, "arguments": ["0", "4"]},
 
     "object_get_and_verify_type": {"address": "0x4fa7d0", "replace": true, "use_return_value": true, "arguments": ["ecx", "0"]},
-    "object_placement_data_new": {"address": "0x4f8cb0", "replace": true, "use_return_value": true, "arguments": ["eax", "0", "4"]}
+    "object_placement_data_new": {"address": "0x4f8cb0", "replace": true, "use_return_value": true, "arguments": ["eax", "0", "4"]},
+    
+    "unit_get_camera_position": {"address": "0x56c440", "replace": false, "arguments": ["ecx", "eax"]},
+
+    "weapon_build_weapon_interface_state": {"address": "0x4c5d90", "replace": false, "arguments": ["eax", "0"] },
+    "hud_draw_bitmap_internal": {"address": "0x4b0140", "replace": true, "arguments": ["0", "4", "8", "12", "16", "20", "esi", "eax"] },
+    "hud_calculate_point": {"address": "0x4aea80", "replace": false, "disabled": true, "arguments": ["0", "edx", "ecx", "eax", "4", "8"] },
+    "hud_calculate_bitmap_bounds": {"address": "0x4b0040", "replace": false, "disabled": true, "arguments": ["0", "esi", "edx", "eax", "ecx"] },
+    "hud_draw_bitmap_with_meter": {"address": "0x4afec0", "replace": true, "arguments": ["0", "4", "8", "12", "16", "20", "ecx", "edx", "eax", "ebx"] },
+    "hud_draw_meter": {"address": "0x4aefb0", "replace": true, "arguments": ["0", "4", "8", "12", "16", "20", "esi"] },
+
+    "color_interpolate": {"address": "0x43f6a0", "replace": false, "arguments": ["ecx", "eax", "0", "4", "8"] }
 }

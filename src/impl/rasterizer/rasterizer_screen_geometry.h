@@ -19,7 +19,7 @@ typedef struct RasterizerMeterParams {
     float gradient;
 } RasterizerMeterParams;
 
-typedef struct RasterizerDynamicScreenQuadParams {
+typedef struct RasterizerDynamicScreenGeometryParams {
     RasterizerMeterParams *meter_parameters;
     VectorXY *offset;
     bool map_anchor_screen[3];
@@ -36,8 +36,15 @@ typedef struct RasterizerDynamicScreenQuadParams {
     int16_t map1_to_2_blend_function;
     int16_t framebuffer_blend_function;
     bool point_sampled;
-} RasterizerDynamicScreenQuadParams;
-_Static_assert(sizeof(RasterizerDynamicScreenQuadParams) == 140);
+} RasterizerDynamicScreenGeometryParams;
+_Static_assert(sizeof(RasterizerDynamicScreenGeometryParams) == 140);
+
+/**
+ * Renders a screen geometry quad.
+ * @param params Pointer to the structure containing the rendering parameters.
+ * @param vertices Pointer to an array of vertex structures that define the corners of the screen quad.
+ */
+void rasterizer_screen_geometry_draw(RasterizerDynamicScreenGeometryParams *params, RasterizerDynamicVertex *vertices);
 
 #ifdef __cplusplus
 }

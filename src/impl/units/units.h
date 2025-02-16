@@ -96,9 +96,10 @@ typedef struct UnitAnimationData {
     UnitAnimationStateData weapon_ik;
     bool update_look;
     bool update_aim;
-    Rectangle2DF looking_bounds;
-    Rectangle2DF aiming_bounds;
-    char pad_3[8];
+    Bounds2D looking_bounds;
+    Bounds2D aiming_bounds;
+    void *external_animation_graph;
+    UnitAnimationStateData external_animation;
 } UnitAnimationData;
 _Static_assert(sizeof(UnitAnimationData) == 0x48);
 
@@ -403,6 +404,13 @@ void unit_delete_all_weapons(ObjectHandle unit);
  * @param param_3 Unknown.
  */
 void unit_add_weapon_to_inventory(ObjectHandle unit, ObjectHandle weapon, uint16_t param_3);
+
+/**
+ * Get the camera position of a unit.
+ * @param unit_handle The handle of the unit.
+ * @param position Pointer to a VectorXYZ to store the camera position in.
+ */
+void unit_get_camera_position(ObjectHandle unit_handle, VectorXYZ *position);
 
 #ifdef __cplusplus
 }

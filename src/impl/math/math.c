@@ -17,3 +17,10 @@ double math_vector_squared_magnitude(VectorIJK *v) {
 double math_vector_normalize(VectorIJK *v) {
     return sqrt(math_vector_squared_magnitude(v));
 }
+
+void math_vector_2d_scale(void *v, float scale, void *result) {
+    VectorIJ *vector = v;
+    VectorIJ *result_vector = result;
+    result_vector->i = vector->i * scale;
+    result_vector->j = vector->j * scale;
+}

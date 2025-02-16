@@ -9,6 +9,11 @@ extern "C" {
 
 static ColorRGB color_rgb_white = {1.0f, 1.0f, 1.0f};
 
+enum {
+    COLOR_INTERPOLATE_IN_HSV_SPACE = 1,
+    COLOR_INTERPOLATE_ALONG_FARTHEST_HUE_PATH = 2
+};
+
 /**
  * Decode a 24-bit RGB color into a ColorRGB structure.
  */
@@ -28,6 +33,17 @@ uint32_t color_encode_r8g8b8(ColorRGB *rgb);
  * Encode a ColorARGB structure into a 32-bit ARGB color.
  */
 uint32_t color_encode_a8r8g8b8(ColorARGB *argb);
+
+/**
+ * Interpolate between two colors.
+ * @param a The first color.
+ * @param b The second color.
+ * @param output Pointer to a ColorRGB structure to store the result.
+ * @param flags Interpolation flags.
+ * @param t Interpolation value.
+ * @return The pointer to the output color.
+ */
+ColorRGB *color_interpolate(ColorRGB *a, ColorRGB *b, ColorRGB *output, uint32_t flags, float t);
 
 #ifdef __cplusplus
 }

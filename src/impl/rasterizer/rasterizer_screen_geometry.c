@@ -49,7 +49,7 @@ static void rasterizer_screen_geometry_hud_meter_draw(BitmapData **meter_maps, R
     rasterizer_dx9_draw_primitive_up(D3DPT_TRIANGLEFAN, 2, vertices, sizeof(RasterizerDynamicVertex));
 }
 
-void rasterizer_screen_geometry_draw(RasterizerDynamicScreenQuadParams *params, RasterizerDynamicVertex *vertices) {
+void rasterizer_screen_geometry_draw(RasterizerDynamicScreenGeometryParams *params, RasterizerDynamicVertex *vertices) {
     IDirect3DDevice9 *device = rasterizer_dx9_device();
     RenderGlobals *render_globals = render_get_globals();
     RasterizerGlobals *rasterizer_globals = rasterizer_dx9_get_globals();

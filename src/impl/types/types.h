@@ -113,13 +113,13 @@ typedef struct Rectangle2D {
 } Rectangle2D;
 _Static_assert(sizeof(Rectangle2D) == 0x8);
 
-typedef struct Rectangle2DF {
-    float top;
+typedef struct Bounds2D {
     float left;
-    float bottom;
     float right;
-} Rectangle2DF;
-_Static_assert(sizeof(Rectangle2DF) == 0x10);
+    float top;
+    float bottom;
+} Bounds2D;
+_Static_assert(sizeof(Bounds2D) == 0x10);
 
 typedef struct Rectangle3DF {
     float top;

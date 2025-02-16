@@ -14,6 +14,13 @@
         "type": "enum"
     },
     {
+        "name": "WeaponHUDInterfaceRuntimeFlags",
+        "options": [
+            "invalid"
+        ],
+        "type": "enum"
+    },
+    {
         "name": "WeaponHUDInterfaceViewType",
         "options": [
             "any",
@@ -152,8 +159,9 @@
                 "type": "WeaponHUDInterfaceStateAttachedTo"
             },
             {
-                "type": "pad",
-                "size": 2
+                "name": "runtime flags",
+                "type": "WeaponHUDInterfaceRuntimeFlags",
+                "cache_only": true
             },
             {
                 "name": "allowed view type",

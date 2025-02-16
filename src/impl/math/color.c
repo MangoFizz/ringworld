@@ -14,7 +14,7 @@ void color_decode_a8r8g8b8(uint32_t argb, ColorARGB *output) {
 }
 
 uint32_t color_encode_r8g8b8(ColorRGB *rgb) {
-    uint32_t output;
+    uint32_t output = 0;
     output = (uint32_t)(rgb->r * 255.0) << 16;
     output |= (uint32_t)(rgb->g * 255.0) << 8;
     output |= (uint32_t)(rgb->b * 255.0) << 0;

@@ -11,9 +11,31 @@ extern "C" {
 #include "../tag/definitions/shader.h"
 #include "../tag/tag.h"
 
+typedef enum RasterizerLock {
+    RASTERIZER_LOCK_NONE = 0,
+    RASTERIZER_LOCK_TEXTURE_CHANGED,
+    RASTERIZER_LOCK_VERTEXBUFFER_NEW,
+    RASTERIZER_LOCK_DETAIL_OBJECTS,
+    RASTERIZER_LOCK_DECAL_UPDATE,
+    RASTERIZER_LOCK_DECAL_VERTICES,
+    RASTERIZER_LOCK_BINK,
+    RASTERIZER_LOCK_UI,
+    RASTERIZER_LOCK_CINEMATICS,
+    RASTERIZER_LOCK_KOTH,
+    RASTERIZER_LOCK_HUD,
+    RASTERIZER_LOCK_FLAG,
+    RASTERIZER_LOCK_LIGHTNING,
+    RASTERIZER_LOCK_DEBUG,
+    RASTERIZER_LOCK_TEXT,
+    RASTERIZER_LOCK_CONTRAIL,
+    RASTERIZER_LOCK_SPRITE,
+    RASTERIZER_LOCK_BSP_SWITCH,
+    NUMBER_OF_RASTERIZER_LOCKS
+} RasterizerLock;
+
 typedef struct RasterizerGlobals {
     Bool initialized;
-    int16_t unk1;
+    int16_t lock_index;
     Rectangle2D screen_bounds;
     Rectangle2D frame_bounds;
     int64_t frame_index;

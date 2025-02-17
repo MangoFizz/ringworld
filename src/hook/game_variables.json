@@ -55,5 +55,6 @@
     "object_table": {"type": "ObjectTable *", "address": "0x7fb710"},
     "rasterizer_enable_user_interface_render": {"type": "bool", "address": "0x6249e2"},
     "rasterizer_font_character_cache": {"type": "FontCache", "address": "0x673758"},
-    "rasterizer_text_vertex_shader_constants": {"type": "VertexShaderScreenprojConstants", "address": "0x67ccc8"}
+    "rasterizer_text_vertex_shader_constants": {"type": "VertexShaderScreenprojConstants", "address": "0x67ccc8"},
+    "game_globals": {"type": "Globals *", "address": "0x6e2260"}
 }

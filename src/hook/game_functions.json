@@ -54,6 +54,7 @@
     "rasterizer_dx9_render_target_set": {"address": "0x52fda0", "replace": false, "arguments": ["0", "4", "eax"]},
 
     "rasterizer_screen_geometry_draw": {"address": "0x5200a0", "replace": true, "arguments": ["eax", "0"]},
+    "rasterizer_screen_geometry_draw_quad": {"address": "0x44a0f0", "replace": true, "arguments": ["ecx", "eax"]},
     
     "rasterizer_text_cache_initialize": {"address": "0x5180c0", "replace": true, "use_return_value": true},
     "rasterizer_text_begin": {"address": "0x534ae0", "replace": false, "arguments": ["edi"]},

@@ -61,6 +61,7 @@ add_library(ringworld STATIC
     src/impl/crypto/md5.c
     src/impl/crypto/xtea.c
     src/impl/exception/exception.c
+    src/impl/game/game_globals.c
     src/impl/game/game_state.c
     src/impl/game/game_time.c
     src/impl/math/color.c

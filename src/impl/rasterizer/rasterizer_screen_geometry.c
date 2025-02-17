@@ -1,4 +1,5 @@
 #include "../math/color.h"
+#include "../game/game_globals.h"
 #include "../exception/exception.h"
 #include "rasterizer_dx9.h"
 #include "rasterizer_dx9_shader_effect.h"
@@ -370,3 +371,67 @@ void rasterizer_screen_geometry_draw(RasterizerDynamicScreenGeometryParams *para
 
     IDirect3DDevice9_SetSoftwareVertexProcessing(device, rasterizer_globals->using_software_vertex_processing);
 }
+
+void rasterizer_screen_geometry_draw_quad(Rectangle2D *rect, ColorARGBInt color) {
+    Globals *game_globals = game_globals_get();
+    RasterizerGlobals *rasterizer_globals = rasterizer_dx9_get_globals();
+
+    if(game_globals->rasterizer_data.count == 0) {
+        return;
+    }
+
+    GlobalsRasterizerData *rasterizer_data = &game_globals->rasterizer_data.elements[0];
+    if(HANDLE_IS_NULL(rasterizer_data->default_2d.tag_handle)) {
+        return;
+    }
+
+    BitmapData *default_2d = bitmap_get_data(rasterizer_data->default_2d.tag_handle, 1);
+    if(default_2d == NULL) {
+        return;
+    }
+
+    Bounds2D bounds;
+    bounds.left = rect->left;
+    bounds.top = rect->top;
+    bounds.right = rect->right;
+    bounds.bottom = rect->bottom;
+
+    RasterizerDynamicVertex vertices[4];
+    for(size_t i = 0; i < sizeof(vertices) / sizeof(vertices[0]); i++) {
+        float pos_x, pos_y;
+        if(((i + 1) & 2) == 0) {
+            pos_x = bounds.left;
+        }
+        else {
+            pos_x = bounds.right;
+        }
+        if(i < 2) {
+            pos_y = bounds.top;
+        }
+        else {
+            pos_y = bounds.bottom;
+        }
+
+        RasterizerDynamicVertex *vertex = &vertices[i];
+        vertex->position.x = pos_x;
+        vertex->position.y = pos_y;
+        vertex->position.z = 0.0f;
+        vertex->texture_pos.x = 0.0f;
+        vertex->texture_pos.y = 0.0f;
+        vertex->color = color;
+    }
+
+    RasterizerDynamicScreenGeometryParams params = {0};
+    params.framebuffer_blend_function = FRAMEBUFFER_BLEND_FUNCTION_ALPHA_BLEND;
+    params.map_texture_scale[0].x = 1.0f;
+    params.map_texture_scale[0].y = 1.0f;
+    params.map_scale[0].x = 1.0f;
+    params.map_scale[0].y = 1.0f;
+    params.meter_parameters = NULL;
+    params.point_sampled = false;
+    params.map[0] = default_2d;
+
+    rasterizer_globals->lock_index = RASTERIZER_LOCK_CINEMATICS;
+    rasterizer_screen_geometry_draw(&params, vertices);
+    rasterizer_globals->lock_index = RASTERIZER_LOCK_NONE;
+} 

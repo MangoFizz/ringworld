@@ -102,7 +102,7 @@
             "linear",
             "v16u16",
             {
-                "name": "unused",
+                "name": "runtime created",
                 "cache_only": true
             },
             {
@@ -281,14 +281,14 @@
                 "cache_only": true
             },
             {
-                "name": "hardware_format",
+                "name": "hardware format",
                 "type": "Pointer",
                 "cache_only": true
             },
             {
-                "type": "pad",
-                "size": 4,
-                "comment": "this appears to be a pointer specific to the tool editing it; it gets changed whenever the tag is opened in any of the HEK tools (guerilla.exe, tool.exe, etc.)"
+                "name": "base address",
+                "type": "Pointer",
+                "cache_only": true
             }
         ],
         "type": "struct",

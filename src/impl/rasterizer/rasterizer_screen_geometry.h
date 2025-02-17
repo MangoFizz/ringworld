@@ -7,6 +7,7 @@ extern "C" {
 
 #include "../types/types.h"
 #include "../tag/definitions/bitmap.h"
+#include "rasterizer_dx9_vertex.h"
 
 typedef struct RasterizerMeterParams {
     ColorARGBInt gradient_min_color;

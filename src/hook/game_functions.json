@@ -15,7 +15,7 @@
 
     "pow_float": {"address": "0x5ccf80", "replace": true, "arguments": ["st1", "st0"]},
 
-    "update_menu_cursor_coords": {"address": "0x49a220", "replace": false},
+    "update_menu_cursor_coords": {"address": "0x49a220", "replace": true},
     "ui_widgets_initialize": {"address": "0x49a940", "replace": true},
     "ui_widget_delete_recursive": {"address": "0x49ab90", "replace": false, "arguments": ["0"]},
     "ui_widget_new_history_node": {"address": "0x49c3c0", "replace": true, "arguments": ["esi", "edi"]},
@@ -32,6 +32,8 @@
 
     "bitmap_load": {"address": "0x444eb0", "replace": false, "use_return_value": true, "arguments": ["0", "4", "eax"]},
     "bitmap_group_sequence_get_bitmap_for_frame": {"address": "0x43f290", "replace": true, "use_return_value": true, "arguments": ["eax", "0", "edi"]},
+    "bitmap_mipmap_get_pixel_count": {"address": "0x43fc10", "replace": true, "use_return_value": true, "arguments": ["ecx", "esi"]},
+    "bitmap_get_pixel_data_size": {"address": "0x43fb70", "replace": true, "disabled": true, "use_return_value": true, "arguments": ["eax"], "comment": "for some reason crashes the game when enabled"},
     
     "shader_get_vertex_shader_permutation": {"address": "0x543160", "replace": false, "use_return_value": true, "arguments": ["ecx"]},
     "rasterizer_dx9_set_framebuffer_blend_function": {"address": "0x51be80", "replace": false, "arguments": ["ecx"]},
@@ -52,6 +54,15 @@
     "rasterizer_dx9_render_target_set": {"address": "0x52fda0", "replace": false, "arguments": ["0", "4", "eax"]},
 
     "rasterizer_screen_geometry_draw": {"address": "0x5200a0", "replace": true, "arguments": ["eax", "0"]},
+    
+    "rasterizer_text_cache_initialize": {"address": "0x5180c0", "replace": true, "use_return_value": true},
+    "rasterizer_text_begin": {"address": "0x534ae0", "replace": false, "arguments": ["edi"]},
+    "rasterizer_text_end": {"address": "0x534df0", "replace": false},
+    "rasterizer_text_draw_character_with_shadow": {"address": "0x518580", "replace": false, "arguments": ["0", "4", "8", "12", "16", "20", "24", "28", "32", "36"]},
+    "rasterizer_draw_unicode_string": {"address": "0x518580", "replace": true, "disabled": true, "arguments": ["ecx", "eax", "0", "4", "8"], "comment": "for some reason it does not draws the text"},
+    "rasterizer_text_set_up_vertex_shader_constants": {"address": "0x534a10", "replace": true},
+    
+    "text_draw_unicode_string": {"address": "0x559bf0", "replace": false, "use_return_value": true, "arguments": ["0", "4", "8", "12", "16", "20"]},
 
     "saved_games_read_player_profile": {"address": "0x53dad0", "replace": false, "use_return_value": true, "arguments": ["0", "ecx"]},
     "saved_games_write_player_profile": {"address": "0x53dcb0", "replace": false, "arguments": ["0", "4"]},
@@ -63,7 +74,7 @@
 
     "weapon_build_weapon_interface_state": {"address": "0x4c5d90", "replace": false, "arguments": ["eax", "0"] },
     "hud_draw_bitmap_internal": {"address": "0x4b0140", "replace": true, "arguments": ["0", "4", "8", "12", "16", "20", "esi", "eax"] },
-    "hud_calculate_point": {"address": "0x4aea80", "replace": false, "disabled": true, "arguments": ["0", "edx", "ecx", "eax", "4", "8"] },
+    "hud_calculate_point": {"address": "0x4aea80", "replace": true, "arguments": ["0", "edx", "ecx", "eax", "4", "8"] },
     "hud_calculate_bitmap_bounds": {"address": "0x4b0040", "replace": false, "disabled": true, "arguments": ["0", "esi", "edx", "eax", "ecx"] },
     "hud_draw_bitmap_with_meter": {"address": "0x4afec0", "replace": true, "arguments": ["0", "4", "8", "12", "16", "20", "ecx", "edx", "eax", "ebx"] },
     "hud_draw_meter": {"address": "0x4aefb0", "replace": true, "arguments": ["0", "4", "8", "12", "16", "20", "esi"] },

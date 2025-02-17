@@ -9,7 +9,6 @@
 #include "rasterizer_screen.h"
 #include "rasterizer_screen_geometry.h"
 
-
 static void rasterizer_screen_geometry_hud_meter_draw(BitmapData **meter_maps, RasterizerMeterParams *meter_params, RasterizerDynamicVertex *vertices) {
     ASSERT(meter_params->tint_mode_2);
     ASSERT(meter_params->gradient == 1.0f);
@@ -58,7 +57,7 @@ void rasterizer_screen_geometry_draw(RasterizerDynamicScreenGeometryParams *para
     ASSERT(device != NULL);
     ASSERT(render_globals != NULL);
 
-    if(render_globals->time_delta_since_tick != 1) {
+    if(rasterizer_screen_user_interface_render_enabled() == false || render_globals->time_delta_since_tick < 1) {
         return;
     }
 

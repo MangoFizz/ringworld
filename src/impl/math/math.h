@@ -125,6 +125,15 @@ double math_vector_normalize(VectorIJK *v);
  */
 void math_vector_2d_scale(void *v, float scale, void *result);
 
+/**
+ * Translate a 2D rectangle by a given offset.
+ * @param rect Pointer to the rectangle to be translated.
+ * @param offset_x The offset along the x-axis.
+ * @param offset_y The offset along the y-axis.
+ * @return Pointer to the translated rectangle.
+ */
+Rectangle2D *math_rectangle_2d_translate(Rectangle2D *rect, int16_t offset_x, int16_t offset_y);
+
 #ifdef __cplusplus
 }
 #endif

@@ -2,15 +2,12 @@
 #include <stdbool.h>
 
 #include "../math/math.h"
+#include "../rasterizer/rasterizer_screen.h"
 #include "mouse.h"
 
 extern int32_t *menu_cursor_x;
 extern int32_t *menu_cursor_y;
 extern uint8_t *cursor_should_activate_widgets;
-
-// to be changed dynamically when we have widescreen support
-#define UI_WIDTH 640
-#define UI_HEIGHT 480
 
 // base acceleration factor in the menu
 #define MENU_MOUSE_ACCELERATION 0.025
@@ -25,8 +22,8 @@ static bool move_cursor(int32_t dx, int32_t dy) {
     int32_t new_position_x = *menu_cursor_x + dx;
     int32_t new_position_y = *menu_cursor_y + dy;
 
-    *menu_cursor_x = max_i32(min_i32(new_position_x, UI_WIDTH), 0);
-    *menu_cursor_y = max_i32(min_i32(new_position_y, UI_HEIGHT), 0);
+    *menu_cursor_x = max_i32(min_i32(new_position_x, rasterizer_screen_get_width()), 0);
+    *menu_cursor_y = max_i32(min_i32(new_position_y, rasterizer_screen_get_height()), 0);
 
     return true;
 }

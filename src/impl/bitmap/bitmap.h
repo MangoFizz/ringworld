@@ -42,6 +42,49 @@ BitmapData *bitmap_group_sequence_get_bitmap_for_frame(TagHandle bitmap_tag, uin
  */
 bool bitmap_load(bool block, bool load, BitmapData *bitmap);
 
+/**
+ * Validate the width of a bitmap based on the format and type.
+ * @param format The format of the bitmap.
+ * @param type The type of the bitmap.
+ * @param width The width of the bitmap.
+ * @return True if the width is valid, false otherwise.
+ */
+bool bitmap_format_type_valid_width(BitmapFormat format, BitmapType type, uint16_t width);
+
+/**
+ * Validate the height of a bitmap based on the format and type.
+ * @param format The format of the bitmap.
+ * @param type The type of the bitmap.
+ * @param height The height of the bitmap.
+ * @return True if the height is valid, false otherwise.
+ */
+bool bitmap_format_type_valid_height(BitmapFormat format, BitmapType type, uint16_t height);
+
+/**
+ * Get the number of pixels in a mipmap level.
+ * @param mipmap_index The index of the mipmap level.
+ * @param bitmap_data The bitmap data.
+ * @return The number of pixels in the mipmap level.
+ */
+uint32_t bitmap_mipmap_get_pixel_count(uint8_t mipmap_index, BitmapData *bitmap_data);
+
+/**
+ * Get the size of the pixel data in a bitmap.
+ * @param bitmap_data The bitmap data.
+ * @return The size of the pixel data.
+ */
+uint32_t bitmap_get_pixel_data_size(BitmapData *bitmap_data);
+
+/**
+ * Create a new 2D bitmap data.
+ * @param width The width of the bitmap.
+ * @param height The height of the bitmap.
+ * @param mipmap_count The number of mipmaps.
+ * @param format The format of the bitmap.
+ * @return The new bitmap data.
+ */
+BitmapData *bitmap_new_2d_bitmap_data(uint16_t width, uint16_t height, uint16_t mipmap_count, BitmapDataFormat format);
+
 #ifdef __cplusplus
 }
 #endif

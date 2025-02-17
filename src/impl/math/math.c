@@ -24,3 +24,11 @@ void math_vector_2d_scale(void *v, float scale, void *result) {
     result_vector->i = vector->i * scale;
     result_vector->j = vector->j * scale;
 }
+
+Rectangle2D *math_rectangle_2d_translate(Rectangle2D *rect, int16_t offset_x, int16_t offset_y) {
+    rect->left += offset_x;
+    rect->right += offset_x;
+    rect->top += offset_y;
+    rect->bottom += offset_y;
+    return rect;
+}

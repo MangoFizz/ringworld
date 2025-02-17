@@ -9,6 +9,7 @@
 #include "hook/hook.hpp"
 #include "impl/exception/exception.h"
 #include "ringworld.h"
+#include "version.hpp"
 
 using namespace Demon;
 
@@ -17,6 +18,8 @@ static const std::size_t hook_heap_size = 512 * 1024;
 static std::size_t hook_heap_usage;
 
 bool ringworld_server_mode = false;
+
+extern "C" wchar_t *build_number;
 
 extern "C" void set_up_ringworld_hooks(Platform platform) {
     // Enable DEP (if doable) because executing code not marked as executable is bad
@@ -46,6 +49,11 @@ extern "C" void set_up_ringworld_hooks(Platform platform) {
         MessageBox(nullptr, e.what(), "Error patching the game!", 0);
         std::terminate();
     }
+
+#ifdef DEBUG
+    const wchar_t *ringworld_version = L"" RINGWORLD_VERSION_STRING;
+    std::wcscpy(build_number, ringworld_version);
+#endif
 
     // Once done, set the protection to execute/read only so we don't get pwned.
     VirtualProtect(hook_heap, hook_heap_size, PAGE_EXECUTE_READ, &old_protection);

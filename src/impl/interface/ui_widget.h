@@ -218,6 +218,22 @@ Widget *ui_widget_get_last_child(Widget *widget);
  */
 Widget *ui_widget_get_topmost_parent(Widget *widget);
 
+/**
+ * Render a widget instance.
+ * @param widget pointer to the widget instance
+ * @param bounds pointer to the bounds of the widget
+ * @param offset pointer to the offset of the widget
+ * @param is_root_widget true if the widget is the root widget, false otherwise
+ * @param is_focused true if the widget is focused, false otherwise
+ * @todo Check if parameters 4 and 5 are correct
+ */
+void ui_widget_instance_render_recursive(Widget *widget, Rectangle2D *bounds, VectorXYInt offset, bool is_root_widget, bool is_focused);
+
+/**
+ * Render the virtual keyboard.
+ */
+void ui_widget_render_virtual_keyboard(void);
+
 #ifdef __cplusplus
 }
 #endif

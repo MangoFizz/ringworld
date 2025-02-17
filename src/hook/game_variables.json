@@ -18,7 +18,7 @@
     "menu_cursor_y": {"type": "int32_t", "address": "0x6b4010"},
     "cursor_should_activate_widgets": {"type": "uint8_t", "address": "0x6b400a"},
     "ui_widget_memory_pool": {"type": "MemoryPool *", "address": "0x62dcb4"},
-    "ui_widget_globals": {"type": "WidgetGlobals", "address": "0x6b401c"},
+    "widget_globals": {"type": "WidgetGlobals", "address": "0x6b401c"},
     "map_is_loaded": {"type": "bool", "address": "0x643040"},
     "tag_data_header_loaded": {"type": "TagDataHeader *", "address": "0x643844"},
     "ui_widgets_unknown_1": {"type": "bool", "address": "0x6b4050"},
@@ -55,5 +55,7 @@
     "rasterizer_enable_user_interface_render": {"type": "bool", "address": "0x6249e2"},
     "rasterizer_font_character_cache": {"type": "FontCache", "address": "0x673758"},
     "rasterizer_text_vertex_shader_constants": {"type": "VertexShaderScreenprojConstants", "address": "0x67ccc8"},
+    "local_player_index_for_draw_string_and_hack_in_icons": {"type": "bool", "address": "0x8153f0"},
+    "ui_widget_virtual_keyboard_opened": {"type": "bool", "address": "0x6b4430"},
     "game_globals": {"type": "Globals *", "address": "0x6e2260"}
 }

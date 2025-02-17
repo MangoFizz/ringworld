@@ -18,7 +18,7 @@
     "menu_cursor_y": {"type": "int32_t", "address": "0x61c840"},
     "cursor_should_activate_widgets": {"type": "uint8_t", "address": "0x61c83a"},
     "ui_widget_memory_pool": {"type": "MemoryPool *", "address": "0x5a3654"},
-    "ui_widget_globals": {"type": "WidgetGlobals", "address": "0x61c84c"},
+    "widget_globals": {"type": "WidgetGlobals", "address": "0x61c84c"},
     "map_is_loaded": {"type": "bool", "address": "0x5b4e30"},
     "tag_data_header_loaded": {"type": "TagDataHeader *", "address": "0x5b5634"},
     "cursor_bitmap_tag_handle": {"type": "TagHandle", "address": "0x59f60c"},

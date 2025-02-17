@@ -21,14 +21,20 @@
 #define CURSOR_SIZE_IN_PIXELS 32
 
 extern MemoryPool **ui_widget_memory_pool;
-extern WidgetGlobals *ui_widget_globals;
+extern WidgetGlobals *widget_globals;
 extern bool *ui_widgets_unknown_1;
 extern bool *is_main_menu;
+extern bool *local_player_index_for_draw_string_and_hack_in_icons;
+extern bool *ui_widget_virtual_keyboard_opened;
 
 TagHandle cursor_bitmap_tag_handle = NULL_HANDLE;
 
 WidgetGlobals *get_ui_widget_globals(void) {
-    return ui_widget_globals;
+    return widget_globals;
+}
+
+bool ui_widget_virtual_keyboard_is_open(void) {
+    return *ui_widget_virtual_keyboard_opened;
 }
 
 void ui_widgets_initialize(void) {
@@ -43,7 +49,7 @@ void ui_widgets_initialize(void) {
     memory_pool->allocated_size = memory_pool_size;
     memory_pool->blocks_number = blocks_number;
 
-    WidgetGlobals *globals = ui_widget_globals;
+    WidgetGlobals *globals = widget_globals;
     memset(globals, 0, sizeof(WidgetGlobals));
     globals->deferred_error_code = -1;
     globals->priority_warning.error_string = -1;
@@ -80,7 +86,7 @@ Widget *ui_widget_load_by_name_or_tag(const char *definition_tag_path, TagHandle
     }
 
     if(parent == NULL) {
-        Widget *active_widget = ui_widget_globals->active_widget[player_controller_index];
+        Widget *active_widget = widget_globals->active_widget[player_controller_index];
         int16_t local_player_index;
         if(active_widget != NULL) {
             local_player_index = active_widget->local_player_index;
@@ -89,7 +95,7 @@ Widget *ui_widget_load_by_name_or_tag(const char *definition_tag_path, TagHandle
         else {
             local_player_index = -1;
         }
-        ui_widget_globals->active_widget[0] = widget;
+        widget_globals->active_widget[0] = widget;
         
         if(!HANDLE_IS_NULL(topmost_widget_definition_handle)) {
             UIWidgetDefinition *topmost_definition = tag_get_data(TAG_GROUP_UI_WIDGET_DEFINITION, topmost_widget_definition_handle);
@@ -99,7 +105,7 @@ Widget *ui_widget_load_by_name_or_tag(const char *definition_tag_path, TagHandle
                 history_node.previous_menu_list = parent_widget_definition_handle;
                 history_node.focused_item_index = child_index_from_parent;
                 history_node.local_player_index = local_player_index;
-                ui_widget_new_history_node(&history_node, &ui_widget_globals->history_top_node[player_controller_index]);
+                ui_widget_new_history_node(&history_node, &widget_globals->history_top_node[player_controller_index]);
             }
         }
     }
@@ -140,7 +146,7 @@ void ui_widget_new_instance(int16_t controller_index, UIWidgetDefinition *widget
     widget->visible = true;
     widget->render_regardless_of_controller_index = widget_definition->flags.render_regardless_of_controller_index;
     widget->pauses_game_time = widget_definition->flags.pause_game_time;
-    widget->creation_process_start_time = ui_widget_globals->current_time_ms;
+    widget->creation_process_start_time = widget_globals->current_time_ms;
     widget->ms_to_close = max_i32(widget_definition->milliseconds_to_auto_close, 0);
     widget->ms_to_close_fade_time = max_i32(widget_definition->milliseconds_auto_close_fade_time, 0);
     widget->alpha_modifier = 1.0;
@@ -155,7 +161,7 @@ void ui_widget_new_instance(int16_t controller_index, UIWidgetDefinition *widget
         widget->animation_data.number_of_sprite_frames = background_bitmap->bitmap_group_sequence.elements[0].bitmap_count;
     }
     
-    if(ui_widget_globals->dont_load_children_recursive == false) {
+    if(widget_globals->dont_load_children_recursive == false) {
         if(!ui_widget_load_children_recursive(widget_definition, widget)) {
             CRASHF_DEBUG("failed to load children for widget");
         }
@@ -184,7 +190,7 @@ void ui_widget_new_instance(int16_t controller_index, UIWidgetDefinition *widget
     } 
 
     if(widget->pauses_game_time == true && get_multiplayer_mode() != MULTIPLAYER_MODE_HOST) {
-        ui_widget_globals->pause_time_count++;
+        widget_globals->pause_time_count++;
         bool game_paused = game_time_get_paused();
         if(*is_main_menu == false && game_paused == false) {
             game_time_set_paused(true);
@@ -209,7 +215,7 @@ bool ui_widget_load_children_recursive(UIWidgetDefinition *widget_definition, Wi
     
     if(widget_definition->flags_2.list_items_from_string_list_tag) {
         UnicodeStringList *string_list = tag_get_data(TAG_GROUP_UNICODE_STRING_LIST, widget_definition->text_label_unicode_strings_list.tag_handle);
-        ui_widget_globals->dont_load_children_recursive = true;
+        widget_globals->dont_load_children_recursive = true;
         for(size_t i = 0; i < string_list->strings.count; i++) {
             Widget *child = ui_widget_load_by_name_or_tag(NULL, widget->definition_tag_handle, widget, widget->local_player_index, NULL_HANDLE, NULL_HANDLE, -1);
             if(child == NULL) {
@@ -228,7 +234,7 @@ bool ui_widget_load_children_recursive(UIWidgetDefinition *widget_definition, Wi
             
             widget->list_parameters.number_of_items++;
         }
-        ui_widget_globals->dont_load_children_recursive = false;
+        widget_globals->dont_load_children_recursive = false;
     }
 
     size_t children_count = widget_definition->child_widgets.count;
@@ -406,3 +412,73 @@ void ui_widget_render_cursor(void) {
     rasterizer_screen_geometry_draw_quad(&bounds, 0x80FF0000);
 }
 
+void ui_widget_render_root_widget(Widget *widget) {
+    if(widget != NULL) {
+        uint16_t screen_width = rasterizer_screen_get_width();
+        uint16_t screen_height = rasterizer_screen_get_height();
+        Rectangle2D bounds;
+        bounds.left = 0;
+        bounds.top = 0;
+        bounds.right = screen_width;
+        bounds.bottom = screen_height;
+        VectorXYInt offset = { 0, 0 };
+        ui_widget_instance_render_recursive(widget, &bounds, offset, true, false);
+    }
+}
+
+void ui_widget_render(int16_t local_player_index) {    
+    *local_player_index_for_draw_string_and_hack_in_icons = local_player_index == -1 ? 0 : local_player_index;
+
+    if(ui_widget_virtual_keyboard_is_open() == false) {
+        // @todo rewrite this to support multiple local players
+        int16_t player_index = 0;
+        if(local_player_index == -1) {
+            player_index = -1;
+        }
+
+        bool widget_rendered = false;
+        for(size_t i = 0; i < MAX_LOCAL_PLAYERS; i++) {
+            Widget *active_widget = widget_globals->active_widget[i];
+            if(active_widget != NULL) {
+                if(active_widget->render_regardless_of_controller_index) {
+                    ui_widget_render_root_widget(active_widget);
+                    widget_rendered = true;
+                }
+                else {
+                    int16_t active_widget_player_index = active_widget->local_player_index;
+                    if(active_widget->is_error_dialog) {
+                        if(active_widget_player_index == player_index || active_widget_player_index == -1 || player_index == -1 || *is_main_menu) {
+                            ui_widget_render_root_widget(active_widget);
+                            widget_rendered = true;
+                        }
+                    }
+                    else if((active_widget_player_index == -1 && i == 0) || active_widget_player_index == player_index) {
+                        ui_widget_render_root_widget(active_widget);
+                        widget_rendered = true;
+                    }
+                }
+            }
+        }
+
+        if(widget_rendered) {
+            ui_widget_render_cursor();
+        }
+
+        if(widget_globals->fade_to_black >= 0.0f && widget_globals->fade_to_black <= 1.0f) {
+            Rectangle2D bounds;
+            bounds.left = 0;
+            bounds.top = 0;
+            bounds.right = rasterizer_screen_get_width();
+            bounds.bottom = rasterizer_screen_get_height();
+            if(widget_globals->fade_to_black >= 0.95f) {
+                widget_globals->fade_to_black = 1.0f;
+            }
+            uint8_t alpha = clamp_u8(widget_globals->fade_to_black * 255, 0, 255);
+            rasterizer_screen_geometry_draw_quad(&bounds, alpha << 24);
+        }
+    }
+    else {
+        ui_widget_render_virtual_keyboard();
+        ui_widget_render_cursor();
+    }
+}

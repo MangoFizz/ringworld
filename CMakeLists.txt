@@ -67,10 +67,10 @@ add_library(ringworld STATIC
     src/impl/math/color.c
     src/impl/math/math.c
     src/impl/math/wave_functions.c
-    src/impl/input/mouse.c
     src/impl/interface/hud.c
     src/impl/interface/ui_widget.c
     src/impl/memory/memory.c
+    src/impl/mouse/mouse.c
     src/impl/multiplayer/mode.c
     src/impl/object/object.c
     src/impl/memory/table.c

@@ -47,6 +47,13 @@ _Static_assert(sizeof(RasterizerDynamicScreenGeometryParams) == 140);
  */
 void rasterizer_screen_geometry_draw(RasterizerDynamicScreenGeometryParams *params, RasterizerDynamicVertex *vertices);
 
+/**
+ * Renders a screen geometry quad.
+ * @param rect Pointer to the rectangle structure that defines the screen quad.
+ * @param color The color of the quad.
+ */
+void rasterizer_screen_geometry_draw_quad(Rectangle2D *rect, ColorARGBInt color);
+
 #ifdef __cplusplus
 }
 #endif

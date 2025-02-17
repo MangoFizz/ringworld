@@ -21,7 +21,6 @@
     "ui_widget_globals": {"type": "WidgetGlobals", "address": "0x6b401c"},
     "map_is_loaded": {"type": "bool", "address": "0x643040"},
     "tag_data_header_loaded": {"type": "TagDataHeader *", "address": "0x643844"},
-    "cursor_bitmap_tag_handle": {"type": "TagHandle", "address": "0x629c6c"},
     "ui_widgets_unknown_1": {"type": "bool", "address": "0x6b4050"},
     "game_time_globals": {"type": "GameTimeGlobals *", "address": "0x68cd70"},
     "current_multiplayer_mode": {"type": "MultiplayerMode", "address": "0x6b47b0"},

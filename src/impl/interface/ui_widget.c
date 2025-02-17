@@ -1,6 +1,7 @@
 #include <windows.h>
 
 #include "../../event/events.h"
+#include "../bitmap/bitmap.h"
 #include "../console/console.h"
 #include "../memory/pool.h"
 #include "../math/math.h"
@@ -9,16 +10,22 @@
 #include "../multiplayer/mode.h"
 #include "../game/game_time.h"
 #include "../exception/exception.h"
+#include "../rasterizer/rasterizer_screen.h"
+#include "../rasterizer/rasterizer_screen_geometry.h"
+#include "../mouse/mouse.h"
 #include "ui_widget.h"
 
 #define UI_WIDGET_MEMORY_POOL_SIZE 0x20000
 #define UI_WIDGET_MEMORY_POOL_BLOCKS_NUMBER 0x1000
 
+#define CURSOR_SIZE_IN_PIXELS 32
+
 extern MemoryPool **ui_widget_memory_pool;
 extern WidgetGlobals *ui_widget_globals;
-extern TagHandle *cursor_bitmap_tag_handle;
 extern bool *ui_widgets_unknown_1;
 extern bool *is_main_menu;
+
+TagHandle cursor_bitmap_tag_handle = NULL_HANDLE;
 
 WidgetGlobals *get_ui_widget_globals(void) {
     return ui_widget_globals;
@@ -49,7 +56,7 @@ void ui_widgets_initialize(void) {
 Widget *ui_widget_load_by_name_or_tag(const char *definition_tag_path, TagHandle definition_tag, Widget *parent, int16_t controller_index, 
                         TagHandle topmost_widget_definition_handle, TagHandle parent_widget_definition_handle, uint16_t child_index_from_parent) {
     
-    *cursor_bitmap_tag_handle = lookup_tag("ui\\shell\\bitmaps\\cursor", TAG_GROUP_BITMAP);
+    cursor_bitmap_tag_handle = lookup_tag("ui\\shell\\bitmaps\\cursor", TAG_GROUP_BITMAP);
     *ui_widgets_unknown_1 = true;
 
     int16_t player_controller_index = controller_index == -1 ? 0 : controller_index;
@@ -380,4 +387,22 @@ void ui_widget_new_history_node(WidgetHistoryNode *history_node_data, WidgetHist
     *history_top_node = new_node;
 }
 
+void ui_widget_render_cursor(void) {
+    VectorXYInt cursor_position = mouse_get_cursor_position();
+    Rectangle2D bounds;
+    bounds.left = cursor_position.x;
+    bounds.top = cursor_position.y;
+    if(!HANDLE_IS_NULL(cursor_bitmap_tag_handle)) {
+        BitmapData *cursor_bitmap = bitmap_group_sequence_get_bitmap_for_frame(cursor_bitmap_tag_handle, 0, 0);
+        if(cursor_bitmap != NULL) {
+            bounds.right = cursor_position.x + CURSOR_SIZE_IN_PIXELS;
+            bounds.bottom = cursor_position.y + CURSOR_SIZE_IN_PIXELS;
+            bitmap_draw_in_rect(cursor_bitmap, NULL, 0xFFFFFFFF, &bounds, NULL);
+            return;
+        }
+    }
+    bounds.right = cursor_position.x + 16;
+    bounds.bottom = cursor_position.y + 16;
+    rasterizer_screen_geometry_draw_quad(&bounds, 0x80FF0000);
+}
 

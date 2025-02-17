@@ -85,6 +85,17 @@ uint32_t bitmap_get_pixel_data_size(BitmapData *bitmap_data);
  */
 BitmapData *bitmap_new_2d_bitmap_data(uint16_t width, uint16_t height, uint16_t mipmap_count, BitmapDataFormat format);
 
+/**
+ * Draw a bitmap in a specified rectangle with a color mask.
+ * @param screen_rect The position and size of the screen rectangle to draw the bitmap.
+ * @param texture_rect The position and size of the texture rectangle to use from the bitmap.
+ * @param bitmap The bitmap data to draw.
+ * @param rect Unknown.
+ * @param color_mask The color mask to apply to the bitmap.
+ * @todo Verify the parameters.
+ */
+void bitmap_draw_in_rect(BitmapData *bitmap, Rectangle2D *rect, ColorARGBInt color_mask, Rectangle2D *screen_rect, Rectangle2D *texture_rect);
+
 #ifdef __cplusplus
 }
 #endif

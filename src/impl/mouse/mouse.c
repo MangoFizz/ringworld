@@ -41,3 +41,8 @@ void update_menu_cursor_coords(void) {
     // move the cursor, and 'activate' widgets if we moved the cursor
     *cursor_should_activate_widgets = move_cursor(+x_delta, -y_delta);
 }
+
+VectorXYInt mouse_get_cursor_position(void) {
+    VectorXYInt position = { *menu_cursor_x, *menu_cursor_y };
+    return position;
+}

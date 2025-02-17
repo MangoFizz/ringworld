@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.12)
 
 project("ring-world"
-    VERSION 0.1
+    VERSION 0.1.0
     LANGUAGES C CXX ASM
 )
 
@@ -53,6 +53,36 @@ include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/src
 )
 
+# Add debug define for debug builds
+if(CMAKE_BUILD_TYPE MATCHES Debug)
+    add_definitions(-DDEBUG)
+endif()
+
+find_package(Git REQUIRED)
+
+# If we have Git, try to see if we are in a git repo
+if(${GIT_FOUND})
+    execute_process(
+        COMMAND git rev-parse --git-dir
+        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+        OUTPUT_VARIABLE GIT_DIR
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+    )
+    if("${GIT_DIR}" STREQUAL "")
+        set(IN_GIT_REPO FALSE)
+    else()
+        set(IN_GIT_REPO TRUE)
+    endif()
+else()
+    set(IN_GIT_REPO FALSE)
+endif()
+
+add_custom_command(
+    OUTPUT "${CMAKE_CURRENT_SOURCE_DIR}/src/version.hpp"
+    COMMAND "${CMAKE_COMMAND}" "-DGIT_EXECUTABLE=${GIT_EXECUTABLE}" "-DGIT_DIR=${GIT_DIR}" "-DOUT_FILE=${CMAKE_CURRENT_SOURCE_DIR}/src/version.hpp" -DPROJECT_VERSION_MAJOR=${PROJECT_VERSION_MAJOR} -DPROJECT_VERSION_MINOR=${PROJECT_VERSION_MINOR} -DPROJECT_VERSION_PATCH=${PROJECT_VERSION_PATCH} -DIN_GIT_REPO=${IN_GIT_REPO} -P "${CMAKE_CURRENT_SOURCE_DIR}/src/version.cmake"
+    DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/src/version.cmake" "$<$<BOOL:${IN_GIT_REPO}>:${GIT_DIR}/refs/heads>"
+)
+
 add_library(ringworld STATIC
     src/ringworld.cpp
     src/event/events.cpp
@@ -95,6 +125,7 @@ add_library(ringworld STATIC
     src/impl/script/hsc.c
     src/impl/shader/shader.c
     src/impl/tag/tag.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/version.hpp
 
     ${CMAKE_CURRENT_BINARY_DIR}/game_function_hooks.cpp
     ${CMAKE_CURRENT_BINARY_DIR}/game_functions.S

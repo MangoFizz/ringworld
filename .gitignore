@@ -1,3 +1,4 @@
 .vscode/
 build/
 src/impl/tag/definitions/
+src/version.hpp

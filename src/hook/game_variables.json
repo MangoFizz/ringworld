@@ -57,5 +57,6 @@
     "rasterizer_text_vertex_shader_constants": {"type": "VertexShaderScreenprojConstants", "address": "0x67ccc8"},
     "local_player_index_for_draw_string_and_hack_in_icons": {"type": "bool", "address": "0x8153f0"},
     "ui_widget_virtual_keyboard_opened": {"type": "bool", "address": "0x6b4430"},
+    "build_number": {"type": "wchar_t", "address": "0x6b4300"},
     "game_globals": {"type": "Globals *", "address": "0x6e2260"}
 }

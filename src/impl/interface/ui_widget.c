@@ -391,27 +391,21 @@ void ui_widget_new_history_node(WidgetHistoryNode *history_node_data, WidgetHist
     *history_top_node = new_node;
 }
 
-VectorXYInt ui_widget_get_bounds_margins(int16_t local_player_index) {
-    uint16_t player_index = local_player_index == -1 ? 0 : local_player_index;
-    ASSERT(player_index >= 0 && player_index < MAX_LOCAL_PLAYERS);
-    VectorXYInt margin = { 0, 0 };
+float ui_widget_get_widescreen_margin() {
     if(rasterizer_screen_widescreen_support_enabled()) {
-        Widget *active_widget = widget_globals->active_widget[player_index];
+        Widget *active_widget = widget_globals->active_widget[0];
         UIWidgetDefinition *definition = tag_get_data(TAG_GROUP_UI_WIDGET_DEFINITION, active_widget->definition_tag_handle);
         uint16_t widget_width = max_i32(definition->bounds.right - max_i32(definition->bounds.left, 0), RASTERIZER_SCREEN_BASE_WIDTH);
         uint16_t screen_width = rasterizer_screen_get_width();
-        margin.x = (screen_width - widget_width) / 2;
+        return (float)(screen_width - widget_width) / 2.0f;
     }
-    return margin;
+    return 0.0f;
 }
 
 VectorXYInt ui_widget_get_relative_cursor_position(void) {
     VectorXYInt cursor_position = ui_cursor_get_position();
-    VectorXYInt ui_bounds_margins = ui_widget_get_bounds_margins(-1);
-    VectorXYInt relative_cursor_position = { 
-        cursor_position.x - ui_bounds_margins.x, 
-        cursor_position.y - ui_bounds_margins.y 
-    };
+    float widescreen_margin = ui_widget_get_widescreen_margin();
+    VectorXYInt relative_cursor_position = { cursor_position.x - widescreen_margin, cursor_position.y };
     return relative_cursor_position;
 }
 
@@ -424,8 +418,8 @@ void ui_widget_render_root_widget(Widget *widget) {
         bounds.top = 0;
         bounds.right = screen_width;
         bounds.bottom = screen_height;
-        VectorXYInt margins = ui_widget_get_bounds_margins(widget->local_player_index);
-        VectorXYInt offset = { margins.x, margins.y };
+        float widescreen_margin = ui_widget_get_widescreen_margin();
+        VectorXYInt offset = { widescreen_margin, 0 };
         ui_widget_instance_render_recursive(widget, &bounds, offset, true, false);
     }
 }
@@ -559,18 +553,17 @@ void ui_widget_instance_render_recursive(Widget *widget, Rectangle2D *bounds, Ve
             }
             
             if(rasterizer_screen_widescreen_support_enabled() && !ui_widget_background_is_excluded_from_widescreen(widget->definition_tag_handle)) {
-                VectorXYInt bounds_margins = ui_widget_get_bounds_margins(widget->local_player_index);
                 uint16_t screen_width = rasterizer_screen_get_width();
-                uint16_t widgets_bounds_width = screen_width - bounds_margins.x * 2;
-                if(screen_width > widgets_bounds_width) {
-                    if(widgets_bounds_width == screen_rect.right - screen_rect.left && screen_rect.left == bounds_margins.x) {
-                        if(bounds_pointer) {
-                            bounds_pointer->right = 0;
-                            bounds_pointer->left = screen_width;
-                        }
-                        screen_rect.right = 0;
-                        screen_rect.left = screen_width;
+                float widescreen_margin = ui_widget_get_widescreen_margin();
+                uint16_t widgets_bounds_width = screen_width - widescreen_margin * 2;
+                uint16_t widget_width = min_i32(definition->bounds.right, widgets_bounds_width) - max_i32(definition->bounds.left, 0);
+                if(screen_width > widgets_bounds_width && widgets_bounds_width == widget_width) {
+                    if(bounds_pointer) {
+                        bounds_pointer->left = 0;
+                        bounds_pointer->right = screen_width;
                     }
+                    screen_rect.left = 0;
+                    screen_rect.right = screen_width;
                 }
             }
 

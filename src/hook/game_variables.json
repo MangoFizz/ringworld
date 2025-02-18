@@ -42,7 +42,7 @@
     "window_parameters": {"type": "RasterizerWindowRenderParameters", "address": "0x75C580"},
     "render_globals": {"type": "RenderGlobals", "address": "0x75E460"},
     "fog_enable": {"type": "bool", "address": "0x6249dc"},
-    "frame_parameters": {"type": "FrameParameters", "address": "0x75C570"},
+    "frame_parameters": {"type": "RasterizerFrameParameters", "address": "0x75C570"},
     "effect_collection_effect_count": {"type": "uint32_t", "address": "0x75b720"},
     "effect_collection_buffer": {"type": "RasterizerDx9ShaderEffect *", "address": "0x75b724"},
     "wave_functions_initialized": {"type": "bool", "address": "0xd85a94"},
@@ -59,5 +59,7 @@
     "local_player_index_for_draw_string_and_hack_in_icons": {"type": "bool", "address": "0x8153f0"},
     "ui_widget_virtual_keyboard_opened": {"type": "bool", "address": "0x6b4430"},
     "build_number": {"type": "wchar_t", "address": "0x6b4300"},
-    "game_globals": {"type": "Globals *", "address": "0x6e2260"}
+    "game_globals": {"type": "Globals *", "address": "0x6e2260"},
+    "motion_sensor_blip_render_enabled": {"type": "bool", "address": "0x6249e3"},
+    "motion_sensor_blip_being_rendered": {"type": "bool", "address": "0x6b849d"}
 }

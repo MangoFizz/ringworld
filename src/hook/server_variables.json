@@ -41,7 +41,7 @@
     "vertex_declarations": {"type": "VertexDeclaration", "address": "NULL"},
     "render_globals": {"type": "RenderGlobals", "address": "NULL"},
     "fog_enable": {"type": "bool", "address": "NULL"},
-    "frame_parameters": {"type": "FrameParameters", "address": "NULL"},
+    "frame_parameters": {"type": "RasterizerFrameParameters", "address": "NULL"},
     "effect_collection_effect_count": {"type": "uint32_t", "address": "NULL"},
     "effect_collection_buffer": {"type": "RasterizerDx9ShaderEffect *", "address": "NULL"},
     "wave_functions_initialized": {"type": "bool", "address": "NULL"},

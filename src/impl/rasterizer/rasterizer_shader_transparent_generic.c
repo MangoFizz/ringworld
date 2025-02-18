@@ -582,7 +582,7 @@ void rasterizer_shader_transparent_generic_draw(TransparentGeometryGroup *group,
                     float map_u_offset = map->map_u_offset;
                     float map_v_offset = map->map_v_offset;
                     float map_rotation = map->map_rotation;
-                    FrameParameters *frame_parameters = render_get_frame_parameters();
+                    RasterizerFrameParameters *frame_parameters = rasterizer_get_frame_parameters();
                     shader_texture_animation_evaluate(map_u_scale, map_v_scale, map_u_offset, map_v_offset, map_rotation,
                                                         frame_parameters->elapsed_time_sec, texture_animation, group->animation, 
                                                         &animation_vsh_constants[map_index * 8 + 0],
@@ -699,7 +699,7 @@ void rasterizer_dx9_transparent_generic_preprocess(TransparentGeometryGroup *gro
                 progress = group->animation->values[0];
             }
             else {
-                FrameParameters *frame_parameters = render_get_frame_parameters();
+                RasterizerFrameParameters *frame_parameters = rasterizer_get_frame_parameters();
                 progress = wave_function_calculate_value_og(frame_parameters->elapsed_time_sec / stage->color0_animation_period, stage->color0_animation_function);
             } 
             ASSERT(!nan_f32(progress));

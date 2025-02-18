@@ -196,6 +196,11 @@ MAKE_TABLE_STRUCT(PlayersTable, Player);
  */
 void players_data_initialize(void);
 
+/**
+ * Get the players globals
+ */
+PlayersGlobals *player_get_globals(void);
+
 #ifdef __cplusplus
 }
 #endif

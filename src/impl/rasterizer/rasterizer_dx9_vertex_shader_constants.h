@@ -57,6 +57,8 @@ enum VertexShaderConstants {
 typedef struct FLOAT4_ALIGNED VertexShaderScreenprojConstants {
     ProjectionMatrix projection;
     VectorXY texture_scale;
+    float pad1;
+    float pad2;
 } VertexShaderScreenprojConstants;
 _Static_assert(sizeof(VertexShaderScreenprojConstants) == VSH_CONSTANTS_SCREENPROJ_COUNT * FLOAT4_SIZE);
 

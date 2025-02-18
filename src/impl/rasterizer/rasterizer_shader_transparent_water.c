@@ -17,6 +17,8 @@ extern bool *shader_transparent_water_should_update_bumpmap;
 bool shader_transparent_water_enabled = true;
 
 void rasterizer_shader_transparent_water_render_bumpmap(ShaderTransparentWater *shader) {
+    RasterizerWindowRenderParameters *window_parameters = rasterizer_get_window_parameters();
+
     ASSERT(shader != NULL);
 
     IDirect3DDevice9 *device = rasterizer_dx9_device();
@@ -118,7 +120,7 @@ void rasterizer_shader_transparent_water_render_bumpmap(ShaderTransparentWater *
                 }
             }
 
-            FrameParameters *frame_parameters = render_get_frame_parameters();
+            RasterizerFrameParameters *frame_parameters = rasterizer_get_frame_parameters();
             float vs_constants[4 * 8] = {0};
             for(size_t i = 0; i < 4; i++) {
                 float cos = cosf(ripples[i].animation_angle);
@@ -193,7 +195,7 @@ void rasterizer_shader_transparent_water_render_bumpmap(ShaderTransparentWater *
             IDirect3DDevice9_SetSoftwareVertexProcessing(device, rasterizer_dx9_device_supports_software_vertex_processing());
         }
 
-        rasterizer_dx9_render_target_set(0x00000000, 0, rasterizer_dx9_render_target_current_index());
+        rasterizer_dx9_render_target_set(0x00000000, 0, window_parameters->render_target);
         rasterizer_dx9_set_stencil_mode(2);
     }
 }
@@ -329,7 +331,7 @@ void rasterizer_shader_transparent_water_draw(TransparentGeometryGroup *group) {
 
         water_opacity_effect = rasterizer_dx9_shader_effect_get(SHADER_EFFECT_TRANSPARENT_WATER_REFLECTION);
         if(water_opacity_effect != NULL) {
-            FrameParameters *frame_params = render_get_frame_parameters();
+            RasterizerFrameParameters *frame_params = rasterizer_get_frame_parameters();
             float ripple_scale = shader->ripple_scale;
             float vs_constants[12] = {0};
             vs_constants[0] = ripple_scale;

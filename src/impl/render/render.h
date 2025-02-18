@@ -115,12 +115,6 @@ typedef struct RenderScreenEffect {
 } RenderScreenEffect;
 _Static_assert(sizeof(RenderScreenEffect) == 0x8);
 
-typedef struct FrameParameters {
-    double elapsed_time_sec;
-    float delta_time;
-} FrameParameters;
-_Static_assert(sizeof(FrameParameters) == 0x10);
-
 typedef struct RenderWindow {
     int16_t local_player_index;
     uint8_t console_window;
@@ -134,12 +128,6 @@ _Static_assert(sizeof(struct RenderWindow) == 0xAC);
  * @return The window render parameters.
  */
 RenderGlobals *render_get_globals(void);
-
-/**
- * Get the frame parameters.
- * @return The frame parameters.
- */
-FrameParameters *render_get_frame_parameters(void);
 
 /**
  * Get whether the fog is enabled.

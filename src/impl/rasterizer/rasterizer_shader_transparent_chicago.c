@@ -176,7 +176,7 @@ void rasterizer_shader_transparent_chicago_draw(TransparentGeometryGroup *group,
                     float map_u_offset = map->map_u_offset;
                     float map_v_offset = map->map_v_offset;
                     float map_rotation = map->map_rotation;
-                    FrameParameters *frame_parameters = render_get_frame_parameters();
+                    RasterizerFrameParameters *frame_parameters = rasterizer_get_frame_parameters();
                     shader_texture_animation_evaluate(map_u_scale, map_v_scale, map_u_offset, map_v_offset, map_rotation,
                                                         frame_parameters->elapsed_time_sec, texture_animation, group->animation, 
                                                         &animation_vsh_constants[map_index * 8 + 0],

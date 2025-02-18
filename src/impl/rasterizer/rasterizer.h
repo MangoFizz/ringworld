@@ -77,6 +77,12 @@ typedef struct RasterizerWindowRenderParameters {
 } RasterizerWindowRenderParameters;
 _Static_assert(sizeof(RasterizerWindowRenderParameters) == 0x258);
 
+typedef struct RasterizerFrameParameters {
+    double elapsed_time_sec;
+    float delta_time;
+} RasterizerFrameParameters;
+_Static_assert(sizeof(RasterizerFrameParameters) == 0x10);
+
 /**
  * Get the pointer to the rasterizer globals.
  * @return pointer to rasterizer globals
@@ -88,6 +94,12 @@ RasterizerGlobals *rasterizer_get_globals(void);
  * @return The rasterizer window render parameters.
  */
 RasterizerWindowRenderParameters *rasterizer_get_window_parameters(void);
+
+/**
+ * Get the frame parameters.
+ * @return The frame parameters.
+ */
+RasterizerFrameParameters*rasterizer_get_frame_parameters(void);
 
 #ifdef __cplusplus
 }

@@ -57,6 +57,9 @@
     "rasterizer_dx9_texture_create": {"address": "0x5272c0", "replace": true, "use_return_value": true, "arguments": ["esi"]},
     "rasterizer_dx9_set_stencil_mode": {"address": "0x51c900", "replace": true, "arguments": ["eax"]},
     "rasterizer_dx9_render_target_set": {"address": "0x52fda0", "replace": false, "arguments": ["0", "4", "eax"]},
+    "rasterizer_hud_motion_sensor_blip_begin": {"address": "0x52e750", "replace": true},
+    "rasterizer_hud_motion_sensor_blip_draw": {"address": "0x52eb90", "replace": true, "arguments": ["0", "4", "eax", "edi"]},
+    "rasterizer_hud_motion_sensor_blip_end": {"address": "0x52ed00", "replace": true, "arguments": ["0", "ebx"]},
 
     "rasterizer_screen_geometry_draw": {"address": "0x5200a0", "replace": true, "arguments": ["eax", "0"]},
     "rasterizer_screen_geometry_draw_quad": {"address": "0x44a0f0", "replace": true, "arguments": ["ecx", "eax"]},

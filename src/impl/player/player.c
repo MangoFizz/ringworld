@@ -22,3 +22,7 @@ void players_data_initialize(void) {
 
     *player_control_globals = game_state_allocate_heap(sizeof(PlayerControlGlobals));
 }
+
+PlayersGlobals *player_get_globals(void) {
+    return *players_globals;
+}

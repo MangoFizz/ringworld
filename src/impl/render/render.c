@@ -4,17 +4,11 @@
 #include "render.h"
 
 extern RenderGlobals *render_globals;
-extern FrameParameters *frame_parameters;
 extern bool *fog_enable;
 extern GlobalsRasterizerData **globals_rasterizer_data;
 
 RenderGlobals *render_get_globals(void) {
     return render_globals;
-}
-
-FrameParameters *render_get_frame_parameters(void) {
-    ASSERT(frame_parameters != NULL);
-    return frame_parameters;
 }
 
 bool render_get_fog_enabled(void) {

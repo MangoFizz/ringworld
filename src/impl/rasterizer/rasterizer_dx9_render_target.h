@@ -39,7 +39,7 @@ _Static_assert(sizeof(RasterizerDx9RenderTarget) == 0x14);
  * @param index The index of the d3d9 render target to set
  * @param render_target_index The index of the render target.
  */
-void rasterizer_dx9_render_target_set(ColorARGBInt clear_color, int16_t index, uint16_t render_target_index);
+void rasterizer_dx9_render_target_set(ColorARGBInt clear_color, bool should_clear, uint16_t render_target_index);
 
 /**
  * Get the render target surface.

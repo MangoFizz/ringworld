@@ -234,6 +234,43 @@ void ui_widget_instance_render_recursive(Widget *widget, Rectangle2D *bounds, Ve
  */
 void ui_widget_render_virtual_keyboard(void);
 
+/**
+ * Check if a text box widget is focused.
+ * @param widget pointer to the widget instance
+ * @return true if the text box widget is focused, false otherwise
+ */
+bool ui_widget_text_box_is_focused(Widget *widget);
+
+/**
+ * Render a text box widget.
+ * @param widget pointer to the widget instance
+ * @param definition pointer to the widget definition tag data
+ * @param bounds pointer to the bounds of the widget
+ * @param offset pointer to the offset of the widget
+ * @param is_focused true if the widget is focused, false otherwise
+ */
+void ui_widget_render_text_box(Widget *widget, UIWidgetDefinition *definition, Rectangle2D *bounds, VectorXYInt offset, bool is_focused);
+
+/**
+ * Render a column list widget.
+ * @param widget pointer to the widget instance
+ * @param definition pointer to the widget definition tag data
+ * @param bounds pointer to the bounds of the widget
+ * @param offset pointer to the offset of the widget
+ * @param is_focused true if the widget is focused, false otherwise
+ */
+void ui_widget_render_column_list(Widget *widget, UIWidgetDefinition *definition, Rectangle2D *bounds, VectorXYInt offset, bool is_focused);
+
+/**
+ * Render a spinner list widget.
+ * @param widget pointer to the widget instance
+ * @param definition pointer to the widget definition tag data
+ * @param bounds pointer to the bounds of the widget
+ * @param offset pointer to the offset of the widget
+ * @param is_focused true if the widget is focused, false otherwise
+ */
+void ui_widget_render_spinner_list(Widget *widget, UIWidgetDefinition *definition, Rectangle2D *bounds, VectorXYInt offset, bool is_focused);
+
 #ifdef __cplusplus
 }
 #endif

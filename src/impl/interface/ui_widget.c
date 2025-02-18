@@ -1,5 +1,5 @@
 #include <windows.h>
-
+#include <math.h>
 #include "../../event/events.h"
 #include "../bitmap/bitmap.h"
 #include "../console/console.h"
@@ -24,6 +24,7 @@ extern bool *ui_widgets_unknown_1;
 extern bool *is_main_menu;
 extern bool *local_player_index_for_draw_string_and_hack_in_icons;
 extern bool *ui_widget_virtual_keyboard_opened;
+extern void (**ui_widget_game_data_input_functions)(Widget *);
 
 WidgetGlobals *get_ui_widget_globals(void) {
     return widget_globals;
@@ -426,7 +427,8 @@ void ui_widget_render_root_widget(Widget *widget) {
         bounds.top = 0;
         bounds.right = screen_width;
         bounds.bottom = screen_height;
-        VectorXYInt offset = { (screen_width - 640) / 2, 0 };
+        VectorXYInt margins = ui_widget_get_bounds_margins(widget->local_player_index);
+        VectorXYInt offset = { margins.x, margins.y };
         ui_widget_instance_render_recursive(widget, &bounds, offset, true, false);
     }
 }
@@ -486,6 +488,182 @@ void ui_widget_render(int16_t local_player_index) {
         ui_widget_render_virtual_keyboard();
         ui_cursor_render();
     }
+}
+
+static bool ui_widget_background_is_excluded_from_widescreen(TagHandle tag) {
+    static const char *exclude_list[] = {
+        "ui\\shell\\main_menu\\halo_logo",
+        "ui\\shell\\main_menu\\multiplayer_type_select\\join_game\\join_game_items_list",
+        "ui\\shell\\main_menu\\settings_select\\player_setup\\player_profile_edit\\controls_setup\\controls_options_menu",
+        "ui\\shell\\main_menu\\settings_select\\player_setup\\player_profile_edit\\gamepad_setup\\gamepad_setup_options"
+    };
+
+    TagDataHeader *tag_data = tag_get_data_header();
+    TagEntry *entry = &tag_data->tags[tag.index];
+    for(size_t i = 0; i < sizeof(exclude_list) / sizeof(exclude_list[0]); i++) {
+        if(strcmp(entry->path, exclude_list[i]) == 0) {
+            return true;
+        }
+    }
+    return false;
+}
+
+void ui_widget_instance_render_recursive(Widget *widget, Rectangle2D *bounds, VectorXYInt offset, bool is_focused, bool use_nifty_render_fx) {
+    ASSERT(widget != NULL);    
+
+    UIWidgetDefinition *definition = tag_get_data(TAG_GROUP_UI_WIDGET_DEFINITION, widget->definition_tag_handle);
+
+    for(size_t i = 0; i < definition->game_data_inputs.count; i++) {
+        GameDataInputReference *game_data_input = &definition->game_data_inputs.elements[i];
+        if(game_data_input->function > UI_GAME_DATA_INPUT_REFERENCE_FUNCTION_NULL) {
+            if(game_data_input->function < UI_GAME_DATA_INPUT_REFERENCE_FUNCTION_MAX) {
+                ui_widget_game_data_input_functions[game_data_input->function](widget);
+            }
+        }
+    }
+
+    if(!widget->visible) {
+        return;
+    }
+
+    float alpha_modifier = widget->alpha_modifier;
+    Widget *current_widget = widget->parent;
+    while(current_widget != NULL) {
+        alpha_modifier *= current_widget->alpha_modifier;
+        current_widget = current_widget->parent;
+    }
+
+    // The plasma effect that was used on menus in the original Xbox release
+    bool should_use_nifty_render_fx = use_nifty_render_fx || definition->flags.always_use_nifty_render_fx;
+
+    // Update offset
+    offset.x += widget->position.x;
+    offset.y += widget->position.y;
+
+    if(!HANDLE_IS_NULL(definition->background_bitmap.tag_handle)) {
+        TagHandle background_bitmap_tag = definition->background_bitmap.tag_handle;
+        uint16_t background_frame_index = widget->animation_data.current_frame_index;
+        BitmapData *background_bitmap = bitmap_group_sequence_get_bitmap_for_frame(background_bitmap_tag, 0, background_frame_index);
+        if(background_bitmap != NULL) {
+            Rectangle2D screen_rect, texture_rect, parent_rect;
+            screen_rect.left = definition->bounds.left + offset.x;
+            screen_rect.top = definition->bounds.top + offset.y;
+            screen_rect.right = definition->bounds.right + offset.x;
+            screen_rect.bottom = definition->bounds.bottom + offset.y;
+            texture_rect = screen_rect;
+            
+            Rectangle2D *bounds_pointer = NULL;
+            if(bounds != NULL) {
+                parent_rect.left = bounds->left + offset.x;
+                parent_rect.top = bounds->top + offset.y;
+                parent_rect.right = bounds->right + offset.x;
+                parent_rect.bottom = bounds->bottom + offset.y;
+                bounds_pointer = &parent_rect;
+            }
+            
+            if(rasterizer_screen_widescreen_support_enabled() && !ui_widget_background_is_excluded_from_widescreen(widget->definition_tag_handle)) {
+                VectorXYInt bounds_margins = ui_widget_get_bounds_margins(widget->local_player_index);
+                uint16_t screen_width = rasterizer_screen_get_width();
+                uint16_t screen_height = rasterizer_screen_get_height();
+                uint16_t widgets_bounds_width = screen_width - bounds_margins.x * 2;
+                uint16_t widgets_bounds_height = screen_height - bounds_margins.y * 2;
+
+                if(screen_width > widgets_bounds_width) {
+                    if(widgets_bounds_width == screen_rect.right - screen_rect.left && screen_rect.left == bounds_margins.x) {
+                        if(bounds_pointer) {
+                            bounds_pointer->right = 0;
+                            bounds_pointer->left = screen_width;
+                        }
+                        screen_rect.right = 0;
+                        screen_rect.left = screen_width;
+                    }
+                }
+
+                if(screen_height > widgets_bounds_height) {
+                    if(widgets_bounds_height == screen_rect.bottom - screen_rect.top && screen_rect.top == bounds_margins.y) {
+                        if(bounds_pointer) {
+                            bounds_pointer->top = 0;
+                            bounds_pointer->bottom = screen_height;
+                        }
+                        screen_rect.top = 0;
+                        screen_rect.bottom = screen_height;
+                    }
+                }
+            }
+
+            float alpha = alpha_modifier;
+            if(definition->flags.flash_background_bitmap) {
+                double time = widget_globals->current_time_ms;
+                if(time < 0) {
+                    time += UINT32_MAX;
+                }
+                alpha = (cos(time * 0.003) + 1.0f) * 0.5f * alpha_modifier;
+            }
+
+            alpha = clamp_f32(alpha, 0.0f, 1.0f);
+            uint32_t color = (uint8_t)round(alpha * 255.0f) << 24 | 0xFFFFFF;
+
+            bitmap_draw_in_rect(background_bitmap, bounds_pointer, color, &screen_rect, &texture_rect);
+        }
+    }
+
+    bool do_not_render_children = false;
+    switch(widget->type) {
+        case UI_WIDGET_TYPE_TEXT_BOX: {
+            if(!definition->flags_1.dont_do_that_weird_focus_test) {
+                is_focused = ui_widget_text_box_is_focused(widget);
+            }
+            ui_widget_render_text_box(widget, definition, bounds, offset, is_focused);
+            break;
+        }
+        case UI_WIDGET_TYPE_SPINNER_LIST: {
+            ui_widget_render_spinner_list(widget, definition, bounds, offset, is_focused);
+            if(definition->flags_2.list_items_from_string_list_tag && definition->child_widgets.count == 0) {
+                do_not_render_children = true;
+            }
+            break;
+        }
+        case UI_WIDGET_TYPE_COLUMN_LIST: {
+            ui_widget_render_column_list(widget, definition, bounds, offset, is_focused);
+            if(definition->flags_2.list_items_generated_in_code) {
+                do_not_render_children = true;
+            }
+            break;
+        }
+    }
+
+    if(!do_not_render_children) {
+        for(Widget *current_widget = widget->child; current_widget != NULL; current_widget = current_widget->next) {
+            bool child_is_focused = current_widget == widget->focused_child;
+            if(child_is_focused && ui_widget_is_list(widget)) {
+                should_use_nifty_render_fx = true;
+            }
+            else {
+                should_use_nifty_render_fx = false;
+            }
+            ui_widget_instance_render_recursive(current_widget, bounds, offset, child_is_focused, should_use_nifty_render_fx);
+        }
+    }
+
+    for(size_t i = 0; i < definition->event_handlers.count; i++) {
+        EventHandlerReference *event_handler = &definition->event_handlers.elements[i];
+        if(event_handler->event_type == UI_EVENT_TYPE_POST_RENDER) {
+            UIWidgetEventRecord event_record;
+            event_record.controller_index = widget->local_player_index;
+            event_record.type = 0;
+            event_record.unk1 = 0;
+            int16_t controller_index;
+            ui_widget_event_handler_dispatch(widget, definition, &event_record, event_handler, &controller_index);
+        }
+    }
+}
+
+/**
+ * @todo Fix hooks when first parameters are registers instead of stack variables
+ */
+void ui_widget_render_column_list_og(UIWidgetDefinition *definition, Rectangle2D *bounds, VectorXYInt offset, bool is_focused, Widget *widget);
+void ui_widget_render_column_list(Widget *widget, UIWidgetDefinition *definition, Rectangle2D *bounds, VectorXYInt offset, bool is_focused) {
+    ui_widget_render_column_list_og(definition, bounds, offset, is_focused, widget);
 }
 
 void ui_widget_adjust_spinner_list_bounds(Widget *widget, Rectangle2D *bounds) {

@@ -390,6 +390,33 @@ void ui_widget_new_history_node(WidgetHistoryNode *history_node_data, WidgetHist
     *history_top_node = new_node;
 }
 
+VectorXYInt ui_widget_get_bounds_margins(int16_t local_player_index) {
+    uint16_t player_index = local_player_index == -1 ? 0 : local_player_index;
+    ASSERT(player_index >= 0 && player_index < MAX_LOCAL_PLAYERS);
+    VectorXYInt margin = { 0, 0 };
+    if(rasterizer_screen_widescreen_support_enabled()) {
+        Widget *active_widget = widget_globals->active_widget[player_index];
+        UIWidgetDefinition *definition = tag_get_data(TAG_GROUP_UI_WIDGET_DEFINITION, active_widget->definition_tag_handle);
+        uint16_t widget_width = max_i32(definition->bounds.right - definition->bounds.left, RASTERIZER_SCREEN_BASE_WIDTH);
+        uint16_t widget_height = max_i32(definition->bounds.bottom - definition->bounds.top, RASTERIZER_SCREEN_BASE_HEIGHT);
+        uint16_t screen_width = rasterizer_screen_get_width();
+        uint16_t screen_height = rasterizer_screen_get_height();
+        margin.x = (screen_width - widget_width) / 2;
+        margin.y = (screen_height - widget_height) / 2;
+    }
+    return margin;
+}
+
+VectorXYInt ui_widget_get_relative_cursor_position(void) {
+    VectorXYInt cursor_position = ui_cursor_get_position();
+    VectorXYInt ui_bounds_margins = ui_widget_get_bounds_margins(-1);
+    VectorXYInt relative_cursor_position = { 
+        cursor_position.x - ui_bounds_margins.x, 
+        cursor_position.y - ui_bounds_margins.y 
+    };
+    return relative_cursor_position;
+}
+
 void ui_widget_render_root_widget(Widget *widget) {
     if(widget != NULL) {
         uint16_t screen_width = rasterizer_screen_get_width();
@@ -507,11 +534,13 @@ Widget *ui_widget_find_cursor_focused_widget(Widget *widget, int cursor_x, int c
 }
 
 Widget *ui_widget_get_cursor_focused_widget(Widget *widget, int cursor_x, int cursor_y, VectorXYInt offset) {
-    return ui_widget_find_cursor_focused_widget(widget, cursor_x, cursor_y, offset);
+    VectorXYInt cursor_position = ui_widget_get_relative_cursor_position();
+    return ui_widget_find_cursor_focused_widget(widget, cursor_position.x, cursor_position.y, offset);
+}
 
 bool ui_widget_is_cursor_over(Widget *widget) {
     ASSERT(widget != NULL);
-    VectorXYInt cursor_position = ui_cursor_get_position();
+    VectorXYInt cursor_position = ui_widget_get_relative_cursor_position();
     UIWidgetDefinition *definition = tag_get_data(TAG_GROUP_UI_WIDGET_DEFINITION, widget->definition_tag_handle);
     Rectangle2D bounds = definition->bounds;
     VectorXYInt offset = { 0, 0 };

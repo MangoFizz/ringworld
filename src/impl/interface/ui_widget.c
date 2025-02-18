@@ -398,12 +398,9 @@ VectorXYInt ui_widget_get_bounds_margins(int16_t local_player_index) {
     if(rasterizer_screen_widescreen_support_enabled()) {
         Widget *active_widget = widget_globals->active_widget[player_index];
         UIWidgetDefinition *definition = tag_get_data(TAG_GROUP_UI_WIDGET_DEFINITION, active_widget->definition_tag_handle);
-        uint16_t widget_width = max_i32(definition->bounds.right - definition->bounds.left, RASTERIZER_SCREEN_BASE_WIDTH);
-        uint16_t widget_height = max_i32(definition->bounds.bottom - definition->bounds.top, RASTERIZER_SCREEN_BASE_HEIGHT);
+        uint16_t widget_width = max_i32(definition->bounds.right - max_i32(definition->bounds.left, 0), RASTERIZER_SCREEN_BASE_WIDTH);
         uint16_t screen_width = rasterizer_screen_get_width();
-        uint16_t screen_height = rasterizer_screen_get_height();
         margin.x = (screen_width - widget_width) / 2;
-        margin.y = (screen_height - widget_height) / 2;
     }
     return margin;
 }
@@ -564,10 +561,7 @@ void ui_widget_instance_render_recursive(Widget *widget, Rectangle2D *bounds, Ve
             if(rasterizer_screen_widescreen_support_enabled() && !ui_widget_background_is_excluded_from_widescreen(widget->definition_tag_handle)) {
                 VectorXYInt bounds_margins = ui_widget_get_bounds_margins(widget->local_player_index);
                 uint16_t screen_width = rasterizer_screen_get_width();
-                uint16_t screen_height = rasterizer_screen_get_height();
                 uint16_t widgets_bounds_width = screen_width - bounds_margins.x * 2;
-                uint16_t widgets_bounds_height = screen_height - bounds_margins.y * 2;
-
                 if(screen_width > widgets_bounds_width) {
                     if(widgets_bounds_width == screen_rect.right - screen_rect.left && screen_rect.left == bounds_margins.x) {
                         if(bounds_pointer) {
@@ -576,17 +570,6 @@ void ui_widget_instance_render_recursive(Widget *widget, Rectangle2D *bounds, Ve
                         }
                         screen_rect.right = 0;
                         screen_rect.left = screen_width;
-                    }
-                }
-
-                if(screen_height > widgets_bounds_height) {
-                    if(widgets_bounds_height == screen_rect.bottom - screen_rect.top && screen_rect.top == bounds_margins.y) {
-                        if(bounds_pointer) {
-                            bounds_pointer->top = 0;
-                            bounds_pointer->bottom = screen_height;
-                        }
-                        screen_rect.top = 0;
-                        screen_rect.bottom = screen_height;
                     }
                 }
             }
@@ -690,8 +673,8 @@ Widget *ui_widget_find_cursor_focused_widget(Widget *widget, int cursor_x, int c
         bool parent_is_null_or_list = widget->parent == NULL || ui_widget_is_list(widget->parent);
         bool force_handle_mouse = definition->flags.force_handle_mouse;
         if(has_event_handlers || is_list || parent_is_null_or_list || force_handle_mouse) {
-            offset.y = offset.y + (widget->position).y;
-            offset.x = offset.x + (widget->position).x;
+            offset.x += widget->position.x;
+            offset.y += widget->position.y;
             ui_widget_adjust_spinner_list_bounds(widget, &bounds);
             math_rectangle_2d_translate(&bounds, offset.x, offset.y);
             if(math_rectangle_2d_contains_point(&bounds, cursor_x, cursor_y)) {

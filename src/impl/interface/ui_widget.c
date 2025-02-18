@@ -508,4 +508,21 @@ Widget *ui_widget_find_cursor_focused_widget(Widget *widget, int cursor_x, int c
 
 Widget *ui_widget_get_cursor_focused_widget(Widget *widget, int cursor_x, int cursor_y, VectorXYInt offset) {
     return ui_widget_find_cursor_focused_widget(widget, cursor_x, cursor_y, offset);
+
+bool ui_widget_is_cursor_over(Widget *widget) {
+    ASSERT(widget != NULL);
+    VectorXYInt cursor_position = ui_cursor_get_position();
+    UIWidgetDefinition *definition = tag_get_data(TAG_GROUP_UI_WIDGET_DEFINITION, widget->definition_tag_handle);
+    Rectangle2D bounds = definition->bounds;
+    VectorXYInt offset = { 0, 0 };
+    Widget *current_widget = widget;
+    while(current_widget != NULL) {
+        offset.x += current_widget->position.x;
+        offset.y += current_widget->position.y;
+        current_widget = current_widget->parent;
+    }
+    ui_widget_adjust_spinner_list_bounds(widget, &bounds);
+    math_rectangle_2d_translate(&bounds, offset.x, offset.y);
+    bool is_over = math_rectangle_2d_contains_point(&bounds, cursor_position.x, cursor_position.y);
+    return is_over;
 }

@@ -31,6 +31,7 @@
     "ui_widget_render": {"address": "0x49b450", "replace": true, "arguments": ["eax"]},
     "ui_widget_adjust_spinner_list_bounds": {"address": "0x49c920", "replace": true, "arguments": ["eax", "ecx"]},
     "ui_widget_get_cursor_focused_widget": {"address": "0x49ca60", "replace": true, "use_return_value": true, "arguments": ["0", "4", "8", "12"]},
+    "ui_widget_is_cursor_over": {"address": "0x49c980", "replace": true, "use_return_value": true, "arguments": ["eax"]},
     "memory_pool_new_block": {"address": "0x4d5310", "replace": false, "use_return_value": true, "arguments": ["ecx", "eax"]},
 
     "player_ui_set_active_player_profile": {"address": "0x4988d0", "replace": false, "arguments": ["0", "eax", "edx"]},

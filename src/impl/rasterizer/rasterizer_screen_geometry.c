@@ -7,6 +7,7 @@
 #include "rasterizer_dx9_vertex_shader.h"
 #include "rasterizer_dx9_texture.h"
 #include "../render/render.h"
+#include "rasterizer.h"
 #include "rasterizer_screen.h"
 #include "rasterizer_screen_geometry.h"
 
@@ -51,14 +52,14 @@ static void rasterizer_screen_geometry_hud_meter_draw(BitmapData **meter_maps, R
 
 void rasterizer_screen_geometry_draw(RasterizerDynamicScreenGeometryParams *params, RasterizerDynamicVertex *vertices) {
     IDirect3DDevice9 *device = rasterizer_dx9_device();
-    RenderGlobals *render_globals = render_get_globals();
-    RasterizerGlobals *rasterizer_globals = rasterizer_dx9_get_globals();
+    RasterizerWindowRenderParameters *window_parameters = rasterizer_get_window_parameters();
+    RasterizerGlobals *rasterizer_globals = rasterizer_get_globals();
     D3DCAPS9 *device_caps = rasterizer_dx9_device_caps();
 
     ASSERT(device != NULL);
-    ASSERT(render_globals != NULL);
+    ASSERT(window_parameters != NULL);
 
-    if(rasterizer_screen_user_interface_render_enabled() == false || render_globals->time_delta_since_tick < 1) {
+    if(rasterizer_screen_user_interface_render_enabled() == false || window_parameters->render_target < 1) {
         return;
     }
 
@@ -86,9 +87,9 @@ void rasterizer_screen_geometry_draw(RasterizerDynamicScreenGeometryParams *para
     IDirect3DVertexShader9 *vertex_shader = rasterizer_dx9_shader_get_vertex_shader(VSH_SCREEN2);
     rasterizer_dx9_set_vertex_shader(vertex_shader);
 
-    Rectangle2D *viewport_bounds = &render_globals->camera.viewport_bounds;
-    float viewport_width = viewport_bounds->right - viewport_bounds->left;
-    float viewport_height = viewport_bounds->top - viewport_bounds->bottom;
+    Rectangle2D *window_bounds = &window_parameters->camera.window_bounds;
+    float window_width = window_bounds->right - window_bounds->left;
+    float window_height = window_bounds->top - window_bounds->bottom;
     float inv_screen_width = 2.0f / rasterizer_screen_get_width();
     float inv_screen_height = -2.0f / rasterizer_screen_get_height();
 
@@ -106,11 +107,11 @@ void rasterizer_screen_geometry_draw(RasterizerDynamicScreenGeometryParams *para
     screenproj.projection.x[0] = inv_screen_width;
     screenproj.projection.x[1] = 0.0f;
     screenproj.projection.x[2] = 0.0f;
-    screenproj.projection.x[3] = -1.0f - 1.0f / viewport_width + offset_x;
+    screenproj.projection.x[3] = -1.0f - 1.0f / window_width + offset_x;
     screenproj.projection.y[0] = 0.0f;
     screenproj.projection.y[1] = inv_screen_height;
     screenproj.projection.y[2] = 0.0f;
-    screenproj.projection.y[3] = 1.0f + 1.0f / viewport_height + offset_y;
+    screenproj.projection.y[3] = 1.0f + 1.0f / window_height + offset_y;
     screenproj.projection.z[0] = 0.0f;
     screenproj.projection.z[1] = 0.0f;
     screenproj.projection.z[2] = 0.0f;
@@ -374,7 +375,7 @@ void rasterizer_screen_geometry_draw(RasterizerDynamicScreenGeometryParams *para
 
 void rasterizer_screen_geometry_draw_quad(Rectangle2D *rect, ColorARGBInt color) {
     Globals *game_globals = game_globals_get();
-    RasterizerGlobals *rasterizer_globals = rasterizer_dx9_get_globals();
+    RasterizerGlobals *rasterizer_globals = rasterizer_get_globals();
 
     if(game_globals->rasterizer_data.count == 0) {
         return;

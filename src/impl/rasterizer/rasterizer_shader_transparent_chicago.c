@@ -7,19 +7,20 @@
 #include "../tag/definitions/shader_transparent_chicago.h"
 #include "../interface/numeric_countdown.h"
 #include "../math/math.h"
+#include "../render/render.h"
+#include "rasterizer.h"
 #include "rasterizer_geometry_group.h"
 #include "rasterizer_dx9.h"
 #include "rasterizer_dx9_shader_effect.h"
 #include "rasterizer_dx9_vertex_shader.h"
 #include "rasterizer_dx9_vertex.h"
 #include "rasterizer_dx9_texture.h"
-#include "../render/render.h"
 #include "rasterizer_shader_transparent_chicago.h"
 
 extern float *shader_transparent_generic_vertex_constants;
 
 void rasterizer_shader_transparent_chicago_draw(TransparentGeometryGroup *group, uint32_t *param_2) {
-    RenderGlobals *render_globals = render_get_globals();
+    RasterizerWindowRenderParameters *window_parameters = rasterizer_get_window_parameters();
     ShaderTransparentChicago *shader_data = shader_type_assert(group->shader, SHADER_TYPE_SHADER_TRANSPARENT_CHICAGO);
 
     // Not sure about this 
@@ -147,13 +148,13 @@ void rasterizer_shader_transparent_chicago_draw(TransparentGeometryGroup *group,
                         animation_vsh_constants[map_index * 8 + 7] = 0.0;
                     } 
                     else {
-                        animation_vsh_constants[map_index * 8 + 0] = render_globals->frustum.world_to_view.forward.i;
-                        animation_vsh_constants[map_index * 8 + 1] = render_globals->frustum.world_to_view.forward.j;
-                        animation_vsh_constants[map_index * 8 + 2] = render_globals->frustum.world_to_view.forward.k;
+                        animation_vsh_constants[map_index * 8 + 0] = window_parameters->frustum.view_to_world.forward.i;
+                        animation_vsh_constants[map_index * 8 + 1] = window_parameters->frustum.view_to_world.forward.j;
+                        animation_vsh_constants[map_index * 8 + 2] = window_parameters->frustum.view_to_world.forward.k;
                         animation_vsh_constants[map_index * 8 + 3] = 0.0;
-                        animation_vsh_constants[map_index * 8 + 4] = render_globals->frustum.world_to_view.left.i;
-                        animation_vsh_constants[map_index * 8 + 5] = render_globals->frustum.world_to_view.left.j;
-                        animation_vsh_constants[map_index * 8 + 6] = render_globals->frustum.world_to_view.left.k;
+                        animation_vsh_constants[map_index * 8 + 4] = window_parameters->frustum.view_to_world.left.i;
+                        animation_vsh_constants[map_index * 8 + 5] = window_parameters->frustum.view_to_world.left.j;
+                        animation_vsh_constants[map_index * 8 + 6] = window_parameters->frustum.view_to_world.left.k;
                         animation_vsh_constants[map_index * 8 + 7] = 0.0;
                     }
                 }
@@ -177,7 +178,7 @@ void rasterizer_shader_transparent_chicago_draw(TransparentGeometryGroup *group,
                     float map_rotation = map->map_rotation;
                     FrameParameters *frame_parameters = render_get_frame_parameters();
                     shader_texture_animation_evaluate(map_u_scale, map_v_scale, map_u_offset, map_v_offset, map_rotation,
-                                                        frame_parameters->elapsed_time, texture_animation, group->animation, 
+                                                        frame_parameters->elapsed_time_sec, texture_animation, group->animation, 
                                                         &animation_vsh_constants[map_index * 8 + 0],
                                                         &animation_vsh_constants[map_index * 8 + 4]);
                 }

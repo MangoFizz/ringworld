@@ -102,10 +102,22 @@ typedef struct RenderGlobals {
     int16_t visible_sky_index;
 } RenderGlobals;
 
+typedef struct RenderScreenFlash {
+    int16_t type;
+    float intensity;
+    ColorARGB color;
+} RenderScreenFlash;
+_Static_assert(sizeof(RenderScreenFlash) == 0x18);
+
+typedef struct RenderScreenEffect {
+    int16_t type;
+    float intensity;
+} RenderScreenEffect;
+_Static_assert(sizeof(RenderScreenEffect) == 0x8);
+
 typedef struct FrameParameters {
-    double elapsed_time;
-    float unk1;
-    float unk2;
+    double elapsed_time_sec;
+    float delta_time;
 } FrameParameters;
 _Static_assert(sizeof(FrameParameters) == 0x10);
 

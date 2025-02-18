@@ -5,69 +5,10 @@
 extern "C" {
 #endif
 
+#include <stdbool.h>
+#include <stdint.h>
 #include <d3d9.h>
-
-#include "../tag/definitions/bitmap.h"
 #include "../tag/definitions/shader.h"
-#include "../tag/tag.h"
-
-typedef enum RasterizerLock {
-    RASTERIZER_LOCK_NONE = 0,
-    RASTERIZER_LOCK_TEXTURE_CHANGED,
-    RASTERIZER_LOCK_VERTEXBUFFER_NEW,
-    RASTERIZER_LOCK_DETAIL_OBJECTS,
-    RASTERIZER_LOCK_DECAL_UPDATE,
-    RASTERIZER_LOCK_DECAL_VERTICES,
-    RASTERIZER_LOCK_BINK,
-    RASTERIZER_LOCK_UI,
-    RASTERIZER_LOCK_CINEMATICS,
-    RASTERIZER_LOCK_KOTH,
-    RASTERIZER_LOCK_HUD,
-    RASTERIZER_LOCK_FLAG,
-    RASTERIZER_LOCK_LIGHTNING,
-    RASTERIZER_LOCK_DEBUG,
-    RASTERIZER_LOCK_TEXT,
-    RASTERIZER_LOCK_CONTRAIL,
-    RASTERIZER_LOCK_SPRITE,
-    RASTERIZER_LOCK_BSP_SWITCH,
-    NUMBER_OF_RASTERIZER_LOCKS
-} RasterizerLock;
-
-typedef struct RasterizerGlobals {
-    Bool initialized;
-    int16_t lock_index;
-    Rectangle2D screen_bounds;
-    Rectangle2D frame_bounds;
-    int64_t frame_index;
-    uint32_t flip_index;
-    uint8_t use_floating_point_zbuffer;
-    uint8_t use_rasterizer_frame_rate_throttle;
-    uint8_t use_rasterizer_frame_rate_stabilization;
-    int16_t refresh_rate;
-    float z_near;
-    float z_far;
-    float z_near_first_person;
-    float z_far_first_person;
-    IDirect3DBaseTexture9 **default_texture_white;
-    IDirect3DBaseTexture9 **default_texture_2d_texture;
-    IDirect3DBaseTexture9 **default_texture_3d_texture; // engine actually uses 2d for 3d cases
-    IDirect3DBaseTexture9 **default_texture_cubemap;
-    int16_t lightmap_mode;
-    int16_t maximum_nodes_per_model;
-    Bool using_software_vertex_processing;
-    int16_t unk2;
-    uint32_t fixed_function_ambient; // ambient light value for FF
-    Bool use_cheap_active_camo;
-    Bool render_targets_disabled;
-    Bool alpha_render_targets_disabled;
-} RasterizerGlobals; 
-_Static_assert(sizeof(RasterizerGlobals) == 0x60);
-
-/**
- * Get the pointer to the rasterizer globals.
- * @return pointer to rasterizer globals
- */
-RasterizerGlobals *rasterizer_dx9_get_globals(void);
 
 /**
  * Get the pointer to the Direct3D 9 device.
@@ -166,6 +107,36 @@ void rasterizer_dx9_set_stencil_mode(uint16_t stencil_mode);
  * Draw a primitive with the given vertex data
  */
 bool rasterizer_dx9_draw_primitive_up(D3DPRIMITIVETYPE primitive_type, UINT primitive_count, const void *vertex_data, UINT vertex_stride);
+
+/**
+ * Set the render target
+ * @param render_target The render target to set.
+ * @param render_target_index The index of the render target.
+ */
+void rasterizer_dx9_set_render_target(DWORD render_target_index, IDirect3DSurface9 *render_target);
+
+/**
+ * Get the render target
+ * @param render_target The render target to get.
+ */
+void rasterizer_dx9_set_viewport(const D3DVIEWPORT9 *viewport);
+
+/**
+ * Clear the render target
+ * @param count The number of rectangles to clear.
+ * @param rects The rectangles to clear.
+ * @param flags The flags to clear with.
+ * @param color The color to clear with.
+ * @param z The z value to clear with.
+ * @param stencil The stencil value to clear with.
+ */
+void rasterizer_dx9_clear(uint32_t count, const D3DRECT *rects, DWORD flags, D3DCOLOR color, float z, DWORD stencil);
+
+/**
+ * Set the software vertex processing
+ * @param software_vertex_processing The software vertex processing to set.
+ */
+void rasterizer_dx9_set_software_vertex_processing(bool software_vertex_processing);
 
 #ifdef __cplusplus
 }

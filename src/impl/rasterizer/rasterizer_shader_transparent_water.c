@@ -4,11 +4,12 @@
 #include "../exception/exception.h"
 #include "../shader/shader.h"
 #include "../math/math.h"
+#include "../render/render.h"
+#include "rasterizer.h"
 #include "rasterizer_dx9_render_target.h"
 #include "rasterizer_dx9_shader_effect.h"
 #include "rasterizer_dx9_vertex_shader.h"
 #include "rasterizer_dx9_texture.h"
-#include "../render/render.h"
 #include "rasterizer_shader_transparent_water.h"
 
 extern bool *shader_transparent_water_unk1;
@@ -125,11 +126,11 @@ void rasterizer_shader_transparent_water_render_bumpmap(ShaderTransparentWater *
                 vs_constants[i * 8 + 0] = ripples[i].map_repeats;
                 vs_constants[i * 8 + 1] = 0.0f;
                 vs_constants[i * 8 + 2] = 0.0f;
-                vs_constants[i * 8 + 3] = cos * ripples[i].animation_velocity * frame_parameters->elapsed_time + ripples[i].map_offset.i;
+                vs_constants[i * 8 + 3] = cos * ripples[i].animation_velocity * frame_parameters->elapsed_time_sec + ripples[i].map_offset.i;
                 vs_constants[i * 8 + 4] = 0.0f;
                 vs_constants[i * 8 + 5] = ripples[i].map_repeats;
                 vs_constants[i * 8 + 6] = 0.0f;
-                vs_constants[i * 8 + 7] = sin * ripples[i].animation_velocity * frame_parameters->elapsed_time + ripples[i].map_offset.j;
+                vs_constants[i * 8 + 7] = sin * ripples[i].animation_velocity * frame_parameters->elapsed_time_sec + ripples[i].map_offset.j;
             }
 
             rasterizer_dx9_set_vertex_shader_constant_f(13, vs_constants, 8);
@@ -333,8 +334,8 @@ void rasterizer_shader_transparent_water_draw(TransparentGeometryGroup *group) {
             float vs_constants[12] = {0};
             vs_constants[0] = ripple_scale;
             vs_constants[1] = ripple_scale;
-            vs_constants[2] = cos(shader->ripple_animation_angle) * shader->ripple_animation_velocity * frame_params->elapsed_time;
-            vs_constants[3] = sin(shader->ripple_animation_angle) * shader->ripple_animation_velocity * frame_params->elapsed_time;
+            vs_constants[2] = cos(shader->ripple_animation_angle) * shader->ripple_animation_velocity * frame_params->elapsed_time_sec;
+            vs_constants[3] = sin(shader->ripple_animation_angle) * shader->ripple_animation_velocity * frame_params->elapsed_time_sec;
             vs_constants[4] = 0.0f;
             vs_constants[5] = 0.0f;
             vs_constants[6] = 0.0f;
@@ -390,11 +391,11 @@ void rasterizer_shader_transparent_water_draw(TransparentGeometryGroup *group) {
             rasterizer_dx9_set_sampler_state(3, D3DSAMP_MIPFILTER, D3DTEXF_LINEAR);
 
             float ps_constants[4] = {0};
-            RenderGlobals *render_globals = render_get_globals();
+            RasterizerWindowRenderParameters *window_parameters = rasterizer_get_window_parameters();
             Plane3D *plane = &group->plane;
             double norm = math_vector_normalize((VectorIJK *)plane);
             if(norm > 0.0) {
-                double dot_product = math_vector_dot_product((VectorIJK *)plane, (VectorIJK *)&render_globals->camera.position);
+                double dot_product = math_vector_dot_product((VectorIJK *)plane, (VectorIJK *)&window_parameters->camera.forward);
                 if(dot_product >= 0.0) {
                     if((dot_product * -1.0) <= 1.0) {
                         dot_product = dot_product * -1.0;

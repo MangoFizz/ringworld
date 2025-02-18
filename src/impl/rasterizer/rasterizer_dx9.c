@@ -5,17 +5,12 @@
 #include "rasterizer_dx9_vertex.h"
 #include "rasterizer_dx9.h"
 
-extern RasterizerGlobals *rasterizer_globals;
 extern IDirect3DDevice9 **d3d9_device;
 extern D3DCAPS9 *d3d9_device_caps;
 extern bool *d3d9_device_supports_software_vertex_processing;
 extern uint16_t *d3d9_stencil_mode;
 extern uint32_t *d3d9_stencil_mode_unk1;
 extern uint32_t *d3d9_pixel_shader_version;
-
-RasterizerGlobals *rasterizer_dx9_get_globals(void) {
-    return rasterizer_globals;
-}
 
 IDirect3DDevice9 *rasterizer_dx9_device(void) {
     return *d3d9_device;
@@ -145,4 +140,24 @@ void rasterizer_dx9_set_stencil_mode(uint16_t stencil_mode) {
 bool rasterizer_dx9_draw_primitive_up(D3DPRIMITIVETYPE primitive_type, UINT primitive_count, const void *vertex_data, UINT vertex_stride) {
     ASSERT(*d3d9_device != NULL);
     return IDirect3DDevice9_DrawPrimitiveUP(*d3d9_device, primitive_type, primitive_count, vertex_data, vertex_stride) == D3D_OK;
+}
+
+void rasterizer_dx9_set_render_target(DWORD render_target_index, IDirect3DSurface9 *render_target) {
+    ASSERT(*d3d9_device != NULL);
+    IDirect3DDevice9_SetRenderTarget(*d3d9_device, render_target_index, render_target);
+}
+
+void rasterizer_dx9_set_viewport(const D3DVIEWPORT9 *viewport) {
+    ASSERT(*d3d9_device != NULL);
+    IDirect3DDevice9_SetViewport(*d3d9_device, viewport);
+}
+
+void rasterizer_dx9_clear(uint32_t count, const D3DRECT *rects, DWORD flags, D3DCOLOR color, float z, DWORD stencil) {
+    ASSERT(*d3d9_device != NULL);
+    IDirect3DDevice9_Clear(*d3d9_device, count, rects, flags, color, z, stencil);
+}
+
+void rasterizer_dx9_set_software_vertex_processing(bool software_vertex_processing) {
+    ASSERT(*d3d9_device != NULL);
+    IDirect3DDevice9_SetSoftwareVertexProcessing(*d3d9_device, software_vertex_processing);
 }

@@ -9,13 +9,14 @@
 #include "../math/wave_functions.h"
 #include "../exception/exception.h"
 #include "../crypto/md5.h"
+#include "../render/render.h"
+#include "rasterizer.h"
 #include "rasterizer_dx9.h"
 #include "rasterizer_dx9_shader_effect.h"
 #include "rasterizer_dx9_vertex_shader.h"
 #include "rasterizer_dx9_vertex.h"
 #include "rasterizer_dx9_texture.h"
 #include "rasterizer_dx9_shader_compiler.h"
-#include "../render/render.h"
 #include "rasterizer_geometry_group.h"
 #include "rasterizer_shader_transparent_generic.h"
 
@@ -440,7 +441,7 @@ IDirect3DPixelShader9 *rasterizer_shader_transparent_generic_get_pixel_shader(Sh
 }
 
 void rasterizer_shader_transparent_generic_draw(TransparentGeometryGroup *group, uint32_t *param_2) {
-    RenderGlobals *render_globals = render_get_globals();
+    RasterizerWindowRenderParameters *window_parameters = rasterizer_get_window_parameters();
     ShaderTransparentGeneric *shader_data = shader_type_assert(group->shader, SHADER_TYPE_SHADER_TRANSPARENT_GENERIC);
 
     uint16_t vertex_permutation = shader_get_vertex_shader_permutation(group->shader);
@@ -553,13 +554,13 @@ void rasterizer_shader_transparent_generic_draw(TransparentGeometryGroup *group,
                         animation_vsh_constants[map_index * 8 + 7] = 0.0;
                     } 
                     else {
-                        animation_vsh_constants[map_index * 8 + 0] = render_globals->frustum.world_to_view.forward.i;
-                        animation_vsh_constants[map_index * 8 + 1] = render_globals->frustum.world_to_view.forward.j;
-                        animation_vsh_constants[map_index * 8 + 2] = render_globals->frustum.world_to_view.forward.k;
+                        animation_vsh_constants[map_index * 8 + 0] = window_parameters->frustum.view_to_world.forward.i;
+                        animation_vsh_constants[map_index * 8 + 1] = window_parameters->frustum.view_to_world.forward.j;
+                        animation_vsh_constants[map_index * 8 + 2] = window_parameters->frustum.view_to_world.forward.k;
                         animation_vsh_constants[map_index * 8 + 3] = 0.0;
-                        animation_vsh_constants[map_index * 8 + 4] = render_globals->frustum.world_to_view.left.i;
-                        animation_vsh_constants[map_index * 8 + 5] = render_globals->frustum.world_to_view.left.j;
-                        animation_vsh_constants[map_index * 8 + 6] = render_globals->frustum.world_to_view.left.k;
+                        animation_vsh_constants[map_index * 8 + 4] = window_parameters->frustum.view_to_world.left.i;
+                        animation_vsh_constants[map_index * 8 + 5] = window_parameters->frustum.view_to_world.left.j;
+                        animation_vsh_constants[map_index * 8 + 6] = window_parameters->frustum.view_to_world.left.k;
                         animation_vsh_constants[map_index * 8 + 7] = 0.0;
                     }
                 }
@@ -583,7 +584,7 @@ void rasterizer_shader_transparent_generic_draw(TransparentGeometryGroup *group,
                     float map_rotation = map->map_rotation;
                     FrameParameters *frame_parameters = render_get_frame_parameters();
                     shader_texture_animation_evaluate(map_u_scale, map_v_scale, map_u_offset, map_v_offset, map_rotation,
-                                                        frame_parameters->elapsed_time, texture_animation, group->animation, 
+                                                        frame_parameters->elapsed_time_sec, texture_animation, group->animation, 
                                                         &animation_vsh_constants[map_index * 8 + 0],
                                                         &animation_vsh_constants[map_index * 8 + 4]);
                 }
@@ -675,15 +676,15 @@ void rasterizer_dx9_transparent_generic_preprocess(TransparentGeometryGroup *gro
             rasterizer_dx9_set_vertex_shader_constant_f(10, vertex_constants, 3);
         }
         else {
-            RenderGlobals *render_globals = render_get_globals();
-            Plane3D *plane = &render_globals->fog.plane;
-            VectorXYZ *camera = &render_globals->camera.position;
+            RasterizerWindowRenderParameters *window_parameters = rasterizer_get_window_parameters();
+            Plane3D *plane = &window_parameters->fog.plane;
+            VectorXYZ *camera = &window_parameters->camera.position;
             float product = plane->i * camera->x + plane->j * camera->y + plane->k * camera->z - plane->w;
-            float res = clamp_f32((product * -1.0f) / render_globals->fog.planar_maximum_depth, 0.0f, 1.0f);
-            stage_color0[fog_stage * 4 + 0] = render_globals->fog.planar_color.r;
-            stage_color0[fog_stage * 4 + 1] = render_globals->fog.planar_color.g;
-            stage_color0[fog_stage * 4 + 2] = render_globals->fog.planar_color.b;
-            stage_color0[fog_stage * 4 + 3] = render_globals->fog.planar_maximum_density * res;
+            float res = clamp_f32((product * -1.0f) / window_parameters->fog.planar_maximum_depth, 0.0f, 1.0f);
+            stage_color0[fog_stage * 4 + 0] = window_parameters->fog.planar_color.r;
+            stage_color0[fog_stage * 4 + 1] = window_parameters->fog.planar_color.g;
+            stage_color0[fog_stage * 4 + 2] = window_parameters->fog.planar_color.b;
+            stage_color0[fog_stage * 4 + 3] = window_parameters->fog.planar_maximum_density * res;
 
             fog_config[1] = 1.0f;
         }
@@ -699,7 +700,7 @@ void rasterizer_dx9_transparent_generic_preprocess(TransparentGeometryGroup *gro
             }
             else {
                 FrameParameters *frame_parameters = render_get_frame_parameters();
-                progress = wave_function_calculate_value_og(frame_parameters->elapsed_time / stage->color0_animation_period, stage->color0_animation_function);
+                progress = wave_function_calculate_value_og(frame_parameters->elapsed_time_sec / stage->color0_animation_period, stage->color0_animation_function);
             } 
             ASSERT(!nan_f32(progress));
 

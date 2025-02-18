@@ -5,6 +5,7 @@
 #include "../math/math.h"
 #include "../render/render.h"
 #include "../text/text.h"
+#include "rasterizer.h"
 #include "rasterizer_dx9_texture.h"
 #include "rasterizer_dx9_vertex_shader.h"
 #include "rasterizer_screen.h"
@@ -25,10 +26,10 @@ BitmapData *rasterizer_text_get_font_cache_bitmap(void) {
 }
 
 void rasterizer_text_set_up_vertex_shader_constants(void) {
-    RenderGlobals *render_globals = render_get_globals();
-    Rectangle2D *viewport_bounds = &render_globals->camera.viewport_bounds;
-    float viewport_width = viewport_bounds->right - viewport_bounds->left;
-    float viewport_height = viewport_bounds->top - viewport_bounds->bottom;
+    RasterizerWindowRenderParameters *window_parameters = rasterizer_get_window_parameters();
+    Rectangle2D *window_bounds = &window_parameters->camera.window_bounds;
+    float window_width = window_bounds->right - window_bounds->left;
+    float window_height = window_bounds->top - window_bounds->bottom;
     float inv_screen_width = 2.0f / rasterizer_screen_get_width();
     float inv_screen_height = -2.0f / rasterizer_screen_get_height();
 
@@ -36,11 +37,11 @@ void rasterizer_text_set_up_vertex_shader_constants(void) {
     screenproj->projection.x[0] = inv_screen_width;
     screenproj->projection.x[1] = 0.0f;
     screenproj->projection.x[2] = 0.0f;
-    screenproj->projection.x[3] = -1.0f - 1.0f / viewport_width;
+    screenproj->projection.x[3] = -1.0f - 1.0f / window_width;
     screenproj->projection.y[0] = 0.0f;
     screenproj->projection.y[1] = inv_screen_height;
     screenproj->projection.y[2] = 0.0f;
-    screenproj->projection.y[3] = 1.0f + 1.0f / viewport_height;
+    screenproj->projection.y[3] = 1.0f + 1.0f / window_height;
     screenproj->projection.z[0] = 0.0f;
     screenproj->projection.z[1] = 0.0f;
     screenproj->projection.z[2] = 0.0f;
@@ -75,13 +76,14 @@ bool rasterizer_text_cache_initialize(void) {
  */
 void rasterizer_draw_unicode_string(Rectangle2D *position, Rectangle2D *dest_rect, ColorARGBInt color, uint32_t flags, wchar_t *string) {
     RenderGlobals *render_globals = render_get_globals();
+    RasterizerWindowRenderParameters *window_parameters = rasterizer_get_window_parameters();
     BitmapData *bitmap = rasterizer_text_get_font_cache_bitmap();
 
     ASSERT(render_globals != NULL);
     ASSERT(string != NULL);
     ASSERT(bitmap != NULL);
 
-    if(rasterizer_screen_user_interface_render_enabled() == false || render_globals->time_delta_since_tick < 1) {
+    if(rasterizer_screen_user_interface_render_enabled() == false || window_parameters->render_target != 1) {
         return;
     }
 
@@ -122,8 +124,6 @@ void rasterizer_draw_unicode_string(Rectangle2D *position, Rectangle2D *dest_rec
     screen_geometry_parameters.map[0] = bitmap;
     screen_geometry_parameters.meter_parameters = NULL;
 
-    printf("rasterizer_draw_unicode_stringss\n");
-    
     rasterizer_text_begin(&screen_geometry_parameters);
     text_draw_unicode_string(rasterizer_text_draw_character_with_shadow, &final_position, color, &final_rect, flags, string);
     rasterizer_text_end();

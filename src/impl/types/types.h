@@ -106,10 +106,10 @@ typedef struct VectorPY {
 _Static_assert(sizeof(VectorPY) == 0x8);
 
 typedef struct Rectangle2D {
-    uint16_t top;
-    uint16_t left;
-    uint16_t bottom;
-    uint16_t right;
+    int16_t top;
+    int16_t left;
+    int16_t bottom;
+    int16_t right;
 } Rectangle2D;
 _Static_assert(sizeof(Rectangle2D) == 0x8);
 

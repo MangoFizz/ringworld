@@ -19,7 +19,8 @@ extern int32_t *mouse_y_delta;
 extern uint8_t *cursor_should_activate_widgets;
 
 TagHandle cursor_bitmap_tag_handle = NULL_HANDLE;
-float menu_mouse_sensitivity_value = 0.6;
+float ui_cursor_sensitivity_value = 0.6;
+float ui_cursor_size = 28;
 
 void ui_cursor_displace(int32_t dx, int32_t dy) {
     if(dx == 0 && dy == 0) {
@@ -40,8 +41,8 @@ void ui_cursor_displace(int32_t dx, int32_t dy) {
 }
 
 void ui_cursor_update(void) {
-    double x_delta = (double)(*mouse_x_delta) * menu_mouse_sensitivity_value;
-    double y_delta = (double)(*mouse_y_delta) * menu_mouse_sensitivity_value;
+    double x_delta = (double)(*mouse_x_delta) * ui_cursor_sensitivity_value;
+    double y_delta = (double)(*mouse_y_delta) * ui_cursor_sensitivity_value;
 
     x_delta *= (1.0 + fabs(x_delta) * UI_CURSOR_ACCELERATION);
     y_delta *= (1.0 + fabs(y_delta) * UI_CURSOR_ACCELERATION);
@@ -67,8 +68,8 @@ void ui_cursor_render(void) {
     if(!HANDLE_IS_NULL(cursor_bitmap_tag_handle)) {
         BitmapData *cursor_bitmap = bitmap_group_sequence_get_bitmap_for_frame(cursor_bitmap_tag_handle, 0, 0);
         if(cursor_bitmap != NULL) {
-            bounds.right = cursor_position.x + UI_CURSOR_SIZE_IN_PIXELS;
-            bounds.bottom = cursor_position.y + UI_CURSOR_SIZE_IN_PIXELS;
+            bounds.right = cursor_position.x + ui_cursor_size;
+            bounds.bottom = cursor_position.y + ui_cursor_size;
             bitmap_draw_in_rect(cursor_bitmap, NULL, 0xFFFFFFFF, &bounds, NULL);
             return;
         }

@@ -1,4 +1,3 @@
-#include <stdio.h>
 #include <string.h>
 #include "../exception/exception.h"
 #include "../bitmap/bitmap.h"
@@ -71,9 +70,6 @@ bool rasterizer_text_cache_initialize(void) {
     return font_cache->initialized;
 }
 
-/**
- * @todo FIXME: The functions is apparently completed, but it does not draw the text.
- */
 void rasterizer_draw_unicode_string(Rectangle2D *position, Rectangle2D *dest_rect, ColorARGBInt color, uint32_t flags, wchar_t *string) {
     RenderGlobals *render_globals = render_get_globals();
     RasterizerWindowRenderParameters *window_parameters = rasterizer_get_window_parameters();
@@ -101,10 +97,10 @@ void rasterizer_draw_unicode_string(Rectangle2D *position, Rectangle2D *dest_rec
     uint16_t screen_width = rasterizer_screen_get_width();
     uint16_t screen_height = rasterizer_screen_get_height();
     if(dest_rect != NULL) {
-        final_rect.bottom = min_i32(dest_rect->bottom, screen_height);
-        final_rect.right = min_i32(dest_rect->right, screen_width);
-        final_rect.top = max_i32(dest_rect->top, 0);
-        final_rect.left = max_i32(dest_rect->left, 0);
+        final_rect.bottom = clamp_i32(dest_rect->bottom, 0, screen_height);
+        final_rect.right = clamp_i32(dest_rect->right, 0, screen_width);
+        final_rect.top = clamp_i32(dest_rect->top, 0, screen_height);
+        final_rect.left = clamp_i32(dest_rect->left, 0, screen_width);
     }
     else {
         final_rect.bottom = render_globals->camera.viewport_bounds.right - render_globals->camera.viewport_bounds.left;

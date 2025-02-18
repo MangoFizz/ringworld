@@ -68,7 +68,7 @@
     "rasterizer_text_begin": {"address": "0x534ae0", "replace": false, "arguments": ["edi"]},
     "rasterizer_text_end": {"address": "0x534df0", "replace": false},
     "rasterizer_text_draw_character_with_shadow": {"address": "0x518580", "replace": false, "arguments": ["0", "4", "8", "12", "16", "20", "24", "28", "32", "36"]},
-    "rasterizer_draw_unicode_string": {"address": "0x518580", "replace": true, "disabled": true, "arguments": ["ecx", "eax", "0", "4", "8"], "comment": "for some reason it does not draws the text"},
+    "rasterizer_draw_unicode_string": {"address": "0x518350", "replace": true, "arguments": ["ecx", "eax", "0", "4", "8"], "comment": "for some reason it does not draws the text"},
     "rasterizer_text_set_up_vertex_shader_constants": {"address": "0x534a10", "replace": true},
     
     "text_draw_unicode_string": {"address": "0x559bf0", "replace": false, "use_return_value": true, "arguments": ["0", "4", "8", "12", "16", "20"]},

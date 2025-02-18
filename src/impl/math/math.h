@@ -134,6 +134,15 @@ void math_vector_2d_scale(void *v, float scale, void *result);
  */
 Rectangle2D *math_rectangle_2d_translate(Rectangle2D *rect, int16_t offset_x, int16_t offset_y);
 
+/**
+ * Check if a 2D rectangle contains a point.
+ * @param rect Pointer to the rectangle to check.
+ * @param x The x-coordinate of the point.
+ * @param y The y-coordinate of the point.
+ * @return true if the point is inside the rectangle, or false otherwise.
+ */
+bool math_rectangle_2d_contains_point(Rectangle2D *rect, int16_t x, int16_t y);
+
 #ifdef __cplusplus
 }
 #endif

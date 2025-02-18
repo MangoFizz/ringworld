@@ -12,13 +12,11 @@
 #include "../exception/exception.h"
 #include "../rasterizer/rasterizer_screen.h"
 #include "../rasterizer/rasterizer_screen_geometry.h"
-#include "../mouse/mouse.h"
+#include "ui_cursor.h"
 #include "ui_widget.h"
 
 #define UI_WIDGET_MEMORY_POOL_SIZE 0x20000
 #define UI_WIDGET_MEMORY_POOL_BLOCKS_NUMBER 0x1000
-
-#define CURSOR_SIZE_IN_PIXELS 32
 
 extern MemoryPool **ui_widget_memory_pool;
 extern WidgetGlobals *widget_globals;
@@ -26,8 +24,6 @@ extern bool *ui_widgets_unknown_1;
 extern bool *is_main_menu;
 extern bool *local_player_index_for_draw_string_and_hack_in_icons;
 extern bool *ui_widget_virtual_keyboard_opened;
-
-TagHandle cursor_bitmap_tag_handle = NULL_HANDLE;
 
 WidgetGlobals *get_ui_widget_globals(void) {
     return widget_globals;
@@ -62,7 +58,8 @@ void ui_widgets_initialize(void) {
 Widget *ui_widget_load_by_name_or_tag(const char *definition_tag_path, TagHandle definition_tag, Widget *parent, int16_t controller_index, 
                         TagHandle topmost_widget_definition_handle, TagHandle parent_widget_definition_handle, uint16_t child_index_from_parent) {
     
-    cursor_bitmap_tag_handle = lookup_tag("ui\\shell\\bitmaps\\cursor", TAG_GROUP_BITMAP);
+    TagHandle cursor_tag = lookup_tag("ui\\shell\\bitmaps\\cursor", TAG_GROUP_BITMAP);
+    ui_cursor_set_bitmap_tag_handle(cursor_tag);
     *ui_widgets_unknown_1 = true;
 
     int16_t player_controller_index = controller_index == -1 ? 0 : controller_index;
@@ -393,25 +390,6 @@ void ui_widget_new_history_node(WidgetHistoryNode *history_node_data, WidgetHist
     *history_top_node = new_node;
 }
 
-void ui_widget_render_cursor(void) {
-    VectorXYInt cursor_position = mouse_get_cursor_position();
-    Rectangle2D bounds;
-    bounds.left = cursor_position.x;
-    bounds.top = cursor_position.y;
-    if(!HANDLE_IS_NULL(cursor_bitmap_tag_handle)) {
-        BitmapData *cursor_bitmap = bitmap_group_sequence_get_bitmap_for_frame(cursor_bitmap_tag_handle, 0, 0);
-        if(cursor_bitmap != NULL) {
-            bounds.right = cursor_position.x + CURSOR_SIZE_IN_PIXELS;
-            bounds.bottom = cursor_position.y + CURSOR_SIZE_IN_PIXELS;
-            bitmap_draw_in_rect(cursor_bitmap, NULL, 0xFFFFFFFF, &bounds, NULL);
-            return;
-        }
-    }
-    bounds.right = cursor_position.x + 16;
-    bounds.bottom = cursor_position.y + 16;
-    rasterizer_screen_geometry_draw_quad(&bounds, 0x80FF0000);
-}
-
 void ui_widget_render_root_widget(Widget *widget) {
     if(widget != NULL) {
         uint16_t screen_width = rasterizer_screen_get_width();
@@ -421,7 +399,7 @@ void ui_widget_render_root_widget(Widget *widget) {
         bounds.top = 0;
         bounds.right = screen_width;
         bounds.bottom = screen_height;
-        VectorXYInt offset = { 0, 0 };
+        VectorXYInt offset = { (screen_width - 640) / 2, 0 };
         ui_widget_instance_render_recursive(widget, &bounds, offset, true, false);
     }
 }
@@ -461,7 +439,7 @@ void ui_widget_render(int16_t local_player_index) {
         }
 
         if(widget_rendered) {
-            ui_widget_render_cursor();
+            ui_cursor_render();
         }
 
         if(widget_globals->fade_to_black >= 0.0f && widget_globals->fade_to_black <= 1.0f) {
@@ -479,6 +457,55 @@ void ui_widget_render(int16_t local_player_index) {
     }
     else {
         ui_widget_render_virtual_keyboard();
-        ui_widget_render_cursor();
+        ui_cursor_render();
     }
+}
+
+void ui_widget_adjust_spinner_list_bounds(Widget *widget, Rectangle2D *bounds) {
+    UIWidgetDefinition *definition = tag_get_data(TAG_GROUP_UI_WIDGET_DEFINITION, widget->definition_tag_handle);
+    bool is_spinner_list = widget->type == UI_WIDGET_TYPE_SPINNER_LIST;
+    TagHandle list_header_bitmap = definition->list_header_bitmap.tag_handle;
+    TagHandle list_footer_bitmap = definition->list_footer_bitmap.tag_handle;
+    if(is_spinner_list && definition->child_widgets.count < 2 && !HANDLE_IS_NULL(list_footer_bitmap) && !HANDLE_IS_NULL(list_header_bitmap)) {
+        bounds->left = bounds->left + definition->header_bounds.left - 10;
+        uint16_t right = definition->footer_bounds.right;
+        if(bounds->right <= right) {
+            bounds->right = right + 2;
+        }
+    }
+}
+
+Widget *ui_widget_find_cursor_focused_widget(Widget *widget, int cursor_x, int cursor_y, VectorXYInt offset) {
+    ASSERT(widget != NULL);
+    UIWidgetDefinition *definition = tag_get_data(TAG_GROUP_UI_WIDGET_DEFINITION, widget->definition_tag_handle);
+    Rectangle2D bounds = definition->bounds;
+    if(!widget->never_receive_events) {
+        bool has_event_handlers = definition->event_handlers.count > 0;
+        bool is_list = ui_widget_is_list(widget);
+        bool parent_is_null_or_list = widget->parent == NULL || ui_widget_is_list(widget->parent);
+        bool force_handle_mouse = definition->flags.force_handle_mouse;
+        if(has_event_handlers || is_list || parent_is_null_or_list || force_handle_mouse) {
+            offset.y = offset.y + (widget->position).y;
+            offset.x = offset.x + (widget->position).x;
+            ui_widget_adjust_spinner_list_bounds(widget, &bounds);
+            math_rectangle_2d_translate(&bounds, offset.x, offset.y);
+            if(math_rectangle_2d_contains_point(&bounds, cursor_x, cursor_y)) {
+                Widget *current_child = widget->child;
+                Widget *found_widget = NULL;
+                while(current_child != NULL && found_widget == NULL) {
+                    found_widget = ui_widget_find_cursor_focused_widget(current_child, cursor_x, cursor_y, offset);
+                    current_child = current_child->next;
+                }
+                if(found_widget == NULL && !ui_widget_is_list(widget)) {
+                    found_widget = widget;
+                }
+                return found_widget;
+            }
+        }
+    }
+    return NULL;
+}
+
+Widget *ui_widget_get_cursor_focused_widget(Widget *widget, int cursor_x, int cursor_y, VectorXYInt offset) {
+    return ui_widget_find_cursor_focused_widget(widget, cursor_x, cursor_y, offset);
 }

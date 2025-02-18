@@ -15,7 +15,8 @@
 
     "pow_float": {"address": "0x5ccf80", "replace": true, "arguments": ["st1", "st0"]},
 
-    "update_menu_cursor_coords": {"address": "0x49a220", "replace": true},
+    "ui_cursor_update": {"address": "0x49a220", "replace": true},
+    "ui_cursor_displace": {"address": "0x49a1b0", "replace": true, "arguments": ["eax", "ecx"]},
     "ui_widgets_initialize": {"address": "0x49a940", "replace": true},
     "ui_widget_delete_recursive": {"address": "0x49ab90", "replace": false, "arguments": ["0"]},
     "ui_widget_new_history_node": {"address": "0x49c3c0", "replace": true, "arguments": ["esi", "edi"]},
@@ -25,9 +26,11 @@
     "ui_widget_event_handler_dispatch": {"address": "0x49d3c0", "replace": false, "arguments": ["0", "4", "8", "12", "16"]},
     "ui_widget_instance_give_focus_directly": {"address": "0x49eb30", "replace": true, "arguments": ["eax", "ecx"]},
     "ui_widget_instance_render_recursive": {"address": "0x49d850", "replace": false, "arguments": ["0", "4", "8", "12", "16"]},
-    "ui_widget_render_cursor": {"address": "0x49a2e0", "replace": true},
+    "ui_cursor_render": {"address": "0x49a2e0", "replace": true},
     "ui_widget_render_virtual_keyboard": {"address": "0x4ac520", "replace": false},
     "ui_widget_render": {"address": "0x49b450", "replace": true, "arguments": ["eax"]},
+    "ui_widget_adjust_spinner_list_bounds": {"address": "0x49c920", "replace": true, "arguments": ["eax", "ecx"]},
+    "ui_widget_get_cursor_focused_widget": {"address": "0x49ca60", "replace": true, "use_return_value": true, "arguments": ["0", "4", "8", "12"]},
     "memory_pool_new_block": {"address": "0x4d5310", "replace": false, "use_return_value": true, "arguments": ["ecx", "eax"]},
 
     "player_ui_set_active_player_profile": {"address": "0x4988d0", "replace": false, "arguments": ["0", "eax", "edx"]},

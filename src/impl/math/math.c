@@ -32,3 +32,7 @@ Rectangle2D *math_rectangle_2d_translate(Rectangle2D *rect, int16_t offset_x, in
     rect->bottom += offset_y;
     return rect;
 }
+
+bool math_rectangle_2d_contains_point(Rectangle2D *rect, int16_t x, int16_t y) {
+    return x >= rect->left && x <= rect->right && y >= rect->top && y <= rect->bottom;
+}

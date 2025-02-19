@@ -19,7 +19,7 @@ extern int32_t *mouse_y_delta;
 extern uint8_t *cursor_should_activate_widgets;
 
 TagHandle cursor_bitmap_tag_handle = NULL_HANDLE;
-float ui_cursor_sensitivity_value = 0.6;
+float ui_cursor_sensitivity_value = 0.75;
 float ui_cursor_size = 28;
 
 void ui_cursor_displace(int32_t dx, int32_t dy) {

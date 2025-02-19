@@ -53,6 +53,26 @@ void rasterizer_text_end(void);
  */
 void rasterizer_text_draw_character_with_shadow();
 
+/**
+ * Draw a unicode string with the given parameters.
+ * @param position The position to draw the string.
+ * @param dest_rect The destination rectangle.
+ * @param color The color of the text.
+ * @param flags Additional flags for drawing.
+ * @param string The Unicode string to draw.
+ */
+void rasterizer_draw_unicode_string(Rectangle2D *position, Rectangle2D *dest_rect, ColorARGBInt *color, uint32_t flags, wchar_t *string);
+
+/**
+ * Draw a string with the given parameters.
+ * @param position The position to draw the string.
+ * @param dest_rect The destination rectangle.
+ * @param color The color of the text.
+ * @param flags Additional flags for drawing.
+ * @param string The string to draw.
+ */
+void rasterizer_draw_string(Rectangle2D *position, Rectangle2D *dest_rect, ColorARGBInt *color, uint32_t flags, char *string);
+
 #ifdef __cplusplus
 }
 #endif

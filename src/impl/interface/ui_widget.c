@@ -9,9 +9,11 @@
 #include "../tag/definitions/unicode_string_list.h"
 #include "../multiplayer/mode.h"
 #include "../game/game_time.h"
+#include "../text/text.h"
 #include "../exception/exception.h"
 #include "../rasterizer/rasterizer_screen.h"
 #include "../rasterizer/rasterizer_screen_geometry.h"
+#include "../rasterizer/rasterizer_text.h"
 #include "ui_cursor.h"
 #include "ui_widget.h"
 
@@ -409,18 +411,26 @@ VectorXYInt ui_widget_get_relative_cursor_position(void) {
     return relative_cursor_position;
 }
 
+#include <stdio.h>
+
 void ui_widget_render_root_widget(Widget *widget) {
-    if(widget != NULL) {
-        uint16_t screen_width = rasterizer_screen_get_width();
-        uint16_t screen_height = rasterizer_screen_get_height();
-        Rectangle2D bounds;
-        bounds.left = 0;
-        bounds.top = 0;
-        bounds.right = screen_width;
-        bounds.bottom = screen_height;
-        float widescreen_margin = ui_widget_get_widescreen_margin();
-        VectorXYInt offset = { widescreen_margin, 0 };
-        ui_widget_instance_render_recursive(widget, &bounds, offset, true, false);
+    ASSERT(widget != NULL);
+    uint16_t screen_width = rasterizer_screen_get_width();
+    uint16_t screen_height = rasterizer_screen_get_height();
+    Rectangle2D bounds;
+    bounds.left = 0;
+    bounds.top = 0;
+    bounds.right = screen_width;
+    bounds.bottom = screen_height;
+    float widescreen_margin = ui_widget_get_widescreen_margin();
+    VectorXYInt offset = { widescreen_margin, 0 };
+    ui_widget_instance_render_recursive(widget, &bounds, offset, true, false);
+    
+    if(widget_globals->debug_show_path) {
+        char *path = tag_get_path(widget->definition_tag_handle);
+        ColorARGBInt color = 0xFFFFFFFF;
+        bounds.top += 32;
+        rasterizer_draw_string(&bounds, &bounds, &color, 0, path);
     }
 }
 
@@ -557,6 +567,11 @@ void ui_widget_instance_render_recursive(Widget *widget, Rectangle2D *bounds, Ve
                 float widescreen_margin = ui_widget_get_widescreen_margin();
                 uint16_t widgets_bounds_width = screen_width - widescreen_margin * 2;
                 uint16_t widget_width = min_i32(definition->bounds.right, widgets_bounds_width) - max_i32(definition->bounds.left, 0);
+
+                if(abs(definition->bounds.left) == definition->bounds.right) {
+                    widget_width = definition->bounds.right;
+                }
+
                 if(screen_width > widgets_bounds_width && widgets_bounds_width == widget_width) {
                     if(bounds_pointer) {
                         bounds_pointer->left = 0;

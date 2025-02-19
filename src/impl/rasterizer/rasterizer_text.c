@@ -70,7 +70,7 @@ bool rasterizer_text_cache_initialize(void) {
     return font_cache->initialized;
 }
 
-void rasterizer_draw_unicode_string(Rectangle2D *position, Rectangle2D *dest_rect, ColorARGBInt color, uint32_t flags, wchar_t *string) {
+void rasterizer_draw_unicode_string(Rectangle2D *position, Rectangle2D *dest_rect, ColorARGBInt *color, uint32_t flags, wchar_t *string) {
     RenderGlobals *render_globals = render_get_globals();
     RasterizerWindowRenderParameters *window_parameters = rasterizer_get_window_parameters();
     BitmapData *bitmap = rasterizer_text_get_font_cache_bitmap();
@@ -122,5 +122,60 @@ void rasterizer_draw_unicode_string(Rectangle2D *position, Rectangle2D *dest_rec
 
     rasterizer_text_begin(&screen_geometry_parameters);
     text_draw_unicode_string(rasterizer_text_draw_character_with_shadow, &final_position, color, &final_rect, flags, string);
+    rasterizer_text_end();
+}
+
+void rasterizer_draw_string(Rectangle2D *position, Rectangle2D *dest_rect, ColorARGBInt *color, uint32_t flags, char *string) {
+    RenderGlobals *render_globals = render_get_globals();
+    RasterizerWindowRenderParameters *window_parameters = rasterizer_get_window_parameters();
+    BitmapData *bitmap = rasterizer_text_get_font_cache_bitmap();
+
+    ASSERT(render_globals != NULL);
+    ASSERT(string != NULL);
+    ASSERT(bitmap != NULL);
+
+    if(rasterizer_screen_user_interface_render_enabled() == false || window_parameters->render_target != 1) {
+        return;
+    }
+
+    size_t string_length = strlen(string);
+    Rectangle2D final_position;
+    if(position != NULL) {
+        final_position = *position;
+    }
+    else {
+        final_position = render_globals->camera.window_bounds;
+        math_rectangle_2d_translate(&final_position, render_globals->camera.viewport_bounds.left * -1, render_globals->camera.viewport_bounds.top * -1);
+    }
+
+    Rectangle2D final_rect;
+    uint16_t screen_width = rasterizer_screen_get_width();
+    uint16_t screen_height = rasterizer_screen_get_height();
+    if(dest_rect != NULL) {
+        final_rect.bottom = clamp_i32(dest_rect->bottom, 0, screen_height);
+        final_rect.right = clamp_i32(dest_rect->right, 0, screen_width);
+        final_rect.top = clamp_i32(dest_rect->top, 0, screen_height);
+        final_rect.left = clamp_i32(dest_rect->left, 0, screen_width);
+    }
+    else {
+        final_rect.bottom = render_globals->camera.viewport_bounds.right - render_globals->camera.viewport_bounds.left;
+        final_rect.right = render_globals->camera.viewport_bounds.bottom - render_globals->camera.viewport_bounds.top;
+        final_rect.top = 0;
+        final_rect.left = 0;
+    }
+
+    RasterizerDynamicScreenGeometryParams screen_geometry_parameters;
+    memset(&screen_geometry_parameters, 0, sizeof(screen_geometry_parameters));
+    screen_geometry_parameters.map_texture_scale[0].x = 1.0f / bitmap->width;
+    screen_geometry_parameters.map_texture_scale[0].y = 1.0f / bitmap->height;
+    screen_geometry_parameters.map_scale[0].x = 1.0f;
+    screen_geometry_parameters.map_scale[0].y = 1.0f;
+    screen_geometry_parameters.point_sampled = false;
+    screen_geometry_parameters.framebuffer_blend_function = FRAMEBUFFER_BLEND_FUNCTION_ALPHA_BLEND;
+    screen_geometry_parameters.map[0] = bitmap;
+    screen_geometry_parameters.meter_parameters = NULL;
+
+    rasterizer_text_begin(&screen_geometry_parameters);
+    text_draw_string(rasterizer_text_draw_character_with_shadow, &final_position, color, &final_rect, flags, string);
     rasterizer_text_end();
 }

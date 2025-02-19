@@ -5,6 +5,7 @@
 #include "../console/console.h"
 #include "../memory/pool.h"
 #include "../math/math.h"
+#include "../math/color.h"
 #include "../tag/definitions/bitmap.h"
 #include "../tag/definitions/unicode_string_list.h"
 #include "../multiplayer/mode.h"
@@ -427,10 +428,13 @@ void ui_widget_render_root_widget(Widget *widget) {
     ui_widget_instance_render_recursive(widget, &bounds, offset, true, false);
     
     if(widget_globals->debug_show_path) {
+        math_rectangle_2d_translate(&bounds, 32, 32);
         char *path = tag_get_path(widget->definition_tag_handle);
-        ColorARGBInt color = 0xFFFFFFFF;
-        bounds.top += 32;
-        rasterizer_draw_string(&bounds, &bounds, &color, 0, path);
+        ColorARGB color = { 1.0f, 1.0f, 1.0f, 1.0f };
+        ColorARGBInt color_mask = color_encode_a8r8g8b8(&color);
+        TagHandle font_tag = lookup_tag("ui\\small_ui", TAG_GROUP_FONT);
+        text_set_drawing_parameters(-1, 0, 0, font_tag, &color);
+        rasterizer_draw_string(&bounds, &bounds, &color_mask, 0, path);
     }
 }
 
@@ -509,6 +513,17 @@ static bool ui_widget_background_is_excluded_from_widescreen(TagHandle tag) {
     return false;
 }
 
+float ui_widget_get_cumulative_alpha_modifier(Widget *widget) {
+    ASSERT(widget != NULL);
+    float alpha_modifier = widget->alpha_modifier;
+    Widget *current_widget = widget->parent;
+    while(current_widget != NULL) {
+        alpha_modifier *= current_widget->alpha_modifier;
+        current_widget = current_widget->parent;
+    }
+    return alpha_modifier;
+}
+
 void ui_widget_instance_render_recursive(Widget *widget, Rectangle2D *bounds, VectorXYInt offset, bool is_focused, bool use_nifty_render_fx) {
     ASSERT(widget != NULL);    
 
@@ -527,12 +542,7 @@ void ui_widget_instance_render_recursive(Widget *widget, Rectangle2D *bounds, Ve
         return;
     }
 
-    float alpha_modifier = widget->alpha_modifier;
-    Widget *current_widget = widget->parent;
-    while(current_widget != NULL) {
-        alpha_modifier *= current_widget->alpha_modifier;
-        current_widget = current_widget->parent;
-    }
+    float alpha_modifier = ui_widget_get_cumulative_alpha_modifier(widget);
 
     // The plasma effect that was used on menus in the original Xbox release
     bool should_use_nifty_render_fx = use_nifty_render_fx || definition->flags.always_use_nifty_render_fx;

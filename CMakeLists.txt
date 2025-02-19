@@ -127,6 +127,7 @@ add_library(ringworld STATIC
     src/impl/script/hsc.c
     src/impl/shader/shader.c
     src/impl/tag/tag.c
+    src/impl/text/text.c
     ${CMAKE_CURRENT_SOURCE_DIR}/src/version.hpp
 
     ${CMAKE_CURRENT_BINARY_DIR}/game_function_hooks.cpp

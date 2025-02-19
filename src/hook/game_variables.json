@@ -62,5 +62,6 @@
     "game_globals": {"type": "Globals *", "address": "0x6e2260"},
     "motion_sensor_blip_render_enabled": {"type": "bool", "address": "0x6249e3"},
     "motion_sensor_blip_being_rendered": {"type": "bool", "address": "0x6b849d"},
-    "ui_widget_game_data_input_functions": {"type": "void (*)(Widget *)", "address": "0x62e108"}
+    "ui_widget_game_data_input_functions": {"type": "void (*)(Widget *)", "address": "0x62e108"},
+    "text_drawing_globals": {"type": "TextDrawGlobals", "address": "0x67f6ec"}
 }

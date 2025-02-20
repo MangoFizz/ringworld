@@ -16,6 +16,7 @@
 #include "../rasterizer/rasterizer_screen_geometry.h"
 #include "../rasterizer/rasterizer_text.h"
 #include "ui_cursor.h"
+#include "ui_virtual_keyboard.h"
 #include "ui_widget.h"
 
 #define UI_WIDGET_MEMORY_POOL_SIZE 0x20000
@@ -26,15 +27,10 @@ extern WidgetGlobals *widget_globals;
 extern bool *ui_widgets_unknown_1;
 extern bool *is_main_menu;
 extern bool *local_player_index_for_draw_string_and_hack_in_icons;
-extern bool *ui_widget_virtual_keyboard_opened;
 extern void (**ui_widget_game_data_input_functions)(Widget *);
 
 WidgetGlobals *get_ui_widget_globals(void) {
     return widget_globals;
-}
-
-bool ui_widget_virtual_keyboard_is_open(void) {
-    return *ui_widget_virtual_keyboard_opened;
 }
 
 void ui_widgets_initialize(void) {
@@ -394,7 +390,7 @@ void ui_widget_new_history_node(WidgetHistoryNode *history_node_data, WidgetHist
     *history_top_node = new_node;
 }
 
-float ui_widget_get_widescreen_margin() {
+float ui_widget_get_widescreen_margin(void) {
     if(rasterizer_screen_widescreen_support_enabled()) {
         Widget *active_widget = widget_globals->active_widget[0];
         UIWidgetDefinition *definition = tag_get_data(TAG_GROUP_UI_WIDGET_DEFINITION, active_widget->definition_tag_handle);
@@ -439,9 +435,11 @@ void ui_widget_render_root_widget(Widget *widget) {
 }
 
 void ui_widget_render(int16_t local_player_index) {    
+    VirtualKeyboardGlobals *virtual_keyboard_globals = ui_virtual_keyboard_get_globals();
+
     *local_player_index_for_draw_string_and_hack_in_icons = local_player_index == -1 ? 0 : local_player_index;
 
-    if(ui_widget_virtual_keyboard_is_open() == false) {
+    if(virtual_keyboard_globals->active == false) {
         // @todo rewrite this to support multiple local players
         int16_t player_index = 0;
         if(local_player_index == -1) {
@@ -490,7 +488,7 @@ void ui_widget_render(int16_t local_player_index) {
         }
     }
     else {
-        ui_widget_render_virtual_keyboard();
+        ui_virtual_keyboard_render();
         ui_cursor_render();
     }
 }

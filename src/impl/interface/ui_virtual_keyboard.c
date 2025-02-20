@@ -1,0 +1,100 @@
+#include "../math/color.h"
+#include "../bitmap/bitmap.h"
+#include "../rasterizer/rasterizer_screen.h"
+#include "../rasterizer/rasterizer_text.h"
+#include "../text/text.h"
+#include "../text/unicode_string_list.h"
+#include "ui_widget.h"
+#include "ui_virtual_keyboard.h"
+
+extern VirtualKeyboardGlobals *virtual_keyboard_globals;
+extern wchar_t **virtual_keyboard_labels;
+
+VirtualKeyboardGlobals *ui_virtual_keyboard_get_globals(void) {
+    return virtual_keyboard_globals;
+}
+
+bool ui_virtual_keyboard_initialize(void) {
+    virtual_keyboard_globals->active = false;
+    virtual_keyboard_globals->shift_active = false;
+    virtual_keyboard_globals->caps_active = false;
+    virtual_keyboard_globals->symbols_active = false;
+    TagHandle vk_tag_handle = lookup_tag("ui\\english", TAG_GROUP_VIRTUAL_KEYBOARD);
+    bool virtual_keyboard_found = false;
+    if(!HANDLE_IS_NULL(vk_tag_handle)) {
+        virtual_keyboard_globals->keyboard = tag_get_data(TAG_GROUP_VIRTUAL_KEYBOARD, vk_tag_handle);
+        virtual_keyboard_globals->row = 0;
+        virtual_keyboard_globals->column = 0;
+        virtual_keyboard_globals->buffer_size = 0;
+        virtual_keyboard_globals->last_event = -1;
+        virtual_keyboard_globals->last_key = -1;
+        virtual_keyboard_globals->number_of_event_repeats = 0;
+        virtual_keyboard_globals->caption_index = 0;
+        virtual_keyboard_globals->text_buffer = NULL;
+        virtual_keyboard_globals->insertion_point = NULL;
+        virtual_keyboard_globals->unk3 = 0;
+        virtual_keyboard_found = true;
+    }
+    virtual_keyboard_globals->caret_bitmap_tag = lookup_tag("ui\\shell\\bitmaps\\white", TAG_GROUP_BITMAP);
+    return virtual_keyboard_found;
+}
+
+void ui_virtual_keyboard_render(void) {
+    VirtualKeyboardGlobals *virtual_keyboard_globals = ui_virtual_keyboard_get_globals();
+    VirtualKeyboard *keyboard = virtual_keyboard_globals->keyboard;
+
+    TagHandle background_bitmap_handle = keyboard->background_bitmap.tag_handle;
+    if(!HANDLE_IS_NULL(background_bitmap_handle)) {
+        Rectangle2D bounds;
+        bounds.left = 0;
+        bounds.top = 0;
+        bounds.right = rasterizer_screen_get_width();
+        bounds.bottom = rasterizer_screen_get_height();
+        ColorARGBInt color = color_encode_a8r8g8b8(&color_argb_white);
+        BitmapData *background_bitmap = bitmap_group_sequence_get_bitmap_for_frame(background_bitmap_handle, 0, 0);
+        bitmap_draw_in_rect(background_bitmap, NULL, color, &bounds, &bounds);
+    }
+
+    ColorARGB text_color;
+    text_color.a = 1.0f;
+    text_color.r = 0.9f;
+    text_color.g = 0.9f;
+    text_color.b = 0.9f;
+    text_set_drawing_parameters(-1, 2, 0, virtual_keyboard_globals->caption_font_tag, &text_color);
+
+    TagHandle special_key_labels_strings_tag = keyboard->special_key_labels_string_list.tag_handle;
+    wchar_t *label = virtual_keyboard_labels[0];
+    if(!HANDLE_IS_NULL(special_key_labels_strings_tag)) {
+        wchar_t *string = unicode_string_list_get_string(special_key_labels_strings_tag, virtual_keyboard_globals->caption_index);
+        Rectangle2D bounds;
+        bounds.left = 0;
+        bounds.top = 78;
+        bounds.right = rasterizer_screen_get_width();
+        bounds.bottom = 110;
+        rasterizer_draw_unicode_string(&bounds, &bounds, NULL, 0, string);
+
+        UnicodeStringList *string_list = tag_get_data(TAG_GROUP_UNICODE_STRING_LIST, special_key_labels_strings_tag);
+        if(string_list->strings.count >= 15) {
+            UnicodeStringListString *string = TAG_BLOCK_GET_ELEMENT(string_list->strings, 14);
+            if(string->string.size > 0) {
+                label = string->string.pointer;
+                label[string->string.size] = L'\0';
+            }
+        }
+    }
+
+    text_set_drawing_parameters(-1, 1, 0, virtual_keyboard_globals->caption_font_tag, &text_color);
+
+    Rectangle2D bounds;
+    bounds.left = 0;
+    bounds.top = 414;
+    bounds.right = 450;
+    bounds.bottom = 630;
+    rasterizer_draw_unicode_string(&bounds, &bounds, NULL, 0, label);
+
+    bounds.top = 118;
+    bounds.left = 0;
+    bounds.bottom = 143;
+    bounds.right = rasterizer_screen_get_width();
+    ui_virtual_keyboard_render_prompt(&bounds);
+}

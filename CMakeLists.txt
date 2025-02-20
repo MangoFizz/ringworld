@@ -99,6 +99,7 @@ add_library(ringworld STATIC
     src/impl/math/wave_functions.c
     src/impl/interface/hud.c
     src/impl/interface/ui_cursor.c
+    src/impl/interface/ui_virtual_keyboard.c
     src/impl/interface/ui_widget.c
     src/impl/memory/memory.c
     src/impl/multiplayer/mode.c

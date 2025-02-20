@@ -230,11 +230,6 @@ Widget *ui_widget_get_topmost_parent(Widget *widget);
 void ui_widget_instance_render_recursive(Widget *widget, Rectangle2D *bounds, VectorXYInt offset, bool is_root_widget, bool is_focused);
 
 /**
- * Render the virtual keyboard.
- */
-void ui_widget_render_virtual_keyboard(void);
-
-/**
  * Check if a text box widget is focused.
  * @param widget pointer to the widget instance
  * @return true if the text box widget is focused, false otherwise
@@ -270,6 +265,12 @@ void ui_widget_render_column_list(Widget *widget, UIWidgetDefinition *definition
  * @param is_focused true if the widget is focused, false otherwise
  */
 void ui_widget_render_spinner_list(Widget *widget, UIWidgetDefinition *definition, Rectangle2D *bounds, VectorXYInt offset, bool is_focused);
+
+/**
+ * Get the widescreen margin for a widget.
+ * @return the widescreen margin as a float
+ */
+float ui_widget_get_widescreen_margin(void);
 
 #ifdef __cplusplus
 }

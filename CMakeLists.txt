@@ -101,6 +101,7 @@ add_library(ringworld STATIC
     src/impl/interface/ui_cursor.c
     src/impl/interface/ui_virtual_keyboard.c
     src/impl/interface/ui_widget.c
+    src/impl/main/main_globals.c
     src/impl/memory/memory.c
     src/impl/multiplayer/mode.c
     src/impl/object/object.c

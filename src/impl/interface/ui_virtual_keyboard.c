@@ -45,14 +45,19 @@ void ui_virtual_keyboard_render(void) {
 
     TagHandle background_bitmap_handle = keyboard->background_bitmap.tag_handle;
     if(!HANDLE_IS_NULL(background_bitmap_handle)) {
-        Rectangle2D bounds;
-        bounds.left = 0;
-        bounds.top = 0;
-        bounds.right = rasterizer_screen_get_width();
-        bounds.bottom = rasterizer_screen_get_height();
+        Rectangle2D screen_rect;
+        screen_rect.left = 0;
+        screen_rect.top = 0;
+        screen_rect.right = rasterizer_screen_get_width();
+        screen_rect.bottom = rasterizer_screen_get_height();
+        Rectangle2D texture_rect;
+        texture_rect.left = 0;
+        texture_rect.top = 0;
+        texture_rect.right = RASTERIZER_SCREEN_BASE_WIDTH;
+        texture_rect.bottom = RASTERIZER_SCREEN_BASE_HEIGHT;
         ColorARGBInt color = color_encode_a8r8g8b8(&color_argb_white);
         BitmapData *background_bitmap = bitmap_group_sequence_get_bitmap_for_frame(background_bitmap_handle, 0, 0);
-        bitmap_draw_in_rect(background_bitmap, NULL, color, &bounds, &bounds);
+        bitmap_draw_in_rect(background_bitmap, NULL, color, &screen_rect, &texture_rect);
     }
 
     ColorARGB text_color;

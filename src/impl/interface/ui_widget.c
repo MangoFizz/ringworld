@@ -393,10 +393,12 @@ void ui_widget_new_history_node(WidgetHistoryNode *history_node_data, WidgetHist
 float ui_widget_get_widescreen_margin(void) {
     if(rasterizer_screen_widescreen_support_enabled()) {
         Widget *active_widget = widget_globals->active_widget[0];
-        UIWidgetDefinition *definition = tag_get_data(TAG_GROUP_UI_WIDGET_DEFINITION, active_widget->definition_tag_handle);
-        uint16_t widget_width = max_i32(definition->bounds.right - max_i32(definition->bounds.left, 0), RASTERIZER_SCREEN_BASE_WIDTH);
-        uint16_t screen_width = rasterizer_screen_get_width();
-        return (float)(screen_width - widget_width) / 2.0f;
+        if(active_widget != NULL) {
+            UIWidgetDefinition *definition = tag_get_data(TAG_GROUP_UI_WIDGET_DEFINITION, active_widget->definition_tag_handle);
+            uint16_t widget_width = max_i32(definition->bounds.right - max_i32(definition->bounds.left, 0), RASTERIZER_SCREEN_BASE_WIDTH);
+            uint16_t screen_width = rasterizer_screen_get_width();
+            return (float)(screen_width - widget_width) / 2.0f;
+        }
     }
     return 0.0f;
 }

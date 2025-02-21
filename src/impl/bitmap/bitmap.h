@@ -1,5 +1,5 @@
-#ifndef RINGWORLD__CONSOLE__CONSOLE_H
-#define RINGWORLD__CONSOLE__CONSOLE_H
+#ifndef RINGWORLD__BITMAP__BITMAP_H
+#define RINGWORLD__BITMAP__BITMAP_H
 
 #ifdef __cplusplus
 extern "C" {

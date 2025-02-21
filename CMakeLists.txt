@@ -99,11 +99,13 @@ add_library(ringworld STATIC
     src/impl/math/wave_functions.c
     src/impl/interface/hud.c
     src/impl/interface/ui_cursor.c
+    src/impl/interface/ui_loading_screen.c
     src/impl/interface/ui_virtual_keyboard.c
     src/impl/interface/ui_widget.c
     src/impl/main/main_globals.c
     src/impl/memory/memory.c
     src/impl/multiplayer/mode.c
+    src/impl/netgame/netgame.c
     src/impl/object/object.c
     src/impl/memory/table.c
     src/impl/player/player.c

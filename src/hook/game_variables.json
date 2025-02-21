@@ -65,5 +65,15 @@
     "motion_sensor_blip_being_rendered": {"type": "bool", "address": "0x6b849d"},
     "ui_widget_game_data_input_functions": {"type": "void (*)(Widget *)", "address": "0x62e108"},
     "text_drawing_globals": {"type": "TextDrawGlobals", "address": "0x67f6ec"},
-    "main_globals": {"type": "MainGlobals", "address": "0x6B4798"}
+    "main_globals": {"type": "MainGlobals", "address": "0x6B4798"},
+    "loading_screen_state": {"type": "UILoadingScreenState", "address": "0x6b4014"},
+    "loading_screen_time_counter_ms_0": {"type": "int32_t", "address": "0x629c70"},
+    "loading_screen_time_counter_ms_1": {"type": "int32_t", "address": "0x629c74"},
+    "loading_screen_time_counter_ms_2": {"type": "int32_t", "address": "0x629c78"},
+    "loading_screen_unk_flag": {"type": "bool", "address": "0x6ad4a1"},
+    "devmode_enabled": {"type": "bool", "address": "0x6bd15e"},
+    "close_server_connection_flag": {"type": "bool", "address": "0x6b736e"},
+    "server_connection_attempts": {"type": "uint32_t", "address": "0x6b4018"},
+    "loading_screen_server_address": {"type": "wchar[]", "address": "0x64de58"},
+    "loading_screen_map_name": {"type": "wchar[]", "address": "0x64de98"}
 }

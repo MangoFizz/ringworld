@@ -57,7 +57,9 @@ bool rasterizer_text_cache_initialize(void) {
     RasterizerFontCache *font_cache = rasterizer_text_get_font_cache();
     ASSERT(font_cache->initialized == false);
 
-    BitmapData *bitmap = bitmap_new_2d_bitmap_data(512, 512, 1, BITMAP_DATA_FORMAT_A4R4G4B4);
+    uint16_t screen_width = rasterizer_screen_get_width();
+    uint16_t screen_height = rasterizer_screen_get_height();
+    BitmapData *bitmap = bitmap_new_2d_bitmap_data(screen_width, screen_height, 1, BITMAP_DATA_FORMAT_A4R4G4B4);
     if(bitmap) {
         memset(font_cache, 0, sizeof(RasterizerFontCache));
         bool texture_created = rasterizer_dx9_texture_create(bitmap);

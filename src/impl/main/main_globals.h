@@ -54,8 +54,8 @@ typedef struct MainGlobals {
     GameConnectionType game_connection; 
     int16_t screenshot_count;
     void *movie; // screenshot bitmap
-    uint32_t pad1;
     uint32_t pad2;
+    uint32_t pad3;
     int32_t movie_frame_index;
     float screenshot_delta_time;
     MainGlobalsMap map;
@@ -71,14 +71,14 @@ typedef struct MainGlobals {
     bool start_time;
     bool unk9;
     bool skip_frames;
-    bool pad2;
+    bool pad4;
     int16_t skip_frames_count;
     int16_t lost_map_count;
     int16_t respawn_count;
     bool unk10;
-    bool pad3;
-    bool pad4;
     bool pad5;
+    bool pad6;
+    bool pad7;
     bool unk11;
     char scenario_tag_path[256];
     char multiplayer_map_name[256];
@@ -86,8 +86,8 @@ typedef struct MainGlobals {
     bool unk12;
     char connect_address[32];
     char connect_password[9];
-    bool pad6;
-    uint32_t pad7;
+    bool pad8;
+    uint32_t pad9;
 } MainGlobals; 
 _Static_assert(sizeof(MainGlobals) == 0x3A0);
 

@@ -38,6 +38,7 @@
     "ui_virtual_keyboard_initialize": {"address": "0x4ab900", "replace": true, "use_return_value": true},
     "ui_virtual_keyboard_render": {"address": "0x4ac520", "replace": true},
     "ui_virtual_keyboard_render_prompt": {"address": "0x4ac310", "replace": false, "arguments": ["0"]},
+    "ui_loading_screen_render": {"address": "0x49a370", "replace": true},
     "memory_pool_new_block": {"address": "0x4d5310", "replace": false, "use_return_value": true, "arguments": ["ecx", "eax"]},
 
     "player_ui_set_active_player_profile": {"address": "0x4988d0", "replace": false, "arguments": ["0", "eax", "edx"]},
@@ -102,5 +103,9 @@
     "hud_draw_bitmap_with_meter": {"address": "0x4afec0", "replace": true, "arguments": ["0", "4", "8", "12", "16", "20", "ecx", "edx", "eax", "ebx"] },
     "hud_draw_meter": {"address": "0x4aefb0", "replace": true, "arguments": ["0", "4", "8", "12", "16", "20", "esi"] },
 
-    "color_interpolate": {"address": "0x43f6a0", "replace": false, "arguments": ["ecx", "eax", "0", "4", "8"] }
+    "color_interpolate": {"address": "0x43f6a0", "replace": false, "arguments": ["ecx", "eax", "0", "4", "8"] },
+    
+    "time_query_performance_counter_ms": {"address": "0x449b80", "replace": false, "use_return_value": true },
+    "loading_screen_abort_connection": {"address": "0x4adb40", "replace": false },
+    "loading_screen_timeout_connection": {"address": "0x5b9d00", "replace": false, "arguments": ["0"] }
 }

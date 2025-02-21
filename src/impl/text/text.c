@@ -1,6 +1,7 @@
 #include "text.h"
 
 extern TextDrawGlobals *text_drawing_globals;
+extern ColorARGBInt *text_shadow_color;
 
 TextDrawGlobals *text_get_drawing_globals(void) {
     return text_drawing_globals;
@@ -13,4 +14,8 @@ void text_set_drawing_parameters(int16_t style, int16_t justification, uint32_t 
     globals->flags = flags;
     globals->font = font_tag;
     globals->color = *color;
+}
+
+void text_set_shadow_color(ColorARGBInt color) {
+    *text_shadow_color = color;
 }

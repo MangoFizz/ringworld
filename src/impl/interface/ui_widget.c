@@ -29,7 +29,7 @@ extern bool *is_main_menu;
 extern bool *local_player_index_for_draw_string_and_hack_in_icons;
 extern void (**ui_widget_game_data_input_functions)(Widget *);
 
-WidgetGlobals *get_ui_widget_globals(void) {
+WidgetGlobals *ui_widget_get_globals(void) {
     return widget_globals;
 }
 

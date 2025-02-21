@@ -90,6 +90,7 @@ add_library(ringworld STATIC
     src/impl/console/console.c
     src/impl/crypto/md5.c
     src/impl/crypto/xtea.c
+    src/impl/cutscene/cutscene.c
     src/impl/exception/exception.c
     src/impl/game/game_globals.c
     src/impl/game/game_state.c
@@ -128,6 +129,7 @@ add_library(ringworld STATIC
     src/impl/rasterizer/rasterizer_text.c
     src/impl/render/render.c
     src/impl/saved_games/player_profile.c
+    src/impl/scenario/scenario.c
     src/impl/script/hsc.c
     src/impl/shader/shader.c
     src/impl/tag/tag.c

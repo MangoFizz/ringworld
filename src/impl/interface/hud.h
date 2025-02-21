@@ -6,6 +6,7 @@ extern "C" {
 #endif
 
 #include "../tag/definitions/weapon_hud_interface.h"
+#include "../tag/definitions/hud_globals.h"
 #include "../rasterizer/rasterizer_screen_geometry.h"
 #include "../memory/memory.h"
 
@@ -40,6 +41,12 @@ typedef struct HUDMeterDrawFlags {
     uint8_t pad0[3];
 } HUDMeterDrawFlags;
 _Static_assert(sizeof(HUDMeterDrawFlags) == 4);
+
+/**
+ * Get the global HUD settings.
+ * @return A pointer to the global HUD settings.
+ */
+HUDGlobals *hud_get_globals(void);
 
 /**
  * Calculate the position of a HUD element on the screen.

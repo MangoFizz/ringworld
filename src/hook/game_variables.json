@@ -75,5 +75,9 @@
     "close_server_connection_flag": {"type": "bool", "address": "0x6b736e"},
     "server_connection_attempts": {"type": "uint32_t", "address": "0x6b4018"},
     "loading_screen_server_address": {"type": "wchar[]", "address": "0x64de58"},
-    "loading_screen_map_name": {"type": "wchar[]", "address": "0x64de98"}
+    "loading_screen_map_name": {"type": "wchar[]", "address": "0x64de98"},
+    "hud_globals": {"type": "HUDGlobals *", "address": "0x6b44a4"},
+    "current_scenario": {"type": "Scenario *", "address": "0x6e224c"},
+    "cinematic_globals": {"type": "CinematicGlobals *", "address": "0x68c83c"},
+    "text_shadow_color": {"type": "ColorARGBInt", "address": "0x6b83dc"}
 }

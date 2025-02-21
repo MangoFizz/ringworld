@@ -56,6 +56,12 @@ bool text_draw_string(void (*draw_character)(), Rectangle2D *position, ColorARGB
  */
 void text_set_drawing_parameters(int16_t style, int16_t justification, uint32_t flags, TagHandle font_tag, ColorARGB *color);
 
+/**
+ * This function sets the shadow color for text.
+ * @param color The color of the shadow in ARGB format.
+ */
+void text_set_shadow_color(ColorARGBInt color);
+
 #ifdef __cplusplus
 }
 #endif

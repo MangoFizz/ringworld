@@ -85,7 +85,6 @@ uint32_t bitmap_mipmap_get_pixel_count(uint8_t mipmap_index, BitmapData *bitmap_
 }
 
 size_t bitmap_get_pixel_data_size(BitmapData *bitmap_data) {
-    printf("bitmap_get_pixel_data_size\n");
     ASSERT(bitmap_data != NULL);
     size_t size = 0;
     for(byte i = 0; i < bitmap_data->mipmap_count; i++) {

@@ -25,14 +25,11 @@ float ui_cursor_size = 28;
 void ui_cursor_displace(int32_t dx, int32_t dy) {
     if(dx == 0 && dy == 0) {
         *cursor_should_activate_widgets = false;
+        return;
     }
 
     int32_t new_position_x = *menu_cursor_x + dx;
     int32_t new_position_y = *menu_cursor_y + dy;
-
-    if(new_position_x == *menu_cursor_x && new_position_y == *menu_cursor_y) {
-        *cursor_should_activate_widgets = false;
-    }
 
     *menu_cursor_x = max_i32(min_i32(new_position_x, rasterizer_screen_get_width()), 0);
     *menu_cursor_y = max_i32(min_i32(new_position_y, rasterizer_screen_get_height()), 0);

@@ -26,3 +26,7 @@ void players_data_initialize(void) {
 PlayersGlobals *player_get_globals(void) {
     return *players_globals;
 }
+
+PlayersTable *player_get_table(void) {
+    return *players_data;
+}

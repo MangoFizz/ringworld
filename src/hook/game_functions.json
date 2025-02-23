@@ -109,5 +109,5 @@
     "loading_screen_abort_connection": {"address": "0x4adb40", "replace": false },
     "loading_screen_timeout_connection": {"address": "0x5b9d00", "replace": false, "arguments": ["0"] },
 
-    "cutscene_cinematic_render": {"address": "0x44a330", "replace": true }
+    "cutscene_cinematic_render": {"address": "0x44a330", "replace": true }    
 }

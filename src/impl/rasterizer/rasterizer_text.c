@@ -105,8 +105,9 @@ void rasterizer_draw_unicode_string(Rectangle2D *position, Rectangle2D *dest_rec
         final_rect.left = clamp_i32(dest_rect->left, 0, screen_width);
     }
     else {
-        final_rect.bottom = render_globals->camera.viewport_bounds.right - render_globals->camera.viewport_bounds.left;
-        final_rect.right = render_globals->camera.viewport_bounds.bottom - render_globals->camera.viewport_bounds.top;
+        // @todo use viewport bounds for calculating this
+        final_rect.bottom = screen_height;
+        final_rect.right = screen_width;
         final_rect.top = 0;
         final_rect.left = 0;
     }

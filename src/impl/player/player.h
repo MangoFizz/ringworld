@@ -201,6 +201,11 @@ void players_data_initialize(void);
  */
 PlayersGlobals *player_get_globals(void);
 
+/**
+ * Get the players table
+ */
+PlayersTable *player_get_table(void);
+
 #ifdef __cplusplus
 }
 #endif

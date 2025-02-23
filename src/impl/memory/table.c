@@ -54,6 +54,19 @@ void *table_get_element(void *table_data, TableResourceHandle handle) {
     return element;
 }
 
+void *table_find_element(void *table_data, int16_t identifier) {
+    if(identifier != -1) {
+        GenericTable *table = (GenericTable *)(table_data);
+        for(size_t i = 0; i < table->current_size; i++) {
+            void *element = table->first_element + i * table->element_size;
+            if(*(int16_t *)(element) == identifier) {
+                return element;
+            }
+        }
+    }
+    return NULL;
+}
+
 void table_init_element(void *table_data, void *new_element_location) {
     GenericTable *table = (GenericTable *)(table_data);
     memset(new_element_location, 0, table->element_size);

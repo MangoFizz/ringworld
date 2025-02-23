@@ -139,6 +139,14 @@ void *table_new(const char *name, uint16_t maximum_count, uint16_t element_size)
 void *table_get_element(void *table, TableResourceHandle handle);
 
 /**
+ * Find an element in a table by its identifier.
+ * @param table_data    table pointer
+ * @param identifier    identifier to find
+ * @return pointer to the element, or NULL if not found
+ */
+void *table_find_element(void *table_data, int16_t identifier);
+
+/**
  * Initialize a table element.
  * @param table                table pointer
  * @param new_element_location pointer to the new element

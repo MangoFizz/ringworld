@@ -57,6 +57,18 @@ bool text_draw_string(void (*draw_character)(), Rectangle2D *position, ColorARGB
 void text_set_drawing_parameters(int16_t style, int16_t justification, uint32_t flags, TagHandle font_tag, ColorARGB *color);
 
 /**
+ * This function sets the tab stops for text.
+ * @param tab_stops An array of tab stops.
+ * @param count The number of tab stops.
+ */
+void text_set_tab_stops(uint16_t *tab_stops, size_t count);
+
+/**
+ * This function resets the tab stops for text.
+ */
+void text_reset_tab_stops(void);
+
+/**
  * This function sets the shadow color for text.
  * @param color The color of the shadow in ARGB format.
  */

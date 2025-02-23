@@ -1,5 +1,5 @@
-#ifndef RINGWORLD__UNITS__UNITS_H
-#define RINGWORLD__UNITS__UNITS_H
+#ifndef RINGWORLD__UNIT__UNIT_H
+#define RINGWORLD__UNIT__UNIT_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -17,62 +17,56 @@ typedef struct UnitRecentDamager {
 _Static_assert(sizeof(UnitRecentDamager) == 0x10);
 
 typedef struct UnitFlags {
-    bool unknown_biped_speech_related : 1;
-    bool pad_1 : 3;
-    bool power_up : 1;
-    bool power_up_addition : 1; 
-    bool controllable : 1;
-    bool berserking : 1;
-    bool pad_2 : 8;
-    bool pad_3 : 3;
-    bool unknown_integrated_light_related : 1;
-    bool will_not_drop_items : 1;
-    bool unknown : 1;
-    bool can_blink : 1;
-    bool impervious : 1;
-    bool suspended : 1;
-    bool blind : 1;
-    bool unknown_nv_related : 1; 
-    bool possessed : 1;
-    bool desires_flashlight_on : 1;
-    bool desires_flashlight_off : 1;
-    bool pad_4 : 2;
+    Bool unknown_biped_speech_related : 1;
+    Bool pad_1 : 3;
+    Bool power_up : 1;
+    Bool power_up_addition : 1; 
+    Bool controllable : 1;
+    Bool berserking : 1;
+    Bool pad_2 : 8;
+    Bool pad_3 : 3;
+    Bool unknown_integrated_light_related : 1;
+    Bool will_not_drop_items : 1;
+    Bool unknown : 1;
+    Bool can_blink : 1;
+    Bool impervious : 1;
+    Bool suspended : 1;
+    Bool blind : 1;
+    Bool unknown_nv_related : 1; 
+    Bool possessed : 1;
+    Bool desires_flashlight_on : 1;
+    Bool desires_flashlight_off : 1;
+    Bool pad_4 : 2;
 } UnitFlags;
 _Static_assert(sizeof(UnitFlags) == 0x4);
 
 typedef struct UnitControlFlags {
-    bool crouch : 1;
-    bool jump : 1;
-    bool user1 : 1;
-    bool user2 : 1;
-    bool light : 1;
-    bool exact_facing : 1;
-    bool action : 1;
-    bool melee : 1;
-    bool look_dont_turn : 1;
-    bool force_alert : 1;
-    bool reload : 1;
-    bool primary_trigger : 1;
-    bool secondary_trigger : 1;
-    bool grenade : 1;
-    bool exchange_weapon : 1;
-    bool pad_1 : 1;
+    Bool crouch : 1;
+    Bool jump : 1;
+    Bool user1 : 1;
+    Bool user2 : 1;
+    Bool light : 1;
+    Bool exact_facing : 1;
+    Bool action : 1;
+    Bool melee : 1;
+    Bool look_dont_turn : 1;
+    Bool force_alert : 1;
+    Bool reload : 1;
+    Bool primary_trigger : 1;
+    Bool secondary_trigger : 1;
+    Bool grenade : 1;
+    Bool exchange_weapon : 1;
+    Bool pad_1 : 1;
 } UnitControlFlags;
 _Static_assert(sizeof(UnitControlFlags) == 0x2);
 
-typedef struct UnitAnimationStateData {
-    int16_t animation_index;
-    int16_t frame_index;
-} UnitAnimationStateData;
-_Static_assert(sizeof(UnitAnimationStateData) == 0x4);
-
 typedef struct UnitAnimationFlags {
-    bool animation_bit0_unknown : 1;
-    bool animation_bit1_unknown : 1;
-    bool animation_bit2_unknown : 1;
-    bool animation_bit3_unknown : 1;
-    bool pad_1 : 4;
-    bool pad_2 : 1;
+    Bool animation_bit0_unknown : 1;
+    Bool animation_bit1_unknown : 1;
+    Bool animation_bit2_unknown : 1;
+    Bool animation_bit3_unknown : 1;
+    Bool pad_1 : 4;
+    Bool pad_2 : 1;
 } UnitAnimationFlags;
 _Static_assert(sizeof(UnitAnimationFlags) == 0x2);
 
@@ -91,15 +85,15 @@ typedef struct UnitAnimationData {
     int8_t base_seat;
     int8_t emotion;
     char pad_2;
-    UnitAnimationStateData replacement_animation;
-    UnitAnimationStateData overlay_state_animation;
-    UnitAnimationStateData weapon_ik;
-    bool update_look;
-    bool update_aim;
+    ObjectAnimationState replacement_animation;
+    ObjectAnimationState overlay_state_animation;
+    ObjectAnimationState weapon_ik;
+    Bool update_look;
+    Bool update_aim;
     Bounds2D looking_bounds;
     Bounds2D aiming_bounds;
     void *external_animation_graph;
-    UnitAnimationStateData external_animation;
+    ObjectAnimationState external_animation;
 } UnitAnimationData;
 _Static_assert(sizeof(UnitAnimationData) == 0x48);
 
@@ -113,7 +107,7 @@ typedef struct AiCommunicationPacket {
     char pad_6[2]; 
     char pad_7[2]; 
     char pad_8[4]; 
-    bool broken;
+    Bool broken;
     char pad_9[3]; 
 } AiCommunicationPacket;
 _Static_assert(sizeof(AiCommunicationPacket) == 0x20);
@@ -137,10 +131,10 @@ typedef struct UnitSpeechData {
     int16_t unknown2; 
     int16_t unknown3;
     int32_t unknown4;
-    bool unknown6;
-    bool unknown7;
-    bool unknown8;
-    bool pad_1;
+    Bool unknown6;
+    Bool unknown7;
+    Bool unknown8;
+    Bool pad_1;
     int16_t unknown9;
     int16_t unknown10;
     int16_t unknown11; 
@@ -247,7 +241,7 @@ typedef struct UnitObject {
     char pad_5[4];
     TickCount32 died_at_tick;
     TickCount16 feign_death_timer;
-    bool camo_regrowth;
+    Bool camo_regrowth;
     char pad_6;
     float stun;
     TickCount16 stun_ticks;
@@ -259,7 +253,7 @@ typedef struct UnitObject {
     uint8_t opensauce_zoom_level;
     uint8_t opensauce_desired_zoom_level;
     UnitControlData control_data;
-    bool last_completed_client_update_valid;
+    Bool last_completed_client_update_valid;
     char pad_9[3];
     int32_t last_completed_client_update_id;
     char pad_10[12];
@@ -267,14 +261,14 @@ typedef struct UnitObject {
 _Static_assert(sizeof(UnitObject) == 0x4CC);
 
 typedef struct BipedFlags {
-    bool airborne : 1;
-    bool slipping : 1;
-    bool absolute_movement : 1;
-    bool no_collision : 1;
-    bool passes_through_other_bipeds : 1;
-    bool limping2 : 1;
-    bool pad_1 : 2;
-    bool pad_2[3];
+    Bool airborne : 1;
+    Bool slipping : 1;
+    Bool absolute_movement : 1;
+    Bool no_collision : 1;
+    Bool passes_through_other_bipeds : 1;
+    Bool limping2 : 1;
+    Bool pad_1 : 2;
+    Bool pad_2[3];
 } BipedFlags;
 _Static_assert(sizeof(BipedFlags) == 0x4);
 
@@ -283,19 +277,19 @@ typedef struct BipedNetworkDelta {
     char pad_1[2];
     float body_vitality;
     float shield_vitality; 
-    bool shield_stun_ticks_greater_than_zero;
+    Bool shield_stun_ticks_greater_than_zero;
     char pad_2[3];
 } BipedNetworkDelta;
 _Static_assert(sizeof(BipedNetworkDelta) == 0x10);
 
 typedef struct BipedNetwork {
     char pad_1[2];
-    bool baseline_valid;
+    Bool baseline_valid;
     int8_t baseline_id;
     int8_t message_id;
     char pad_2[3];
     BipedNetworkDelta update_baseline;
-    bool delta_valid;
+    Bool delta_valid;
     char pad_3[3];
     BipedNetworkDelta update_delta;
 } BipedNetwork;
@@ -333,18 +327,18 @@ typedef struct BipedObject {
 _Static_assert(sizeof(BipedObject) == 0x84 + sizeof(UnitObject));
 
 typedef struct VehicleFlags {
-    bool vehicle_unknown0 : 1; 
-    bool hovering : 1;
-    bool crouched : 1;
-    bool jumping : 1;
-    bool unknown_vehicle1 : 1;
-    bool unknown_vehicle2 : 3;
-    bool pad_1;
+    Bool vehicle_unknown0 : 1; 
+    Bool hovering : 1;
+    Bool crouched : 1;
+    Bool jumping : 1;
+    Bool unknown_vehicle1 : 1;
+    Bool unknown_vehicle2 : 3;
+    Bool pad_1;
 } VehicleFlags;
 _Static_assert(sizeof(VehicleFlags) == 0x2);
 
 typedef struct VehicleNetworkData {
-    bool at_rest;
+    Bool at_rest;
     char pad_1[3];
     VectorXYZ position;
     VectorXYZ transitional_velocity;
@@ -355,12 +349,12 @@ typedef struct VehicleNetworkData {
 _Static_assert(sizeof(VehicleNetworkData) == 0x40);
 
 typedef struct VehicleNetwork {
-    bool time_valid;
-    bool baseline_valid;
+    Bool time_valid;
+    Bool baseline_valid;
     int8_t baseline_id;
     int8_t message_id;
     VehicleNetworkData update_baseline;
-    bool delta_valid; 
+    Bool delta_valid; 
     char pad_1[3];
     VehicleNetworkData update_delta;
     TickCount32 last_moved_at_tick; 

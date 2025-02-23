@@ -92,6 +92,7 @@ add_library(ringworld STATIC
     src/impl/crypto/xtea.c
     src/impl/cutscene/cutscene.c
     src/impl/exception/exception.c
+    src/impl/game/game_engine.c
     src/impl/game/game_globals.c
     src/impl/game/game_state.c
     src/impl/game/game_time.c
@@ -106,7 +107,8 @@ add_library(ringworld STATIC
     src/impl/main/main_globals.c
     src/impl/memory/memory.c
     src/impl/multiplayer/mode.c
-    src/impl/netgame/netgame.c
+    src/impl/network/network_game.c
+    src/impl/network/network_game_client.c
     src/impl/object/object.c
     src/impl/memory/table.c
     src/impl/player/player.c

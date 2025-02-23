@@ -79,5 +79,11 @@
     "hud_globals": {"type": "HUDGlobals *", "address": "0x6b44a4"},
     "current_scenario": {"type": "Scenario *", "address": "0x6e224c"},
     "cinematic_globals": {"type": "CinematicGlobals *", "address": "0x68c83c"},
-    "text_shadow_color": {"type": "ColorARGBInt", "address": "0x6b83dc"}
+    "text_shadow_color": {"type": "ColorARGBInt", "address": "0x6b83dc"},
+    "current_game_engine_interface": {"type": "GameTypeEngineInterface *", "address": "0x68cd24"},
+    "network_game_globals_client": {"type": "NetworkGame", "address": "0x80EC94"},
+    "network_game_globals_host": {"type": "NetworkGame", "address": "0x7fc6a8"},
+    "network_game_server_address_host": {"type": "uint32_t", "address": "0x621f74"},
+    "network_game_server_port_host": {"type": "uint16_t", "address": "0x6337f8"},
+    "network_game_client": {"type": "NetworkGameClient *", "address": "0x6b7368"}
 }

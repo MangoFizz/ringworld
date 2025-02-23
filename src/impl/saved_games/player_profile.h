@@ -9,38 +9,15 @@ extern "C" {
 #include <stdbool.h>
 
 #include "../memory/memory.h"
+#include "../network/network_game.h"
 
 #pragma pack(push)
 #pragma pack(1)
 
-typedef enum PACKED_ENUM PlayerColorSetting {
-    PLAYER_COLOR_WHITE,
-    PLAYER_COLOR_BLACK,
-    PLAYER_COLOR_RED,
-    PLAYER_COLOR_BLUE,
-    PLAYER_COLOR_GRAY,
-    PLAYER_COLOR_YELLOW,
-    PLAYER_COLOR_GREEN,
-    PLAYER_COLOR_PINK,
-    PLAYER_COLOR_PURPLE,
-    PLAYER_COLOR_CYAN,
-    PLAYER_COLOR_COBALT,
-    PLAYER_COLOR_ORANGE,
-    PLAYER_COLOR_TEAL,
-    PLAYER_COLOR_SAGE,
-    PLAYER_COLOR_BROWN,
-    PLAYER_COLOR_TAN,
-    PLAYER_COLOR_MAROON,
-    PLAYER_COLOR_SALMON,
-    PLAYER_COLOR_RANDOM,
-    NUM_OF_PLAYER_COLORS,
-    PLAYER_COLOR_SIZE = 0xFF
-} PlayerColorSetting;
-
 typedef struct PlayerProfileDetails {
     wchar_t player_name[12]; 
     uint8_t pad1[0x100];
-    PlayerColorSetting player_color;
+    NetworkGamePlayerColor player_color;
 } PlayerProfileDetails;
 _Static_assert(sizeof(PlayerProfileDetails) == 281);
 

@@ -134,6 +134,20 @@ typedef struct ObjectValidOutGoingFunctions {
 } ObjectValidOutGoingFunctions;
 _Static_assert(sizeof(ObjectValidOutGoingFunctions) == 0x1);
 
+typedef struct ObjectAnimationState {
+    uint16_t index;
+    uint16_t frame;
+} ObjectAnimationState;
+_Static_assert(sizeof(ObjectAnimationState) == 0x4);
+
+typedef struct ObjectAnimationData {
+    TagHandle animation_tag_handle;
+    ObjectAnimationState animation_state;
+    uint16_t animation_interpolation_frame;
+    uint16_t animation_interpolation_frame_count;
+} ObjectAnimationData;
+_Static_assert(sizeof(ObjectAnimationData) == 0xC);
+
 typedef struct DynamicObjectBase {
     TagHandle tag_handle;
     uint32_t network_role;
@@ -158,11 +172,7 @@ typedef struct DynamicObjectBase {
     TableResourceHandle player;
     ObjectHandle owner_object;
     uint32_t pad_2;
-    TagHandle animation_tag_handle;
-    uint16_t animation_index;
-    uint16_t animation_frame;
-    uint16_t animation_interpolation_frame;
-    uint16_t animation_interpolation_frame_count;
+    ObjectAnimationData animation_data;
     BaseObjectVitals vitals;
     uint32_t pad_3;
     TableResourceHandle cluster_partition;

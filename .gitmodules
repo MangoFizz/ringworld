@@ -1,0 +1,3 @@
+[submodule "ringhopper"]
+	path = ringhopper
+	url = https://github.com/FishAndRips/ringhopper

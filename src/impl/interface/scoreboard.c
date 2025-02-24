@@ -553,84 +553,51 @@ void scoreboard_draw_background(float fade) {
     rasterizer_screen_geometry_draw_quad(&background_rect, color_encode_a8r8g8b8(&background_color));
 }
 
-void scoreboard_draw_server_name(float fade) {
+void scoreboard_draw_server_info(float fade) {
     HUDGlobals *hud_globals = hud_get_globals();
     NetworkGame *network_game = network_game_get();
+    TagHandle mp_text_tag = multiplayer_get_text_tag();
 
     uint16_t screen_width = rasterizer_screen_get_width();
     uint16_t screen_height = rasterizer_screen_get_height();
 
-    Rectangle2D server_name_rect;
-    server_name_rect.left = 10;
-    server_name_rect.right = screen_width - 5;
-    server_name_rect.top = screen_height - 55;
-    server_name_rect.bottom = screen_height - 35;
-
-    ColorARGB server_name_color;
-    server_name_color.a = fade;
-    server_name_color.r = 1.0f;
-    server_name_color.g = 1.0f;
-    server_name_color.b = 1.0f;
-
-    TagHandle server_name_font = hud_globals->fullscreen_font.tag_handle;
-    if(HANDLE_IS_NULL(server_name_font)) {
-        server_name_font = hud_globals->splitscreen_font.tag_handle;
-        if(HANDLE_IS_NULL(server_name_font)) {
-            server_name_font = font_get_default_large();
+    TagHandle font = hud_globals->fullscreen_font.tag_handle;
+    if(HANDLE_IS_NULL(font)) {
+        font = hud_globals->splitscreen_font.tag_handle;
+        if(HANDLE_IS_NULL(font)) {
+            font = font_get_default_large();
         }
     }
+    ColorARGB color = { fade, 1.0f, 1.0f, 1.0f };
+    text_set_drawing_parameters(-1, 1, 0, font, &color);
 
-    text_set_drawing_parameters(-1, 1, 0, server_name_font, &server_name_color);
-    rasterizer_draw_unicode_string(&server_name_rect, NULL, NULL, 0, network_game->server_name);
-}
+    uint16_t line_height = font_get_height(font) + 2;
 
-void scoreboard_draw_server_address(float fade) {
-    HUDGlobals *hud_globals = hud_get_globals();
-
-    uint16_t screen_width = rasterizer_screen_get_width();
-    uint16_t screen_height = rasterizer_screen_get_height();
-
-    Rectangle2D server_address_rect;
-    server_address_rect.left = 10;
-    server_address_rect.right = screen_width - 5;
-    server_address_rect.top = screen_height - 30;
-    server_address_rect.bottom = screen_height - 10;
-
-    ColorARGB server_address_color;
-    server_address_color.a = fade;
-    server_address_color.r = 1.0f;
-    server_address_color.g = 1.0f;
-    server_address_color.b = 1.0f;
-
-    TagHandle server_address_font = hud_globals->fullscreen_font.tag_handle;
-    if(HANDLE_IS_NULL(server_address_font)) {
-        server_address_font = hud_globals->splitscreen_font.tag_handle;
-        if(HANDLE_IS_NULL(server_address_font)) {
-            server_address_font = font_get_default_large();
-        }
-    }
+    Rectangle2D rect;
+    rect.left = 10;
+    rect.right = screen_width - 5;
+    rect.bottom = screen_height - 10;
+    rect.top = rect.bottom - line_height * 2;
+    
+    rasterizer_draw_unicode_string(&rect, NULL, NULL, 0, network_game->server_name);
 
     union {
         uint32_t value;
         NetworkTransportAddressIPv4 ipv4;
     } address;
-    
     address.value = network_game_get_server_address();
     uint16_t server_port = network_game_get_server_port();;
 
-    TagHandle mp_text_tag = multiplayer_get_text_tag();
-    const wchar_t *prefix = scoreboard_get_server_address_prefix(mp_text_tag);
-    
     wchar_t server_address_text[256];
+    const wchar_t *prefix = scoreboard_get_server_address_prefix(mp_text_tag);
     swprintf(server_address_text, 256, L"%s%d.%d.%d.%d:%d", prefix, address.ipv4.class_d, address.ipv4.class_c, address.ipv4.class_b, address.ipv4.class_a, server_port);
-
-    text_set_drawing_parameters(-1, 1, 0, server_address_font, &server_address_color);
-    rasterizer_draw_unicode_string(&server_address_rect, NULL, NULL, 0, server_address_text);
+    
+    math_rectangle_2d_translate(&rect, 0, line_height);
+    rasterizer_draw_unicode_string(&rect, NULL, NULL, 0, server_address_text);
 }
 
 void scoreboard_render(PlayerHandle player_handle, float fade) {
     scoreboard_draw_background(fade);
     scoreboard_draw_table(player_handle, fade);
-    scoreboard_draw_server_name(fade);
-    scoreboard_draw_server_address(fade);
+    scoreboard_draw_server_info(fade);
 }

@@ -82,11 +82,11 @@ _Static_assert(sizeof(NetworkGameUniversalVariant) == 0x48);
 typedef struct NetworkGameVariant {
     wchar_t name[24]; 
     uint32_t game_engine_index;
-    NetworkGameUniversalVariant universal_variant;		// 0x34
+    NetworkGameUniversalVariant universal_variant; 
     char pad1[32];
     char game_engine_variant[0x38];	// Add this union later
     uint32_t flags; 
-    //uint32 crc; // 0xD8, not actually part of the structure, only "used" when presisting to/from files
+    //uint32 crc; // not actually part of the structure, only "used" when presisting to/from files
 } NetworkGameVariant;
 _Static_assert(sizeof(NetworkGameVariant) == 0xD8);
 
@@ -108,9 +108,9 @@ typedef struct NetworkGame {
 _Static_assert(sizeof(NetworkGame) == 0x3F0);
 
 /**
- * Get the network game globals.
+ * Get the network game data.
  */
-NetworkGame *network_game_get_globals(void);
+NetworkGame *network_game_get(void);
 
 /**
  * Sets the flag to disconnect from the network game.

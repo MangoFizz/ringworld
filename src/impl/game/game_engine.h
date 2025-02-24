@@ -7,8 +7,28 @@ extern "C" {
 
 #include <stdint.h>
 #include <stdbool.h>
+#include "../types/types.h"
+#include "../player/player.h"
 
-typedef struct GameTypeEngineInterface {
+typedef enum GameEngineMode {
+    GAME_ENGINE_MODE_ACTIVE,
+    GAME_ENGINE_MODE_POSTGAME_DELAY,
+    GAME_ENGINE_MODE_POSTGAME_RASTERIZE_DELAY,
+    GAME_ENGINE_MODE_POSTGAME_RASTERIZE,
+    NUM_OF_GAME_ENGINE_MODES
+} GameEngineMode;
+
+typedef struct GameEngineGlobals {
+    uint32_t unk1;
+    uint32_t unk2;
+    float fade_unk1;
+    float fade_unk2;
+    GameEngineMode mode;
+    uint32_t pad1[3];
+} GameEngineGlobals;
+_Static_assert(sizeof(GameEngineGlobals) == 0x20);
+
+typedef struct GameEngineInterface {
     const char *name;
     uint16_t type;
     void (*dispose)();
@@ -28,11 +48,11 @@ typedef struct GameTypeEngineInterface {
     void (*weapon_pickup)();
     void (*weapon_drop)();
     void (*update)();
-    int32_t (*get_score)();
-    int32_t (*get_team_score)();
-    wchar_t *(*get_score_string)();
-    wchar_t *(*get_score_header_string)();
-    wchar_t *(*get_team_score_string)();
+    int32_t (*get_score)(uint16_t player_index, bool team_score);
+    int32_t (*get_team_score)(uint16_t team_index);
+    wchar_t *(*get_score_string)(uint16_t player_index, wchar_t *out_buffer);
+    wchar_t *(*get_score_header_string)(wchar_t *out_buffer);
+    wchar_t *(*get_team_score_string)(uint16_t team_index, wchar_t *out_buffer);
     bool (*allow_pick_up)();
     void (*player_damaged_player)();
     void (*player_killed_player)();
@@ -53,14 +73,20 @@ typedef struct GameTypeEngineInterface {
     void (*create_team_score_strings)();
     void (*get_gamespy_key_count)();
     void (*initialize_for_reset_map)();
-} GameTypeEngineInterface;
-_Static_assert(sizeof(GameTypeEngineInterface) == 0xB0);
+} GameEngineInterface;
+_Static_assert(sizeof(GameEngineInterface) == 0xB0);
 
 /**
  * Get the current game type engine.
  * @return Pointer to the current game type engine interface.
  */
-GameTypeEngineInterface *game_engine_get_current_interface(void);
+GameEngineInterface *game_engine_get_current_interface(void);
+
+/**
+ * Get the game engine globals.
+ * @return Pointer to the game engine globals.
+ */
+GameEngineGlobals *game_engine_get_globals(void);
 
 #ifdef __cplusplus
 }

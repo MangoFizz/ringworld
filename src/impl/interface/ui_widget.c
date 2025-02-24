@@ -4,11 +4,11 @@
 #include "../bitmap/bitmap.h"
 #include "../console/console.h"
 #include "../memory/pool.h"
+#include "../main/main_globals.h"
 #include "../math/math.h"
 #include "../math/color.h"
 #include "../tag/definitions/bitmap.h"
 #include "../tag/definitions/unicode_string_list.h"
-#include "../multiplayer/mode.h"
 #include "../game/game_time.h"
 #include "../text/text.h"
 #include "../exception/exception.h"
@@ -186,7 +186,8 @@ void ui_widget_new_instance(int16_t controller_index, UIWidgetDefinition *widget
         }
     } 
 
-    if(widget->pauses_game_time == true && get_multiplayer_mode() != MULTIPLAYER_MODE_HOST) {
+    MainGlobals *main_globals = main_get_globals();
+    if(widget->pauses_game_time == true && main_globals->game_connection != GAME_CONNECTION_NETWORK_SERVER) {
         widget_globals->pause_time_count++;
         bool game_paused = game_time_get_paused();
         if(*is_main_menu == false && game_paused == false) {

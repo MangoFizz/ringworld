@@ -79,5 +79,3 @@ void text_set_shadow_color(ColorARGBInt color);
 #endif
 
 #endif
-
-

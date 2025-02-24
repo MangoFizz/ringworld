@@ -1,7 +1,12 @@
 #include "game_engine.h"
 
-extern GameTypeEngineInterface **current_game_engine_interface;
+extern GameEngineInterface **current_game_engine_interface;
+extern GameEngineGlobals *game_engine_globals;
 
-GameTypeEngineInterface *game_engine_get_current_interface(void) {
+GameEngineInterface *game_engine_get_current_interface(void) {
     return *current_game_engine_interface;
+}
+
+GameEngineGlobals *game_engine_get_globals(void) {
+    return game_engine_globals;
 }

@@ -11,7 +11,7 @@
 #include "../text/unicode_string_list.h"
 #include "../rasterizer/rasterizer_screen.h"
 #include "../rasterizer/rasterizer_text.h"
-#include "ui_loading_screen.h"
+#include "loading_screen.h"
 
 extern uint32_t *loading_screen_state;
 extern int32_t *loading_screen_time_counter_ms_0;
@@ -26,7 +26,7 @@ extern bool *devmode_enabled;
 void loading_screen_abort_connection();
 void loading_screen_timeout_connection(uint32_t counter);
 
-void ui_loading_screen_render() {
+void loading_screen_render() {
     MainGlobals *main_globals = main_get_globals();
 
     if(*loading_screen_state == LOADING_SCREEN_STATE_OFF) {

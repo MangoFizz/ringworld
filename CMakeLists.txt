@@ -100,14 +100,13 @@ add_library(ringworld STATIC
     src/impl/math/math.c
     src/impl/math/wave_functions.c
     src/impl/interface/hud.c
+    src/impl/interface/loading_screen.c
     src/impl/interface/scoreboard.c
     src/impl/interface/ui_cursor.c
-    src/impl/interface/ui_loading_screen.c
     src/impl/interface/ui_virtual_keyboard.c
     src/impl/interface/ui_widget.c
     src/impl/main/main_globals.c
     src/impl/memory/memory.c
-    src/impl/multiplayer/mode.c
     src/impl/network/network_game.c
     src/impl/network/network_game_client.c
     src/impl/object/object.c

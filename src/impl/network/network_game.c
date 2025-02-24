@@ -39,7 +39,7 @@ extern NetworkGame *network_game_globals_host;
 extern uint32_t *network_game_server_address_host;
 extern uint16_t *network_game_server_port_host;
 
-NetworkGame *network_game_get_globals(void) {
+NetworkGame *network_game_get(void) {
     MainGlobals *main_globals = main_get_globals();
     switch(main_globals->game_connection) {
         case GAME_CONNECTION_NETWORK_CLIENT: {
@@ -71,7 +71,8 @@ uint16_t network_game_get_server_port(void) {
     MainGlobals *main_globals = main_get_globals();
     switch(main_globals->game_connection) {
         case GAME_CONNECTION_NETWORK_CLIENT:
-            // return network_game_server_address_client->port;
+            NetworkGameClient *client = network_game_client_get();
+            return client->connection->reliable_endpoint->gs_connection->port;
         case GAME_CONNECTION_NETWORK_SERVER:
             return *network_game_server_port_host;
         default:

@@ -1,6 +1,6 @@
 #include <stdio.h>
-#include <winsock.h>
 #include "../bitmap/bitmap.h"
+#include "../exception/exception.h"
 #include "../game/game_engine.h"
 #include "../game/game_globals.h"
 #include "../main/main_globals.h"
@@ -10,32 +10,152 @@
 #include "../network/network_game.h"
 #include "../math/math.h"
 #include "../math/color.h"
+#include "../multiplayer/multiplayer_tags.h"
 #include "../player/player.h"
 #include "../text/text.h"
+#include "../text/font.h"
 #include "../text/unicode_string_list.h"
 #include "../rasterizer/rasterizer_screen.h"
 #include "../rasterizer/rasterizer_text.h"
 
-wchar_t *scoreboard_get_column_header_text(TagHandle multiplayer_text_tag, uint16_t index) {
-    if(HANDLE_IS_NULL(multiplayer_text_tag)) {
-        return L"";
-    }
-    wchar_t *text = unicode_string_list_get_string(multiplayer_text_tag, 67 + index);
-    if(text == NULL) {
+enum {
+    SCOREBOARD_PLACE_COLUMN_HEADER_INDEX = 0,
+    SCOREBOARD_NAME_COLUMN_HEADER_INDEX = 1,
+    SCOREBOARD_KILLS_COLUMN_HEADER_INDEX = 2,
+    SCOREBOARD_ASSISTS_COLUMN_HEADER_INDEX = 3,
+    SCOREBOARD_DEATHS_COLUMN_HEADER_INDEX = 4,
+    SCOREBOARD_PING_COLUMN_HEADER_INDEX = 5,
+    NUM_OF_SCOREBOARD_COLUMNS = 6,
+
+    SCOREBOARD_SCORE_DEAD_TEXT_INDEX = 0,
+    SCOREBOARD_SCORE_QUIT_TEXT_INDEX = 1,
+    NUM_OF_SCOREBOARD_SCORE_SPECIAL_TEXTS = 2,
+
+    SCOREBOARD_HEADER_NO_LIVES_INDEX = 0,
+    SCOREBOARD_HEADER_ONE_LIFE_INDEX = 1,
+    SCOREBOARD_HEADER_LIVES_INDEX = 2,
+    SCOREBOARD_HEADER_DRAW_INDEX = 3,
+    SCOREBOARD_HEADER_TEAM_LOST_INDEX = 4,
+    SCOREBOARD_HEADER_YOU_LOST_INDEX = 5,
+    SCOREBOARD_HEADER_TEAM_WON_INDEX = 6,
+    SCOREBOARD_HEADER_YOU_WON_INDEX = 7,
+    SCOREBOARD_HEADER_RED_LEADS_BLUE_INDEX = 8,
+    SCOREBOARD_HEADER_BLUE_LEADS_RED_INDEX = 9,
+    SCOREBOARD_HEADER_TEAMS_TIED_INDEX = 10,
+    SCOREBOARD_HEADER_TIED_FOR_PLACE_INDEX = 11,
+    SCOREBOARD_HEADER_IN_PLACE_INDEX = 12,
+    NUM_OF_SCOREBOARD_HEADERS = 13
+};
+
+const wchar_t *SCOREBOARD_DEFAULT_COLUMN_HEADERS[] = {
+    L"Place",
+    L"Name",
+    L"Kills",
+    L"Assists",
+    L"Deaths",
+    L"Ping"
+};
+
+const wchar_t *SCOREBOARD_PLACE_STRINGS[NETWORK_GAME_MAX_PLAYERS] = {
+    L"1st",
+    L"2nd",
+    L"3rd",
+    L"4th",
+    L"5th",
+    L"6th",
+    L"7th",
+    L"8th",
+    L"9th",
+    L"10th",
+    L"11th",
+    L"12th",
+    L"13th",
+    L"14th",
+    L"15th",
+    L"16th"
+};
+
+const wchar_t *SCOREBOARD_SCORE_SPECIAL_TEXTS[] = {
+    L"Dead",
+    L"Quit"
+};
+
+const wchar_t *SCOREBOARD_SERVER_ADDRESS_PREFIX = L"Server IP address - ";
+
+const wchar_t *SCOREBOARD_HEADER_TEXTS[] = {
+    L"(no lives)",
+    L"(1 life)",
+    L"(%d lives)",
+    L"Game ends in a draw",
+    L"Your team lost",
+    L"You lost",
+    L"Your team won",
+    L"You won",
+    L"Red leads Blue %s to %s %s",
+    L"Blue leads Red %s to %s %s",
+    L"Teams tied at %s %s",
+    L"Tied for %s place with %s %s",
+    L"In %s place with %s %s"
+};
+
+const wchar_t *scoreboard_get_header_text(TagHandle multiplayer_text_tag, uint16_t index) {
+    if(index >= NUM_OF_SCOREBOARD_HEADERS) {
         return L"<missing string>";
     }
-    return text;
+    if(!HANDLE_IS_NULL(multiplayer_text_tag)) {
+        wchar_t *text = unicode_string_list_get_string(multiplayer_text_tag, 52 + index);
+        if(text != NULL) {
+            return text;
+        }
+    }
+    return SCOREBOARD_HEADER_TEXTS[index];
 }
 
-wchar_t *scoreboard_get_place_text(TagHandle multiplayer_text_tag, uint16_t place) {
-    if(HANDLE_IS_NULL(multiplayer_text_tag) || place > 16) {
-        return L"";
-    }
-    wchar_t *text = unicode_string_list_get_string(multiplayer_text_tag, 36 + place - 1);
-    if(text == NULL) {
+const wchar_t *scoreboard_get_column_header_text(TagHandle multiplayer_text_tag, uint16_t index) {
+    if(index >= NUM_OF_SCOREBOARD_COLUMNS) {
         return L"<missing string>";
     }
-    return text;
+    if(!HANDLE_IS_NULL(multiplayer_text_tag)) {
+        wchar_t *text = unicode_string_list_get_string(multiplayer_text_tag, 67 + index);
+        if(text != NULL) {
+            return text;
+        }
+    }
+    return SCOREBOARD_DEFAULT_COLUMN_HEADERS[index];
+}
+
+const wchar_t *scoreboard_get_place_text(TagHandle multiplayer_text_tag, uint16_t place) {
+    place = min_i32(place, NETWORK_GAME_MAX_PLAYERS); // @todo replace this
+    if(!HANDLE_IS_NULL(multiplayer_text_tag)) {
+        wchar_t *text = unicode_string_list_get_string(multiplayer_text_tag, 36 + place - 1);
+        if(text == NULL) {
+            return L"<missing string>";
+        }
+    }
+    return SCOREBOARD_PLACE_STRINGS[place - 1];
+}
+
+const wchar_t *scoreboard_get_score_special_text(TagHandle multiplayer_text_tag, uint16_t score) {
+    if(score >= NUM_OF_SCOREBOARD_SCORE_SPECIAL_TEXTS) {
+        return L"<missing string>";
+    }
+    if(!HANDLE_IS_NULL(multiplayer_text_tag)) {
+        wchar_t *text = unicode_string_list_get_string(multiplayer_text_tag, 138 + score);
+        if(text != NULL) {
+            return text;
+        }
+    }
+    return SCOREBOARD_SCORE_SPECIAL_TEXTS[score];
+}
+
+const wchar_t *scoreboard_get_server_address_prefix(TagHandle multiplayer_text_tag) {
+    if(!HANDLE_IS_NULL(multiplayer_text_tag)) {
+        wchar_t *text = unicode_string_list_get_string(multiplayer_text_tag, 190);
+        if(text != NULL) {
+            return text;
+        }
+    }
+    return SCOREBOARD_SERVER_ADDRESS_PREFIX;
 }
 
 void scoreboard_draw_row(wchar_t *text, bool highlight, ColorARGB *color, int16_t row_index) {
@@ -49,7 +169,7 @@ void scoreboard_draw_row(wchar_t *text, bool highlight, ColorARGB *color, int16_
     GlobalsInterfaceBitmaps *interface_bitmaps = TAG_BLOCK_GET_ELEMENT(globals->interface_bitmaps, 0);
     TagHandle font = interface_bitmaps->font_terminal.tag_handle;
     if(HANDLE_IS_NULL(font)) {
-        return;
+        font = font_get_default_terminal();
     }
 
     uint16_t screen_width = rasterizer_screen_get_width();
@@ -72,12 +192,14 @@ void scoreboard_draw_row(wchar_t *text, bool highlight, ColorARGB *color, int16_
         text_reset_tab_stops();
     }
 
+    uint16_t font_height = font_get_height(font);
+
     Rectangle2D rect;
-    rect.left = 0;
+    rect.left = 10;
     rect.right = RASTERIZER_SCREEN_BASE_WIDTH;
-    rect.top = 59;
-    rect.bottom = 76;
-    math_rectangle_2d_translate(&rect, widescreen_margin, row_index * 15);
+    rect.top = 60;
+    rect.bottom = rect.top + font_height;
+    math_rectangle_2d_translate(&rect, widescreen_margin, row_index * font_height + 3);
 
     ColorARGB text_color = *color;
     if(highlight) {
@@ -92,11 +214,11 @@ void scoreboard_draw_row(wchar_t *text, bool highlight, ColorARGB *color, int16_
 }
 
 typedef struct PlayerScore {
-    int16_t player_id;
-    int16_t player_index;
+    PlayerHandle player_handle;
     int16_t team_index;
     int16_t score;
     int16_t place;
+    bool tied;
 } PlayerScore;
 
 int scoreboard_players_sort_compare_scores(const void *a, const void *b) {
@@ -111,25 +233,28 @@ int scoreboard_players_sort_compare_scores(const void *a, const void *b) {
     return 0;
 }
 
-void scoreboard_sort_players(PlayerScore *scores, uint16_t *count) {
+void scoreboard_sort_players(PlayerScore *scores, uint16_t *count, PlayerHandle local_player_handle, PlayerScore **local_player_score) {
     PlayersTable *players_table = player_get_table();
-    GameTypeEngineInterface *game_type_engine = game_engine_get_current_interface();
-    NetworkGame *netgame_globals = network_game_get_globals();
+    GameEngineInterface *game_type_engine = game_engine_get_current_interface();
+    NetworkGame *network_game = network_game_get();
 
     PlayerScore *current_player_score = scores;
     size_t players_count = 0;
     for(size_t i = 0; i < NETWORK_GAME_MAX_PLAYERS; i++) {
-        NetworkGamePlayer *netgame_player = &netgame_globals->players[i];
+        NetworkGamePlayer *netgame_player = &network_game->players[i];
         if(netgame_player->player_list_index != -1) {
             Player *player = table_get_element(players_table, MAKE_HANDLE(0, netgame_player->player_list_index));
-            current_player_score->player_id = player->player_id;
-            current_player_score->player_index = i;
+            PlayerHandle player_handle = MAKE_HANDLE(player->player_id, netgame_player->player_list_index);
+            current_player_score->player_handle = player_handle;
             current_player_score->score = game_type_engine->get_score(i, false);
-            if(netgame_globals->gametype_variant.universal_variant.teams) {
+            if(network_game->gametype_variant.universal_variant.teams) {
                 current_player_score->team_index = player->team_index;
             }
             else {
                 current_player_score->team_index = 0;
+            }
+            if(local_player_handle.value == player_handle.value) {
+                *local_player_score = current_player_score;
             }
             current_player_score++;
             players_count++;
@@ -140,17 +265,21 @@ void scoreboard_sort_players(PlayerScore *scores, uint16_t *count) {
     qsort(scores, players_count, sizeof(PlayerScore), scoreboard_players_sort_compare_scores);
     
     // Assign places
-    int16_t previous_score = -1, previous_place = 0;
+    PlayerScore *previous_player_score = NULL;
     for(size_t i = 0; i < players_count; i++) {
         PlayerScore *player_score = &scores[i];
-        if(player_score->score != previous_score) {
-            player_score->place = previous_place + 1;
-            previous_score = player_score->score;
-            previous_place++;
+        if(previous_player_score == NULL) {
+            player_score->place = 1;
+        }
+        else if(player_score->score != previous_player_score->score) {
+            player_score->place = previous_player_score->place + 1;
         }
         else {
-            player_score->place = previous_place;
+            player_score->place = previous_player_score->place;
+            player_score->tied = true;
+            previous_player_score->tied = true;
         }
+        previous_player_score = player_score;
     }
 
     *count = players_count;
@@ -160,90 +289,229 @@ typedef struct ScoreboardRowData {
     PlayerHandle player_handle;
     uint16_t place;
     wchar_t *name;
-    int16_t score;
+    wchar_t *score;
     uint16_t kills;
     uint16_t deaths;
     uint16_t assists;
     uint8_t team;
     uint16_t ping;
+    int16_t lives;
+    bool tied;
 } ScoreboardRowData;
 
-void scoreboard_build_rows(ScoreboardRowData *scoreboard_rows, uint16_t count) {
+void scoreboard_push_rows_data_by_team(PlayerScore *players_scores, size_t players_scores_count, uint16_t team_index, ScoreboardRowData *scoreboard_rows, size_t *rows_count)  {
     PlayersTable *players_table = player_get_table();
-    NetworkGame *netgame_globals = network_game_get_globals();
-    
+    NetworkGame *network_game = network_game_get();
+
+    for(size_t player_score_index = 0; player_score_index < players_scores_count; player_score_index++) {
+        PlayerScore *player_score = &players_scores[player_score_index];
+        if(player_score->team_index == team_index) {
+            ScoreboardRowData *scoreboard_row = &scoreboard_rows[*rows_count];
+            PlayerHandle player_handle = player_score->player_handle;
+            Player *player = table_get_element(players_table, player_handle);
+            scoreboard_row->player_handle = player_handle;
+            scoreboard_row->name = player->name;
+            scoreboard_row->kills = player->kills[0];
+            scoreboard_row->deaths = player->deaths;
+            scoreboard_row->assists = player->assists[0];
+            scoreboard_row->ping = player->ping;
+            scoreboard_row->team = player_score->team_index;
+            scoreboard_row->place = player_score->place;
+            scoreboard_row->lives = max_i32(network_game->gametype_variant.universal_variant.lives - player->deaths, 0);
+            (*rows_count)++;
+        }
+    }
+}
+
+void scoreboard_build_rows(PlayerHandle player_handle, ScoreboardRowData *scoreboard_rows, uint16_t count) {
     PlayerScore players_scores[NETWORK_GAME_MAX_PLAYERS];
+    PlayerScore *local_player_score = NULL;
     uint16_t players_scores_count = 0;
-    scoreboard_sort_players(players_scores, &players_scores_count);
+    scoreboard_sort_players(players_scores, &players_scores_count, player_handle, &local_player_score);
 
     memset(scoreboard_rows, 0, sizeof(ScoreboardRowData) * count);
     for(size_t i = 0; i < count; i++) {
         scoreboard_rows[i].player_handle = NULL_HANDLE;
     }
 
-    uint8_t teams_count = netgame_globals->gametype_variant.universal_variant.teams ? NUM_OF_NETWORK_GAME_TEAMS : 1;
-    uint8_t scoreboard_row_index = 0;
+    ASSERT(local_player_score != NULL);
+    uint8_t local_player_team = local_player_score->team_index;
+    size_t scoreboard_row_index = 0;
+    
+    // Push local player's team first
+    scoreboard_push_rows_data_by_team(players_scores, players_scores_count, local_player_team, scoreboard_rows, &scoreboard_row_index);
+
+    // Push the rest of the teams
+    NetworkGame *network_game = network_game_get();
+    uint8_t teams_count = network_game->gametype_variant.universal_variant.teams ? NUM_OF_NETWORK_GAME_TEAMS : 1;
     for(size_t team_index = 0; team_index < teams_count; team_index++) {
-        for(size_t player_score_index = 0; player_score_index < players_scores_count; player_score_index++) {
-            PlayerScore *player_score = &players_scores[player_score_index];
-            if(player_score->team_index == team_index) {
-                ScoreboardRowData *scoreboard_row = &scoreboard_rows[scoreboard_row_index];
-                PlayerHandle player_handle = MAKE_HANDLE(player_score->player_id, player_score->player_index);
-                Player *player = table_get_element(players_table, player_handle);
-                scoreboard_row->player_handle = player_handle;
-                scoreboard_row->name = player->name;
-                scoreboard_row->kills = player->kills[0];
-                scoreboard_row->deaths = player->deaths;
-                scoreboard_row->assists = player->assists[0];
-                scoreboard_row->ping = player->ping;
-                scoreboard_row->team = player_score->team_index;
-                scoreboard_row->score = player_score->score;
-                scoreboard_row->place = player_score->place;
-                scoreboard_row_index++;
-            }
+        if(team_index != local_player_team) {
+            scoreboard_push_rows_data_by_team(players_scores, players_scores_count, team_index, scoreboard_rows, &scoreboard_row_index);
         }
     }
 }
 
-void scoreboard_draw_score_table(PlayerHandle player_handle, float fade) {
-    GameTypeEngineInterface *game_type_engine = game_engine_get_current_interface();
-    PlayersTable *players_table = player_get_table();
-    NetworkGame *netgame_globals = network_game_get_globals();
-    MainGlobals *main_globals = main_get_globals();
+void scoreboard_draw_header(ScoreboardRowData *player_score_data, float fade) {
+    HUDGlobals *hud_globals = hud_get_globals();
+    NetworkGame *network_game = network_game_get();
+    GameEngineInterface *game_engine = game_engine_get_current_interface();
+    GameEngineGlobals *game_engine_globals = game_engine_get_globals();
+    TagHandle mp_text_tag = multiplayer_get_text_tag();
 
-    TagHandle mp_text_tag = lookup_tag("ui\\multiplayer_game_text", TAG_GROUP_UNICODE_STRING_LIST);
-    wchar_t *place_label = scoreboard_get_column_header_text(mp_text_tag, 0);
-    wchar_t *name_label = scoreboard_get_column_header_text(mp_text_tag, 1);
-    wchar_t *kills_label = scoreboard_get_column_header_text(mp_text_tag, 2);
-    wchar_t *assists_label = scoreboard_get_column_header_text(mp_text_tag, 3);
-    wchar_t *deaths_label = scoreboard_get_column_header_text(mp_text_tag, 4);
-    wchar_t *ping_label = L"Ping"; // not sure where this is stored
+    uint16_t screen_width = rasterizer_screen_get_width();
+    uint16_t screen_height = rasterizer_screen_get_height();
+
+    ColorARGB header_color;
+    header_color.a = fade;
+    header_color.r = 1.0f;
+    header_color.g = 1.0f;
+    header_color.b = 1.0f;
+
+    TagHandle server_name_font = hud_globals->splitscreen_font.tag_handle;
+    if(HANDLE_IS_NULL(server_name_font)) {
+        server_name_font = font_get_default_small();
+    }
+    
+    wchar_t lives_text[32];
+    if(network_game->gametype_variant.universal_variant.lives > 0) {
+        uint16_t text_index;
+        if(player_score_data->lives == 0) {
+            swprintf(lives_text, 32, scoreboard_get_header_text(mp_text_tag, SCOREBOARD_HEADER_NO_LIVES_INDEX));
+        }
+        else if(player_score_data->lives == 1) {
+            swprintf(lives_text, 32, scoreboard_get_header_text(mp_text_tag, SCOREBOARD_HEADER_ONE_LIFE_INDEX));
+        }
+        else {
+            swprintf(lives_text, 32, scoreboard_get_header_text(mp_text_tag, SCOREBOARD_HEADER_LIVES_INDEX), player_score_data->lives);
+        }
+    }
+    else {
+        lives_text[0] = L'\0';
+    }
+
+    wchar_t text[256];
+
+    if(game_engine_globals->mode == GAME_ENGINE_MODE_ACTIVE) {
+        if(network_game->gametype_variant.universal_variant.teams) {
+            int16_t red_team_score = game_engine->get_team_score(NETWORK_GAME_TEAM_RED);
+            int16_t blue_team_score = game_engine->get_team_score(NETWORK_GAME_TEAM_BLUE);
+            
+            wchar_t red_team_score_text[32];
+            swprintf(red_team_score_text, 32, L"%d", red_team_score);
+            
+            wchar_t blue_team_score_text[32];
+            swprintf(blue_team_score_text, 32, L"%d", blue_team_score);
+    
+            if(red_team_score == blue_team_score) {
+                swprintf(text, 256, scoreboard_get_header_text(mp_text_tag, SCOREBOARD_HEADER_TEAMS_TIED_INDEX), red_team_score_text, lives_text);
+            }
+            else if(red_team_score > blue_team_score) {
+                swprintf(text, 256, scoreboard_get_header_text(mp_text_tag, SCOREBOARD_HEADER_RED_LEADS_BLUE_INDEX), red_team_score_text, blue_team_score_text, lives_text);
+            }
+            else {
+                swprintf(text, 256, scoreboard_get_header_text(mp_text_tag, SCOREBOARD_HEADER_BLUE_LEADS_RED_INDEX), blue_team_score_text, red_team_score_text, lives_text);
+            }
+        }
+        else {
+            wchar_t player_score_text[32];
+            swprintf(player_score_text, 32, L"%d", game_engine->get_score(player_score_data->player_handle.index, false));
+    
+            if(player_score_data->tied) {
+                swprintf(text, 256, scoreboard_get_header_text(mp_text_tag, SCOREBOARD_HEADER_TIED_FOR_PLACE_INDEX), player_score_text, lives_text);
+            }
+            else {
+                const wchar_t *place_text = scoreboard_get_place_text(mp_text_tag, player_score_data->place);
+                swprintf(text, 256, scoreboard_get_header_text(mp_text_tag, SCOREBOARD_HEADER_IN_PLACE_INDEX), place_text, player_score_text, lives_text);
+            }
+        }
+    }
+    else {
+        if(network_game->gametype_variant.universal_variant.teams) {
+            int16_t red_team_score = game_engine->get_team_score(NETWORK_GAME_TEAM_RED);
+            int16_t blue_team_score = game_engine->get_team_score(NETWORK_GAME_TEAM_BLUE);
+            uint16_t text_index;
+            if(red_team_score == blue_team_score) {
+                text_index = SCOREBOARD_HEADER_DRAW_INDEX;
+            }
+            else if((red_team_score > blue_team_score) == (player_score_data->team == NETWORK_GAME_TEAM_RED)) {
+                text_index = SCOREBOARD_HEADER_TEAM_WON_INDEX;
+            }
+            else {
+                text_index = SCOREBOARD_HEADER_TEAM_LOST_INDEX;
+            }
+            swprintf(text, 256, scoreboard_get_header_text(mp_text_tag, text_index));
+        }
+        else {
+            uint16_t text_index;
+            if(player_score_data->place == 1) {
+                if(player_score_data->tied) {
+                    text_index = SCOREBOARD_HEADER_DRAW_INDEX;
+                }
+                else {
+                    text_index = SCOREBOARD_HEADER_YOU_WON_INDEX;
+                }
+            } 
+            else {
+                text_index = SCOREBOARD_HEADER_YOU_LOST_INDEX;
+            }
+            swprintf(text, 256, scoreboard_get_header_text(mp_text_tag, text_index));
+        }
+    }
+
+    scoreboard_draw_row(text, false, &header_color, 0);
+}
+
+void scoreboard_draw_table(PlayerHandle player_handle, float fade) {
+    GameEngineInterface *game_type_engine = game_engine_get_current_interface();
+    PlayersTable *players_table = player_get_table();
+    NetworkGame *network_game = network_game_get();
+    MainGlobals *main_globals = main_get_globals();
+    TagHandle mp_text_tag = multiplayer_get_text_tag();
+
+    ScoreboardRowData rows_data[NETWORK_GAME_MAX_PLAYERS];
+    scoreboard_build_rows(player_handle, rows_data, NETWORK_GAME_MAX_PLAYERS);
+
+    const wchar_t *place_label = scoreboard_get_column_header_text(mp_text_tag, SCOREBOARD_PLACE_COLUMN_HEADER_INDEX);
+    const wchar_t *name_label = scoreboard_get_column_header_text(mp_text_tag, SCOREBOARD_NAME_COLUMN_HEADER_INDEX);
+    const wchar_t *kills_label = scoreboard_get_column_header_text(mp_text_tag, SCOREBOARD_KILLS_COLUMN_HEADER_INDEX);
+    const wchar_t *assists_label = scoreboard_get_column_header_text(mp_text_tag, SCOREBOARD_ASSISTS_COLUMN_HEADER_INDEX);
+    const wchar_t *deaths_label = scoreboard_get_column_header_text(mp_text_tag, SCOREBOARD_DEATHS_COLUMN_HEADER_INDEX);
+    const wchar_t *ping_label = SCOREBOARD_DEFAULT_COLUMN_HEADERS[SCOREBOARD_PING_COLUMN_HEADER_INDEX];
     
     wchar_t score_label[256];
-    game_type_engine->get_score_header_string(&score_label);
+    game_type_engine->get_score_header_string(score_label);
 
-    wchar_t scoreboard_header[512];
-    swprintf(scoreboard_header, 512, L"\t%s\t%s\t%s\t%s\t%s\t%s\t%s", place_label, name_label, score_label, kills_label, assists_label, deaths_label, ping_label);
+    wchar_t row_text[256];
+    swprintf(row_text, 512, L"\t%s\t%s\t%s\t%s\t%s\t%s\t%s", place_label, name_label, score_label, kills_label, assists_label, deaths_label, ping_label);
 
     ColorARGB text_color;
     text_color.a = fade;
     text_color.r = 0.5f;
     text_color.g = 0.5f;
     text_color.b = 0.5f;
-    scoreboard_draw_row(scoreboard_header, false, &text_color, 1);
+    scoreboard_draw_row(row_text, false, &text_color, 1);
 
-    ScoreboardRowData rows_data[16];
-    scoreboard_build_rows(rows_data, 16);
-
-    wchar_t row_text[256];
-    for(size_t i = 0; i < 16; i++) {
+    for(size_t i = 0; i < NETWORK_GAME_MAX_PLAYERS; i++) {
         ScoreboardRowData *row_data = &rows_data[i];
         if(!HANDLE_IS_NULL(row_data->player_handle)) {
-            wchar_t *place_text = scoreboard_get_place_text(mp_text_tag, row_data->place);
-            swprintf(row_text, 256, L"\t%s\t%s\t%d\t%d\t%d\t%d\t%d", place_text, row_data->name, row_data->score, row_data->kills, row_data->assists, row_data->deaths, row_data->ping);
+            Player *player = table_get_element(players_table, row_data->player_handle);
+
+            const wchar_t *place_text = scoreboard_get_place_text(mp_text_tag, row_data->place);
+            const wchar_t *score_string = NULL;
+            if(network_game->gametype_variant.universal_variant.lives > 0 && row_data->lives == 0) {
+                score_string = scoreboard_get_score_special_text(mp_text_tag, SCOREBOARD_SCORE_DEAD_TEXT_INDEX); 
+            }
+            if(player->quit) {
+                score_string = scoreboard_get_score_special_text(mp_text_tag, SCOREBOARD_SCORE_QUIT_TEXT_INDEX);
+            }
+            if(score_string == NULL) {
+                score_string = game_type_engine->get_score_string(row_data->player_handle.index, score_label);
+            }
+            swprintf(row_text, 256, L"\t%s\t%s\t%s\t%d\t%d\t%d\t%d", place_text, row_data->name, score_string, row_data->kills, row_data->assists, row_data->deaths, row_data->ping);
+            
             ColorARGB row_color;
             row_color.a = fade;
-            if(netgame_globals->gametype_variant.universal_variant.teams) {
+            if(network_game->gametype_variant.universal_variant.teams) {
                 const ColorRGB *team_color = network_game_get_team_color(row_data->team);
                 row_color.r = team_color->r;
                 row_color.g = team_color->g;
@@ -254,7 +522,14 @@ void scoreboard_draw_score_table(PlayerHandle player_handle, float fade) {
                 row_color.g = 0.7f;
                 row_color.b = 0.7f;
             }
-            scoreboard_draw_row(row_text, row_data->player_handle.value == player_handle.value, &row_color, i + 2);
+            
+            bool should_highlight = false;
+            if(row_data->player_handle.value == player_handle.value) {
+                scoreboard_draw_header(row_data, fade);
+                should_highlight = true;
+            }
+            
+            scoreboard_draw_row(row_text, should_highlight, &row_color, i + 2);
         }
     }
 }
@@ -278,44 +553,9 @@ void scoreboard_draw_background(float fade) {
     rasterizer_screen_geometry_draw_quad(&background_rect, color_encode_a8r8g8b8(&background_color));
 }
 
-void scoreboard_draw_header(PlayerHandle player_handle, float fade) {
-    HUDGlobals *hud_globals = hud_get_globals();
-    NetworkGame *netgame_globals = network_game_get_globals();
-    GameTypeEngineInterface *game_type_engine = game_engine_get_current_interface();
-
-    uint16_t screen_width = rasterizer_screen_get_width();
-    uint16_t screen_height = rasterizer_screen_get_height();
-
-    Rectangle2D server_name_rect;
-    server_name_rect.left = 0;
-    server_name_rect.right = screen_width - 5;
-    server_name_rect.top = 10;
-    server_name_rect.bottom = screen_height - 40;
-
-    ColorARGB server_name_color;
-    server_name_color.a = fade;
-    server_name_color.r = 1.0f;
-    server_name_color.g = 1.0f;
-    server_name_color.b = 1.0f;
-
-    TagHandle server_name_font = hud_globals->fullscreen_font.tag_handle;
-    if(HANDLE_IS_NULL(server_name_font)) {
-        server_name_font = hud_globals->splitscreen_font.tag_handle;
-        if(HANDLE_IS_NULL(server_name_font)) {
-            server_name_font = lookup_tag("ui\\large_ui", TAG_GROUP_FONT);
-        }
-    }
-
-    wchar_t text[256];
-    wprintf(L"Score header text: %s\n", game_type_engine->get_score_string(player_handle, text));
-
-    // text_set_drawing_parameters(-1, 1, 0, server_name_font, &server_name_color);
-    // rasterizer_draw_unicode_string(&server_name_rect, NULL, NULL, 0, text);
-}
-
 void scoreboard_draw_server_name(float fade) {
     HUDGlobals *hud_globals = hud_get_globals();
-    NetworkGame *netgame_globals = network_game_get_globals();
+    NetworkGame *network_game = network_game_get();
 
     uint16_t screen_width = rasterizer_screen_get_width();
     uint16_t screen_height = rasterizer_screen_get_height();
@@ -323,8 +563,8 @@ void scoreboard_draw_server_name(float fade) {
     Rectangle2D server_name_rect;
     server_name_rect.left = 10;
     server_name_rect.right = screen_width - 5;
-    server_name_rect.top = screen_height - 60;
-    server_name_rect.bottom = screen_height - 40;
+    server_name_rect.top = screen_height - 55;
+    server_name_rect.bottom = screen_height - 35;
 
     ColorARGB server_name_color;
     server_name_color.a = fade;
@@ -336,12 +576,12 @@ void scoreboard_draw_server_name(float fade) {
     if(HANDLE_IS_NULL(server_name_font)) {
         server_name_font = hud_globals->splitscreen_font.tag_handle;
         if(HANDLE_IS_NULL(server_name_font)) {
-            server_name_font = lookup_tag("ui\\large_ui", TAG_GROUP_FONT);
+            server_name_font = font_get_default_large();
         }
     }
 
     text_set_drawing_parameters(-1, 1, 0, server_name_font, &server_name_color);
-    rasterizer_draw_unicode_string(&server_name_rect, NULL, NULL, 0, netgame_globals->server_name);
+    rasterizer_draw_unicode_string(&server_name_rect, NULL, NULL, 0, network_game->server_name);
 }
 
 void scoreboard_draw_server_address(float fade) {
@@ -366,7 +606,7 @@ void scoreboard_draw_server_address(float fade) {
     if(HANDLE_IS_NULL(server_address_font)) {
         server_address_font = hud_globals->splitscreen_font.tag_handle;
         if(HANDLE_IS_NULL(server_address_font)) {
-            server_address_font = lookup_tag("ui\\large_ui", TAG_GROUP_FONT);
+            server_address_font = font_get_default_large();
         }
     }
 
@@ -378,14 +618,11 @@ void scoreboard_draw_server_address(float fade) {
     address.value = network_game_get_server_address();
     uint16_t server_port = network_game_get_server_port();;
 
-    TagHandle mp_text_tag = lookup_tag("ui\\multiplayer_game_text", TAG_GROUP_UNICODE_STRING_LIST);
-    wchar_t *prefix = unicode_string_list_get_string(mp_text_tag, 190);
-    if(prefix == NULL) {
-        prefix = L"Server IP address - ";
-    }
+    TagHandle mp_text_tag = multiplayer_get_text_tag();
+    const wchar_t *prefix = scoreboard_get_server_address_prefix(mp_text_tag);
     
     wchar_t server_address_text[256];
-    swprintf(server_address_text, 256, L"%s%d.%d.%d.%d:%d", prefix, address.ipv4.class_a, address.ipv4.class_b, address.ipv4.class_c, address.ipv4.class_d, server_port);
+    swprintf(server_address_text, 256, L"%s%d.%d.%d.%d:%d", prefix, address.ipv4.class_d, address.ipv4.class_c, address.ipv4.class_b, address.ipv4.class_a, server_port);
 
     text_set_drawing_parameters(-1, 1, 0, server_address_font, &server_address_color);
     rasterizer_draw_unicode_string(&server_address_rect, NULL, NULL, 0, server_address_text);
@@ -393,8 +630,7 @@ void scoreboard_draw_server_address(float fade) {
 
 void scoreboard_render(PlayerHandle player_handle, float fade) {
     scoreboard_draw_background(fade);
-    scoreboard_draw_header(player_handle, fade);
-    scoreboard_draw_score_table(player_handle, fade);
+    scoreboard_draw_table(player_handle, fade);
     scoreboard_draw_server_name(fade);
     scoreboard_draw_server_address(fade);
 }

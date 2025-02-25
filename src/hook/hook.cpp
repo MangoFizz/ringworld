@@ -20,6 +20,20 @@ static std::size_t hook_heap_usage;
 bool ringworld_server_mode = false;
 
 extern "C" wchar_t *build_number;
+extern "C" void shader_transparent_generic_switch_case_asm();
+
+static void set_up_transparent_generic_hack() {
+    DWORD old_protection;
+    auto *switch_case_address = reinterpret_cast<std::uint32_t *>(0x5381f4);
+    VirtualProtect(reinterpret_cast<void *>(switch_case_address), 4, PAGE_READWRITE, &old_protection);
+    *switch_case_address = reinterpret_cast<uint32_t>(shader_transparent_generic_switch_case_asm);
+    VirtualProtect(reinterpret_cast<void *>(switch_case_address), 4, old_protection, &old_protection);
+}
+
+static void set_up_build_number() {
+    const wchar_t *ringworld_version = L"" RINGWORLD_VERSION_STRING;
+    std::wcscpy(build_number, ringworld_version);
+}
 
 extern "C" void set_up_ringworld_hooks(Platform platform) {
     // Enable DEP (if doable) because executing code not marked as executable is bad
@@ -37,6 +51,7 @@ extern "C" void set_up_ringworld_hooks(Platform platform) {
                 ringworld_server_mode = false;
                 set_game_variables();
                 set_up_game_hooks();
+                set_up_transparent_generic_hack();
                 break;
             case RW_PLATFORM_DEDICATED_SERVER:
                 ringworld_server_mode = true;
@@ -51,8 +66,7 @@ extern "C" void set_up_ringworld_hooks(Platform platform) {
     }
 
 #ifdef RINGWORLD_DEBUG
-    const wchar_t *ringworld_version = L"" RINGWORLD_VERSION_STRING;
-    std::wcscpy(build_number, ringworld_version);
+    set_up_build_number();
 #endif
 
     // Once done, set the protection to execute/read only so we don't get pwned.

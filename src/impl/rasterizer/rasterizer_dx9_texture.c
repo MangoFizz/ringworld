@@ -31,8 +31,8 @@ D3DFORMAT rasterizer_dx9_texture_get_d3d_format(BitmapDataFormat format) {
             return D3DFMT_A8L8;
 #endif
         default:
-            printf("Unsupported bitmap format: %d\n", format);
-            return D3DFMT_UNKNOWN;            
+            CRASHF_DEBUG("Unsupported bitmap data format: %d", format);
+            return D3DFMT_UNKNOWN;         
     }
 }
 

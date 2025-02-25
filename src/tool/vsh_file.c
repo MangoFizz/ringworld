@@ -73,7 +73,7 @@ const char *vertex_shaders_files[] = {
     "transparent_water_opacity_m",
     "transparent_water_reflection",
     "transparent_water_reflection_m",
-#ifndef ENABLE_DEBUG_SHADERS
+#ifndef RINGWORLD_TOOL_ENABLE_DEBUG_SHADERS
     "model_fast_prepass",
     "model_scenery_prepass",
     "environment_prepass"

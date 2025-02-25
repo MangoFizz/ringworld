@@ -5,12 +5,6 @@
 extern "C" {
 #endif
 
-#ifdef RW_EXPORT_SYMBOLS
-    #define RINGWORLD_API __declspec(dllexport)
-#else
-    #define RINGWORLD_API
-#endif
-
 typedef enum Platform {
     RW_PLATFORM_GAME,
     RW_PLATFORM_DEDICATED_SERVER

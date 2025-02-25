@@ -5,12 +5,6 @@ project("ring-world"
     LANGUAGES C CXX ASM
 )
 
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake")
-
-find_package(Python3 COMPONENTS Interpreter REQUIRED)
-
-include("lua/code_generation.cmake")
-
 if(NOT WIN32)
     message(FATAL_ERROR "This can only be built for 32-bit Windows. If you are cross compiling, use MinGW.")
 endif()
@@ -20,45 +14,24 @@ if(NOT (CMAKE_SIZEOF_VOID_P EQUAL 4))
     message(FATAL_ERROR "This can only be built for 32-bit Windows. You are trying to build for ${BITNESS}-bit which is not allowed.")
 endif()
 
-add_custom_command(
-    OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/game_function_hooks.cpp ${CMAKE_CURRENT_BINARY_DIR}/game_functions.S
-    DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/src/hook/game_functions.json
-    DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/src/hook/generate_hooks.py
-    COMMAND Python3::Interpreter ${CMAKE_CURRENT_SOURCE_DIR}/src/hook/generate_hooks.py ${CMAKE_CURRENT_SOURCE_DIR}/src/hook/game_functions.json set_up_game_hooks ${CMAKE_CURRENT_BINARY_DIR}/game_function_hooks.cpp ${CMAKE_CURRENT_BINARY_DIR}/game_functions.S "false"
-)
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake")
 
-add_custom_command(
-    OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/server_function_hooks.cpp
-    DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/src/hook/server_functions.json
-    DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/src/hook/generate_hooks.py
-    COMMAND Python3::Interpreter ${CMAKE_CURRENT_SOURCE_DIR}/src/hook/generate_hooks.py ${CMAKE_CURRENT_SOURCE_DIR}/src/hook/server_functions.json set_up_server_hooks ${CMAKE_CURRENT_BINARY_DIR}/server_function_hooks.cpp ${CMAKE_CURRENT_BINARY_DIR}/server_functions.S "true"
-)
+find_package(Python3 COMPONENTS Interpreter REQUIRED)
+find_package(Git REQUIRED)
 
-add_custom_command(
-    OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/game_variables.cpp
-    DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/src/hook/game_variables.json
-    DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/src/hook/generate_variables.py
-    COMMAND Python3::Interpreter ${CMAKE_CURRENT_SOURCE_DIR}/src/hook/generate_variables.py ${CMAKE_CURRENT_SOURCE_DIR}/src/hook/game_variables.json ${CMAKE_CURRENT_BINARY_DIR}/game_variables.cpp "set_game_variables" "false"
-)
+option(RINGWORLD_BUILD_STATIC "Build a static library instead of the standalone module" OFF)
+option(RINGWORLD_BUILD_TOOL "Build ringworld's tool" OFF)
+option(RINGWORLD_TOOL_ENABLE_DEBUG_SHADERS "Enable debug shaders in the tool" OFF)
+option(RINGWORLD_ENABLE_EVENTS_BUS "Enable the events bus" OFF)
+option(RINGWORLD_ENABLE_ENHANCEMENTS "Enable enhancements" OFF)
 
-add_custom_command(
-    OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/server_variables.cpp
-    DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/src/hook/server_variables.json
-    DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/src/hook/generate_variables.py
-    COMMAND Python3::Interpreter ${CMAKE_CURRENT_SOURCE_DIR}/src/hook/generate_variables.py ${CMAKE_CURRENT_SOURCE_DIR}/src/hook/server_variables.json ${CMAKE_CURRENT_BINARY_DIR}/server_variables.cpp "set_server_variables" "true"
-)
+include("lua/tag_definitions.cmake")
+include("src/hook/hooks.cmake")
 
 include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/include
     ${CMAKE_CURRENT_SOURCE_DIR}/src
 )
-
-# Add debug define for debug builds
-if(CMAKE_BUILD_TYPE MATCHES Debug)
-    add_definitions(-DDEBUG)
-endif()
-
-find_package(Git REQUIRED)
 
 # If we have Git, try to see if we are in a git repo
 if(${GIT_FOUND})
@@ -83,9 +56,16 @@ add_custom_command(
     DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/src/version.cmake" "$<$<BOOL:${IN_GIT_REPO}>:${GIT_DIR}/refs/heads>"
 )
 
-add_library(ringworld STATIC
-    src/ringworld.cpp
-    src/event/events.cpp
+# Add debug define for debug builds
+if(CMAKE_BUILD_TYPE MATCHES Debug)
+    add_definitions(-DRINGWORLD_DEBUG)
+endif()
+
+if(RINGWORLD_ENABLE_ENHANCEMENTS)
+    add_definitions(-DRINGWORLD_ENABLE_ENHANCEMENTS)
+endif()
+
+set(RINGWORLD_SOURCES
     src/impl/bitmap/bitmap.c
     src/impl/console/console.c
     src/impl/crypto/md5.c
@@ -136,24 +116,39 @@ add_library(ringworld STATIC
     src/impl/shader/shader.c
     src/impl/tag/tag.c
     src/impl/text/text.c
+    ${RINGWORLD_HOOKS_SOURCES}
     ${CMAKE_CURRENT_SOURCE_DIR}/src/version.hpp
-
-    ${CMAKE_CURRENT_BINARY_DIR}/game_function_hooks.cpp
-    ${CMAKE_CURRENT_BINARY_DIR}/game_functions.S
-    ${CMAKE_CURRENT_BINARY_DIR}/game_variables.cpp
-    ${CMAKE_CURRENT_BINARY_DIR}/server_function_hooks.cpp
-    ${CMAKE_CURRENT_BINARY_DIR}/server_variables.cpp
 )
+
+if(RINGWORLD_ENABLE_EVENTS_BUS)
+    add_definitions(-DRINGWORLD_ENABLE_EVENTS_BUS)
+    list(APPEND RINGWORLD_SOURCES
+        src/event/event.cpp
+    )
+endif()
+
+if(RINGWORLD_BUILD_STATIC)
+    add_library(ringworld STATIC ${RINGWORLD_SOURCES})
+else()
+    add_library(ringworld MODULE ${RINGWORLD_SOURCES} src/ringworld.c)
+    set_target_properties(ringworld PROPERTIES PREFIX "")
+    set_target_properties(ringworld PROPERTIES LINK_FLAGS "-static -static-libgcc -static-libstdc++")
+endif()
 
 add_dependencies(ringworld ringworld-tag-definitions-headers)
-
 target_link_libraries(ringworld d3dcompiler)
 
-add_executable(ringworld-tool
-    src/tool/d3d_shader.c
-    src/tool/vsh_file.c
-    src/tool/main.c
-)
-
-set_target_properties(ringworld-tool PROPERTIES LINK_FLAGS "-static -static-libgcc -static-libstdc++")
-target_link_libraries(ringworld-tool ringworld d3d9 d3dx9)
+if(RINGWORLD_BUILD_TOOL)
+    if(RINGWORLD_TOOL_ENABLE_DEBUG_SHADERS)
+        add_definitions(-DRINGWORLD_TOOL_ENABLE_DEBUG_SHADERS)
+    endif()
+    add_executable(ringworld-tool
+        src/impl/rasterizer/rasterizer_dx9_shader_compiler.c
+        src/impl/rasterizer/rasterizer_shaders_blob.c
+        src/tool/d3d_shader.c
+        src/tool/vsh_file.c
+        src/tool/main.c
+    )
+    set_target_properties(ringworld-tool PROPERTIES LINK_FLAGS "-static -static-libgcc -static-libstdc++")
+    target_link_libraries(ringworld-tool d3d9 d3dx9)
+endif()

@@ -1,6 +1,6 @@
 #include <windows.h>
 #include <math.h>
-#include "../../event/events.h"
+#include "../../event/event.h"
 #include "../bitmap/bitmap.h"
 #include "../console/console.h"
 #include "../memory/pool.h"
@@ -129,7 +129,7 @@ Widget *ui_widget_load_by_name_or_tag(const char *definition_tag_path, TagHandle
 
     ui_widget_new_instance(controller_index, definition, widget, definition_tag, parent);
 
-    ringworld_event_trigger(RW_EVENT_WIDGET_LOADED, widget);
+    RINGWORLD_EVENT_DISPATCH(RW_EVENT_WIDGET_LOADED, widget);
 
     return widget;
 }

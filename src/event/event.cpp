@@ -1,7 +1,8 @@
 #include <vector>
 #include <unordered_map>
+#include "event.h"
 
-#include "events.h"
+#ifdef RINGWORLD_ENABLE_EVENTS_BUS
 
 static std::unordered_map<RingworldEventID, std::vector<RingworldEventCallback>> event_callbacks;
 
@@ -12,7 +13,7 @@ extern "C" void ringworld_event_subscribe(RingworldEventID event, RingworldEvent
     event_callbacks[event].push_back(callback);
 }
 
-extern "C" void ringworld_event_trigger(RingworldEventID event, void *data) {
+extern "C" void ringworld_event_dispatch(RingworldEventID event, void *data) {
     if(event_callbacks.find(event) == event_callbacks.end()) {
         return;
     }
@@ -20,3 +21,5 @@ extern "C" void ringworld_event_trigger(RingworldEventID event, void *data) {
         reinterpret_cast<void(*)(void *)>(callback)(data);
     }
 }
+
+#endif

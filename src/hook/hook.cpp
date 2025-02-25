@@ -50,7 +50,7 @@ extern "C" void set_up_ringworld_hooks(Platform platform) {
         std::terminate();
     }
 
-#ifdef DEBUG
+#ifdef RINGWORLD_DEBUG
     const wchar_t *ringworld_version = L"" RINGWORLD_VERSION_STRING;
     std::wcscpy(build_number, ringworld_version);
 #endif

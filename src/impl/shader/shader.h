@@ -7,6 +7,7 @@ extern "C" {
 
 #include "../tag/definitions/shader.h"
 #include "../tag/definitions/bitmap.h"
+#include "../tag/definitions/shader_transparent_generic.h"
 #include "../rasterizer/rasterizer_geometry_group.h"
 
 /**
@@ -15,7 +16,7 @@ extern "C" {
  * @param type The type to assert.
  * @return Pointer to the shader data.
  */
-void *shader_type_assert(Shader *shader, ShaderType type);
+void *shader_type_assert(Shader *shader, ShaderTypePc type);
 
 /**
  * Get the vertex shader permutation index of a shader.
@@ -37,7 +38,7 @@ uint16_t shader_get_vertex_shader_permutation(Shader *shader);
  * @param u_transform_reference The U transform reference.
  * @param v_transform_reference The V transform reference.
  */
-void shader_texture_animation_evaluate(float map_u_scale, float map_v_scale, float map_u_offset, float map_v_offset, float map_rotation, float frame_params, void *texture_animation, RenderAnimation *render_animation, float *u_transform_reference, float *v_transform_reference);
+void shader_texture_animation_evaluate(float map_u_scale, float map_v_scale, float map_u_offset, float map_v_offset, float map_rotation, float frame_params, ShaderTransparentMapAnimation *texture_animation, RenderAnimation *render_animation, float *u_transform_reference, float *v_transform_reference);
 
 /**
  * Get the bitmap type for a shader transparent generic first map.

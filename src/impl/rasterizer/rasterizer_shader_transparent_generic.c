@@ -158,13 +158,13 @@ static char *generate_defines_hash(D3D_SHADER_MACRO *defines) {
     return hash;
 }
 
-static D3D_SHADER_MACRO *generate_defines(ShaderTransparentGeneric *tag) {
+static D3D_SHADER_MACRO *generate_defines(ShaderTransparentGeneric *shader_data) {
     D3D_SHADER_MACRO *defines = GlobalAlloc(GPTR, sizeof(D3D_SHADER_MACRO) * 10);
     size_t defines_count = 0;
     ShaderStageParams params = {0};
 
     // if there are no stages, set up the default stage
-    if(tag->stages.count == 0) {
+    if(shader_data->stages.count == 0) {
         params.input_a = SHADER_TRANSPARENT_GENERIC_STAGE_INPUT_COLOR_MAP_COLOR_0;
         params.input_b = SHADER_TRANSPARENT_GENERIC_STAGE_INPUT_COLOR_ONE;
         params.output_ab = SHADER_TRANSPARENT_GENERIC_STAGE_OUTPUT_ALPHA_SCRATCH_ALPHA_0_FINAL_ALPHA;
@@ -176,8 +176,8 @@ static D3D_SHADER_MACRO *generate_defines(ShaderTransparentGeneric *tag) {
         defines_count++;
     }
     else {
-        for(size_t current_stage = 0; current_stage < tag->stages.count && current_stage < 7; current_stage++) {
-            ShaderTransparentGenericStage *stage = TAG_BLOCK_GET_ELEMENT(tag->stages, current_stage);
+        for(size_t current_stage = 0; current_stage < shader_data->stages.count && current_stage < 7; current_stage++) {
+            ShaderTransparentGenericStage *stage = TAG_BLOCK_GET_ELEMENT(shader_data->stages, current_stage);
             
             params.input_a = stage->input_a;
             params.input_a_mapping = stage->input_a_mapping;
@@ -220,7 +220,7 @@ static D3D_SHADER_MACRO *generate_defines(ShaderTransparentGeneric *tag) {
         }
     }
 
-    FramebufferFadeMode framebuffer_mode = tag->framebuffer_fade_mode;
+    FramebufferFadeMode framebuffer_mode = shader_data->properties.framebuffer_fade_mode;
     ShaderTransparentGenericStageInputColor input_color = SHADER_TRANSPARENT_GENERIC_STAGE_INPUT_COLOR_ZERO;
     ShaderTransparentGenericStageInputAlpha input_alpha = SHADER_TRANSPARENT_GENERIC_STAGE_INPUT_ALPHA_ZERO;
     switch(framebuffer_mode) {
@@ -240,7 +240,7 @@ static D3D_SHADER_MACRO *generate_defines(ShaderTransparentGeneric *tag) {
             CRASHF_DEBUG("invalid framebuffer fade mode: %d", framebuffer_mode);
             break;
     }
-    FramebufferBlendFunction framebuffer_blend_function = tag->framebuffer_blend_function;
+    FramebufferBlendFunction framebuffer_blend_function = shader_data->properties.framebuffer_blend_function;
     switch(framebuffer_blend_function) {
         case FRAMEBUFFER_BLEND_FUNCTION_ALPHA_BLEND:
             params.input_a_alpha = SHADER_TRANSPARENT_GENERIC_STAGE_INPUT_ALPHA_SCRATCH_ALPHA_0;
@@ -292,7 +292,7 @@ static D3D_SHADER_MACRO *generate_defines(ShaderTransparentGeneric *tag) {
     defines[defines_count] = generate_stage_define(defines_count, params);
     defines_count++;
 
-    if(tag->first_map_type != SHADER_FIRST_MAP_TYPE_2D_MAP) {
+    if(shader_data->properties.first_map_type != SHADER_FIRST_MAP_TYPE_2D_MAP) {
         const char *first_map_is_cube = "FIRST_MAP_IS_CUBE";
         char *first_map_type_macro = GlobalAlloc(GMEM_FIXED, strlen(first_map_is_cube) + 1);
         strcpy(first_map_type_macro, first_map_is_cube);
@@ -442,7 +442,7 @@ IDirect3DPixelShader9 *rasterizer_shader_transparent_generic_get_pixel_shader(Sh
 
 void rasterizer_shader_transparent_generic_draw(TransparentGeometryGroup *group, uint32_t *param_2) {
     RasterizerWindowRenderParameters *window_parameters = rasterizer_get_window_parameters();
-    ShaderTransparentGeneric *shader_data = shader_type_assert(group->shader, SHADER_TYPE_SHADER_TRANSPARENT_GENERIC);
+    ShaderTransparentGeneric *shader_data = shader_type_assert(group->shader, SHADER_TYPE_PC_TRANSPARENT_GENERIC);
 
     uint16_t vertex_permutation = shader_get_vertex_shader_permutation(group->shader);
     uint16_t vertex_buffer_type = rasterizer_geometry_group_get_vertex_buffer_type(group);
@@ -451,30 +451,30 @@ void rasterizer_shader_transparent_generic_draw(TransparentGeometryGroup *group,
     rasterizer_dx9_set_vertex_declaration(vertex_buffer_type);
     rasterizer_dx9_set_pixel_shader(NULL);
 
-    for(int i = 0; i < shader_data->extra_layers.count; i++) {
+    for(int i = 0; i < shader_data->properties.extra_layers.count; i++) {
         TransparentGeometryGroup extra_layer_group = {};
         memcpy(&extra_layer_group, group, sizeof(TransparentGeometryGroup));
-        ShaderTransparentExtraLayer *layers = shader_data->extra_layers.elements;
-        extra_layer_group.shader = tag_get_data(TAG_GROUP_SHADER, layers[i].shader.tag_handle);
+        ShaderTransparentExtraLayer *layer = TAG_BLOCK_GET_ELEMENT(shader_data->properties.extra_layers, i);
+        extra_layer_group.shader = tag_get_data(TAG_GROUP_SHADER, layer->shader.tag_handle);
         extra_layer_group.sorted_index = -1;
         rasterizer_transparent_geometry_group_draw(&extra_layer_group, param_2);
     }
 
-    rasterizer_dx9_set_render_state(D3DRS_CULLMODE, shader_data->shader_transparent_generic_flags.two_sided ? D3DCULL_NONE : D3DCULL_CCW);
+    rasterizer_dx9_set_render_state(D3DRS_CULLMODE, shader_data->properties.flags.two_sided ? D3DCULL_NONE : D3DCULL_CCW);
     rasterizer_dx9_set_render_state(D3DRS_COLORWRITEENABLE, D3DCOLORWRITEENABLE_RED | D3DCOLORWRITEENABLE_GREEN | D3DCOLORWRITEENABLE_BLUE);
     rasterizer_dx9_set_render_state(D3DRS_ALPHABLENDENABLE, D3DBLENDOP_ADD);
-    rasterizer_dx9_set_render_state(D3DRS_ALPHATESTENABLE, shader_data->shader_transparent_generic_flags.alpha_tested);
+    rasterizer_dx9_set_render_state(D3DRS_ALPHATESTENABLE, shader_data->properties.flags.alpha_tested);
     rasterizer_dx9_set_render_state(D3DRS_ALPHAREF, 0x0000007F);
 
-    rasterizer_dx9_set_framebuffer_blend_function(shader_data->framebuffer_blend_function);
+    rasterizer_dx9_set_framebuffer_blend_function(shader_data->properties.framebuffer_blend_function);
 
     uint16_t bitmap_data_index = group->shader_permutation_index;
-    if(shader_data->shader_transparent_generic_flags.numeric && group->animation != NULL && shader_data->maps.count > 0) {
+    if(shader_data->properties.flags.numeric && group->animation != NULL && shader_data->maps.count > 0) {
         ShaderTransparentGenericMap *map = TAG_BLOCK_GET_ELEMENT(shader_data->maps, 0);
-        Bitmap *bitmap = tag_get_data(TAG_GROUP_BITMAP, map->map.tag_handle);
+        Bitmap *bitmap = tag_get_data(TAG_GROUP_BITMAP, map->parameters.map.tag_handle);
         uint16_t bitmap_count = bitmap->bitmap_data.count;
         
-        int numeric_count = shader_data->numeric_counter_limit;
+        int numeric_count = shader_data->properties.numeric_counter_limit;
         short index = (bitmap_count != 8) ? 0 : 3;
         float new_val = floor(numeric_count * group->animation->values[index] + 0.5f);
         int res = round(new_val);
@@ -498,7 +498,7 @@ void rasterizer_shader_transparent_generic_draw(TransparentGeometryGroup *group,
             if(map_index < shader_data->maps.count) {
                 bool is_first_map = map_index == 0;
                 ShaderTransparentGenericMap *map = TAG_BLOCK_GET_ELEMENT(shader_data->maps, map_index);
-                ShaderFirstMapType first_map_type = shader_data->first_map_type;
+                ShaderFirstMapType first_map_type = shader_data->properties.first_map_type;
                 BitmapType bitmap_type;
                 if(is_first_map) {
                     bitmap_type = shader_bitmap_type_for_shader_transparent_generic_first_map(first_map_type);
@@ -539,11 +539,11 @@ void rasterizer_shader_transparent_generic_draw(TransparentGeometryGroup *group,
                 rasterizer_dx9_set_sampler_state(map_index, D3DSAMP_MINFILTER, map->flags.unfiltered ? D3DTEXF_POINT : D3DTEXF_LINEAR);
                 rasterizer_dx9_set_sampler_state(map_index, D3DSAMP_MIPFILTER, map->flags.unfiltered ? D3DTEXF_POINT : D3DTEXF_LINEAR);
 
-                rasterizer_dx9_texture_set_bitmap_data_texture(map_index, bitmap_type, BITMAP_USAGE_ALPHA_BLEND, bitmap_data_index, map->map.tag_handle);
+                rasterizer_dx9_texture_set_bitmap_data_texture(map_index, bitmap_type, BITMAP_USAGE_ALPHA_BLEND, bitmap_data_index, map->parameters.map.tag_handle);
 
                 uint32_t maps_count = shader_data->maps.count;
-                if(is_first_map && shader_data->first_map_type != SHADER_FIRST_MAP_TYPE_2D_MAP) {
-                    if(shader_data->shader_transparent_generic_flags.first_map_is_in_screenspace == false) {
+                if(is_first_map && shader_data->properties.first_map_type != SHADER_FIRST_MAP_TYPE_2D_MAP) {
+                    if(shader_data->properties.flags.first_map_is_in_screenspace == false) {
                         animation_vsh_constants[map_index * 8 + 0] = 1.0;
                         animation_vsh_constants[map_index * 8 + 1] = 0.0;
                         animation_vsh_constants[map_index * 8 + 2] = 0.0;
@@ -565,23 +565,23 @@ void rasterizer_shader_transparent_generic_draw(TransparentGeometryGroup *group,
                     }
                 }
                 else {
-                    float map_v_scale = map->map_v_scale;
-                    float map_u_scale = map->map_u_scale;
+                    float map_v_scale = map->parameters.map_v_scale;
+                    float map_u_scale = map->parameters.map_u_scale;
 
-                    if(is_first_map && shader_data->shader_transparent_generic_flags.scale_first_map_with_distance) {
+                    if(is_first_map && shader_data->properties.flags.scale_first_map_with_distance) {
                         map_v_scale = map_v_scale * group->z_sort * -1;
                         map_u_scale = map_u_scale * group->z_sort * -1;
                     }
 
-                    if(!is_first_map || shader_data->shader_transparent_generic_flags.first_map_is_in_screenspace == false) {
+                    if(!is_first_map || shader_data->properties.flags.first_map_is_in_screenspace == false) {
                         map_u_scale = map_u_scale * group->model_base_map_scale.x;
                         map_v_scale = map_v_scale * group->model_base_map_scale.y;
                     }
 
-                    void *texture_animation = &map->u_animation_source;
-                    float map_u_offset = map->map_u_offset;
-                    float map_v_offset = map->map_v_offset;
-                    float map_rotation = map->map_rotation;
+                    ShaderTransparentMapAnimation *texture_animation = &map->animation;
+                    float map_u_offset = map->parameters.map_u_offset;
+                    float map_v_offset = map->parameters.map_v_offset;
+                    float map_rotation = map->parameters.map_rotation;
                     RasterizerFrameParameters *frame_parameters = rasterizer_get_frame_parameters();
                     shader_texture_animation_evaluate(map_u_scale, map_v_scale, map_u_offset, map_v_offset, map_rotation,
                                                         frame_parameters->elapsed_time_sec, texture_animation, group->animation, 
@@ -616,7 +616,7 @@ void rasterizer_dx9_transparent_generic_preprocess(TransparentGeometryGroup *gro
     ASSERT(group != NULL);
     ASSERT(group->shader != NULL);
 
-    ShaderTransparentGeneric *shader_data = shader_type_assert(group->shader, SHADER_TYPE_SHADER_TRANSPARENT_GENERIC);
+    ShaderTransparentGeneric *shader_data = shader_type_assert(group->shader, SHADER_TYPE_PC_TRANSPARENT_GENERIC);
 
     if(shader_data->stages.count == 0 && shader_data->maps.count == 0) {
         return;
@@ -632,10 +632,10 @@ void rasterizer_dx9_transparent_generic_preprocess(TransparentGeometryGroup *gro
 
     for(size_t map_index = 0; map_index < shader_data->maps.count; map_index++) {
         ShaderTransparentGenericMap *map = TAG_BLOCK_GET_ELEMENT(shader_data->maps, map_index);
-        if(HANDLE_IS_NULL(map->map.tag_handle)) {
+        if(HANDLE_IS_NULL(map->parameters.map.tag_handle)) {
             CRASHF_DEBUG("transparent generic shader map %d has a no bitmap", map_index);
         }
-        if(map->mipmap_bias != map->mipmap_bias || map->mipmap_bias != 0.0f) {
+        if(map->parameters.mipmap_bias != map->parameters.mipmap_bias || map->parameters.mipmap_bias != 0.0f) {
             CRASHF_DEBUG("transparent generic shader map %d has a non-zero mipmap bias", map_index);
         }
     }
@@ -649,7 +649,7 @@ void rasterizer_dx9_transparent_generic_preprocess(TransparentGeometryGroup *gro
 
         fog_config[0] = 1.0f;
 
-        if(group->geometry_flags.sky == false || shader_data->framebuffer_blend_function != FRAMEBUFFER_BLEND_FUNCTION_ALPHA_BLEND) {
+        if(group->geometry_flags.sky == false || shader_data->properties.framebuffer_blend_function != FRAMEBUFFER_BLEND_FUNCTION_ALPHA_BLEND) {
             float vertex_constants[3 * 4];
             vertex_constants[0] = 0.0f;
             vertex_constants[1] = 0.0f;
@@ -668,8 +668,8 @@ void rasterizer_dx9_transparent_generic_preprocess(TransparentGeometryGroup *gro
                 vertex_constants[10] = clamp_f32(1.0f - group->effect.intensity, 0.0f, 1.0f);
             }
         
-            if(shader_data->framebuffer_fade_source > 0 && group->animation != NULL && group->animation->values != NULL) {
-                vertex_constants[10] *= group->animation->values[shader_data->framebuffer_fade_source - 1];
+            if(shader_data->properties.framebuffer_fade_source > 0 && group->animation != NULL && group->animation->values != NULL) {
+                vertex_constants[10] *= group->animation->values[shader_data->properties.framebuffer_fade_source - 1];
                 ASSERT(!nan_f32(vertex_constants[10])); 
             }
             
@@ -695,29 +695,29 @@ void rasterizer_dx9_transparent_generic_preprocess(TransparentGeometryGroup *gro
             ShaderTransparentGenericStage *stage = TAG_BLOCK_GET_ELEMENT(shader_data->stages, i);
 
             float progress = 0.0f;
-            if(group->animation != NULL && group->animation->values != NULL && stage->flags.a_out_controls_color0_animation) {
+            if(group->animation != NULL && group->animation->values != NULL && stage->flags.a_out_controls_color_0_animation) {
                 progress = group->animation->values[0];
             }
             else {
                 RasterizerFrameParameters *frame_parameters = rasterizer_get_frame_parameters();
-                progress = wave_function_calculate_value_og(frame_parameters->elapsed_time_sec / stage->color0_animation_period, stage->color0_animation_function);
+                progress = wave_function_calculate_value_og(frame_parameters->elapsed_time_sec / stage->color_0_animation_period, stage->color_0_animation_function);
             } 
             ASSERT(!nan_f32(progress));
 
             ColorARGB constant_color0;
-            constant_color0.a = stage->color0_animation_upper_bound.a - stage->color0_animation_lower_bound.a;
-            constant_color0.r = stage->color0_animation_upper_bound.r - stage->color0_animation_lower_bound.r;
-            constant_color0.g = stage->color0_animation_upper_bound.g - stage->color0_animation_lower_bound.g;
-            constant_color0.b = stage->color0_animation_upper_bound.b - stage->color0_animation_lower_bound.b;
+            constant_color0.a = stage->color_0_animation[1].a - stage->color_0_animation[0].a;
+            constant_color0.r = stage->color_0_animation[1].r - stage->color_0_animation[0].r;
+            constant_color0.g = stage->color_0_animation[1].g - stage->color_0_animation[0].g;
+            constant_color0.b = stage->color_0_animation[1].b - stage->color_0_animation[0].b;
 
-            constant_color0.a = stage->color0_animation_lower_bound.a + constant_color0.a * progress;
-            constant_color0.r = stage->color0_animation_lower_bound.r + constant_color0.r * progress;
-            constant_color0.g = stage->color0_animation_lower_bound.g + constant_color0.g * progress;
-            constant_color0.b = stage->color0_animation_lower_bound.b + constant_color0.b * progress;
+            constant_color0.a = stage->color_0_animation[0].a + constant_color0.a * progress;
+            constant_color0.r = stage->color_0_animation[0].r + constant_color0.r * progress;
+            constant_color0.g = stage->color_0_animation[0].g + constant_color0.g * progress;
+            constant_color0.b = stage->color_0_animation[0].b + constant_color0.b * progress;
 
-            if(stage->color0_source > 0 && stage->color0_source < FUNCTION_NAME_NULLABLE_MAX) {
+            if(stage->color_0_source > 0 && stage->color_0_source < FUNCTION_NAME_NULLABLE_MAX) {
                 if(group->animation != NULL && group->animation->colors != NULL) {
-                    ColorRGB *external_color = &group->animation->colors[stage->color0_source - 1];
+                    ColorRGB *external_color = &group->animation->colors[stage->color_0_source - 1];
                     constant_color0.r *= external_color->r;
                     constant_color0.g *= external_color->g;
                     constant_color0.b *= external_color->b;
@@ -728,10 +728,10 @@ void rasterizer_dx9_transparent_generic_preprocess(TransparentGeometryGroup *gro
             stage_color0[i * 4 + 1] = constant_color0.g;
             stage_color0[i * 4 + 2] = constant_color0.b;
             stage_color0[i * 4 + 3] = constant_color0.a;
-            stage_color1[i * 4 + 0] = stage->color1.r;
-            stage_color1[i * 4 + 1] = stage->color1.g;
-            stage_color1[i * 4 + 2] = stage->color1.b;
-            stage_color1[i * 4 + 3] = stage->color1.a;
+            stage_color1[i * 4 + 0] = stage->color_1.r;
+            stage_color1[i * 4 + 1] = stage->color_1.g;
+            stage_color1[i * 4 + 2] = stage->color_1.b;
+            stage_color1[i * 4 + 3] = stage->color_1.a;
         }
     }
 

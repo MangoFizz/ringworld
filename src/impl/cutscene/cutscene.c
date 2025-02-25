@@ -79,7 +79,7 @@ void cutscene_cinematic_render(void) {
 
     for(size_t i = 0; i < sizeof(cinematic_globals->titles) / sizeof(cinematic_globals->titles[0]); i++) {
         uint16_t letter_box_size = cinematic_globals->letter_box_size + 12;
-        TagHandle fullscreen_font_tag = hud_globals->fullscreen_font.tag_handle;
+        TagHandle fullscreen_font_tag = hud_globals->messaging_parameters.fullscreen_font.tag_handle;
         if(!HANDLE_IS_NULL(fullscreen_font_tag) && cinematic_globals->titles[i].index != -1) {
             ScenarioCutsceneTitle *title = TAG_BLOCK_GET_ELEMENT(current_scenario->cutscene_titles, cinematic_globals->titles[i].index);
             TagHandle ingame_help_text_tag = current_scenario->ingame_help_text.tag_handle;
@@ -88,7 +88,7 @@ void cutscene_cinematic_render(void) {
                 if(title->string_index != -1 && title->string_index < ingame_help_text->strings.count) {
                     Rectangle2D title_pos = title->text_bounds;
                     if(title_pos.left == title_pos.right || title_pos.top == title_pos.bottom) {
-                        title_pos = hud_globals->default_chapter_title_bounds;
+                        title_pos = hud_globals->hud_crap.default_chapter_title_bounds;
                     }
 
                     if(rasterizer_screen_widescreen_support_enabled()) {

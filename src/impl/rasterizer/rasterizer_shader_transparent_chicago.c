@@ -21,12 +21,7 @@ extern float *shader_transparent_generic_vertex_constants;
 
 void rasterizer_shader_transparent_chicago_draw(TransparentGeometryGroup *group, uint32_t *param_2) {
     RasterizerWindowRenderParameters *window_parameters = rasterizer_get_window_parameters();
-    ShaderTransparentChicago *shader_data = shader_type_assert(group->shader, SHADER_TYPE_SHADER_TRANSPARENT_CHICAGO);
-
-    // Not sure about this 
-    if(shader_data->maps.count == 0 || shader_data->maps.elements[0].map.path == NULL) {
-        return;
-    }
+    ShaderTransparentChicago *shader_data = shader_type_assert(group->shader, SHADER_TYPE_PC_TRANSPARENT_CHICAGO);
 
     uint16_t vertex_permutation = shader_get_vertex_shader_permutation(group->shader);
     uint16_t vertex_buffer_type = rasterizer_geometry_group_get_vertex_buffer_type(group);
@@ -35,32 +30,32 @@ void rasterizer_shader_transparent_chicago_draw(TransparentGeometryGroup *group,
     rasterizer_dx9_set_vertex_declaration(vertex_buffer_type);
     rasterizer_dx9_set_pixel_shader(NULL);
 
-    for(int i = 0; i < shader_data->extra_layers.count; i++) {
+    for(int i = 0; i < shader_data->properties.extra_layers.count; i++) {
         TransparentGeometryGroup extra_layer_group = {};
         memcpy(&extra_layer_group, group, sizeof(TransparentGeometryGroup));
-        ShaderTransparentExtraLayer *layers = shader_data->extra_layers.elements;
-        extra_layer_group.shader = tag_get_data(TAG_GROUP_SHADER, layers[i].shader.tag_handle);
+        ShaderTransparentExtraLayer *layer = TAG_BLOCK_GET_ELEMENT(shader_data->properties.extra_layers, i);
+        extra_layer_group.shader = tag_get_data(TAG_GROUP_SHADER, layer->shader.tag_handle);
         extra_layer_group.sorted_index = -1;
         rasterizer_transparent_geometry_group_draw(&extra_layer_group, param_2);
     }
 
-    rasterizer_dx9_set_render_state(D3DRS_CULLMODE, shader_data->shader_transparent_chicago_flags.two_sided ? D3DCULL_NONE : D3DCULL_CCW);
+    rasterizer_dx9_set_render_state(D3DRS_CULLMODE, shader_data->properties.flags.two_sided ? D3DCULL_NONE : D3DCULL_CCW);
     rasterizer_dx9_set_render_state(D3DRS_COLORWRITEENABLE, D3DCOLORWRITEENABLE_RED | D3DCOLORWRITEENABLE_GREEN | D3DCOLORWRITEENABLE_BLUE);
     rasterizer_dx9_set_render_state(D3DRS_ALPHABLENDENABLE, D3DBLENDOP_ADD);
-    rasterizer_dx9_set_render_state(D3DRS_ALPHATESTENABLE, shader_data->shader_transparent_chicago_flags.alpha_tested);
+    rasterizer_dx9_set_render_state(D3DRS_ALPHATESTENABLE, shader_data->properties.flags.alpha_tested);
     rasterizer_dx9_set_render_state(D3DRS_ALPHAREF, 0x0000007F);
     rasterizer_dx9_set_render_state(D3DRS_FOGENABLE, FALSE);
 
-    rasterizer_dx9_set_framebuffer_blend_function(shader_data->framebuffer_blend_function);
+    rasterizer_dx9_set_framebuffer_blend_function(shader_data->properties.framebuffer_blend_function);
 
     uint16_t bitmap_data_index = group->shader_permutation_index;
-    if(shader_data->shader_transparent_chicago_flags.numeric && group->animation != NULL && shader_data->maps.count > 0) {
+    if(shader_data->properties.flags.numeric && group->animation != NULL && shader_data->maps.count > 0) {
         ShaderTransparentChicagoMap *map = TAG_BLOCK_GET_ELEMENT(shader_data->maps, 0);
-        Bitmap *bitmap = tag_get_data(TAG_GROUP_BITMAP, map->map.tag_handle);
+        Bitmap *bitmap = tag_get_data(TAG_GROUP_BITMAP, map->parameters.map.tag_handle);
         uint16_t bitmap_count = bitmap->bitmap_data.count;
         
         if(shader_data->extra_flags.numeric_countdown_timer == false) {
-            int numeric_count = shader_data->numeric_counter_limit;
+            int numeric_count = shader_data->properties.numeric_counter_limit;
             short index = (bitmap_count != 8) ? 0 : 3;
             float new_val = floor(numeric_count * group->animation->values[index] + 0.5f);
             int res = round(new_val);
@@ -88,7 +83,7 @@ void rasterizer_shader_transparent_chicago_draw(TransparentGeometryGroup *group,
             if(map_index < shader_data->maps.count) {
                 bool is_first_map = map_index == 0;
                 ShaderTransparentChicagoMap *map = TAG_BLOCK_GET_ELEMENT(shader_data->maps, map_index);
-                ShaderFirstMapType first_map_type = shader_data->first_map_type;
+                ShaderFirstMapType first_map_type = shader_data->properties.first_map_type;
                 BitmapType bitmap_type;
                 if(is_first_map) {
                     bitmap_type = shader_bitmap_type_for_shader_transparent_generic_first_map(first_map_type);
@@ -98,9 +93,9 @@ void rasterizer_shader_transparent_chicago_draw(TransparentGeometryGroup *group,
                 }
 
                 ASSERT(first_map_type >= 0 && first_map_type < SHADER_FIRST_MAP_TYPE_MAX);
-                ASSERT(shader_data->base.shader_flags.transparent_lit == false || first_map_type == SHADER_FIRST_MAP_TYPE_2D_MAP);
+                ASSERT(shader_data->base.radiosity.flags.transparent_lit == false || first_map_type == SHADER_FIRST_MAP_TYPE_2D_MAP);
 
-                rasterizer_dx9_texture_set_bitmap_data_texture(map_index, bitmap_type, BITMAP_USAGE_ALPHA_BLEND, bitmap_data_index, map->map.tag_handle);
+                rasterizer_dx9_texture_set_bitmap_data_texture(map_index, bitmap_type, BITMAP_USAGE_ALPHA_BLEND, bitmap_data_index, map->parameters.map.tag_handle);
 
                 D3DTEXTUREADDRESS fisrt_map_texture_mode;
                 switch(bitmap_type) {
@@ -136,8 +131,8 @@ void rasterizer_shader_transparent_chicago_draw(TransparentGeometryGroup *group,
                 rasterizer_dx9_set_sampler_state(map_index, D3DSAMP_MIPFILTER, map->flags.unfiltered ? D3DTEXF_POINT : D3DTEXF_LINEAR);
 
                 uint32_t maps_count = shader_data->maps.count;
-                if(is_first_map && shader_data->first_map_type != SHADER_FIRST_MAP_TYPE_2D_MAP) {
-                    if(shader_data->shader_transparent_chicago_flags.first_map_is_in_screenspace == false) {
+                if(is_first_map && shader_data->properties.first_map_type != SHADER_FIRST_MAP_TYPE_2D_MAP) {
+                    if(shader_data->properties.flags.first_map_is_in_screenspace == false) {
                         animation_vsh_constants[map_index * 8 + 0] = 1.0;
                         animation_vsh_constants[map_index * 8 + 1] = 0.0;
                         animation_vsh_constants[map_index * 8 + 2] = 0.0;
@@ -159,23 +154,23 @@ void rasterizer_shader_transparent_chicago_draw(TransparentGeometryGroup *group,
                     }
                 }
                 else {
-                    float map_v_scale = map->map_v_scale;
-                    float map_u_scale = map->map_u_scale;
+                    float map_v_scale = map->parameters.map_v_scale;
+                    float map_u_scale = map->parameters.map_u_scale;
 
-                    if(is_first_map && shader_data->shader_transparent_chicago_flags.scale_first_map_with_distance) {
+                    if(is_first_map && shader_data->properties.flags.scale_first_map_with_distance) {
                         map_v_scale = map_v_scale * group->z_sort * -1;
                         map_u_scale = map_u_scale * group->z_sort * -1;
                     }
 
-                    if(!is_first_map || shader_data->shader_transparent_chicago_flags.first_map_is_in_screenspace == false) {
+                    if(!is_first_map || shader_data->properties.flags.first_map_is_in_screenspace == false) {
                         map_u_scale = map_u_scale * group->model_base_map_scale.x;
                         map_v_scale = map_v_scale * group->model_base_map_scale.y;
                     }
 
-                    void *texture_animation = &map->u_animation_source;
-                    float map_u_offset = map->map_u_offset;
-                    float map_v_offset = map->map_v_offset;
-                    float map_rotation = map->map_rotation;
+                    ShaderTransparentMapAnimation *texture_animation = &map->animation;
+                    float map_u_offset = map->parameters.map_u_offset;
+                    float map_v_offset = map->parameters.map_v_offset;
+                    float map_rotation = map->parameters.map_rotation;
                     RasterizerFrameParameters *frame_parameters = rasterizer_get_frame_parameters();
                     shader_texture_animation_evaluate(map_u_scale, map_v_scale, map_u_offset, map_v_offset, map_rotation,
                                                         frame_parameters->elapsed_time_sec, texture_animation, group->animation, 
@@ -202,7 +197,7 @@ void rasterizer_shader_transparent_chicago_draw(TransparentGeometryGroup *group,
         rasterizer_shader_transparent_chicago_preprocess(shader_data);
     
         uint16_t maps_count = shader_data->maps.count;
-        if(group->geometry_flags.sky && shader_data->framebuffer_blend_function == FRAMEBUFFER_BLEND_FUNCTION_ALPHA_BLEND) {
+        if(group->geometry_flags.sky && shader_data->properties.framebuffer_blend_function == FRAMEBUFFER_BLEND_FUNCTION_ALPHA_BLEND) {
             rasterizer_dx9_set_texture(maps_count, NULL);
             rasterizer_dx9_set_texture_stage_state(maps_count, D3DTSS_COLOROP, D3DTOP_DISABLE);
             rasterizer_dx9_set_texture_stage_state(maps_count, D3DTSS_ALPHAOP, D3DTOP_DISABLE);
@@ -229,15 +224,15 @@ void rasterizer_shader_transparent_chicago_draw(TransparentGeometryGroup *group,
             vertex_constants[10] = clamp_f32(1.0f - group->effect.intensity, 0.0f, 1.0f);
         }
 
-        if(shader_data->framebuffer_fade_source > 0 && group->animation != NULL && group->animation->values != NULL) {
-            vertex_constants[10] *= group->animation->values[shader_data->framebuffer_fade_source - 1];
+        if(shader_data->properties.framebuffer_fade_source > 0 && group->animation != NULL && group->animation->values != NULL) {
+            vertex_constants[10] *= group->animation->values[shader_data->properties.framebuffer_fade_source - 1];
             ASSERT(!nan_f32(vertex_constants[10])); // check for NaN, just in case
         }
 
         rasterizer_dx9_set_vertex_shader_constant_f(10, vertex_constants, 3);
 
         int tss_option_argument;
-        switch(shader_data->framebuffer_fade_mode) {
+        switch(shader_data->properties.framebuffer_fade_mode) {
             case FRAMEBUFFER_FADE_MODE_NONE:
                 tss_option_argument = D3DTA_ALPHAREPLICATE;
                 break;
@@ -248,7 +243,7 @@ void rasterizer_shader_transparent_chicago_draw(TransparentGeometryGroup *group,
                 tss_option_argument = D3DTA_SPECULAR;
                 break;
             default:
-                CRASHF_DEBUG("Unknown framebuffer fade mode: %d", shader_data->framebuffer_fade_mode);
+                CRASHF_DEBUG("Unknown framebuffer fade mode: %d", shader_data->properties.framebuffer_fade_mode);
                 break;
         }
 
@@ -256,7 +251,7 @@ void rasterizer_shader_transparent_chicago_draw(TransparentGeometryGroup *group,
         uint32_t max_simultaneous_textures = device_caps->MaxSimultaneousTextures;
     
         uint16_t texture_stage;
-        switch(shader_data->framebuffer_blend_function) {
+        switch(shader_data->properties.framebuffer_blend_function) {
             case FRAMEBUFFER_BLEND_FUNCTION_ALPHA_BLEND: {
                 if(max_simultaneous_textures == 2 && shader_data->maps.count > 1) {
                     texture_stage = shader_data->maps.count - 1;

@@ -103,7 +103,7 @@ BitmapData *bitmap_new_2d_bitmap_data(uint16_t width, uint16_t height, uint16_t 
         CRASHF_DEBUG("Failed to allocate memory for bitmap data");
     }
 
-    bitmap_data->bitmap_class = TAG_GROUP_BITMAP;
+    bitmap_data->signature = TAG_GROUP_BITMAP;
     bitmap_data->width = width;
     bitmap_data->height = height;
     bitmap_data->depth = 1;

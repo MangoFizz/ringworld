@@ -25,7 +25,7 @@ void rasterizer_hud_motion_sensor_blip_begin(void) {
 
     GlobalsInterfaceBitmaps *interface_bitmaps = &game_globals->interface_bitmaps.elements[0];
     BitmapData *motion_sensor_blip_bitmap = bitmap_get_data(interface_bitmaps->motion_sensor_blip_bitmap.tag_handle, 0);
-    BitmapData *goo_map1 = bitmap_get_data(interface_bitmaps->interface_goo_map1.tag_handle, 0);
+    BitmapData *goo_map1 = bitmap_get_data(interface_bitmaps->interface_goo_map_1.tag_handle, 0);
 
     if(motion_sensor_blip_bitmap == NULL || goo_map1 == NULL) {
         return;

@@ -11,7 +11,7 @@ TagDataHeader *tag_get_data_header(void) {
     return *tag_data_header_loaded;
 }
 
-TagHandle lookup_tag(const char *path, TagGroupFourCC group) {
+TagHandle lookup_tag(const char *path, TagGroup group) {
     if(!*map_is_loaded) {
         return NULL_HANDLE;
     }
@@ -31,7 +31,7 @@ TagHandle lookup_tag(const char *path, TagGroupFourCC group) {
     return NULL_HANDLE;
 }
 
-void *tag_get_data(TagGroupFourCC group, TagHandle tag_handle) {
+void *tag_get_data(TagGroup group, TagHandle tag_handle) {
     ASSERT(tag_handle.index != NULL_HANDLE.index);
     TagEntry *tag = &(*tag_data_header_loaded)->tags[tag_handle.index];
     if(tag->primary_group != group && tag->secondary_group != group && tag->tertiary_group != group) {
@@ -51,7 +51,7 @@ void *tag_get_block(GenericTagBlock *block, uint32_t index, uint32_t size) {
     return block->elements + index * size;
 }
 
-const char *group_fourcc_to_name(TagGroupFourCC group_fourcc) {
+const char *group_fourcc_to_name(TagGroup group_fourcc) {
     switch(group_fourcc) {
         case TAG_GROUP_ACTOR:
             return "actor";

@@ -99,8 +99,8 @@ void rasterizer_shader_transparent_water_render_bumpmap(ShaderTransparentWater *
 
             ShaderTransparentWaterRipple ripples[4];
             for(size_t i = 0; i < 4; i++) {
-                if(i < shader->ripples.count) {
-                    ShaderTransparentWaterRipple *ripple = TAG_BLOCK_GET_ELEMENT(shader->ripples, i);
+                if(i < shader->ripples.ripples.count) {
+                    ShaderTransparentWaterRipple *ripple = TAG_BLOCK_GET_ELEMENT(shader->ripples.ripples, i);
                     ripples[i] = *ripple;
                 }
                 else {
@@ -128,11 +128,11 @@ void rasterizer_shader_transparent_water_render_bumpmap(ShaderTransparentWater *
                 vs_constants[i * 8 + 0] = ripples[i].map_repeats;
                 vs_constants[i * 8 + 1] = 0.0f;
                 vs_constants[i * 8 + 2] = 0.0f;
-                vs_constants[i * 8 + 3] = cos * ripples[i].animation_velocity * frame_parameters->elapsed_time_sec + ripples[i].map_offset.i;
+                vs_constants[i * 8 + 3] = cos * ripples[i].animation_velocity * frame_parameters->elapsed_time_sec + ripples[i].map_offset.x;
                 vs_constants[i * 8 + 4] = 0.0f;
                 vs_constants[i * 8 + 5] = ripples[i].map_repeats;
                 vs_constants[i * 8 + 6] = 0.0f;
-                vs_constants[i * 8 + 7] = sin * ripples[i].animation_velocity * frame_parameters->elapsed_time_sec + ripples[i].map_offset.j;
+                vs_constants[i * 8 + 7] = sin * ripples[i].animation_velocity * frame_parameters->elapsed_time_sec + ripples[i].map_offset.y;
             }
 
             rasterizer_dx9_set_vertex_shader_constant_f(13, vs_constants, 8);
@@ -159,25 +159,25 @@ void rasterizer_shader_transparent_water_render_bumpmap(ShaderTransparentWater *
             rasterizer_dx9_render_target_set(0x00000000, 0, 8);
             rasterizer_dx9_set_stencil_mode(0);
 
-            size_t mipmap_levels = min_i32(shader->ripple_mipmap_levels, 4);
+            size_t mipmap_levels = min_i32(shader->ripples.mipmap_levels, 4);
 
             for(size_t i = 0; i < mipmap_levels; i++) {
                 ps_constants[12] = 0.5f;
                 ps_constants[13] = 0.5f;
                 ps_constants[14] = 1.0f;
                 
-                if(shader->ripple_mipmap_levels < 2) {
+                if(shader->ripples.mipmap_levels < 2) {
                     ps_constants[15] = 0.0f;
                 }
                 else {
-                    float alpha = (float)i / (float)(shader->ripple_mipmap_levels - 1);
-                    ps_constants[15] = alpha * shader->ripple_mipmap_fade_factor;
+                    float alpha = (float)i / (float)(shader->ripples.mipmap_levels - 1);
+                    ps_constants[15] = alpha * shader->ripples.mipmap_fade_factor;
                 }
 
                 for(size_t j = 0; j < 4; j++) {
                     TagHandle ripple_map_handle = NULL_HANDLE;
-                    if(j < shader->ripples.count) {
-                        ripple_map_handle = shader->ripple_maps.tag_handle;
+                    if(j < shader->ripples.ripples.count) {
+                        ripple_map_handle = shader->ripples.maps.tag_handle;
                     }
                     rasterizer_dx9_texture_set_bitmap_data_texture_no_assert(j, ripples[j].map_index, ripple_map_handle);
                 }
@@ -204,7 +204,7 @@ void rasterizer_shader_transparent_water_draw(TransparentGeometryGroup *group) {
     ASSERT(group != NULL);
 
     if(*shader_transparent_water_unk1 == false && shader_transparent_water_enabled) {
-        ShaderTransparentWater *shader = shader_type_assert(group->shader, SHADER_TYPE_SHADER_TRANSPARENT_WATER);
+        ShaderTransparentWater *shader = shader_type_assert(group->shader, SHADER_TYPE_PC_TRANSPARENT_WATER);
         GlobalsRasterizerData *globals_rasterizer_data = render_get_globals_rasterizer_data();
         
         int vertex_buffer_type = rasterizer_geometry_group_get_vertex_buffer_type(group);
@@ -213,7 +213,7 @@ void rasterizer_shader_transparent_water_draw(TransparentGeometryGroup *group) {
             use_m_vertex_shader = true;
         }
 
-        if(shader->water_flags.draw_before_fog && group->geometry_flags.no_queue == false && group->geometry_flags.sky == false) {
+        if(shader->properties.water_flags.draw_before_fog && group->geometry_flags.no_queue == false && group->geometry_flags.sky == false) {
             IDirect3DVertexShader9 *vertex_shader = rasterizer_dx9_shader_get_vertex_shader(use_m_vertex_shader ? VSH_TRANSPARENT_WATER_OPACITY_M : VSH_TRANSPARENT_WATER_OPACITY);
 
             rasterizer_dx9_set_render_state(D3DRS_CULLMODE, D3DCULL_NONE);
@@ -241,7 +241,7 @@ void rasterizer_shader_transparent_water_draw(TransparentGeometryGroup *group) {
         }
 
         bool z_write_enable = false;
-        if(group->geometry_flags.sky == false && shader->water_flags.draw_before_fog == false) {
+        if(group->geometry_flags.sky == false && shader->properties.water_flags.draw_before_fog == false) {
             z_write_enable = true;
         }
 
@@ -252,8 +252,8 @@ void rasterizer_shader_transparent_water_draw(TransparentGeometryGroup *group) {
 
         RasterizerDx9ShaderEffect *water_opacity_effect = rasterizer_dx9_shader_effect_get(SHADER_EFFECT_TRANSPARENT_WATER_OPACITY);
         if(water_opacity_effect != NULL) {
-            float view_perpendicular_brightness = shader->view_perpendicular_brightness;
-            float view_parallel_brightness = shader->view_parallel_brightness;
+            float view_perpendicular_brightness = shader->properties.reflection_map_properties.perpendicular_brightness;
+            float view_parallel_brightness = shader->properties.reflection_map_properties.parallel_brightness;
             float ps_constants[8] = {0};
             ps_constants[0] = view_perpendicular_brightness;
             ps_constants[1] = ps_constants[0];
@@ -268,7 +268,7 @@ void rasterizer_shader_transparent_water_draw(TransparentGeometryGroup *group) {
             IDirect3DVertexShader9 *vertex_shader = rasterizer_dx9_shader_get_vertex_shader(use_m_vertex_shader ? VSH_TRANSPARENT_WATER_OPACITY_M : VSH_TRANSPARENT_WATER_OPACITY);
             rasterizer_dx9_set_vertex_shader(vertex_shader);
 
-            if(shader->water_flags.base_map_alpha_modulates_reflection) {
+            if(shader->properties.water_flags.base_map_alpha_modulates_reflection) {
                 rasterizer_dx9_set_render_state(D3DRS_CULLMODE, D3DCULL_NONE);
                 rasterizer_dx9_set_render_state(D3DRS_COLORWRITEENABLE, D3DCOLORWRITEENABLE_ALPHA);
                 rasterizer_dx9_set_render_state(D3DRS_ALPHABLENDENABLE, FALSE);
@@ -278,7 +278,7 @@ void rasterizer_shader_transparent_water_draw(TransparentGeometryGroup *group) {
                 rasterizer_dx9_set_render_state(D3DRS_ZWRITEENABLE, z_write_enable);
                 rasterizer_dx9_set_render_state(D3DRS_FOGENABLE, FALSE);
 
-                rasterizer_dx9_texture_set_bitmap_data_texture(0, BITMAP_TYPE_2D_TEXTURES, BITMAP_USAGE_DEFAULT, group->shader_permutation_index, shader->base_map.tag_handle);
+                rasterizer_dx9_texture_set_bitmap_data_texture(0, BITMAP_TYPE_2D_TEXTURES, BITMAP_USAGE_DEFAULT, group->shader_permutation_index, shader->properties.base_map.tag_handle);
                 rasterizer_dx9_set_sampler_state(0, D3DSAMP_ADDRESSU, D3DTADDRESS_CLAMP);
                 rasterizer_dx9_set_sampler_state(0, D3DSAMP_ADDRESSV, D3DTADDRESS_CLAMP);
                 rasterizer_dx9_set_sampler_state(0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
@@ -300,8 +300,8 @@ void rasterizer_shader_transparent_water_draw(TransparentGeometryGroup *group) {
                 rasterizer_transparent_geometry_group_draw_vertices(false, group);
             }
 
-            if(shader->water_flags.base_map_color_modulates_background) {
-                rasterizer_dx9_texture_set_bitmap_data_texture(0, BITMAP_TYPE_2D_TEXTURES, BITMAP_USAGE_DEFAULT, group->shader_permutation_index, shader->base_map.tag_handle);
+            if(shader->properties.water_flags.base_map_color_modulates_background) {
+                rasterizer_dx9_texture_set_bitmap_data_texture(0, BITMAP_TYPE_2D_TEXTURES, BITMAP_USAGE_DEFAULT, group->shader_permutation_index, shader->properties.base_map.tag_handle);
                 
                 rasterizer_dx9_set_sampler_state(0, D3DSAMP_ADDRESSU, D3DTADDRESS_CLAMP);
                 rasterizer_dx9_set_sampler_state(0, D3DSAMP_ADDRESSV, D3DTADDRESS_CLAMP);
@@ -319,7 +319,7 @@ void rasterizer_shader_transparent_water_draw(TransparentGeometryGroup *group) {
                 rasterizer_dx9_set_render_state(D3DRS_ZENABLE, D3DZB_TRUE);
                 rasterizer_dx9_set_render_state(D3DRS_ZFUNC, D3DCMP_LESSEQUAL);
                 rasterizer_dx9_set_render_state(D3DRS_ZWRITEENABLE, z_write_enable);
-                rasterizer_dx9_set_render_state(D3DRS_FOGENABLE, shader->water_flags.atmospheric_fog != 0);
+                rasterizer_dx9_set_render_state(D3DRS_FOGENABLE, shader->properties.water_flags.atmospheric_fog != 0);
 
                 rasterizer_dx9_set_pixel_shader(water_opacity_effect->pixel_shaders[1].pixel_shader);
                 rasterizer_dx9_set_texture_stage_state(0, D3DTSS_COLOROP, D3DTOP_DISABLE);
@@ -332,12 +332,12 @@ void rasterizer_shader_transparent_water_draw(TransparentGeometryGroup *group) {
         water_opacity_effect = rasterizer_dx9_shader_effect_get(SHADER_EFFECT_TRANSPARENT_WATER_REFLECTION);
         if(water_opacity_effect != NULL) {
             RasterizerFrameParameters *frame_params = rasterizer_get_frame_parameters();
-            float ripple_scale = shader->ripple_scale;
+            float ripple_scale = shader->ripples.scale;
             float vs_constants[12] = {0};
             vs_constants[0] = ripple_scale;
             vs_constants[1] = ripple_scale;
-            vs_constants[2] = cos(shader->ripple_animation_angle) * shader->ripple_animation_velocity * frame_params->elapsed_time_sec;
-            vs_constants[3] = sin(shader->ripple_animation_angle) * shader->ripple_animation_velocity * frame_params->elapsed_time_sec;
+            vs_constants[2] = cos(shader->ripples.animation_angle) * shader->ripples.animation_velocity * frame_params->elapsed_time_sec;
+            vs_constants[3] = sin(shader->ripples.animation_angle) * shader->ripples.animation_velocity * frame_params->elapsed_time_sec;
             vs_constants[4] = 0.0f;
             vs_constants[5] = 0.0f;
             vs_constants[6] = 0.0f;
@@ -355,14 +355,14 @@ void rasterizer_shader_transparent_water_draw(TransparentGeometryGroup *group) {
             rasterizer_dx9_set_render_state(D3DRS_CULLMODE, D3DCULL_NONE);
             rasterizer_dx9_set_render_state(D3DRS_COLORWRITEENABLE, D3DCOLORWRITEENABLE_RED | D3DCOLORWRITEENABLE_GREEN | D3DCOLORWRITEENABLE_BLUE);
             rasterizer_dx9_set_render_state(D3DRS_ALPHABLENDENABLE, group->geometry_flags.sky == false);
-            rasterizer_dx9_set_render_state(D3DRS_SRCBLEND, shader->water_flags.base_map_alpha_modulates_reflection ? D3DBLEND_DESTALPHA : D3DBLEND_ONE);
+            rasterizer_dx9_set_render_state(D3DRS_SRCBLEND, shader->properties.water_flags.base_map_alpha_modulates_reflection ? D3DBLEND_DESTALPHA : D3DBLEND_ONE);
             rasterizer_dx9_set_render_state(D3DRS_DESTBLEND, D3DBLEND_ONE);
             rasterizer_dx9_set_render_state(D3DRS_BLENDOP, D3DBLENDOP_ADD);
             rasterizer_dx9_set_render_state(D3DRS_ALPHATESTENABLE, FALSE);
             rasterizer_dx9_set_render_state(D3DRS_ZENABLE, D3DZB_TRUE);
             rasterizer_dx9_set_render_state(D3DRS_ZFUNC, D3DCMP_LESSEQUAL);
             rasterizer_dx9_set_render_state(D3DRS_ZWRITEENABLE, z_write_enable);
-            rasterizer_dx9_set_render_state(D3DRS_FOGENABLE, shader->water_flags.atmospheric_fog);
+            rasterizer_dx9_set_render_state(D3DRS_FOGENABLE, shader->properties.water_flags.atmospheric_fog);
 
             D3DCAPS9 *caps = rasterizer_dx9_device_caps();
             if(caps->PixelShaderVersion < D3DPS_VERSION(1, 1)) {
@@ -384,7 +384,7 @@ void rasterizer_shader_transparent_water_draw(TransparentGeometryGroup *group) {
             rasterizer_dx9_set_sampler_state(0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR);
             rasterizer_dx9_set_sampler_state(0, D3DSAMP_MIPFILTER, D3DTEXF_LINEAR);
 
-            rasterizer_dx9_texture_set_bitmap_data_texture(3, BITMAP_TYPE_CUBE_MAPS, BITMAP_USAGE_ALPHA_BLEND, group->shader_permutation_index, shader->reflection_map.tag_handle);
+            rasterizer_dx9_texture_set_bitmap_data_texture(3, BITMAP_TYPE_CUBE_MAPS, BITMAP_USAGE_ALPHA_BLEND, group->shader_permutation_index, shader->properties.reflection_map.tag_handle);
             rasterizer_dx9_set_sampler_state(3, D3DSAMP_ADDRESSU, D3DTADDRESS_CLAMP);
             rasterizer_dx9_set_sampler_state(3, D3DSAMP_ADDRESSV, D3DTADDRESS_CLAMP);
             rasterizer_dx9_set_sampler_state(3, D3DSAMP_ADDRESSW, D3DTADDRESS_CLAMP);
@@ -409,9 +409,11 @@ void rasterizer_shader_transparent_water_draw(TransparentGeometryGroup *group) {
                 else {
                     dot_product = 0.0f;
                 }
-                ps_constants[0] = shader->view_perpendicular_tint_color.r * dot_product + (1.0f - dot_product) * shader->view_parallel_tint_color.r;
-                ps_constants[1] = shader->view_perpendicular_tint_color.g * dot_product + (1.0f - dot_product) * shader->view_parallel_tint_color.g;
-                ps_constants[2] = shader->view_perpendicular_tint_color.b * dot_product + (1.0f - dot_product) * shader->view_parallel_tint_color.b;
+                ColorRGB *perpendicular_tint_color = &shader->properties.reflection_map_properties.perpendicular_tint_color;
+                ColorRGB *parallel_tint_color = &shader->properties.reflection_map_properties.parallel_tint_color;
+                ps_constants[0] = perpendicular_tint_color->r * dot_product + (1.0f - dot_product) * parallel_tint_color->r;
+                ps_constants[1] = perpendicular_tint_color->g * dot_product + (1.0f - dot_product) * parallel_tint_color->g;
+                ps_constants[2] = perpendicular_tint_color->b * dot_product + (1.0f - dot_product) * parallel_tint_color->b;
             }
             else {
                 ps_constants[0] = 1.0f;

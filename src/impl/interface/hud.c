@@ -43,27 +43,27 @@ void hud_calculate_point(HUDInterfaceAnchor *absolute_placement, HUDMeterDefinit
     float pos_y = 0.0f;
 
     switch(*absolute_placement) {
-        case H_U_D_INTERFACE_ANCHOR_TOP_LEFT: {
+        case HUD_INTERFACE_ANCHOR_TOP_LEFT: {
             pos_x = meter_definition->anchor_offset.x * scale + left_offset;
             pos_y = meter_definition->anchor_offset.y * scale + top_offset;
             break;
         }
-        case H_U_D_INTERFACE_ANCHOR_TOP_RIGHT: {
+        case HUD_INTERFACE_ANCHOR_TOP_RIGHT: {
             pos_x = (meter_definition->anchor_offset.x * -1.0f) * scale + right_offset;
             pos_y = meter_definition->anchor_offset.y * scale + top_offset;
             break;
         }
-        case H_U_D_INTERFACE_ANCHOR_BOTTOM_LEFT: {
+        case HUD_INTERFACE_ANCHOR_BOTTOM_LEFT: {
             pos_x = meter_definition->anchor_offset.x * scale + left_offset;
             pos_y = (meter_definition->anchor_offset.y * -1.0f) * scale + bottom_offset;
             break;
         }
-        case H_U_D_INTERFACE_ANCHOR_BOTTOM_RIGHT: {
+        case HUD_INTERFACE_ANCHOR_BOTTOM_RIGHT: {
             pos_x = (meter_definition->anchor_offset.x * -1.0f) * scale + right_offset;
             pos_y = (meter_definition->anchor_offset.y * -1.0f) * scale + bottom_offset;
             break;
         }
-        case H_U_D_INTERFACE_ANCHOR_CENTER: {
+        case HUD_INTERFACE_ANCHOR_CENTER: {
             RenderGlobals *render_globals = render_get_globals();
             pos_x = (meter_definition->anchor_offset.x * scale) + ((screen_width / 2) - render_globals->camera.viewport_bounds.left);
             pos_y = (meter_definition->anchor_offset.y * scale) + ((screen_height / 2) - render_globals->camera.viewport_bounds.top);
@@ -95,35 +95,35 @@ void hud_calculate_bitmap_bounds(BitmapData *bitmap_data, HUDInterfaceAnchor abs
     float height = (screen_coords->bottom - screen_coords->top) * height_factor;
 
     switch(absolute_placement) {
-        case H_U_D_INTERFACE_ANCHOR_TOP_LEFT: {
+        case HUD_INTERFACE_ANCHOR_TOP_LEFT: {
             output->left = 0.0f;
             output->right = width;
             output->top = 0.0f;
             output->bottom = height;
             break;
         }
-        case H_U_D_INTERFACE_ANCHOR_TOP_RIGHT: {
+        case HUD_INTERFACE_ANCHOR_TOP_RIGHT: {
             output->left = width * -1.0f;
             output->right = 0.0f;
             output->top = 0.0f;
             output->bottom = height;
             break;
         }
-        case H_U_D_INTERFACE_ANCHOR_BOTTOM_LEFT: {
+        case HUD_INTERFACE_ANCHOR_BOTTOM_LEFT: {
             output->left = 0.0f;
             output->right = width;
             output->top = height * -1.0f;
             output->bottom = 0.0f;
             break;
         }
-        case H_U_D_INTERFACE_ANCHOR_BOTTOM_RIGHT: {
+        case HUD_INTERFACE_ANCHOR_BOTTOM_RIGHT: {
             output->left = width * -1.0f;
             output->right = 0.0f;
             output->top = height * -1.0f;
             output->bottom = 0.0f;
             break;
         }
-        case H_U_D_INTERFACE_ANCHOR_CENTER: {
+        case HUD_INTERFACE_ANCHOR_CENTER: {
             output->left = (width * -1.0f) / 2.0f;
             output->right = width / 2.0f;
             output->top = (height * -1.0f) / 2.0f;

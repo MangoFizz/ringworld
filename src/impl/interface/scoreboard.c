@@ -367,7 +367,7 @@ void scoreboard_draw_header(ScoreboardRowData *player_score_data, float fade) {
     header_color.g = 1.0f;
     header_color.b = 1.0f;
 
-    TagHandle server_name_font = hud_globals->splitscreen_font.tag_handle;
+    TagHandle server_name_font = hud_globals->messaging_parameters.splitscreen_font.tag_handle;
     if(HANDLE_IS_NULL(server_name_font)) {
         server_name_font = font_get_default_small();
     }
@@ -561,9 +561,9 @@ void scoreboard_draw_server_info(float fade) {
     uint16_t screen_width = rasterizer_screen_get_width();
     uint16_t screen_height = rasterizer_screen_get_height();
 
-    TagHandle font = hud_globals->fullscreen_font.tag_handle;
+    TagHandle font = hud_globals->messaging_parameters.fullscreen_font.tag_handle;
     if(HANDLE_IS_NULL(font)) {
-        font = hud_globals->splitscreen_font.tag_handle;
+        font = hud_globals->messaging_parameters.splitscreen_font.tag_handle;
         if(HANDLE_IS_NULL(font)) {
             font = font_get_default_large();
         }

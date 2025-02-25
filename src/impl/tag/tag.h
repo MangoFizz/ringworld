@@ -9,7 +9,7 @@ extern "C" {
 
 #include "../types/types.h"
 
-typedef enum TagGroupFourCC {
+typedef enum TagGroup {
     TAG_GROUP_NONE = 0,
     TAG_GROUP_ACTOR = 0x61637472,
     TAG_GROUP_ACTOR_VARIANT = 0x61637476,
@@ -95,14 +95,14 @@ typedef enum TagGroupFourCC {
     TAG_GROUP_WEAPON = 0x77656170,
     TAG_GROUP_WIND = 0x77696E64,
     TAG_GROUP_WEAPON_HUD_INTERFACE = 0x77706869
-} TagGroupFourCC;
+} TagGroup;
 
 typedef union TableResourceHandle TagHandle;
 
 typedef struct TagEntry {
-    TagGroupFourCC primary_group;
-    TagGroupFourCC secondary_group;
-    TagGroupFourCC tertiary_group;
+    TagGroup primary_group;
+    TagGroup secondary_group;
+    TagGroup tertiary_group;
     TagHandle handle;
     char *path;
     void *data;
@@ -126,7 +126,7 @@ typedef struct TagDataHeader {
 _Static_assert(sizeof(TagDataHeader) == 0x28);
 
 typedef struct TagReference {
-    TagGroupFourCC tag_group;
+    TagGroup tag_group;
     char *path; // unused at runtime
     size_t path_size; // unused at runtime
     TagHandle tag_handle;
@@ -163,7 +163,7 @@ TagDataHeader *tag_get_data_header(void);
  * @param group group of the tag
  * @return tag ID if found, NULL_ID if not
  */
-TagHandle lookup_tag(const char *path, TagGroupFourCC group);
+TagHandle lookup_tag(const char *path, TagGroup group);
 
 /**
  * Get the data for the tag.
@@ -171,7 +171,7 @@ TagHandle lookup_tag(const char *path, TagGroupFourCC group);
  * @param tag_handle tag handle
  * @return pointer to tag data
  */
-void *tag_get_data(TagGroupFourCC tag_group, TagHandle tag_handle);
+void *tag_get_data(TagGroup tag_group, TagHandle tag_handle);
 
 /**
  * Get th path for the tag.
@@ -200,7 +200,7 @@ void *tag_get_block(GenericTagBlock *block, uint32_t index, uint32_t size);
  * @param group_fourcc fourcc to look up
  * @return tag group or "???" if unknown
  */
-const char *group_fourcc_to_name(TagGroupFourCC group_fourcc);
+const char *group_fourcc_to_name(TagGroup group_fourcc);
 
 #ifdef __cplusplus
 }

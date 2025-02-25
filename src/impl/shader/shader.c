@@ -1,9 +1,9 @@
 #include "../exception/exception.h"
 #include "shader.h"
 
-void *shader_type_assert(Shader *shader, ShaderType type) {
+void *shader_type_assert(Shader *shader, ShaderTypePc type) {
     ASSERT(shader);
-    ASSERT(shader->shader_type == type);
+    ASSERT(shader->physics.type == type);
     return shader;
 }
 

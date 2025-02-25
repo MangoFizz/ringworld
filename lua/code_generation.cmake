@@ -5,7 +5,7 @@ cmake_minimum_required(VERSION 3.16)
 # Find Lua runtime
 find_package(LuaRuntime REQUIRED)
 
-set(TAG_DEFINITIONS_PATH "${CMAKE_CURRENT_SOURCE_DIR}/src/ringhopper/proc/json-definitions")
+set(TAG_DEFINITIONS_PATH "${CMAKE_CURRENT_SOURCE_DIR}/ringhopper/src/ringhopper-definitions/json/tag")
 file(GLOB TAG_DEFINITION_FILES ${TAG_DEFINITIONS_PATH}/*.json)
 
 set(SOURCE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/src")
@@ -15,7 +15,7 @@ set(TAG_DEFINITION_HPP_FILES)
 # Tell CMake how to generate the tag struct headers
 set(LUA_ENVIRONMENT_SCRIPT ${CMAKE_CURRENT_SOURCE_DIR}/lua/env.lua)
 set(LUA_COMMNAD ${CMAKE_COMMAND} -E env LUA_INIT="@${LUA_ENVIRONMENT_SCRIPT}" ${LUA_EXECUTABLE})
-set(TAG_DEFINITION_HEADERS_GENERATOR_SCRIPT ${CMAKE_CURRENT_SOURCE_DIR}/lua/generate_headers.lua)
+set(TAG_DEFINITION_HEADERS_GENERATOR_SCRIPT ${CMAKE_CURRENT_SOURCE_DIR}/lua/tagHeadersGenerator.lua)
 
 # Create output directory for tag structures and get output file paths
 file(MAKE_DIRECTORY ${TAG_DEFINITIONS_HPP_PATH})

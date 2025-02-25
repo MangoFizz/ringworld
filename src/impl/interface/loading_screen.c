@@ -144,14 +144,14 @@ void loading_screen_render() {
 
     switch(*loading_screen_state) {
         case LOADING_SCREEN_STATE_SERVER: {
-            wchar_t *text = unicode_string_list_get_string(strings, 1);
+            const wchar_t *text = unicode_string_list_get_string(strings, 1);
             rasterizer_draw_unicode_string(&rect, NULL, NULL, 0, text);
             break;
         }
 
         case LOADING_SCREEN_STATE_RESOLVING: 
         case LOADING_SCREEN_STATE_CONNECTING: {
-            wchar_t *format = unicode_string_list_get_string(strings, 2);
+            const wchar_t *format = unicode_string_list_get_string(strings, 2);
             wchar_t text[512];
             swprintf(text, 512, format, loading_screen_server_address);
             rasterizer_draw_unicode_string(&rect, NULL, NULL, 0, text);
@@ -159,7 +159,7 @@ void loading_screen_render() {
         }
 
         case LOADING_SCREEN_STATE_NEGOTIATING: {
-            wchar_t *format = unicode_string_list_get_string(strings, 0);
+            const wchar_t *format = unicode_string_list_get_string(strings, 0);
             wchar_t text[512];
             swprintf(text, 512, format, loading_screen_server_address);
             rasterizer_draw_unicode_string(&rect, NULL, NULL, 0, text);
@@ -167,7 +167,7 @@ void loading_screen_render() {
         }
 
         case LOADING_SCREEN_STATE_RETRYING: {
-            wchar_t *format = unicode_string_list_get_string(strings, 3);
+            const wchar_t *format = unicode_string_list_get_string(strings, 3);
             wchar_t text[512];
             swprintf(text, 512, format, loading_screen_server_address, *server_connection_attempts);
             rasterizer_draw_unicode_string(&rect, NULL, NULL, 0, text);
@@ -175,7 +175,7 @@ void loading_screen_render() {
         }
 
         case LOADING_SCREEN_STATE_CONNECTED: {
-            wchar_t *text = unicode_string_list_get_string(strings, 4);
+            const wchar_t *text = unicode_string_list_get_string(strings, 4);
             rasterizer_draw_unicode_string(&rect, NULL, NULL, 0, text);
             break;
         }
@@ -185,7 +185,7 @@ void loading_screen_render() {
             if(main_globals->game_connection != GAME_CONNECTION_NETWORK_SERVER) {
                 text_index = 5;
             }
-            wchar_t *format = unicode_string_list_get_string(strings, text_index);
+            const wchar_t *format = unicode_string_list_get_string(strings, text_index);
             wchar_t text[512];
             swprintf(text, 512, format, loading_screen_map_name);
             rasterizer_draw_unicode_string(&rect, NULL, NULL, 0, text);
@@ -193,7 +193,7 @@ void loading_screen_render() {
         }
 
         case LOADING_SCREEN_STATE_WAITING_FOR_NEW_GAME: {
-            wchar_t *format = unicode_string_list_get_string(strings, 8);
+            const wchar_t *format = unicode_string_list_get_string(strings, 8);
             wchar_t text[512];
             swprintf(text, 512, format, loading_screen_map_name);
             rasterizer_draw_unicode_string(&rect, NULL, NULL, 0, text);
@@ -211,14 +211,14 @@ void loading_screen_render() {
         case LOADING_SCREEN_STATE_WAITING_FOR_NEW_GAME: {
             rect.top = 430;
             rect.bottom = 450;
-            wchar_t *text = unicode_string_list_get_string(strings, 7);
+            const wchar_t *text = unicode_string_list_get_string(strings, 7);
             rasterizer_draw_unicode_string(&rect, NULL, NULL, 0, text);
         }
 
         case LOADING_SCREEN_STATE_LOADING_MP_MAP: {
             rect.top = 460;
             rect.bottom = 480;
-            wchar_t *text = unicode_string_list_get_string(strings, 9);
+            const wchar_t *text = unicode_string_list_get_string(strings, 9);
             rasterizer_draw_unicode_string(&rect, NULL, NULL, 0, text);
         }
     }

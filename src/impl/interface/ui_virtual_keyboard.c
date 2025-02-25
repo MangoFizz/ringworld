@@ -70,7 +70,7 @@ void ui_virtual_keyboard_render(void) {
     TagHandle special_key_labels_strings_tag = keyboard->special_key_labels_string_list.tag_handle;
     wchar_t *label = virtual_keyboard_labels[0];
     if(!HANDLE_IS_NULL(special_key_labels_strings_tag)) {
-        wchar_t *string = unicode_string_list_get_string(special_key_labels_strings_tag, virtual_keyboard_globals->caption_index);
+        const wchar_t *string = unicode_string_list_get_string(special_key_labels_strings_tag, virtual_keyboard_globals->caption_index);
         Rectangle2D bounds;
         bounds.left = 0;
         bounds.top = 78;

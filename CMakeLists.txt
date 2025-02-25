@@ -119,6 +119,7 @@ set(RINGWORLD_SOURCES
     src/impl/shader/shader.c
     src/impl/tag/tag.c
     src/impl/text/text.c
+    src/impl/text/unicode_string_list.c
     ${RINGWORLD_HOOKS_SOURCES}
     ${TAG_DEFINITION_HPP_FILES}
     ${CMAKE_CURRENT_SOURCE_DIR}/src/version.hpp

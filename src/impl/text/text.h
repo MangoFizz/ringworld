@@ -33,7 +33,7 @@ TextDrawGlobals *text_get_drawing_globals(void);
  * @param flags Flags to control the text drawing behavior.
  * @param string The Unicode string to be drawn.
  */
-bool text_draw_unicode_string(void (*draw_character)(), Rectangle2D *position, ColorARGBInt *color, Rectangle2D *draw_rect, uint32_t flags, wchar_t *string);
+bool text_draw_unicode_string(void (*draw_character)(), Rectangle2D *position, ColorARGBInt *color, Rectangle2D *draw_rect, uint32_t flags, const wchar_t *string);
 
 /**
  * This function draws a string on the screen.
@@ -44,7 +44,7 @@ bool text_draw_unicode_string(void (*draw_character)(), Rectangle2D *position, C
  * @param flags Flags to control the text drawing behavior.
  * @param string The string to be drawn.
  */
-bool text_draw_string(void (*draw_character)(), Rectangle2D *position, ColorARGBInt *color, Rectangle2D *draw_rect, uint32_t flags, char *string);
+bool text_draw_string(void (*draw_character)(), Rectangle2D *position, ColorARGBInt *color, Rectangle2D *draw_rect, uint32_t flags, const char *string);
 
 /**
  * This function sets the drawing parameters for text.

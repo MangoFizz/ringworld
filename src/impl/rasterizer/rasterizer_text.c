@@ -72,7 +72,7 @@ bool rasterizer_text_cache_initialize(void) {
     return font_cache->initialized;
 }
 
-void rasterizer_draw_unicode_string(Rectangle2D *position, Rectangle2D *dest_rect, ColorARGBInt *color, uint32_t flags, wchar_t *string) {
+void rasterizer_draw_unicode_string(Rectangle2D *position, Rectangle2D *dest_rect, ColorARGBInt *color, uint32_t flags, const wchar_t *string) {
     RenderGlobals *render_globals = render_get_globals();
     RasterizerWindowRenderParameters *window_parameters = rasterizer_get_window_parameters();
     BitmapData *bitmap = rasterizer_text_get_font_cache_bitmap();
@@ -128,7 +128,7 @@ void rasterizer_draw_unicode_string(Rectangle2D *position, Rectangle2D *dest_rec
     rasterizer_text_end();
 }
 
-void rasterizer_draw_string(Rectangle2D *position, Rectangle2D *dest_rect, ColorARGBInt *color, uint32_t flags, char *string) {
+void rasterizer_draw_string(Rectangle2D *position, Rectangle2D *dest_rect, ColorARGBInt *color, uint32_t flags, const char *string) {
     RenderGlobals *render_globals = render_get_globals();
     RasterizerWindowRenderParameters *window_parameters = rasterizer_get_window_parameters();
     BitmapData *bitmap = rasterizer_text_get_font_cache_bitmap();

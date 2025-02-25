@@ -137,7 +137,7 @@ void cutscene_cinematic_render(void) {
                     text_shadow_color.a = clamp_f32(text_shadow_color.a, 0.0f, 1.0f);
                     text_set_shadow_color(color_encode_a8r8g8b8(&text_shadow_color));
 
-                    wchar_t *title_text = unicode_string_list_get_string(ingame_help_text_tag, title->string_index);
+                    const wchar_t *title_text = unicode_string_list_get_string(ingame_help_text_tag, title->string_index);
                     rasterizer_draw_unicode_string(&title_pos, &title_pos, 0, 0, title_text);
                     text_set_shadow_color(0);
 

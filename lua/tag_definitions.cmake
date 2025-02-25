@@ -1,10 +1,5 @@
 # SPDX-License-Identifier: GPL-3.0-only
 
-cmake_minimum_required(VERSION 3.16)
-
-# Find Lua runtime
-find_package(LuaRuntime REQUIRED)
-
 set(TAG_DEFINITIONS_PATH "${CMAKE_CURRENT_SOURCE_DIR}/ringhopper/src/ringhopper-definitions/json/tag")
 file(GLOB TAG_DEFINITION_FILES ${TAG_DEFINITIONS_PATH}/*.json)
 
@@ -28,9 +23,6 @@ add_custom_command(
     OUTPUT ${TAG_DEFINITION_HPP_FILES} 
     COMMAND ${LUA_COMMNAD} ${TAG_DEFINITION_HEADERS_GENERATOR_SCRIPT} ${SOURCE_PATH} ${TAG_DEFINITION_FILES}
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-    COMMENT "Generating tag definitions headers..."
+    COMMENT "Generating tag definitions headers"
     DEPENDS ${TAG_DEFINITION_HEADERS_GENERATOR_SCRIPT} ${TAG_DEFINITION_FILES}
 )
-
-# Add definitions headers target, so we can add them as a dependency to Balltze
-add_custom_target(ringworld-tag-definitions-headers ALL DEPENDS ${TAG_DEFINITION_HPP_FILES})

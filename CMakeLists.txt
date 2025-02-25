@@ -16,6 +16,7 @@ endif()
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake")
 
+find_package(LuaRuntime REQUIRED)
 find_package(Python3 COMPONENTS Interpreter REQUIRED)
 find_package(Git REQUIRED)
 
@@ -44,6 +45,7 @@ if(${GIT_FOUND})
     if("${GIT_DIR}" STREQUAL "")
         set(IN_GIT_REPO FALSE)
     else()
+        get_filename_component(GIT_DIR "${GIT_DIR}" ABSOLUTE)
         set(IN_GIT_REPO TRUE)
     endif()
 else()
@@ -54,10 +56,11 @@ add_custom_command(
     OUTPUT "${CMAKE_CURRENT_SOURCE_DIR}/src/version.hpp"
     COMMAND "${CMAKE_COMMAND}" "-DGIT_EXECUTABLE=${GIT_EXECUTABLE}" "-DGIT_DIR=${GIT_DIR}" "-DOUT_FILE=${CMAKE_CURRENT_SOURCE_DIR}/src/version.hpp" -DPROJECT_VERSION_MAJOR=${PROJECT_VERSION_MAJOR} -DPROJECT_VERSION_MINOR=${PROJECT_VERSION_MINOR} -DPROJECT_VERSION_PATCH=${PROJECT_VERSION_PATCH} -DIN_GIT_REPO=${IN_GIT_REPO} -P "${CMAKE_CURRENT_SOURCE_DIR}/src/version.cmake"
     DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/src/version.cmake" "$<$<BOOL:${IN_GIT_REPO}>:${GIT_DIR}/refs/heads>"
+    COMMENT "Generating version.hpp"
 )
 
 # Add debug define for debug builds
-if(CMAKE_BUILD_TYPE MATCHES Debug)
+if(NOT CMAKE_BUILD_TYPE MATCHES Release)
     add_definitions(-DRINGWORLD_DEBUG)
 endif()
 
@@ -117,6 +120,7 @@ set(RINGWORLD_SOURCES
     src/impl/tag/tag.c
     src/impl/text/text.c
     ${RINGWORLD_HOOKS_SOURCES}
+    ${TAG_DEFINITION_HPP_FILES}
     ${CMAKE_CURRENT_SOURCE_DIR}/src/version.hpp
 )
 
@@ -135,7 +139,6 @@ else()
     set_target_properties(ringworld PROPERTIES LINK_FLAGS "-static -static-libgcc -static-libstdc++")
 endif()
 
-add_dependencies(ringworld ringworld-tag-definitions-headers)
 target_link_libraries(ringworld d3dcompiler)
 
 if(RINGWORLD_BUILD_TOOL)

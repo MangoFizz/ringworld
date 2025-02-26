@@ -131,7 +131,6 @@ const wchar_t *scoreboard_get_place_string(TagHandle multiplayer_text_tag, uint1
 }
 
 void scoreboard_draw_row(wchar_t *text, bool highlight, ColorARGB *color, int16_t row_index) {
-    TextDrawGlobals *text_draw_globals = text_get_drawing_globals();
     HUDGlobals *hud_globals = hud_get_globals();
 
     TagHandle font = hud_globals->messaging_parameters.splitscreen_font.tag_handle;
@@ -140,7 +139,6 @@ void scoreboard_draw_row(wchar_t *text, bool highlight, ColorARGB *color, int16_
     }
 
     uint16_t screen_width = rasterizer_screen_get_width();
-    uint16_t screen_height = rasterizer_screen_get_height();
     float widescreen_margin = ((float)screen_width - RASTERIZER_SCREEN_BASE_WIDTH) / 2.0f;
 
     if(row_index != 0) {
@@ -325,9 +323,6 @@ void scoreboard_draw_header(ScoreboardRowData *player_score_data, float fade) {
     GameEngineGlobals *game_engine_globals = game_engine_get_globals();
     TagHandle mp_text_tag = multiplayer_get_text_tag();
 
-    uint16_t screen_width = rasterizer_screen_get_width();
-    uint16_t screen_height = rasterizer_screen_get_height();
-
     ColorARGB header_color;
     header_color.a = fade;
     header_color.r = 1.0f;
@@ -432,7 +427,6 @@ void scoreboard_draw_table(PlayerHandle player_handle, float fade) {
     GameEngineInterface *game_type_engine = game_engine_get_current_interface();
     PlayersTable *players_table = player_get_table();
     NetworkGame *network_game = network_game_get();
-    MainGlobals *main_globals = main_get_globals();
     TagHandle mp_text_tag = multiplayer_get_text_tag();
 
     ScoreboardRowData rows_data[NETWORK_GAME_MAX_PLAYERS];
@@ -503,7 +497,6 @@ void scoreboard_draw_table(PlayerHandle player_handle, float fade) {
 
 void scoreboard_draw_background(float fade) {
     uint16_t screen_width = rasterizer_screen_get_width();
-    uint16_t screen_height = rasterizer_screen_get_height();
     float widescreen_margin = ((float)screen_width - RASTERIZER_SCREEN_BASE_WIDTH) / 2.0f;
     
     ColorARGB background_color;

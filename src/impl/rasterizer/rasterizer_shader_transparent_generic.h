@@ -25,8 +25,9 @@ typedef struct ShaderTransparentGenericInstance {
     char hash[32];
     void *compiled_shader;
     IDirect3DPixelShader9 *shader;
+    Bool invalid;
 } ShaderTransparentGenericInstance;
-_Static_assert(sizeof(ShaderTransparentGenericInstance) == 48);
+_Static_assert(sizeof(ShaderTransparentGenericInstance) == 52);
 
 MAKE_TABLE_STRUCT(ShaderTransparentGenericInstances, ShaderTransparentGenericInstance);
 
@@ -56,6 +57,12 @@ void rasterizer_dx9_transparent_generic_preprocess(TransparentGeometryGroup *gro
  * Create an instance of the shader transparent generic for each tag in the current map.
  */
 void rasterizer_shader_transparent_generic_create_instances_for_current_map(void);
+
+/**
+ * Create an instance of the shader transparent generic for each tag in the current map except try to reuse 
+ * instaces from the previous map that are still valid to save shader compilation time. 
+ */
+void rasterizer_shader_transparent_generic_update_instances_for_current_map(void);
 
 /**
  * Clear all shader transparent generic instances.

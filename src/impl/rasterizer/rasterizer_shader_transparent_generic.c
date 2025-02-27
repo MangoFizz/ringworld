@@ -378,6 +378,7 @@ ShaderTransparentGenericInstance *rasterizer_shader_transparent_generic_get_or_c
     table_init_element(shader_transparent_generic_tags_cache, cache_entry);
     cache_entry->shader_data = tag;
     cache_entry->shader_instance = instance->handle;
+    instance->invalid = false;
 
     free_defines(defines);
     GlobalFree(hash);
@@ -396,6 +397,73 @@ void rasterizer_shader_transparent_generic_create_instances_for_current_map(void
         if(tag_entry->primary_group == TAG_GROUP_SHADER_TRANSPARENT_GENERIC) {
             rasterizer_shader_transparent_generic_get_or_create_instance(tag_entry->data);
         }
+    }
+}
+
+static bool clean_up_instances(const TableIterator *iterator, void *element, void *) {
+    ShaderTransparentGenericInstance *instance = (ShaderTransparentGenericInstance *)element;
+    if(instance->invalid) {
+        if(instance->shader != NULL) {
+            IDirect3DPixelShader9_Release(instance->shader);
+            instance->shader = NULL;
+        }
+        if(instance->compiled_shader != NULL) {
+            ID3D10Blob_Release((ID3DBlob *)instance->compiled_shader);
+            instance->compiled_shader = NULL;
+        }
+        table_remove_element(shader_transparent_generic_instances, iterator->handle);
+    }
+    return true;
+}
+
+static bool set_invalid_flag(const TableIterator *iterator, void *element, void *) {
+    ShaderTransparentGenericInstance *instance = (ShaderTransparentGenericInstance *)element;
+    instance->invalid = true;
+    return true;
+}
+
+void rasterizer_shader_transparent_generic_update_instances_for_current_map(void) {
+    // Clear the tag cache
+    if(shader_transparent_generic_tags_cache != NULL) {
+        table_clear(shader_transparent_generic_tags_cache);
+    }
+
+    TagDataHeader *tag_data_header = tag_get_data_header();
+    if(tag_data_header == NULL) {
+        CRASHF_DEBUG("tag data header is NULL");
+    }
+    ShaderTransparentGeneric *tag[MAX_SHADER_TRANSPARENT_GENERIC_PER_MAP];
+    size_t tag_count = 0;
+    for(size_t i = 0; i < tag_data_header->tag_count; i++) {
+        TagEntry *tag_entry = tag_data_header->tags + i;
+        if(tag_entry->primary_group == TAG_GROUP_SHADER_TRANSPARENT_GENERIC) {
+            if(tag_count > MAX_SHADER_TRANSPARENT_GENERIC_PER_MAP) {
+                CRASHF_DEBUG("maximum number of shader transparent generic tags reached");
+            }
+            else {
+                tag[tag_count++] = tag_entry->data;
+            }
+        }
+    }
+
+    // If we might overflow the instace table, just clear all instances. Otherwise, set invalid flag for all instances
+    if(shader_transparent_generic_instances != NULL) {
+        if(tag_count + shader_transparent_generic_instances->count > MAX_SHADER_TRANSPARENT_GENERIC_INSTANCES) {
+            rasterizer_shader_transparent_generic_clear_instances();
+        }
+        else {
+            table_iterate_simple(shader_transparent_generic_instances, set_invalid_flag, NULL);
+        }
+    }
+
+    // Find or create instances for all ShaderTransparentGeneric tags.
+    for(size_t i = 0; i < tag_count; i++) {
+        rasterizer_shader_transparent_generic_get_or_create_instance(tag[i]);
+    }
+
+    // Remove invalid instances from instance table
+    if(shader_transparent_generic_instances != NULL) {
+        table_iterate_simple(shader_transparent_generic_instances, clean_up_instances, NULL);
     }
 }
 

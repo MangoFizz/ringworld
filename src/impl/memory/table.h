@@ -161,6 +161,13 @@ void table_init_element(void *table, void *new_element_location);
 void *table_add_element(void *table);
 
 /**
+ * Remove an element from a table by it's handle.
+ * @param table table pointer
+ * @param handle Handle of the element
+ */
+void table_remove_element(void *table, TableResourceHandle handle);
+
+/**
  * Clear the contents of a table.
  * @param table table pointer
  */

@@ -13,7 +13,7 @@
     "crc32_calculate": {"address": "0x4bc550", "replace": false, "arguments": ["0", "4", "8"]},
     "players_data_initialize": {"address": "0x46dbd0", "replace": true},
 
-    "pow_float": {"address": "0x5499c0", "replace": true, "arguments": ["st1", "st0"]},
+    "math_pow_float": {"address": "0x5499c0", "replace": true, "arguments": ["st1", "st0"]},
 
     "update_menu_cursor_coords": {"address": null, "replace": true, "inlines": ["0x4b41ba"], "comment": "this functions was inlined by the compiler"},
     "ui_widgets_initialize": {"address": "0x48f420", "replace": true},

@@ -79,8 +79,8 @@ void hud_calculate_point(HUDInterfaceAnchor *absolute_placement, HUDMeterDefinit
         CRASHF_DEBUG("Anchor adjustments are not implemented");
     }
 
-    out_position->x = round(pos_x);
-    out_position->y = round(pos_y);
+    out_position->x = math_float_to_long(pos_x);
+    out_position->y = math_float_to_long(pos_y);
 }
 
 void hud_calculate_bitmap_bounds(BitmapData *bitmap_data, HUDInterfaceAnchor absolute_placement, Bounds2D *screen_coords, Bounds2D *output, bool is_interface_bitmap) {
@@ -164,8 +164,8 @@ void hud_draw_bitmap_internal(RasterizerMeterParams *meter_params, BitmapData *b
         }
 
         RasterizerDynamicVertex *vertex = &vertices[i];
-        vertex->position.x = offset->x + round((screen_pos_x * cos_rotation - screen_pos_y * sin_rotation) * scale->x);
-        vertex->position.y = offset->y + round((screen_pos_x * sin_rotation + screen_pos_y * cos_rotation) * scale->y);
+        vertex->position.x = offset->x + math_float_to_long((screen_pos_x * cos_rotation - screen_pos_y * sin_rotation) * scale->x);
+        vertex->position.y = offset->y + math_float_to_long((screen_pos_x * sin_rotation + screen_pos_y * cos_rotation) * scale->y);
         vertex->position.z = 0.0f;
         vertex->texture_pos.x = texture_pos_x;
         vertex->texture_pos.y = texture_pos_y;

@@ -14,7 +14,7 @@
     "crc32_calculate": {"address": "0x4d36d0", "replace": false, "arguments": ["0", "4", "8"]},
     "players_data_initialize": {"address": "0x476170", "replace": true},
 
-    "pow_float": {"address": "0x5ccf80", "replace": true, "arguments": ["st1", "st0"]},
+    "math_pow_float": {"address": "0x5ccf80", "replace": true, "arguments": ["st1", "st0"]},
 
     "ui_cursor_update": {"address": "0x49a220", "replace": true},
     "ui_cursor_displace": {"address": "0x49a1b0", "replace": true, "arguments": ["eax", "ecx"]},

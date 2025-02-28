@@ -486,8 +486,9 @@ void ui_widget_render(int16_t local_player_index) {
             if(widget_globals->fade_to_black >= 0.95f) {
                 widget_globals->fade_to_black = 1.0f;
             }
-            uint8_t alpha = clamp_u8(widget_globals->fade_to_black * 255, 0, 255);
-            rasterizer_screen_geometry_draw_quad(&bounds, alpha << 24);
+            float alpha = clamp_f32(widget_globals->fade_to_black, 0.0f, 1.0f);
+            uint32_t color = math_float_to_long(alpha * 255.0f) << 24 | 0x000000;
+            rasterizer_screen_geometry_draw_quad(&bounds, color);
         }
     }
     else {
@@ -603,7 +604,7 @@ void ui_widget_instance_render_recursive(Widget *widget, Rectangle2D *bounds, Ve
             }
 
             alpha = clamp_f32(alpha, 0.0f, 1.0f);
-            uint32_t color = (uint8_t)round(alpha * 255.0f) << 24 | 0xFFFFFF;
+            uint32_t color = math_float_to_long(alpha * 255.0f) << 24 | 0xFFFFFF;
 
             bitmap_draw_in_rect(background_bitmap, bounds_pointer, color, &screen_rect, &texture_rect);
         }

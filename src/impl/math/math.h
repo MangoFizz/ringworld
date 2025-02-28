@@ -96,6 +96,21 @@ static inline float normalize_f32(float x, float min, float max) {
 }
 
 /**
+ * Calculate the power of a float.
+ * @param base The base value.
+ * @param exp The exponent value.
+ * @return The result of base raised to the power of exp.
+ */
+double math_pow_float(double base, double exp);
+
+/**
+ * Convert a float to a long integer.
+ * @param f The float value to convert.
+ * @return The converted long integer.
+ */
+uint32_t math_float_to_long(float f);
+
+/**
  * Calculate the dot product of two vectors
  * @param a The first vector 
  * @param b The second vector 

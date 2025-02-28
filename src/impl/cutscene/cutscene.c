@@ -70,7 +70,7 @@ void cutscene_cinematic_render(void) {
                 letter_box_rect.top = render_globals->camera.viewport_bounds.top;
                 letter_box_rect.bottom = render_globals->camera.viewport_bounds.top + progress;
                 rasterizer_screen_geometry_draw_quad(&letter_box_rect, 0xFF000000);
-                letter_box_rect.top = screen_height - progress;
+                letter_box_rect.top = screen_height - math_float_to_long(progress);
                 letter_box_rect.bottom = screen_height;
                 rasterizer_screen_geometry_draw_quad(&letter_box_rect, 0xFF000000);
             }

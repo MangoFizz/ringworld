@@ -58,7 +58,7 @@ void rasterizer_shader_transparent_chicago_draw(TransparentGeometryGroup *group,
             int numeric_count = shader_data->properties.numeric_counter_limit;
             short index = (bitmap_count != 8) ? 0 : 3;
             float new_val = floor(numeric_count * group->animation->values[index] + 0.5f);
-            int res = round(new_val);
+            int res = math_float_to_long(new_val);
             if(res < 0) {
                 index = 0;
             }

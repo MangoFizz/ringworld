@@ -1,9 +1,12 @@
 #include <math.h>
-
 #include "math.h"
 
-double pow_float(double base, double exp) {
+double math_pow_float(double base, double exp) {
     return pow(base, exp);
+}
+
+uint32_t math_float_to_long(float f) {
+    return lrintf(f);
 }
 
 double math_vector_dot_product(VectorIJK *a, VectorIJK *b) {

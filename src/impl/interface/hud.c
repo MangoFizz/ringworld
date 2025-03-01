@@ -8,7 +8,6 @@
 #include "../math/color.h"
 #include "../rasterizer/rasterizer_dx9_vertex.h"
 #include "../rasterizer/rasterizer_screen_geometry.h"
-#include "../rasterizer/rasterizer_screen.h"
 #include "../render/render.h"
 #include "hud.h"
 
@@ -32,8 +31,8 @@ void hud_calculate_point(HUDInterfaceAnchor *absolute_placement, HUDMeterDefinit
     ASSERT(meter_definition != NULL);
 
     const uint16_t HUD_INTERFACE_MARGIN = 8;
-    uint16_t screen_width = rasterizer_screen_get_width();
-    uint16_t screen_height = rasterizer_screen_get_height();
+    uint16_t screen_width = render_get_screen_width();
+    uint16_t screen_height = render_get_screen_height();
     uint16_t left_offset = HUD_INTERFACE_MARGIN + hud_interface_safe_zones.x;
     uint16_t top_offset = HUD_INTERFACE_MARGIN + hud_interface_safe_zones.y;
     uint16_t right_offset = screen_width - HUD_INTERFACE_MARGIN - hud_interface_safe_zones.x;

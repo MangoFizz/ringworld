@@ -7,7 +7,6 @@
 #include "rasterizer.h"
 #include "rasterizer_dx9_texture.h"
 #include "rasterizer_dx9_vertex_shader.h"
-#include "rasterizer_screen.h"
 #include "rasterizer_text.h"
 
 extern RasterizerFontCache *rasterizer_font_character_cache;
@@ -30,8 +29,8 @@ void rasterizer_text_set_up_vertex_shader_constants(void) {
     Rectangle2D *window_bounds = &window_parameters->camera.window_bounds;
     float window_width = window_bounds->right - window_bounds->left;
     float window_height = window_bounds->top - window_bounds->bottom;
-    float inv_screen_width = 2.0f / rasterizer_screen_get_width();
-    float inv_screen_height = -2.0f / rasterizer_screen_get_height();
+    float inv_screen_width = 2.0f / render_get_screen_width();
+    float inv_screen_height = -2.0f / render_get_screen_height();
 
     VertexShaderScreenprojConstants *screenproj = rasterizer_text_vertex_shader_constants;
     screenproj->projection.x[0] = inv_screen_width;
@@ -58,8 +57,8 @@ bool rasterizer_text_cache_initialize(void) {
     RasterizerFontCache *font_cache = rasterizer_text_get_font_cache();
     ASSERT(font_cache->initialized == false);
 
-    uint16_t screen_width = rasterizer_screen_get_width();
-    uint16_t screen_height = rasterizer_screen_get_height();
+    uint16_t screen_width = render_get_screen_width();
+    uint16_t screen_height = render_get_screen_height();
     BitmapData *bitmap = bitmap_new_2d_bitmap_data(screen_width, screen_height, 1, BITMAP_DATA_FORMAT_A8R8G8B8);
     if(bitmap) {
         memset(font_cache, 0, sizeof(RasterizerFontCache));
@@ -82,7 +81,7 @@ void rasterizer_draw_unicode_string(Rectangle2D *position, Rectangle2D *dest_rec
     ASSERT(string != NULL);
     ASSERT(bitmap != NULL);
 
-    if(rasterizer_screen_user_interface_render_enabled() == false || window_parameters->render_target != 1) {
+    if(render_user_interface_enabled() == false || window_parameters->render_target != 1) {
         return;
     }
 
@@ -99,8 +98,8 @@ void rasterizer_draw_unicode_string(Rectangle2D *position, Rectangle2D *dest_rec
     }
 
     Rectangle2D final_rect;
-    uint16_t screen_width = rasterizer_screen_get_width();
-    uint16_t screen_height = rasterizer_screen_get_height();
+    uint16_t screen_width = render_get_screen_width();
+    uint16_t screen_height = render_get_screen_height();
     if(dest_rect != NULL) {
         final_rect.bottom = clamp_i32(dest_rect->bottom, 0, screen_height);
         final_rect.right = clamp_i32(dest_rect->right, 0, screen_width);
@@ -140,7 +139,7 @@ void rasterizer_draw_string(Rectangle2D *position, Rectangle2D *dest_rect, Color
     ASSERT(string != NULL);
     ASSERT(bitmap != NULL);
 
-    if(rasterizer_screen_user_interface_render_enabled() == false || window_parameters->render_target != 1) {
+    if(render_user_interface_enabled() == false || window_parameters->render_target != 1) {
         return;
     }
 
@@ -157,8 +156,8 @@ void rasterizer_draw_string(Rectangle2D *position, Rectangle2D *dest_rect, Color
     }
 
     Rectangle2D final_rect;
-    uint16_t screen_width = rasterizer_screen_get_width();
-    uint16_t screen_height = rasterizer_screen_get_height();
+    uint16_t screen_width = render_get_screen_width();
+    uint16_t screen_height = render_get_screen_height();
     if(dest_rect != NULL) {
         final_rect.bottom = clamp_i32(dest_rect->bottom, 0, screen_height);
         final_rect.right = clamp_i32(dest_rect->right, 0, screen_width);

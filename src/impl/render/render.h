@@ -1,13 +1,21 @@
-#ifndef RINGWORLD__RENDER_RENDER_H
-#define RINGWORLD__RENDER_RENDER_H
+#ifndef RINGWORLD__RENDER__RENDER_H
+#define RINGWORLD__RENDER__RENDER_H
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
+#include <stdint.h>
+#include <stdbool.h>
+#include "../math/math.h"
 #include "../tag/definitions/enum.h"
 #include "../tag/definitions/globals.h"
 #include "../tag/tag.h"
+
+enum {
+    RASTERIZER_SCREEN_BASE_WIDTH = 640,
+    RASTERIZER_SCREEN_BASE_HEIGHT = 480
+};
 
 typedef struct RenderCamera {
     VectorXYZ position;
@@ -20,7 +28,7 @@ typedef struct RenderCamera {
     float z_near;
     float z_far;
     Plane3D mirror_plane;
-  } RenderCamera;
+} RenderCamera;
 _Static_assert(sizeof(RenderCamera) == 0x54);
 
 typedef struct RenderFrustum {
@@ -34,9 +42,9 @@ typedef struct RenderFrustum {
     VectorXYZ world_midpoint;
     Rectangle3DF world_bounds;
     uint8_t projection_valid;
-    float projection_matrix[4][4];
+    ProjectionMatrix projection_matrix;
     VectorIJ projection_world_to_screen;
-  } RenderFrustum;
+} RenderFrustum;
 _Static_assert(sizeof(RenderFrustum) == 0x18C);
 
 typedef struct FogScreen {
@@ -64,7 +72,7 @@ typedef struct FogScreen {
     float wind_acceleration_weight;
     float wind_perpendicular_weight;
     int wind_unused[2];
-  } FogScreen;
+} FogScreen;
 _Static_assert(sizeof(FogScreen) == 0x70);
 
 typedef struct RenderFog {
@@ -82,7 +90,7 @@ typedef struct RenderFog {
     float planar_maximum_depth;
     FogScreen *screen;
     float screen_external_intensity;
-  } RenderFog;
+} RenderFog;
 _Static_assert(sizeof(RenderFog) == 0x50);
 
 typedef struct RenderGlobals {
@@ -139,6 +147,40 @@ bool render_get_fog_enabled(void);
  * @return The rasterizer data.
  */
 GlobalsRasterizerData *render_get_globals_rasterizer_data(void);
+
+/**
+* Get the width of the screen.
+* @return The width of the screen.
+*/
+uint16_t render_get_screen_width(void);
+
+/**
+* Get the height of the screen.
+* @return The height of the screen.
+*/
+uint16_t render_get_screen_height(void);
+
+/**
+* Check if user interface rendering is enabled.
+* @return True if user interface rendering is enabled, false otherwise.
+*/
+bool render_user_interface_enabled(void);
+
+/**
+* Check if widescreen support is enabled.
+* @return True if widescreen support is enabled, false otherwise.
+*/
+bool render_widescreen_support_enabled(void);
+
+/**
+ * Project a point from world space to screen space.
+ * @param camera The camera.
+ * @param frustum The frustum.
+ * @param view_point The point in world space.
+ * @param screen_point The point in screen space.
+ * @return True if the point was projected successfully, false otherwise.
+ */
+bool render_project_point_to_screen_space(RenderCamera *camera, RenderFrustum *frustum, VectorXYZ *view_point, VectorXY *screen_point);
 
 #ifdef __cplusplus
 }

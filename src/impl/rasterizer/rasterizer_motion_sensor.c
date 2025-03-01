@@ -4,12 +4,12 @@
 #include "../math/color.h"
 #include "../tag/definitions/bitmap.h"
 #include "../player/player.h"
+#include "../render/render.h"
 #include "rasterizer.h"
 #include "rasterizer_dx9_render_target.h"
 #include "rasterizer_dx9_texture.h"
 #include "rasterizer_dx9_vertex.h"
 #include "rasterizer_dx9_vertex_shader.h"
-#include "rasterizer_screen.h"
 #include "rasterizer_screen_geometry.h"
 #include "rasterizer_dx9.h"
 
@@ -103,7 +103,7 @@ void rasterizer_hud_motion_sensor_blip_begin(void) {
 
 void rasterizer_hud_motion_sensor_blip_draw(float opacity, float blip_size, VectorXY *position, ColorRGB *color_tint) {
     if(*motion_sensor_blip_render_enabled && *motion_sensor_blip_being_rendered) {
-        float inv_screen_width = 2.0f / rasterizer_screen_get_width();
+        float inv_screen_width = 2.0f / render_get_screen_width();
         float half_blip_size = blip_size * (inv_screen_width * 20.0f);
         float blip_center_x = position->x * (inv_screen_width * -10.0f);
         float blip_center_y = position->y * (inv_screen_width * -10.0f);
@@ -186,8 +186,8 @@ void rasterizer_hud_motion_sensor_blip_end(float sweep_progress, VectorXY *offse
         Rectangle2D *window_bounds = &window_parameters->camera.window_bounds;
         float window_width_inverse = 1.0f / (window_bounds->right - window_bounds->left);
         float window_height_inverse = 1.0f / (window_bounds->top - window_bounds->bottom);
-        float screen_width_inverse = 1.0f / rasterizer_screen_get_width();
-        float screen_height_inverse = 1.0f / rasterizer_screen_get_height();
+        float screen_width_inverse = 1.0f / render_get_screen_width();
+        float screen_height_inverse = 1.0f / render_get_screen_height();
 
         rasterizer_dx9_texture_set_bitmap_data_directly(0, motion_sensor_sweep_bitmap);
         rasterizer_dx9_set_sampler_state(0, D3DSAMP_ADDRESSU, D3DTADDRESS_CLAMP);

@@ -105,7 +105,6 @@ set(RINGWORLD_SOURCES
     src/impl/rasterizer/rasterizer_dx9.c
     src/impl/rasterizer/rasterizer_geometry_group.c
     src/impl/rasterizer/rasterizer_motion_sensor.c
-    src/impl/rasterizer/rasterizer_screen.c
     src/impl/rasterizer/rasterizer_screen_geometry.c
     src/impl/rasterizer/rasterizer_shader_transparent_chicago.c
     src/impl/rasterizer/rasterizer_shader_transparent_generic.c

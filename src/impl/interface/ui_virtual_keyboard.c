@@ -1,6 +1,6 @@
 #include "../math/color.h"
 #include "../bitmap/bitmap.h"
-#include "../rasterizer/rasterizer_screen.h"
+#include "../render/render.h"
 #include "../rasterizer/rasterizer_text.h"
 #include "../text/text.h"
 #include "../text/unicode_string_list.h"
@@ -48,8 +48,8 @@ void ui_virtual_keyboard_render(void) {
         Rectangle2D screen_rect;
         screen_rect.left = 0;
         screen_rect.top = 0;
-        screen_rect.right = rasterizer_screen_get_width();
-        screen_rect.bottom = rasterizer_screen_get_height();
+        screen_rect.right = render_get_screen_width();
+        screen_rect.bottom = render_get_screen_height();
         Rectangle2D texture_rect;
         texture_rect.left = 0;
         texture_rect.top = 0;
@@ -74,7 +74,7 @@ void ui_virtual_keyboard_render(void) {
         Rectangle2D bounds;
         bounds.left = 0;
         bounds.top = 78;
-        bounds.right = rasterizer_screen_get_width();
+        bounds.right = render_get_screen_width();
         bounds.bottom = 110;
         rasterizer_draw_unicode_string(&bounds, NULL, NULL, 0, string);
 
@@ -100,6 +100,6 @@ void ui_virtual_keyboard_render(void) {
     bounds.top = 118;
     bounds.left = 0;
     bounds.bottom = 143;
-    bounds.right = rasterizer_screen_get_width();
+    bounds.right = render_get_screen_width();
     ui_virtual_keyboard_render_prompt(&bounds);
 }

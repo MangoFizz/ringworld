@@ -15,7 +15,7 @@
 #include "../text/text.h"
 #include "../text/font.h"
 #include "../text/unicode_string_list.h"
-#include "../rasterizer/rasterizer_screen.h"
+#include "../render/render.h"
 #include "../rasterizer/rasterizer_text.h"
 
 typedef enum ScoreboardStringIndex {
@@ -138,7 +138,7 @@ void scoreboard_draw_row(wchar_t *text, bool highlight, ColorARGB *color, int16_
         font = font_get_default_small();
     }
 
-    uint16_t screen_width = rasterizer_screen_get_width();
+    uint16_t screen_width = render_get_screen_width();
     float widescreen_margin = ((float)screen_width - RASTERIZER_SCREEN_BASE_WIDTH) / 2.0f;
 
     if(row_index != 0) {
@@ -496,7 +496,7 @@ void scoreboard_draw_table(PlayerHandle player_handle, float fade) {
 }
 
 void scoreboard_draw_background(float fade) {
-    uint16_t screen_width = rasterizer_screen_get_width();
+    uint16_t screen_width = render_get_screen_width();
     float widescreen_margin = ((float)screen_width - RASTERIZER_SCREEN_BASE_WIDTH) / 2.0f;
     
     ColorARGB background_color;
@@ -518,8 +518,8 @@ void scoreboard_draw_server_info(float fade) {
     NetworkGame *network_game = network_game_get();
     TagHandle mp_text_tag = multiplayer_get_text_tag();
 
-    uint16_t screen_width = rasterizer_screen_get_width();
-    uint16_t screen_height = rasterizer_screen_get_height();
+    uint16_t screen_width = render_get_screen_width();
+    uint16_t screen_height = render_get_screen_height();
 
     TagHandle font = hud_globals->messaging_parameters.fullscreen_font.tag_handle;
     if(HANDLE_IS_NULL(font)) {

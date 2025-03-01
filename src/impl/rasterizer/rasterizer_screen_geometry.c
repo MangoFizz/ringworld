@@ -8,7 +8,6 @@
 #include "rasterizer_dx9_texture.h"
 #include "../render/render.h"
 #include "rasterizer.h"
-#include "rasterizer_screen.h"
 #include "rasterizer_screen_geometry.h"
 
 static void rasterizer_screen_geometry_hud_meter_draw(BitmapData **meter_maps, RasterizerMeterParams *meter_params, RasterizerDynamicVertex *vertices) {
@@ -59,7 +58,7 @@ void rasterizer_screen_geometry_draw(RasterizerDynamicScreenGeometryParams *para
     ASSERT(device != NULL);
     ASSERT(window_parameters != NULL);
 
-    if(rasterizer_screen_user_interface_render_enabled() == false || window_parameters->render_target < 1) {
+    if(render_user_interface_enabled() == false || window_parameters->render_target < 1) {
         return;
     }
 
@@ -90,8 +89,8 @@ void rasterizer_screen_geometry_draw(RasterizerDynamicScreenGeometryParams *para
     Rectangle2D *window_bounds = &window_parameters->camera.window_bounds;
     float window_width = window_bounds->right - window_bounds->left;
     float window_height = window_bounds->bottom - window_bounds->top;
-    float inv_screen_width = 2.0f / rasterizer_screen_get_width();
-    float inv_screen_height = -2.0f / rasterizer_screen_get_height();
+    float inv_screen_width = 2.0f / render_get_screen_width();
+    float inv_screen_height = -2.0f / render_get_screen_height();
 
     float offset_x, offset_y;
     if(params->offset == NULL) {

@@ -4,7 +4,7 @@
 #include "../bitmap/bitmap.h"
 #include "../math/math.h"
 #include "../rasterizer/rasterizer_screen_geometry.h"
-#include "../rasterizer/rasterizer_screen.h"
+#include "../render/render.h"
 #include "../tag/definitions/bitmap.h"
 #include "../tag/tag.h"
 #include "ui_cursor.h"
@@ -31,8 +31,8 @@ void ui_cursor_displace(int32_t dx, int32_t dy) {
     int32_t new_position_x = *menu_cursor_x + dx;
     int32_t new_position_y = *menu_cursor_y + dy;
 
-    *menu_cursor_x = max_i32(min_i32(new_position_x, rasterizer_screen_get_width()), 0);
-    *menu_cursor_y = max_i32(min_i32(new_position_y, rasterizer_screen_get_height()), 0);
+    *menu_cursor_x = max_i32(min_i32(new_position_x, render_get_screen_width()), 0);
+    *menu_cursor_y = max_i32(min_i32(new_position_y, render_get_screen_height()), 0);
 
     *cursor_should_activate_widgets = true;
 }

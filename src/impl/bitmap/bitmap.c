@@ -3,7 +3,7 @@
 #include "../rasterizer/rasterizer_dx9_texture.h"
 #include "../rasterizer/rasterizer_dx9_vertex.h"
 #include "../rasterizer/rasterizer_screen_geometry.h"
-#include "../rasterizer/rasterizer_screen.h"
+#include "../render/render.h"
 #include "bitmap.h"
 
 uint8_t bitmap_format_bits_per_pixel[] = { 0x08, 0x08, 0x08, 0x10, 0x00, 0x00, 0x10, 0x00, 0x10, 0x10, 0x20, 0x20, 0x00, 0x00, 0x04, 0x08, 0x08, 0x08, 0xFF };

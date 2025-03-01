@@ -15,6 +15,7 @@
     "players_data_initialize": {"address": "0x476170", "replace": true},
 
     "math_pow_float": {"address": "0x5ccf80", "replace": true, "arguments": ["st1", "st0"]},
+    "math_matrix_4x3_transform_point": {"address": "0x4cf1e0", "replace": true, "arguments": ["0", "edx", "eax"]},
 
     "ui_cursor_update": {"address": "0x49a220", "replace": true},
     "ui_cursor_displace": {"address": "0x49a1b0", "replace": true, "arguments": ["eax", "ecx"]},
@@ -119,5 +120,5 @@
 
     "cutscene_cinematic_render": {"address": "0x44a330", "replace": true },
 
-    "math_matrix_4x3_transform_point": {"address": "0x4cf1e0", "replace": true, "arguments": ["0", "edx", "eax"]}
+    "render_project_point_to_screen_space": {"address": "0x511740", "replace": true, "use_return_value": true, "arguments": ["edi", "esi", "edx", "ecx"]}
 }

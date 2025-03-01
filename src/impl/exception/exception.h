@@ -37,6 +37,12 @@ void debug_printf(const char *fmt, ...);
         CRASHF_DEBUG("assertion failed: " #expr); \
     }
 
+#define ASSERT_OR_RETURN(expr, ret) \
+    if(!(expr)) { \
+        CRASHF_DEBUG("assertion failed: " #expr); \
+        return ret; \
+    }
+
 #ifdef __cplusplus
 }
 #endif

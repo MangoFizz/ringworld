@@ -4,7 +4,6 @@
 #include "../game/game_time.h"
 #include "../math/math.h"
 #include "../math/color.h"
-#include "../rasterizer/rasterizer_screen.h"
 #include "../rasterizer/rasterizer_text.h"
 #include "../render/render.h"
 #include "../scenario/scenario.h"
@@ -60,8 +59,8 @@ void cutscene_cinematic_render(void) {
 
             cinematic_globals->letter_box_size = letter_box_transition_progress;
             if(letter_box_transition_progress > 0.0f) {
-                uint16_t screen_width = rasterizer_screen_get_width();
-                uint16_t screen_height = rasterizer_screen_get_height();
+                uint16_t screen_width = render_get_screen_width();
+                uint16_t screen_height = render_get_screen_height();
                 float progress = cinematic_globals->letter_box_size * 0.125f * screen_height;
                 Rectangle2D letter_box_rect;
                 // @todo fix camera viewport bounds
@@ -91,8 +90,8 @@ void cutscene_cinematic_render(void) {
                         title_pos = hud_globals->hud_crap.default_chapter_title_bounds;
                     }
 
-                    if(rasterizer_screen_widescreen_support_enabled()) {
-                        uint16_t screen_width = rasterizer_screen_get_width();
+                    if(render_widescreen_support_enabled()) {
+                        uint16_t screen_width = render_get_screen_width();
                         float margin = (float)(screen_width - RASTERIZER_SCREEN_BASE_WIDTH) / 2;
                         switch(title->justification) {
                             case SCENARIO_JUSTIFICATION_CENTER:

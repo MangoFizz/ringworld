@@ -12,9 +12,9 @@
 #include "../game/game_time.h"
 #include "../text/text.h"
 #include "../exception/exception.h"
-#include "../rasterizer/rasterizer_screen.h"
 #include "../rasterizer/rasterizer_screen_geometry.h"
 #include "../rasterizer/rasterizer_text.h"
+#include "../render/render.h"
 #include "ui_cursor.h"
 #include "ui_virtual_keyboard.h"
 #include "ui_widget.h"
@@ -392,12 +392,12 @@ void ui_widget_new_history_node(WidgetHistoryNode *history_node_data, WidgetHist
 }
 
 float ui_widget_get_widescreen_margin(void) {
-    if(rasterizer_screen_widescreen_support_enabled()) {
+    if(render_widescreen_support_enabled()) {
         Widget *active_widget = widget_globals->active_widget[0];
         if(active_widget != NULL) {
             UIWidgetDefinition *definition = tag_get_data(TAG_GROUP_UI_WIDGET_DEFINITION, active_widget->definition_tag_handle);
             uint16_t widget_width = max_i32(definition->bounds.right - max_i32(definition->bounds.left, 0), RASTERIZER_SCREEN_BASE_WIDTH);
-            uint16_t screen_width = rasterizer_screen_get_width();
+            uint16_t screen_width = render_get_screen_width();
             return (float)(screen_width - widget_width) / 2.0f;
         }
     }
@@ -415,8 +415,8 @@ VectorXYInt ui_widget_get_relative_cursor_position(void) {
 
 void ui_widget_render_root_widget(Widget *widget) {
     ASSERT(widget != NULL);
-    uint16_t screen_width = rasterizer_screen_get_width();
-    uint16_t screen_height = rasterizer_screen_get_height();
+    uint16_t screen_width = render_get_screen_width();
+    uint16_t screen_height = render_get_screen_height();
     Rectangle2D bounds;
     bounds.left = 0;
     bounds.top = 0;
@@ -481,8 +481,8 @@ void ui_widget_render(int16_t local_player_index) {
             Rectangle2D bounds;
             bounds.left = 0;
             bounds.top = 0;
-            bounds.right = rasterizer_screen_get_width();
-            bounds.bottom = rasterizer_screen_get_height();
+            bounds.right = render_get_screen_width();
+            bounds.bottom = render_get_screen_height();
             if(widget_globals->fade_to_black >= 0.95f) {
                 widget_globals->fade_to_black = 1.0f;
             }
@@ -574,8 +574,8 @@ void ui_widget_instance_render_recursive(Widget *widget, Rectangle2D *bounds, Ve
                 bounds_pointer = &parent_rect;
             }
             
-            if(rasterizer_screen_widescreen_support_enabled() && !ui_widget_background_is_excluded_from_widescreen(widget->definition_tag_handle)) {
-                uint16_t screen_width = rasterizer_screen_get_width();
+            if(render_widescreen_support_enabled() && !ui_widget_background_is_excluded_from_widescreen(widget->definition_tag_handle)) {
+                uint16_t screen_width = render_get_screen_width();
                 float widescreen_margin = ui_widget_get_widescreen_margin();
                 uint16_t widgets_bounds_width = screen_width - widescreen_margin * 2;
                 uint16_t widget_width = min_i32(definition->bounds.right, widgets_bounds_width) - max_i32(definition->bounds.left, 0);

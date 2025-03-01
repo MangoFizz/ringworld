@@ -9,8 +9,8 @@
 #include "../math/color.h"
 #include "../text/text.h"
 #include "../text/unicode_string_list.h"
-#include "../rasterizer/rasterizer_screen.h"
 #include "../rasterizer/rasterizer_text.h"
+#include "../render/render.h"
 #include "loading_screen.h"
 
 extern uint32_t *loading_screen_state;
@@ -126,8 +126,8 @@ void loading_screen_render() {
     Rectangle2D rect;
     rect.left = 0;
     rect.top = 0;
-    rect.right = rasterizer_screen_get_width();
-    rect.bottom = rasterizer_screen_get_height();
+    rect.right = render_get_screen_width();
+    rect.bottom = render_get_screen_height();
 
     BitmapData *background_bitmap = bitmap_group_sequence_get_bitmap_for_frame(bitmap_tag, 0, 0);
     if(background_bitmap) {

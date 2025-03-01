@@ -209,20 +209,22 @@ void scoreboard_sort_players(PlayerScore *scores, uint16_t *count, PlayerHandle 
         NetworkGamePlayer *netgame_player = &network_game->players[i];
         if(netgame_player->player_list_index != -1) {
             Player *player = table_get_element(players_table, MAKE_HANDLE(0, netgame_player->player_list_index));
-            PlayerHandle player_handle = MAKE_HANDLE(player->player_id, netgame_player->player_list_index);
-            current_player_score->player_handle = player_handle;
-            current_player_score->score = game_type_engine->get_score(i, false);
-            if(network_game->gametype_variant.universal_variant.teams) {
-                current_player_score->team_index = player->team_index;
+            if(player) {
+                PlayerHandle player_handle = MAKE_HANDLE(player->player_id, netgame_player->player_list_index);
+                current_player_score->player_handle = player_handle;
+                current_player_score->score = game_type_engine->get_score(i, false);
+                if(network_game->gametype_variant.universal_variant.teams) {
+                    current_player_score->team_index = player->team_index;
+                }
+                else {
+                    current_player_score->team_index = 0;
+                }
+                if(local_player_handle.value == player_handle.value) {
+                    *local_player_score = current_player_score;
+                }
+                current_player_score++;
+                players_count++;
             }
-            else {
-                current_player_score->team_index = 0;
-            }
-            if(local_player_handle.value == player_handle.value) {
-                *local_player_score = current_player_score;
-            }
-            current_player_score++;
-            players_count++;
         }
     }
 
@@ -274,6 +276,7 @@ void scoreboard_push_rows_data_by_team(PlayerScore *players_scores, size_t playe
             ScoreboardRowData *scoreboard_row = &scoreboard_rows[*rows_count];
             PlayerHandle player_handle = player_score->player_handle;
             Player *player = table_get_element(players_table, player_handle);
+            ASSERT(player != NULL);
             scoreboard_row->player_handle = player_handle;
             scoreboard_row->name = player->name;
             scoreboard_row->kills = player->kills[0];
@@ -456,6 +459,7 @@ void scoreboard_draw_table(PlayerHandle player_handle, float fade) {
         ScoreboardRowData *row_data = &rows_data[i];
         if(!HANDLE_IS_NULL(row_data->player_handle)) {
             Player *player = table_get_element(players_table, row_data->player_handle);
+            ASSERT(player != NULL);
 
             const wchar_t *place_text = scoreboard_get_place_string(mp_text_tag, row_data->place);
             const wchar_t *score_string = NULL;

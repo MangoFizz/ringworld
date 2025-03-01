@@ -1,5 +1,4 @@
 #include <stdint.h>
-
 #include <math.h>
 #include "../types/types.h"
 #include "../exception/exception.h"

@@ -138,7 +138,15 @@ double math_vector_normalize(VectorIJK *v);
  * @param scale The scalar to scale by
  * @param result The result of the scaling
  */
-void math_vector_2d_scale(void *v, float scale, void *result);
+void math_vector_2d_scale(const void *v, float scale, void *result);
+
+/**
+ * Scale a 3D vector by a scalar.
+ * @param v The vector to scale.
+ * @param scale The scalar to scale by.
+ * @param result The result of the scaling.
+ */
+void math_vector_3d_scale(const void *v, float scale, void *result);
 
 /**
  * Translate a 2D rectangle by a given offset.
@@ -157,6 +165,14 @@ Rectangle2D *math_rectangle_2d_translate(Rectangle2D *rect, int16_t offset_x, in
  * @return true if the point is inside the rectangle, or false otherwise.
  */
 bool math_rectangle_2d_contains_point(Rectangle2D *rect, int16_t x, int16_t y);
+
+/**
+ * Transform a 3D point by a 4x3 matrix.
+ * @param matrix Pointer to the matrix to transform by.
+ * @param point Pointer to the point to transform.
+ * @param result Pointer to the result of the transformation.
+ */
+void math_matrix_4x3_transform_point(const Matrix4x3 *matrix, const VectorXYZ *point, VectorXYZ *result);
 
 #ifdef __cplusplus
 }

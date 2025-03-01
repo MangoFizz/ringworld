@@ -8,7 +8,10 @@
 #include "../math/color.h"
 #include "../rasterizer/rasterizer_dx9_vertex.h"
 #include "../rasterizer/rasterizer_screen_geometry.h"
+#include "../rasterizer/rasterizer_text.h"
 #include "../render/render.h"
+#include "../text/font.h"
+#include "../text/text.h"
 #include "hud.h"
 
 extern HUDGlobals **hud_globals;
@@ -337,4 +340,29 @@ void hud_draw_meter(HUDInterfaceAnchor *anchor, uint8_t min_alpha, uint8_t max_a
     meter_params.tint_mode_2 = true;
 
     hud_draw_bitmap_with_meter(&meter_params, bitmap_data, anchor, scale, 0.0f, 0xFFFFFFFF, flags.in_multiplayer, meter_definition, &sprite_bounds, bitmap->type == BITMAP_TYPE_INTERFACE_BITMAPS);
+}
+
+void hud_draw_message(wchar_t *message, float fade) {
+    HUDGlobals *hud_globals = hud_get_globals();
+    
+    TagHandle font = font = hud_globals->messaging_parameters.splitscreen_font.tag_handle;
+    if(HANDLE_IS_NULL(font)) {
+        font = font_get_default_small();
+    }
+
+    ColorARGB text_color;
+    text_color.a = fade;
+    text_color.r = color_rgb_hud_text.r;
+    text_color.g = color_rgb_hud_text.g;
+    text_color.b = color_rgb_hud_text.b;
+
+    Rectangle2D rect;
+    rect.left = hud_interface_safe_zones.x;
+    rect.top = 70;
+    rect.right = render_get_screen_width() - hud_interface_safe_zones.x;
+    rect.bottom = 94;
+
+    text_set_drawing_parameters(-1, 2, 8, font, &text_color);
+    rasterizer_draw_unicode_string(&rect, NULL, NULL, 0, message);
+    text_set_drawing_parameters(-1, 0, 0, font, &text_color);
 }

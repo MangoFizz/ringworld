@@ -8,7 +8,10 @@ extern "C" {
 #include "../tag/definitions/weapon_hud_interface.h"
 #include "../tag/definitions/hud_globals.h"
 #include "../rasterizer/rasterizer_screen_geometry.h"
+#include "../types/types.h"
 #include "../memory/memory.h"
+
+static ColorRGB color_rgb_hud_text = { 0.4588235f, 0.7294118f, 1.0f };
 
 typedef struct HUDMeterDefinition { 
     VectorXYInt anchor_offset;

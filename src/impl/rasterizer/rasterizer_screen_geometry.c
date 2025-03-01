@@ -89,7 +89,7 @@ void rasterizer_screen_geometry_draw(RasterizerDynamicScreenGeometryParams *para
 
     Rectangle2D *window_bounds = &window_parameters->camera.window_bounds;
     float window_width = window_bounds->right - window_bounds->left;
-    float window_height = window_bounds->top - window_bounds->bottom;
+    float window_height = window_bounds->bottom - window_bounds->top;
     float inv_screen_width = 2.0f / rasterizer_screen_get_width();
     float inv_screen_height = -2.0f / rasterizer_screen_get_height();
 

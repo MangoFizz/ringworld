@@ -9,7 +9,6 @@ extern "C" {
 #include <stdbool.h>
 #include "../math/math.h"
 #include "../tag/definitions/enum.h"
-#include "../tag/definitions/globals.h"
 #include "../tag/tag.h"
 
 enum {
@@ -141,12 +140,6 @@ RenderGlobals *render_get_globals(void);
  * Get whether the fog is enabled.
  */
 bool render_get_fog_enabled(void);
-
-/**
- * Get the rasterizer data.
- * @return The rasterizer data.
- */
-GlobalsRasterizerData *render_get_globals_rasterizer_data(void);
 
 /**
 * Get the width of the screen.

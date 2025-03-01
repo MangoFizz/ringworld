@@ -9,6 +9,7 @@ extern "C" {
 
 #include "../render/render.h"
 #include "../tag/definitions/bitmap.h"
+#include "../tag/definitions/globals.h"
 #include "../tag/definitions/shader.h"
 #include "../tag/tag.h"
 
@@ -100,6 +101,12 @@ RasterizerWindowRenderParameters *rasterizer_get_window_parameters(void);
  * @return The frame parameters.
  */
 RasterizerFrameParameters*rasterizer_get_frame_parameters(void);
+
+/**
+ * Get the rasterizer data.
+ * @return The rasterizer data.
+ */
+GlobalsRasterizerData *render_get_globals_rasterizer_data(void);
 
 #ifdef __cplusplus
 }

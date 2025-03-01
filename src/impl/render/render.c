@@ -8,7 +8,6 @@
 
 extern RenderGlobals *render_globals;
 extern bool *fog_enable;
-extern GlobalsRasterizerData **globals_rasterizer_data;
 extern bool *rasterizer_enable_user_interface_render;
 bool rasterizer_enable_widescreen_support = true;
 
@@ -18,11 +17,6 @@ RenderGlobals *render_get_globals(void) {
 
 bool render_get_fog_enabled(void) {
     return *fog_enable;
-}
-
-GlobalsRasterizerData *render_get_globals_rasterizer_data(void) {
-    ASSERT(globals_rasterizer_data != NULL);
-    return *globals_rasterizer_data;
 }
 
 uint16_t render_get_screen_width(void) {

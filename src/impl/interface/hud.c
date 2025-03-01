@@ -360,7 +360,7 @@ void hud_draw_message(wchar_t *message, float fade) {
     rect.left = hud_interface_safe_zones.x;
     rect.top = 70;
     rect.right = render_get_screen_width() - hud_interface_safe_zones.x;
-    rect.bottom = 94;
+    rect.bottom = rect.top + font_get_height(font);
 
     text_set_drawing_parameters(-1, 2, 8, font, &text_color);
     rasterizer_draw_unicode_string(&rect, NULL, NULL, 0, message);

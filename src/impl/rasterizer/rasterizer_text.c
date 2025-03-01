@@ -216,13 +216,16 @@ void rasterizer_text_cache_font_character(Font *font, FontCharacter *character) 
 
     character->draw_generation = *string_draw_count;
 
-    if(character->bitmap_width + font_cache->position.x + 2 > FONT_CHARACTER_CACHE_BITMAP_WIDTH) {
+    uint16_t bitmap_width = character->bitmap_width + 2;
+    uint16_t bitmap_height = character->bitmap_height + 2;
+
+    if(bitmap_width + font_cache->position.x > FONT_CHARACTER_CACHE_BITMAP_WIDTH) {
         font_cache->position.x = 0;
         font_cache->position.y = font_cache->position.y + font_cache->maximum_character_height;
         font_cache->maximum_character_height = 0;
     }
 
-    if(character->bitmap_height + font_cache->position.y + 2 > FONT_CHARACTER_CACHE_BITMAP_HEIGHT) {
+    if(bitmap_height + font_cache->position.y > FONT_CHARACTER_CACHE_BITMAP_HEIGHT) {
         font_cache->position.y = 0;
         font_cache->position.x = 0;
         font_cache->maximum_character_height = 0;
@@ -234,20 +237,19 @@ void rasterizer_text_cache_font_character(Font *font, FontCharacter *character) 
         }
     }
 
-    if(character->bitmap_height + 2 >= font_cache->maximum_character_height) {
+    if(font_cache->maximum_character_height <= bitmap_height) {
         uint16_t character_baseline_y = font_cache->position.y + font_cache->maximum_character_height;
-        uint16_t character_bottom_y = font_cache->position.y + character->bitmap_height + 2;
+        uint16_t character_bottom_y = font_cache->position.y + bitmap_height;
         FontCacheCharacter *character_cache = &font_cache->characters[font_cache->read_index];
         while(font_cache->read_index != font_cache->write_index && character_cache->position.y >= character_baseline_y && character_cache->position.y < character_bottom_y) {
             rasterizer_text_dispose_font_character(character_cache);
             font_cache->read_index = (font_cache->read_index + 1) % MAX_FONT_CACHE_CHARACTERS;
             character_cache = &font_cache->characters[font_cache->read_index];
         }
-        font_cache->maximum_character_height = character->bitmap_height + 2;
+        font_cache->maximum_character_height = bitmap_height;
     }
 
-    uint16_t character_left_x = font_cache->position.x + character->bitmap_width + 2;
-    if(character_left_x == font_cache->read_index) {
+    if(font_cache->read_index == font_cache->write_index + 1) {
         rasterizer_text_dispose_font_character(&font_cache->characters[font_cache->read_index]);
         font_cache->read_index = (font_cache->read_index + 1) % MAX_FONT_CACHE_CHARACTERS;
     }
@@ -260,9 +262,9 @@ void rasterizer_text_cache_font_character(Font *font, FontCharacter *character) 
 
     uint8_t *character_pixels = font->pixels.pointer + character->pixels_offset;
     size_t pixels_count = 0;
-    for(size_t offset_y = 0; offset_y < character->bitmap_height + 2; offset_y++) {
+    for(size_t offset_y = 0; offset_y < bitmap_height; offset_y++) {
         ColorARGBInt *pixel = bitmap_address_for_pixel(font_cache->position.x, font_cache->position.y + offset_y, 0, font_cache->bitmap);
-        for(size_t offset_x = 0; offset_x < character->bitmap_width + 2; offset_x++) {
+        for(size_t offset_x = 0; offset_x < bitmap_width; offset_x++) {
             if(offset_y <= 0 || offset_y > character->bitmap_height || offset_x <= 0 || offset_x > character->bitmap_width) {
                 *pixel = 0x00000000;
             }
@@ -281,6 +283,6 @@ void rasterizer_text_cache_font_character(Font *font, FontCharacter *character) 
     ASSERT(pixels_count == character->bitmap_width * character->bitmap_height);
 
     rasterizer_dx9_texture_update_bitmap_2d(font_cache->bitmap);
-    font_cache->position.x = font_cache->position.x + character->bitmap_width + 2;
+    font_cache->position.x = font_cache->position.x + bitmap_width;
     font_cache->write_index = (font_cache->write_index + 1) % MAX_FONT_CACHE_CHARACTERS;
 }

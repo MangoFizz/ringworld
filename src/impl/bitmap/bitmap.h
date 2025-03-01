@@ -86,6 +86,16 @@ uint32_t bitmap_get_pixel_data_size(BitmapData *bitmap_data);
 BitmapData *bitmap_new_2d_bitmap_data(uint16_t width, uint16_t height, uint16_t mipmap_count, BitmapDataFormat format);
 
 /**
+ * Get the address of a pixel in a bitmap.
+ * @param x The x-coordinate of the pixel.
+ * @param y The y-coordinate of the pixel.
+ * @param mipmap_level The mipmap level of the pixel. // @todo Confirm this
+ * @param bitmap The bitmap data.
+ * @return The address of the pixel.
+ */
+void *bitmap_address_for_pixel(uint16_t x, uint16_t y, uint8_t mipmap_level, BitmapData *bitmap);
+
+/**
  * Draw a bitmap in a specified rectangle with a color mask.
  * @param screen_rect The position and size of the screen rectangle to draw the bitmap.
  * @param texture_rect The position and size of the texture rectangle to use from the bitmap.
@@ -95,6 +105,17 @@ BitmapData *bitmap_new_2d_bitmap_data(uint16_t width, uint16_t height, uint16_t 
  * @todo Verify the parameters.
  */
 void bitmap_draw_in_rect(BitmapData *bitmap, Rectangle2D *rect, ColorARGBInt color_mask, Rectangle2D *screen_rect, Rectangle2D *texture_rect);
+
+/**
+ * Draw a bitmap with specified parameters.
+ * @param bitmap The bitmap data to draw.
+ * @param bounds The bounds within which to draw the bitmap.
+ * @param scale The scale factor to apply to the bitmap.
+ * @param rotation The rotation angle to apply to the bitmap.
+ * @param fade The fade factor to apply to the bitmap.
+ * @param offset The offset to apply to the bitmap.
+ */
+void bitmap_draw(BitmapData *bitmap, Bounds2D *bounds, float scale, float rotation, float fade, VectorXYInt *offset);
 
 #ifdef __cplusplus
 }

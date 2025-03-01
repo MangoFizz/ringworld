@@ -1,7 +1,9 @@
-#include <stdio.h>
-#include <windows.h>
+#include <math.h>
 #include "../exception/exception.h"
 #include "../rasterizer/rasterizer_dx9_texture.h"
+#include "../rasterizer/rasterizer_dx9_vertex.h"
+#include "../rasterizer/rasterizer_screen_geometry.h"
+#include "../rasterizer/rasterizer_screen.h"
 #include "bitmap.h"
 
 uint8_t bitmap_format_bits_per_pixel[] = { 0x08, 0x08, 0x08, 0x10, 0x00, 0x00, 0x10, 0x00, 0x10, 0x10, 0x20, 0x20, 0x00, 0x00, 0x04, 0x08, 0x08, 0x08, 0xFF };
@@ -128,3 +130,64 @@ BitmapData *bitmap_new_2d_bitmap_data(uint16_t width, uint16_t height, uint16_t 
 
     return bitmap_data;
 }
+
+void bitmap_draw(BitmapData *bitmap, Bounds2D *bounds, float scale, float rotation, float fade, VectorXYInt *offset) {
+    float sin_rotation = sin(rotation);
+    float cos_rotation = cos(rotation);
+    uint32_t color = (uint32_t)(fade * 255.0f) << 24 | 0xFFFFFF;
+    float reg_point_x = bitmap->registration_point.x;
+    float reg_point_y = bitmap->registration_point.y;
+    uint16_t width = bitmap->width;
+    uint16_t height = bitmap->height;
+
+    Bounds2D default_bounds;
+    default_bounds.left = 0.0f;
+    default_bounds.right = 1.0f;
+    default_bounds.top = 0.0f;
+    default_bounds.bottom = 1.0f;
+    if(bounds == NULL) {
+        bounds = &default_bounds;
+    }
+
+    RasterizerDynamicVertex vertices[4];
+    for(size_t i = 0; i < sizeof(vertices) / sizeof(vertices[0]); i++) {
+        float pos_x, pos_y;
+        float screen_pos_x, screen_pos_y;
+        if(((i + 1) & 2) == 0) {
+            pos_x = bounds->left;
+        }
+        else {
+            pos_x = bounds->right;
+        }
+        if(i < 2) {
+            pos_y = bounds->top;
+        }
+        else {
+            pos_y = bounds->bottom;
+        }
+
+        float texture_offset_x = (width * pos_x - reg_point_x) * scale;
+        float texture_offset_y = (height * pos_y - reg_point_y) * scale;
+
+        RasterizerDynamicVertex *vertex = &vertices[i];
+        vertex->position.x = (texture_offset_x * cos_rotation + offset->x) - texture_offset_y * sin_rotation;
+        vertex->position.y = (texture_offset_y * cos_rotation + offset->y) + texture_offset_x * sin_rotation;
+        vertex->position.z = 0.0f;
+        vertex->texture_pos.x = pos_x;
+        vertex->texture_pos.y = pos_y;
+        vertex->color = color;
+    }
+
+    RasterizerDynamicScreenGeometryParams screen_geometry_parameters;
+    memset(&screen_geometry_parameters, 0, sizeof(screen_geometry_parameters));
+    screen_geometry_parameters.meter_parameters = NULL;
+    screen_geometry_parameters.map_texture_scale[0].x = 1.0f;
+    screen_geometry_parameters.map_texture_scale[0].y = 1.0f;
+    screen_geometry_parameters.map_scale[0].x = 1.0f;
+    screen_geometry_parameters.map_scale[0].y = 1.0f;
+    screen_geometry_parameters.point_sampled = false;
+    screen_geometry_parameters.framebuffer_blend_function = FRAMEBUFFER_BLEND_FUNCTION_ALPHA_MULTIPLY_ADD;
+    screen_geometry_parameters.map[0] = bitmap;
+    rasterizer_screen_geometry_draw(&screen_geometry_parameters, vertices);
+}
+

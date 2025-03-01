@@ -56,6 +56,12 @@ bool rasterizer_dx9_texture_set_bitmap_data_texture(uint16_t stage, BitmapType b
  */
 bool rasterizer_dx9_texture_set_bitmap_data_directly(uint16_t stage, BitmapData *bitmap_data);
 
+/**
+ * Update a 2D bitmap texture.
+ * @param data The bitmap data.
+ */
+void rasterizer_dx9_texture_update_bitmap_2d(BitmapData *data);
+
 #ifdef __cplusplus
 }
 #endif

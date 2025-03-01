@@ -9,6 +9,12 @@ extern "C" {
 #include "../tag/definitions/bitmap.h"
 #include "rasterizer_screen_geometry.h"
 
+enum {
+    FONT_CHARACTER_CACHE_BITMAP_WIDTH = 512,
+    FONT_CHARACTER_CACHE_BITMAP_HEIGHT = 512,
+    MAX_FONT_CACHE_CHARACTERS = 512
+};
+
 typedef struct FontCacheCharacter {
     FontCharacter *character;
     VectorXYInt position;
@@ -22,9 +28,9 @@ typedef struct RasterizerFontCache {
     VectorXYInt position;
     int16_t maximum_character_height;
     BitmapData *bitmap;
-    FontCacheCharacter characters[512];
+    FontCacheCharacter characters[MAX_FONT_CACHE_CHARACTERS];
 } RasterizerFontCache;
-_Static_assert(sizeof(RasterizerFontCache) == 0x1010);
+_Static_assert(sizeof(RasterizerFontCache) == 0x10 + MAX_FONT_CACHE_CHARACTERS * sizeof(FontCacheCharacter));
 
 /**
  * Get the font cache.

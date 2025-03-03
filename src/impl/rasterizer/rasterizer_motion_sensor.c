@@ -9,6 +9,7 @@
 #include "rasterizer_dx9_render_target.h"
 #include "rasterizer_dx9_texture.h"
 #include "rasterizer_dx9_vertex.h"
+#include "rasterizer_dx9_vertex_shader_constants.h"
 #include "rasterizer_dx9_vertex_shader.h"
 #include "rasterizer_screen_geometry.h"
 #include "rasterizer_dx9.h"

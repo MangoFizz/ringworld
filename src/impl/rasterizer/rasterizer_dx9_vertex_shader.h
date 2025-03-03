@@ -8,7 +8,6 @@ extern "C" {
 #include <stdint.h>
 #include <d3d9.h>
 
-#include "rasterizer_dx9_vertex_shader_constants.h"
 #include "rasterizer_dx9_vertex.h"
 
 typedef struct VertexShader {

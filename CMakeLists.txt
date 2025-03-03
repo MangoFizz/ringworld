@@ -96,6 +96,7 @@ set(RINGWORLD_SOURCES
     src/impl/memory/table.c
     src/impl/player/player.c
     src/impl/rasterizer/rasterizer.c
+    src/impl/rasterizer/rasterizer_config.c
     src/impl/rasterizer/rasterizer_dx9_render_target.c
     src/impl/rasterizer/rasterizer_dx9_shader_compiler.c
     src/impl/rasterizer/rasterizer_dx9_shader_effect.c
@@ -105,6 +106,7 @@ set(RINGWORLD_SOURCES
     src/impl/rasterizer/rasterizer_dx9.c
     src/impl/rasterizer/rasterizer_geometry_group.c
     src/impl/rasterizer/rasterizer_motion_sensor.c
+    src/impl/rasterizer/rasterizer_screen_effect.c
     src/impl/rasterizer/rasterizer_screen_geometry.c
     src/impl/rasterizer/rasterizer_shader_transparent_chicago.c
     src/impl/rasterizer/rasterizer_shader_transparent_generic.c
@@ -112,6 +114,7 @@ set(RINGWORLD_SOURCES
     src/impl/rasterizer/rasterizer_shaders_blob.c
     src/impl/rasterizer/rasterizer_text.c
     src/impl/render/render.c
+    src/impl/rng/rng.c
     src/impl/saved_games/player_profile.c
     src/impl/scenario/scenario.c
     src/impl/script/hsc.c

@@ -9,8 +9,6 @@ extern "C" {
 #include <stdint.h>
 #include <d3d9.h>
 
-#include "rasterizer_dx9_pixel_shader_constants.h"
-
 typedef struct RasterizerDx9PixelShader {
     char name[128];
     IDirect3DPixelShader9 *pixel_shader;

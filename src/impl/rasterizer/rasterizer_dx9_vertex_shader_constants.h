@@ -78,13 +78,19 @@ typedef struct FLOAT4_ALIGNED VertexShaderScreenproj2Constants {
 _Static_assert(sizeof(VertexShaderScreenproj2Constants) == VSH_CONSTANTS_SCREENPROJ2_COUNT * FLOAT4_SIZE);
 
 typedef struct FLOAT4_ALIGNED VertexShaderTexanimConstants {
-    VectorXY scale;
-    VectorXY offset;
+    Plane3D tex0_transform_x;
+    Plane3D tex0_transform_y;
+    Plane3D tex1_transform_x;
+    Plane3D tex1_transform_y;
+    Plane3D tex2_transform_x;
+    Plane3D tex2_transform_y;
+    Plane3D tex3_transform_x;
+    Plane3D tex3_transform_y;
 } VertexShaderTexanimConstants;
+_Static_assert(sizeof(VertexShaderTexanimConstants) == VSH_CONSTANTS_TEXANIM_COUNT * FLOAT4_SIZE);
 
 #ifdef __cplusplus
 }
 #endif
 
 #endif
-

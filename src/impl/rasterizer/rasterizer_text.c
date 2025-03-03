@@ -7,6 +7,7 @@
 #include "rasterizer.h"
 #include "rasterizer_dx9_texture.h"
 #include "rasterizer_dx9_vertex_shader.h"
+#include "rasterizer_dx9_vertex_shader_constants.h"
 #include "rasterizer_text.h"
 
 extern RasterizerFontCache *rasterizer_font_character_cache;

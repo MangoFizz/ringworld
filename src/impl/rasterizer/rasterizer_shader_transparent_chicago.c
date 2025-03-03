@@ -13,6 +13,7 @@
 #include "rasterizer_dx9.h"
 #include "rasterizer_dx9_shader_effect.h"
 #include "rasterizer_dx9_vertex_shader.h"
+#include "rasterizer_dx9_vertex_shader_constants.h"
 #include "rasterizer_dx9_vertex.h"
 #include "rasterizer_dx9_texture.h"
 #include "rasterizer_shader_transparent_chicago.h"

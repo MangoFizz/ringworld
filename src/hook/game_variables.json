@@ -87,5 +87,7 @@
     "network_game_server_port_host": {"type": "uint16_t", "address": "0x6337f8"},
     "network_game_client": {"type": "NetworkGameClient *", "address": "0x6b7368"},
     "game_engine_globals": {"type": "GameEngineGlobals", "address": "0x815ea0"},
-    "string_draw_count": {"type": "uint16_t", "address": "0x637d4c"}
+    "string_draw_count": {"type": "uint16_t", "address": "0x637d4c"},
+    "linear_texture_addressing_sun": {"type": "uint32_t", "address": "0x6bddfc"},
+    "rng_state": {"type": "uint32_t", "address": "0x6b4d64"}
 }

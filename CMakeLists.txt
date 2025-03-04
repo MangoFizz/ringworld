@@ -84,6 +84,7 @@ set(RINGWORLD_SOURCES
     src/impl/math/wave_functions.c
     src/impl/interface/hud.c
     src/impl/interface/loading_screen.c
+    src/impl/interface/pgcr.c
     src/impl/interface/scoreboard.c
     src/impl/interface/ui_cursor.c
     src/impl/interface/ui_virtual_keyboard.c
@@ -94,6 +95,7 @@ set(RINGWORLD_SOURCES
     src/impl/network/network_game_client.c
     src/impl/object/object.c
     src/impl/memory/table.c
+    src/impl/multiplayer/multiplayer_game_text.c
     src/impl/player/player.c
     src/impl/rasterizer/rasterizer.c
     src/impl/rasterizer/rasterizer_config.c

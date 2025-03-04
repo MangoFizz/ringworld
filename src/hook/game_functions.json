@@ -43,6 +43,8 @@
     "loading_screen_render": {"address": "0x49a370", "replace": true},
     "scoreboard_render": {"address": "0x4682b0", "replace": true, "arguments": ["0", "4"]},
     "scoreboard_draw_row": {"address": "0x4662a0", "replace": true, "arguments": ["0", "4", "eax", "edx"]},
+    "pgcr_draw_row_text": {"address": "0x45e000", "replace": true, "arguments": ["0", "4", "ecx"]},
+    "pgcr_draw": {"address": "0x45e090", "replace": true},
     "memory_pool_new_block": {"address": "0x4d5310", "replace": false, "use_return_value": true, "arguments": ["ecx", "eax"]},
 
     "player_ui_set_active_player_profile": {"address": "0x4988d0", "replace": false, "arguments": ["0", "eax", "edx"]},
@@ -92,6 +94,7 @@
     "rasterizer_draw_string": {"address": "0x518150", "replace": true, "arguments": ["ecx", "eax", "0", "4", "8"]},
     "rasterizer_text_set_up_vertex_shader_constants": {"address": "0x534a10", "replace": true},
     "rasterizer_text_cache_font_character": {"address": "0x518770", "replace": true, "arguments": ["0", "4"]},
+    "rasterizer_draw_unicode_string_and_hack_in_icons": {"address": "0x49dd70", "replace": false, "arguments": ["0", "4", "edx"]},
         
     "text_draw_unicode_string": {"address": "0x559bf0", "replace": false, "use_return_value": true, "arguments": ["0", "4", "8", "12", "16", "20"]},
     "text_draw_string": {"address": "0x559870", "replace": false, "use_return_value": true, "arguments": ["0", "4", "8", "12", "16", "20"]},

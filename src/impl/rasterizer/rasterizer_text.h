@@ -79,6 +79,14 @@ void rasterizer_draw_unicode_string(Rectangle2D *position, Rectangle2D *dest_rec
  */
 void rasterizer_draw_string(Rectangle2D *position, Rectangle2D *dest_rect, ColorARGBInt *color, uint32_t flags, const char *string);
 
+/**
+ * Draw a unicode string with the given parameters and a drop shadow.
+ * @param rect The rectangle to draw the string.
+ * @param unk An unknown boolean parameter.
+ * @param string The Unicode string to draw.
+ */
+void rasterizer_draw_unicode_string_and_hack_in_icons(Rectangle2D *rect, bool unk, const wchar_t *string);
+
 #ifdef __cplusplus
 }
 #endif

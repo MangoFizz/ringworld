@@ -121,7 +121,7 @@ typedef struct MultiplayerPlayerInfo {
 
 typedef struct Player {
     uint16_t player_id;
-    uint16_t local_player_index;
+    int16_t local_player_index;
     wchar_t name[12];
     uint32_t squad_index;
     uint32_t team_index;

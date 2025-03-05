@@ -275,20 +275,18 @@ void hud_draw_meter(HUDInterfaceAnchor *anchor, uint8_t min_alpha, uint8_t max_a
             if(!nan_f32(fade)) {
                 flash_color_opacity = clamp_f32(1.0f - fade, 0.0f, 1.0f);
             }
-            flash_color.a = meter_max_alpha / 255.0f;
+            flash_color.a = meter_min_alpha / 255.0f;
             flash_color.r *= flash_color_opacity;
             flash_color.g *= flash_color_opacity;
             flash_color.b *= flash_color_opacity;
 
             meter_params.flash_color = color_encode_a8r8g8b8(&flash_color);
-            meter_params.gradient_min_color = (meter_definition->color_at_meter_minimum & 0xFFFFFF) | (meter_min_alpha << 24);
-            meter_params.gradient_max_color = meter_definition->color_at_meter_maximum & 0xFFFFFF;
+            meter_params.tint_color = (meter_definition->color_at_meter_minimum & 0xFFFFFF) | (meter_max_alpha << 24);
         }
         else {
             if(!flags.flashing) {
-                meter_params.gradient_max_color = meter_definition->color_at_meter_minimum;
                 meter_params.flash_color = meter_min_alpha << 24;
-                meter_params.gradient_min_color = meter_params.gradient_max_color | meter_params.flash_color;
+                meter_params.tint_color = meter_definition->color_at_meter_minimum | meter_params.flash_color;
             }
             else {
                 if(meter_definition->flags.interpolate_between_min_max_flash_colors_as_state_changes) {
@@ -307,37 +305,29 @@ void hud_draw_meter(HUDInterfaceAnchor *anchor, uint8_t min_alpha, uint8_t max_a
                     ColorRGB interpolated_color;
                     color_interpolate(&min_color, &max_color, &interpolated_color, 0, progress);
                     uint32_t interpolated_color_int = color_encode_r8g8b8(&interpolated_color);
-                    meter_params.gradient_min_color = interpolated_color_int | meter_min_alpha << 24;
-                    meter_params.gradient_max_color = interpolated_color_int;
+                    meter_params.tint_color = interpolated_color_int | meter_min_alpha << 24;
                     meter_params.flash_color = meter_min_alpha << 24;
                 }
                 else {
-                    meter_params.gradient_max_color = meter_definition->color_at_meter_maximum;
                     meter_params.flash_color = meter_min_alpha << 24;
-                    meter_params.gradient_min_color = meter_params.gradient_max_color | meter_params.flash_color;
+                    meter_params.tint_color = meter_definition->color_at_meter_maximum | meter_params.flash_color;
                 }
             }
         }
     }
     else {
-        meter_params.gradient_min_color = 0;
-        meter_params.gradient_max_color = 0;
+        meter_params.tint_color = 0;
         meter_params.flash_color = 0;
     }
 
-    ColorARGB tint_color;
-    tint_color.a = meter_definition->translucency;
-    tint_color.r = 1.0 - meter_definition->opacity;
-    tint_color.g = tint_color.r;
-    tint_color.b = tint_color.r;
-    meter_params.tint_color = color_encode_a8r8g8b8(&tint_color);
-    ColorARGB background_color;
-    color_decode_a8r8g8b8(meter_definition->empty_color, &background_color);
-    background_color.a = 1.0f - background_color.a;
-    meter_params.background_color = color_encode_a8r8g8b8(&background_color);
-    meter_params.gradient = 1.0f;
-    meter_params.flash_color_is_negative = false;
-    meter_params.tint_mode_2 = true;
+    ColorARGB color_mask;
+    color_mask.a = 1.0 - meter_definition->translucency;
+    color_mask.r = 1.0 - meter_definition->opacity;
+    color_mask.g = color_mask.r;
+    color_mask.b = color_mask.r;
+    meter_params.color_mask = color_encode_a8r8g8b8(&color_mask);
+    meter_params.background_color = meter_definition->empty_color;
+    meter_params.use_xbox_shading = true;
 
     hud_draw_bitmap_with_meter(&meter_params, bitmap_data, anchor, scale, 0.0f, 0xFFFFFFFF, flags.in_multiplayer, meter_definition, &sprite_bounds, bitmap->type == BITMAP_TYPE_INTERFACE_BITMAPS);
 }

@@ -61,8 +61,6 @@ bool rasterizer_dx9_shader_effect_load_collection_from_binary(void) {
         RasterizerDx9ShaderEffect *effect = &(*effect_collection_buffer)[i];
         shader_blob_read_string(&blob_pointer, effect->name);
 
-        printf("Loaded shader effect: %s\n", effect->name);
-        
         uint32_t effect_data_count = shader_blob_get_count(blob_pointer);
         if(effect_data_count < 64) {
             effect->pixel_shader_count = shader_blob_read_count(&blob_pointer);

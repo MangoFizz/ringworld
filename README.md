@@ -29,9 +29,8 @@ Currently, the project has the following features:
 - New assertions for debugging
 - Shader transparent generic support
 - Monochrome bitmaps support (A8Y8/Y8 formats)
+- Xbox HUD meters shader restoration
 
-
-**NOTE:** Since the original game does not have shader transparent generic support, it cannot be used as-is. It needs to be attached to the game by the "host" mod of ringworld, [Balltze](https://github.com/MangoFizz/balltze) has already implemented it.
 
 ## Installation
 
@@ -50,7 +49,7 @@ To build the project, you will need to have the following dependencies installed
 
 1. Clone the repository.
 ```
-git clone https://github.com/MangoFizz/ringworld && cd ringworld
+git clone --recursive https://github.com/MangoFizz/ringworld && cd ringworld
 ```
 2. Create a build folder.
 ```
@@ -58,7 +57,7 @@ mkdir build && cd build
 ```
 3. Generate the build files.
 ```
-cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=../toolchain-i686-w64-mingw32.cmake
+cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=../cmake/toolchain-i686-w64-mingw32.cmake
 ```
 4. Build the project.
 ```
@@ -66,6 +65,20 @@ cmake --build .
 ```
 
 Depending on your system, you may need to modify the toolchain file to match your environment.
+
+
+### Updating shader effects collection
+
+In order to enable new shader implementations, you will need to update the shader effect collection so new shaders 
+can be loaded. This can be done by using the ringworld's tool. At the moment, this tool provides some useful commands 
+por unpack and repack the shader blob files. You can build the tool by enabling the `RINGWORLD_BUILD_TOOL` option in 
+the CMake configuration.
+
+Assuming you have copied the tool to your shaders folder, you can update the shader effect collection by running the following command:
+
+```
+ringworld-tool update-effect-collection EffectCollection_ps_2_0.enc EffectCollection_ps_3_0.enc
+```
 
 ## Sources 
 

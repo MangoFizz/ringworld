@@ -7,14 +7,12 @@ extern "C" {
 
 /**
  * Terminate the process with a format.
- *
  * @param fmt format
  */
 void crashf(const char *fmt, ...);
 
 /**
  * Terminate the process due to a function being improperly called.
- *
  * @param function_name function name
  * @param from          caller address
  */
@@ -22,17 +20,21 @@ void crash_forbidden_function(const char *function_name, void *from);
 
 /**
  * Print a debug message.
- *
  * @param fmt format
  */
 void debug_printf(const char *fmt, ...);
 
 /**
  * Print a message box.
- *
  * @param fmt format
  */
 void message_box(const char *fmt, ...);
+
+/**
+ * Print an error box.
+ * @param fmt format
+ */
+void error_box(const char *fmt, ...);
 
 #define STR2(s) # s
 #define STR(s) STR2(s)

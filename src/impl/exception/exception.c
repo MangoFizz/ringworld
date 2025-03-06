@@ -25,6 +25,15 @@ void message_box(const char *fmt, ...) {
     MessageBox(NULL, buffer, "ringworld", MB_OK);
 }
 
+void error_box(const char *fmt, ...) {
+    char buffer[1024];
+    va_list args;
+    va_start(args, fmt);
+    vsnprintf(buffer, sizeof(buffer), fmt, args);
+    va_end(args);
+    MessageBox(NULL, buffer, "ringworld", MB_ICONERROR);
+}
+
 void crashf(const char *fmt, ...) {
     // Don't print another crash message
     static bool printed = false;

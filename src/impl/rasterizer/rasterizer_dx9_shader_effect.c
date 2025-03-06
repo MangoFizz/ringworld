@@ -37,7 +37,12 @@ RasterizerDx9ShaderEffect *rasterizer_dx9_shader_effect_find(const char *name) {
 bool rasterizer_dx9_shader_effect_load_collection_from_binary(void) {
     void *effect_collection_blob;
     size_t effect_collection_blob_size;
-    ASSERT(rasterizer_shaders_blob_read_file(&effect_collection_blob, &effect_collection_blob_size, "shaders/EffectCollection_ps_3_0.enc"));
+    if(!rasterizer_shaders_blob_read_file(&effect_collection_blob, &effect_collection_blob_size, "shaders/EffectCollection_ps_3_0.enc")) {
+        if(!rasterizer_shaders_blob_read_file(&effect_collection_blob, &effect_collection_blob_size, "shaders/EffectCollection_ps_2_0.enc")) {
+            error_box("ERROR: Failed to load shader effect collection.\n\nPlease make sure the EffectCollection_ps_2_0.enc file is present in your shaders directory.", "Error", MB_ICONERROR);
+            return false;
+        }
+    }
 
     IDirect3DDevice9 *device = rasterizer_dx9_device();
     ASSERT(device != NULL);

@@ -65,38 +65,8 @@ char *shader_transparent_generic_source = NULL;
 ShaderTransparentGenericInstances *shader_transparent_generic_instances = NULL;
 ShaderTransparentGenericTagsCache *shader_transparent_generic_tags_cache = NULL;
 
-static const char *get_shader_source() {
-    if(shader_transparent_generic_source != NULL) {
-        return shader_transparent_generic_source;
-    }
-
-    void *buffer = NULL;
-    int bytes_read = 0;
-
-    HANDLE file = CreateFileA("shaders/shader_transparent_generic.hlsl", GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_SUPPORTS_EXTENDED_ATTRIBUTES, NULL);
-    if(file == INVALID_HANDLE_VALUE) {
-        const char *error = "Failed to read shader transparent generic source; make sure the file \"shaders/shader_transparent_generic.hlsl\" exists.";
-        MessageBoxA(NULL, error, "Ringworld", MB_OK | MB_ICONERROR);
-        CRASHF_DEBUG("%s", error);
-    }
-    
-    size_t file_size = GetFileSize(file, NULL);
-    ASSERT(file_size != INVALID_FILE_SIZE);
-
-    HGLOBAL buffer_handle = GlobalAlloc(GMEM_FIXED, file_size);
-    if(buffer_handle != NULL) {
-        bool success = ReadFile(file, buffer_handle, file_size, (LPDWORD)&bytes_read, NULL);
-        if(!success) {
-            GlobalFree(buffer_handle);
-        }
-        else {
-            shader_transparent_generic_source = buffer_handle;
-            shader_transparent_generic_source[bytes_read] = '\0';
-        }
-        CloseHandle(file);
-    }
-
-    return shader_transparent_generic_source;
+static bool source_is_available(void) {
+    return shader_transparent_generic_source != NULL;
 }
 
 static D3D_SHADER_MACRO generate_stage_define(size_t stage_index, ShaderStageParams params) {
@@ -322,7 +292,7 @@ static void free_defines(D3D_SHADER_MACRO *defines) {
 
 ID3DBlob *rasterizer_shader_transparent_generic_compile_shader(D3D_SHADER_MACRO *defines) {
     ID3DBlob *compiled_shader = NULL;
-    if(!rasterizer_dx9_shader_compiler_compile_shader_from_blob(get_shader_source(), "main", "ps_3_0", defines, &compiled_shader)) {
+    if(!rasterizer_dx9_shader_compiler_compile_shader_from_blob(shader_transparent_generic_source, "main", "ps_3_0", defines, &compiled_shader)) {
         CRASHF_DEBUG("failed to compile shader transparent generic\n");
     }
     return compiled_shader;
@@ -387,6 +357,10 @@ ShaderTransparentGenericInstance *rasterizer_shader_transparent_generic_get_or_c
 }
 
 void rasterizer_shader_transparent_generic_create_instances_for_current_map(void) {
+    if(!source_is_available()) {
+        return;
+    }
+
     TagDataHeader *tag_data_header = tag_get_data_header();
     if(tag_data_header == NULL) {
         CRASHF_DEBUG("tag data header is NULL");
@@ -423,6 +397,10 @@ static bool set_invalid_flag(const TableIterator *iterator, void *element, void 
 }
 
 void rasterizer_shader_transparent_generic_update_instances_for_current_map(void) {
+    if(!source_is_available()) {
+        return;
+    }
+
     // Clear the tag cache
     if(shader_transparent_generic_tags_cache != NULL) {
         table_clear(shader_transparent_generic_tags_cache);
@@ -511,6 +489,10 @@ IDirect3DPixelShader9 *rasterizer_shader_transparent_generic_get_pixel_shader(Sh
 void rasterizer_shader_transparent_generic_draw(TransparentGeometryGroup *group, uint32_t *param_2) {
     RasterizerWindowRenderParameters *window_parameters = rasterizer_get_window_parameters();
     ShaderTransparentGeneric *shader_data = shader_type_assert(group->shader, SHADER_TYPE_PC_TRANSPARENT_GENERIC);
+
+    if(!source_is_available()) {
+        return;
+    }
 
     uint16_t vertex_permutation = shader_get_vertex_shader_permutation(group->shader);
     uint16_t vertex_buffer_type = rasterizer_geometry_group_get_vertex_buffer_type(group);

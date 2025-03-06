@@ -13,110 +13,78 @@
 #include "rasterizer.h"
 #include "rasterizer_screen_geometry.h"
 
-char *hud_meters_shader_source = NULL; 
-IDirect3DPixelShader9 *hud_meters_shader = NULL;
-
-static const char *get_shader_source() {
-    if(hud_meters_shader_source != NULL) {
-        return hud_meters_shader_source;
-    }
-
-    void *buffer = NULL;
-    int bytes_read = 0;
-
-    HANDLE file = CreateFileA("shaders/hud_meters.hlsl", GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_SUPPORTS_EXTENDED_ATTRIBUTES, NULL);
-    if(file == INVALID_HANDLE_VALUE) {
-        const char *error = "Failed to read HUD meters pixel shader source; make sure the file \"shaders/hud_meters.hlsl\" exists.";
-        MessageBoxA(NULL, error, "Ringworld", MB_OK | MB_ICONERROR);
-        CRASHF_DEBUG("%s", error);
-    }
-    
-    size_t file_size = GetFileSize(file, NULL);
-    ASSERT(file_size != INVALID_FILE_SIZE);
-
-    HGLOBAL buffer_handle = GlobalAlloc(GMEM_FIXED, file_size);
-    if(buffer_handle != NULL) {
-        bool success = ReadFile(file, buffer_handle, file_size, (LPDWORD)&bytes_read, NULL);
-        if(!success) {
-            GlobalFree(buffer_handle);
-        }
-        else {
-            hud_meters_shader_source = buffer_handle;
-            hud_meters_shader_source[bytes_read] = '\0';
-        }
-        CloseHandle(file);
-    }
-
-    debug_printf("hud_meters_shader_source: %s\n", hud_meters_shader_source);
-
-    return hud_meters_shader_source;
-}
-
-ID3DBlob *rasterizer_screen_geometry_compile_hud_meters_shader(D3D_SHADER_MACRO *defines) {
-    static ID3DBlob *compiled_shader = NULL;
-    if(compiled_shader == NULL && !rasterizer_dx9_shader_compiler_compile_shader_from_blob(get_shader_source(), "main", "ps_3_0", defines, &compiled_shader)) {
-        CRASHF_DEBUG("failed to compile HUD meters shader\n");
-    }
-    return compiled_shader;
-}
-
-void rasterizer_screen_geometry_hud_meters_initialize(void) {
-    D3D_SHADER_MACRO defines[] = {
-        {NULL, NULL}
-    };
-
-    ID3DBlob *compiled_shader = rasterizer_screen_geometry_compile_hud_meters_shader(defines);
-    if(compiled_shader == NULL) {
-        CRASHF_DEBUG("failed to compile HUD meters shader");
-    }
-
-    IDirect3DDevice9 *device = rasterizer_dx9_device();
-    if(FAILED(IDirect3DDevice9_CreatePixelShader(device, (DWORD *)ID3D10Blob_GetBufferPointer(compiled_shader), &hud_meters_shader))) {
-        CRASHF_DEBUG("failed to create pixel shader for HUD meters");
-    }
-}
-
 static void rasterizer_screen_geometry_hud_meter_draw(BitmapData **meter_maps, RasterizerMeterParams *meter_params, RasterizerDynamicVertex *vertices) {
-    if(hud_meters_shader == NULL) {
-        rasterizer_screen_geometry_hud_meters_initialize();
-    }
-
     for(size_t i = 0; i < 3 && meter_maps[i] != NULL; i++) {
         rasterizer_dx9_texture_set_bitmap_data_directly(i, meter_maps[i]);
     }
 
-    ColorARGB tint_color, background_color, flash_color, color_mask;
-    color_decode_a8r8g8b8(meter_params->tint_color, &tint_color);
-    color_decode_a8r8g8b8(meter_params->background_color, &background_color);
-    color_decode_a8r8g8b8(meter_params->flash_color, &flash_color);
-    color_decode_a8r8g8b8(meter_params->color_mask, &color_mask);
+    RasterizerDx9ShaderEffect *hud_meters_effect = rasterizer_dx9_shader_effect_get(SHADER_EFFECT_HUD_METERS);
+    if(hud_meters_effect != NULL) {
+        ColorARGB tint_color, background_color, flash_color, color_mask;
+        color_decode_a8r8g8b8(meter_params->tint_color, &tint_color);
+        color_decode_a8r8g8b8(meter_params->background_color, &background_color);
+        color_decode_a8r8g8b8(meter_params->flash_color, &flash_color);
+        color_decode_a8r8g8b8(meter_params->color_mask, &color_mask);
+    
+        PixelShaderHUDMeterConstants psh_constants = {0};
+        psh_constants.progress = tint_color.a;
+        psh_constants.tint_color.r = tint_color.r;
+        psh_constants.tint_color.g = tint_color.g;
+        psh_constants.tint_color.b = tint_color.b;
+        psh_constants.background_color.r = background_color.r;
+        psh_constants.background_color.g = background_color.g;
+        psh_constants.background_color.b = background_color.b;
+        psh_constants.background_fade = background_color.a;
+        psh_constants.flash_color.r = flash_color.r;
+        psh_constants.flash_color.g = flash_color.g;
+        psh_constants.flash_color.b = flash_color.b;
+        psh_constants.gradient = flash_color.a;
+        psh_constants.opacity_mask.r = color_mask.r;
+        psh_constants.opacity_mask.g = color_mask.g;
+        psh_constants.opacity_mask.b = color_mask.b;
+        psh_constants.fade = color_mask.a;
+        psh_constants.flipped_channels = meter_params->use_xbox_shading ? 1.0f : 0.0f;
+    
+        rasterizer_dx9_set_render_state(D3DRS_ALPHABLENDENABLE, TRUE);
+        rasterizer_dx9_set_render_state(D3DRS_SRCBLENDALPHA, D3DBLEND_SRCALPHA);
+        rasterizer_dx9_set_render_state(D3DRS_DESTBLENDALPHA, D3DBLEND_INVSRCALPHA);
+        rasterizer_dx9_set_render_state(D3DRS_BLENDOP, D3DBLENDOP_ADD);
+        rasterizer_dx9_set_pixel_shader(hud_meters_effect->pixel_shaders[0].pixel_shader);
+        rasterizer_dx9_set_pixel_shader_constant_f(0, &psh_constants, 5);
+        rasterizer_dx9_draw_primitive_up(D3DPT_TRIANGLEFAN, 2, vertices, sizeof(RasterizerDynamicVertex));
+    }
+    else {
+        // Fallback to the old meter rendering method if the shader effect is not available
+        rasterizer_dx9_set_pixel_shader(NULL);
+        rasterizer_dx9_set_render_state(D3DRS_ALPHATESTENABLE, TRUE);
+        rasterizer_dx9_set_render_state(D3DRS_ALPHAREF, meter_params->tint_color >> 0x18);
+        rasterizer_dx9_set_render_state(D3DRS_ALPHABLENDENABLE, TRUE);
+        rasterizer_dx9_set_render_state(D3DRS_SRCBLEND, D3DBLEND_ONE);
+        rasterizer_dx9_set_render_state(D3DRS_DESTBLEND, D3DBLEND_ONE);
+        rasterizer_dx9_set_render_state(D3DRS_BLENDOP, D3DBLENDOP_ADD);
 
-    PixelShaderHUDMeterConstants psh_constants = {0};
-    psh_constants.progress = tint_color.a;
-    psh_constants.tint_color.r = tint_color.r;
-    psh_constants.tint_color.g = tint_color.g;
-    psh_constants.tint_color.b = tint_color.b;
-    psh_constants.background_color.r = background_color.r;
-    psh_constants.background_color.g = background_color.g;
-    psh_constants.background_color.b = background_color.b;
-    psh_constants.background_fade = background_color.a;
-    psh_constants.flash_color.r = flash_color.r;
-    psh_constants.flash_color.g = flash_color.g;
-    psh_constants.flash_color.b = flash_color.b;
-    psh_constants.gradient = flash_color.a;
-    psh_constants.opacity_mask.r = color_mask.r;
-    psh_constants.opacity_mask.g = color_mask.g;
-    psh_constants.opacity_mask.b = color_mask.b;
-    psh_constants.fade = color_mask.a;
-    psh_constants.flipped_channels = meter_params->use_xbox_shading ? 1.0f : 0.0f;
+        rasterizer_dx9_set_render_state(D3DRS_ALPHAFUNC, D3DCMP_LESSEQUAL);
+        rasterizer_dx9_set_render_state(D3DRS_TEXTUREFACTOR, meter_params->tint_color);
+        rasterizer_dx9_set_texture_stage_state(0, D3DTSS_COLOROP, D3DTOP_MODULATE);
+        rasterizer_dx9_set_texture_stage_state(0, D3DTSS_COLORARG1, D3DTA_TEXTURE);
+        rasterizer_dx9_set_texture_stage_state(0, D3DTSS_COLORARG2, D3DTA_TFACTOR);
+        rasterizer_dx9_set_texture_stage_state(0, D3DTSS_ALPHAOP, D3DTOP_SELECTARG1);
+        rasterizer_dx9_set_texture_stage_state(0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE);
+        rasterizer_dx9_set_texture_stage_state(1, D3DTSS_COLOROP, D3DTOP_DISABLE);
+        rasterizer_dx9_set_texture_stage_state(1, D3DTSS_ALPHAOP, D3DTOP_DISABLE);
+        rasterizer_dx9_draw_primitive_up(D3DPT_TRIANGLEFAN, 2, vertices, sizeof(RasterizerDynamicVertex));
 
-    rasterizer_dx9_set_render_state(D3DRS_ALPHABLENDENABLE, TRUE);
-    rasterizer_dx9_set_render_state(D3DRS_SRCBLENDALPHA, D3DBLEND_SRCALPHA);
-    rasterizer_dx9_set_render_state(D3DRS_DESTBLENDALPHA, D3DBLEND_INVSRCALPHA);
-    rasterizer_dx9_set_render_state(D3DRS_BLENDOP, D3DBLENDOP_ADD);
-    rasterizer_dx9_set_pixel_shader(hud_meters_shader);
-    rasterizer_dx9_set_pixel_shader_constant_f(0, &psh_constants, 5);
-    rasterizer_dx9_draw_primitive_up(D3DPT_TRIANGLEFAN, 2, vertices, sizeof(RasterizerDynamicVertex));
+        rasterizer_dx9_set_render_state(D3DRS_ALPHAFUNC, D3DCMP_GREATER);
+        rasterizer_dx9_set_render_state(D3DRS_TEXTUREFACTOR, meter_params->background_color);
+        rasterizer_dx9_set_texture_stage_state(0, D3DTSS_COLOROP, D3DTOP_MODULATE2X);
+        rasterizer_dx9_set_texture_stage_state(0, D3DTSS_COLORARG1, D3DTA_TEXTURE);
+        rasterizer_dx9_set_texture_stage_state(0, D3DTSS_COLORARG2, D3DTA_TFACTOR);
+        rasterizer_dx9_set_texture_stage_state(0, D3DTSS_ALPHAOP, D3DTOP_SELECTARG1);
+        rasterizer_dx9_set_texture_stage_state(0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE);
+        rasterizer_dx9_set_texture_stage_state(1, D3DTSS_COLOROP, D3DTOP_DISABLE);
+        rasterizer_dx9_set_texture_stage_state(1, D3DTSS_ALPHAOP, D3DTOP_DISABLE);
+        rasterizer_dx9_draw_primitive_up(D3DPT_TRIANGLEFAN, 2, vertices, sizeof(RasterizerDynamicVertex));
+    }
 }
 
 void rasterizer_screen_geometry_draw(RasterizerDynamicScreenGeometryParams *params, RasterizerDynamicVertex *vertices) {

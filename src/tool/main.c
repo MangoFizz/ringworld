@@ -15,14 +15,14 @@ void printHelp() {
     printf("Ringworld Tool\n");
     printf("Usage: tool <command> [parameters...]\n");
     printf("Commands:\n");
-    printf("  compile-shader <file> <output-file> <profile>\n");
-    printf("  disassemble-shader <file> <output-file>\n");
-    printf("  assemble-shader <file> <output-file>\n");
-    printf("  unpack-vertex-shaders <vsh-file> <path>\n");
-    printf("  pack-vertex-shaders <path> <vsh-file>\n");
-    printf("  unpack-effect-collection <effect-collection-file> <path> [disassemble]\n");
-    printf("  pack-effect-collection <path> <effect-collection-file>\n");
-    printf("  update-effect-collection <effect-collection-file> <output-file>\n");
+    printf("  compile-shader            <file> <output-file> <profile>\n");
+    printf("  disassemble-shader        <file> <output-file>\n");
+    printf("  assemble-shader           <file> <output-file>\n");
+    printf("  unpack-vertex-shaders     <vsh-file> <path>\n");
+    printf("  pack-vertex-shaders       <path> <vsh-file>\n");
+    printf("  unpack-effect-collection  <effect-collection-file> <path> [disassemble: true/false]\n");
+    printf("  pack-effect-collection    <path> <effect-collection-file>\n");
+    printf("  update-effect-collection  <effect-collection-file> <output-file>\n");
     printf("\n");
 }
 

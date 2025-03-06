@@ -327,7 +327,7 @@ void hud_draw_meter(HUDInterfaceAnchor *anchor, uint8_t min_alpha, uint8_t max_a
     color_mask.b = color_mask.r;
     meter_params.color_mask = color_encode_a8r8g8b8(&color_mask);
     meter_params.background_color = meter_definition->empty_color;
-    meter_params.use_xbox_shading = true;
+    meter_params.use_xbox_shading = meter_definition->flags.use_xbox_shading;
 
     hud_draw_bitmap_with_meter(&meter_params, bitmap_data, anchor, scale, 0.0f, 0xFFFFFFFF, flags.in_multiplayer, meter_definition, &sprite_bounds, bitmap->type == BITMAP_TYPE_INTERFACE_BITMAPS);
 }

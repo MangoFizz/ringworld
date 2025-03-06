@@ -1,0 +1,4 @@
+#include "resources.h"
+
+IDR_SHADER_TRANSPARENT_GENERIC      HLSL    "../impl/rasterizer/shaders/shader_transparent_generic.hlsl"
+IDR_SHADER_HUD_METERS               HLSL    "../impl/rasterizer/shaders/hud_meters.hlsl"

@@ -7,6 +7,9 @@ void disassemble_shader(const char* shader_file, const char *output_file);
 void assemble_shader(const char* shader_file, const char *output_file);
 bool unpack_vsh_file(const char *vsh_file, const char *path);
 bool pack_vsh_file(const char *path, const char *vsh_file);
+bool unpack_effect_collection_file(const char *effect_collection_file, const char *path, bool disassemble);
+bool pack_effect_collection(const char *path, const char *effect_collection_file);
+bool update_effect_collection(const char *effect_collection_file, const char *output_file);
 
 void printHelp() {
     printf("Ringworld Tool\n");
@@ -17,6 +20,9 @@ void printHelp() {
     printf("  assemble-shader <file> <output-file>\n");
     printf("  unpack-vertex-shaders <vsh-file> <path>\n");
     printf("  pack-vertex-shaders <path> <vsh-file>\n");
+    printf("  unpack-effect-collection <effect-collection-file> <path> [disassemble]\n");
+    printf("  pack-effect-collection <path> <effect-collection-file>\n");
+    printf("  update-effect-collection <effect-collection-file> <output-file>\n");
     printf("\n");
 }
 
@@ -89,6 +95,52 @@ int main(int argc, char* argv[]) {
             return 1;
         }
         bool res = pack_vsh_file(argv[2], argv[3]);
+        if(!res) {
+            return 1;
+        }
+    }
+    else if (strcmp(verb, "unpack-effect-collection") == 0) {
+        if(argc < 3) {
+            fprintf(stderr, "Error: Missing effect collection file parameter.\n");
+            return 1;
+        }
+        if(argc < 4) {
+            fprintf(stderr, "Error: Missing path parameter.\n");
+            return 1;
+        }
+        bool disassemble = false;
+        if(argc >= 5) {
+            disassemble = strcmp(argv[4], "true") == 0;
+        }
+        bool res = unpack_effect_collection_file(argv[2], argv[3], disassemble);
+        if(!res) {
+            return 1;
+        }
+    }
+    else if (strcmp(verb, "pack-effect-collection") == 0) {
+        if(argc < 3) {
+            fprintf(stderr, "Error: Missing path parameter.\n");
+            return 1;
+        }
+        if(argc < 4) {
+            fprintf(stderr, "Error: Missing effect collection file parameter.\n");
+            return 1;
+        }
+        bool res = pack_effect_collection(argv[2], argv[3]);
+        if(!res) {
+            return 1;
+        }
+    }
+    else if (strcmp(verb, "update-effect-collection") == 0) {
+        if(argc < 3) {
+            fprintf(stderr, "Error: Missing effect collection file parameter.\n");
+            return 1;
+        }
+        if(argc < 4) {
+            fprintf(stderr, "Error: Missing output file parameter.\n");
+            return 1;
+        }
+        bool res = update_effect_collection(argv[2], argv[3]);
         if(!res) {
             return 1;
         }

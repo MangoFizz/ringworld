@@ -50,9 +50,9 @@ void rasterizer_shaders_blob_encrypt(void *data, size_t data_size, void **encryp
     xtea_encrypt(*encrypted_data_size, *encrypted_data, key);
 }
 
-bool rasterizer_shaders_blob_read_file(void **buffer, size_t *bytes_read, const char *filename) {
+bool rasterizer_shaders_blob_read_file(void **buffer, size_t *data_size, const char *filename) {
     *buffer = NULL;
-    *bytes_read = 0;
+    *data_size = 0;
 
     HANDLE file = CreateFileA(filename, GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_SUPPORTS_EXTENDED_ATTRIBUTES, NULL);
     if(file == INVALID_HANDLE_VALUE) {
@@ -66,13 +66,15 @@ bool rasterizer_shaders_blob_read_file(void **buffer, size_t *bytes_read, const 
     }
 
     HGLOBAL buffer_handle = GlobalAlloc(GMEM_FIXED, file_size);
+    size_t bytes_read;
     if(buffer_handle != NULL) {
-        bool success = ReadFile(file, buffer_handle, file_size, (LPDWORD)bytes_read, NULL);
+        bool success = ReadFile(file, buffer_handle, file_size, (LPDWORD)&bytes_read, NULL);
         if(success) {
             CloseHandle(file);
-            bool decrypt_success = rasterizer_shaders_blob_decrypt(buffer_handle, *bytes_read);
+            bool decrypt_success = rasterizer_shaders_blob_decrypt(buffer_handle, bytes_read);
             if(decrypt_success) {
                 *buffer = buffer_handle;
+                *data_size = bytes_read - 33;
                 return true;
             }
         }

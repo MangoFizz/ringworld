@@ -151,12 +151,18 @@ if(RINGWORLD_BUILD_TOOL)
         add_definitions(-DRINGWORLD_TOOL_ENABLE_DEBUG_SHADERS)
     endif()
     add_executable(ringworld-tool
+        src/impl/exception/exception.c
+        src/impl/crypto/md5.c
+        src/impl/crypto/xtea.c
         src/impl/rasterizer/rasterizer_dx9_shader_compiler.c
         src/impl/rasterizer/rasterizer_shaders_blob.c
         src/tool/d3d_shader.c
+        src/tool/effect_collection_file.c
+        src/tool/file.c
         src/tool/vsh_file.c
         src/tool/main.c
+        src/tool/resources.rc
     )
     set_target_properties(ringworld-tool PROPERTIES LINK_FLAGS "-static -static-libgcc -static-libstdc++")
-    target_link_libraries(ringworld-tool d3d9 d3dx9)
+    target_link_libraries(ringworld-tool d3d9 d3dx9 d3dcompiler shlwapi)
 endif()

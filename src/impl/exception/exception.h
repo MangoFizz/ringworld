@@ -27,6 +27,13 @@ void crash_forbidden_function(const char *function_name, void *from);
  */
 void debug_printf(const char *fmt, ...);
 
+/**
+ * Print a message box.
+ *
+ * @param fmt format
+ */
+void message_box(const char *fmt, ...);
+
 #define STR2(s) # s
 #define STR(s) STR2(s)
 

@@ -20,30 +20,34 @@ static void rasterizer_screen_geometry_hud_meter_draw(BitmapData **meter_maps, R
 
     RasterizerDx9ShaderEffect *hud_meters_effect = rasterizer_dx9_shader_effect_get(SHADER_EFFECT_HUD_METERS);
     if(hud_meters_effect != NULL) {
-        ColorARGB tint_color, background_color, flash_color, color_mask;
-        color_decode_a8r8g8b8(meter_params->tint_color, &tint_color);
+        ColorARGB gradient_min_color, gradient_max_color, background_color, flash_color, color_mask;
+        color_decode_a8r8g8b8(meter_params->gradient_min_color, &gradient_min_color);
+        color_decode_a8r8g8b8(meter_params->gradient_max_color, &gradient_max_color);
         color_decode_a8r8g8b8(meter_params->background_color, &background_color);
         color_decode_a8r8g8b8(meter_params->flash_color, &flash_color);
-        color_decode_a8r8g8b8(meter_params->color_mask, &color_mask);
+        color_decode_a8r8g8b8(meter_params->tint_color, &color_mask);
     
         PixelShaderHUDMeterConstants psh_constants = {0};
-        psh_constants.progress = tint_color.a;
-        psh_constants.tint_color.r = tint_color.r;
-        psh_constants.tint_color.g = tint_color.g;
-        psh_constants.tint_color.b = tint_color.b;
+        psh_constants.progress = flash_color.a;
+        psh_constants.gradient_min_color.r = gradient_min_color.r;
+        psh_constants.gradient_min_color.g = gradient_min_color.g;
+        psh_constants.gradient_min_color.b = gradient_min_color.b;
+        psh_constants.gradient_max_color.r = gradient_max_color.r;
+        psh_constants.gradient_max_color.g = gradient_max_color.g;
+        psh_constants.gradient_max_color.b = gradient_max_color.b;
         psh_constants.background_color.r = background_color.r;
         psh_constants.background_color.g = background_color.g;
         psh_constants.background_color.b = background_color.b;
         psh_constants.background_fade = background_color.a;
-        psh_constants.flash_color.r = flash_color.r;
-        psh_constants.flash_color.g = flash_color.g;
-        psh_constants.flash_color.b = flash_color.b;
-        psh_constants.gradient = flash_color.a;
+        psh_constants.draining_color.r = 1.0f;
+        psh_constants.draining_color.g = 1.0f;
+        psh_constants.draining_color.b = 1.0f;
+        psh_constants.gradient = gradient_min_color.a;
         psh_constants.opacity_mask.r = color_mask.r;
         psh_constants.opacity_mask.g = color_mask.g;
         psh_constants.opacity_mask.b = color_mask.b;
-        psh_constants.fade = color_mask.a;
-        psh_constants.flipped_channels = meter_params->use_xbox_shading ? 1.0f : 0.0f;
+        psh_constants.fade = 1.0f - color_mask.a;
+        psh_constants.flipped_channels = meter_params->tint_mode_2 ? 1.0f : 0.0f;
     
         rasterizer_dx9_set_render_state(D3DRS_ALPHABLENDENABLE, TRUE);
         rasterizer_dx9_set_render_state(D3DRS_SRCBLENDALPHA, D3DBLEND_SRCALPHA);
@@ -57,14 +61,14 @@ static void rasterizer_screen_geometry_hud_meter_draw(BitmapData **meter_maps, R
         // Fallback to the old meter rendering method if the shader effect is not available
         rasterizer_dx9_set_pixel_shader(NULL);
         rasterizer_dx9_set_render_state(D3DRS_ALPHATESTENABLE, TRUE);
-        rasterizer_dx9_set_render_state(D3DRS_ALPHAREF, meter_params->tint_color >> 0x18);
+        rasterizer_dx9_set_render_state(D3DRS_ALPHAREF, meter_params->gradient_min_color >> 0x18);
         rasterizer_dx9_set_render_state(D3DRS_ALPHABLENDENABLE, TRUE);
         rasterizer_dx9_set_render_state(D3DRS_SRCBLEND, D3DBLEND_ONE);
         rasterizer_dx9_set_render_state(D3DRS_DESTBLEND, D3DBLEND_ONE);
         rasterizer_dx9_set_render_state(D3DRS_BLENDOP, D3DBLENDOP_ADD);
 
         rasterizer_dx9_set_render_state(D3DRS_ALPHAFUNC, D3DCMP_LESSEQUAL);
-        rasterizer_dx9_set_render_state(D3DRS_TEXTUREFACTOR, meter_params->tint_color);
+        rasterizer_dx9_set_render_state(D3DRS_TEXTUREFACTOR, meter_params->gradient_min_color);
         rasterizer_dx9_set_texture_stage_state(0, D3DTSS_COLOROP, D3DTOP_MODULATE);
         rasterizer_dx9_set_texture_stage_state(0, D3DTSS_COLORARG1, D3DTA_TEXTURE);
         rasterizer_dx9_set_texture_stage_state(0, D3DTSS_COLORARG2, D3DTA_TFACTOR);

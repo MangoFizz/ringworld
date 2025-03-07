@@ -10,11 +10,14 @@ extern "C" {
 #include "rasterizer_dx9_vertex.h"
 
 typedef struct RasterizerMeterParams {
-    ColorARGBInt tint_color;
+    ColorARGBInt gradient_min_color;
+    ColorARGBInt gradient_max_color;
     ColorARGBInt background_color;
     ColorARGBInt flash_color;
-    ColorARGBInt color_mask;
-    bool use_xbox_shading;
+    uint8_t flash_color_is_negative;
+    uint8_t tint_mode_2;
+    ColorARGBInt tint_color;
+    float gradient;
 } RasterizerMeterParams;
 
 typedef struct RasterizerDynamicScreenGeometryParams {

@@ -31,15 +31,16 @@ typedef struct FLOAT4_ALIGNED PixelShaderScreenGeometryConstants {
 _Static_assert(sizeof(PixelShaderScreenGeometryConstants) == PSH_CONSTANTS_SCREEN_COUNT * FLOAT4_SIZE);
 
 typedef struct FLOAT4_ALIGNED PixelShaderHUDMeterConstants {
-    ColorRGB tint_color;
+    ColorRGB gradient_max_color;
+    float flipped_channels;
+    ColorRGB gradient_min_color;
     float progress;
     ColorRGB background_color;
     float background_fade;
-    ColorRGB flash_color;
+    ColorRGB draining_color;
     float gradient;
     ColorRGB opacity_mask;
     float fade;
-    float flipped_channels;
 } PixelShaderHUDMeterConstants;
 _Static_assert(sizeof(PixelShaderHUDMeterConstants) == 5 * FLOAT4_SIZE);
 

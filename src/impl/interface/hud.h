@@ -76,14 +76,14 @@ void hud_calculate_bitmap_bounds(BitmapData *bitmap_data, HUDInterfaceAnchor abs
  * Draw a HUD bitmap on the screen.
  * @param meter_params Parameters for drawing the meter; can be NULL if not applicable.
  * @param bitmap The bitmap to be drawn.
- * @param texture_coords The texture coordinates of the bitmap within the texture atlas.
+ * @param texture_bounds The rectangle from the texture that will be rendered.
  * @param screen_coords The screen coordinates where the bitmap should be drawn.
  * @param rotation The rotation angle of the bitmap in radians.
  * @param color The color mask to apply to the bitmap for tinting.
  * @param scale The scaling factors for the bitmap in both x and y directions.
  * @param position The position on the screen where the bitmap should be drawn.
  */
-void hud_draw_bitmap_internal(RasterizerMeterParams *meter_params, BitmapData *bitmap, Bounds2D *texture_coords, Bounds2D *screen_coords, float rotation, ColorARGBInt color, VectorXY *scale, VectorXYInt *position);
+void hud_draw_bitmap_internal(RasterizerMeterParams *meter_params, BitmapData *bitmap, Bounds2D *texture_bounds, Bounds2D *screen_coords, float rotation, ColorARGBInt color, VectorXY *scale, VectorXYInt *position);
 
 /**
  * Draw a HUD bitmap with a meter on the screen.
@@ -95,10 +95,10 @@ void hud_draw_bitmap_internal(RasterizerMeterParams *meter_params, BitmapData *b
  * @param color_mask The color mask to apply to the bitmap for tinting.
  * @param scale_meter_offset Whether to apply scaling to the meter offset.
  * @param meter_definition The definition and properties of the meter.
- * @param screen_coords The screen coordinates where the bitmap should be drawn.
+ * @param sprite_texture_bounds The rectangle from the texture corresponding to the sprite to be rendered.
  * @param is_interface_bitmap Whether the bitmap is part of the user interface.
  */
-void hud_draw_bitmap_with_meter(RasterizerMeterParams *meter_params, BitmapData *bitmap_data, HUDInterfaceAnchor *meter_anchor, float scale, float rotation, ColorARGBInt color_mask, bool scale_meter_offset, HUDMeterDefinition *meter_definition, Bounds2D *screen_coords, bool is_interface_bitmap);
+void hud_draw_bitmap_with_meter(RasterizerMeterParams *meter_params, BitmapData *bitmap_data, HUDInterfaceAnchor *meter_anchor, float scale, float rotation, ColorARGBInt color_mask, bool scale_meter_offset, HUDMeterDefinition *meter_definition, Bounds2D *sprite_texture_bounds, bool is_interface_bitmap);
 
 #ifdef __cplusplus
 }

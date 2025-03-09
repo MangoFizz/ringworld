@@ -138,7 +138,7 @@ void hud_calculate_bitmap_bounds(BitmapData *bitmap_data, HUDInterfaceAnchor abs
     }
 }
 
-void hud_draw_bitmap_internal(RasterizerMeterParams *meter_params, BitmapData *bitmap, Bounds2D *texture_coords, 
+void hud_draw_bitmap_internal(RasterizerMeterParams *meter_params, BitmapData *bitmap, Bounds2D *texture_bounds, 
                             Bounds2D *screen_coords, float rotation, ColorARGBInt color, VectorXY *scale, VectorXYInt *offset) {
     
     float sin_rotation = sin(rotation);
@@ -149,19 +149,19 @@ void hud_draw_bitmap_internal(RasterizerMeterParams *meter_params, BitmapData *b
         float texture_pos_x, texture_pos_y;
         float screen_pos_x, screen_pos_y;
         if(((i + 1) & 2) == 0) {
-            texture_pos_x = texture_coords->left;
+            texture_pos_x = texture_bounds->left;
             screen_pos_x = screen_coords->left;
         }
         else {
-            texture_pos_x = texture_coords->right;
+            texture_pos_x = texture_bounds->right;
             screen_pos_x = screen_coords->right;
         }
         if(i < 2) {
-            texture_pos_y = texture_coords->top;
+            texture_pos_y = texture_bounds->top;
             screen_pos_y = screen_coords->top;
         }
         else {
-            texture_pos_y = texture_coords->bottom;
+            texture_pos_y = texture_bounds->bottom;
             screen_pos_y = screen_coords->bottom;
         }
 
@@ -189,7 +189,7 @@ void hud_draw_bitmap_internal(RasterizerMeterParams *meter_params, BitmapData *b
 
 void hud_draw_bitmap_with_meter(RasterizerMeterParams *meter_params, BitmapData *bitmap_data, HUDInterfaceAnchor *meter_anchor,
                                 float scale, float rotation, ColorARGBInt color_mask, bool scale_meter_offset, 
-                                HUDMeterDefinition *meter_definition, Bounds2D *screen_coords, bool is_interface_bitmap) {
+                                HUDMeterDefinition *meter_definition, Bounds2D *sprite_texture_bounds, bool is_interface_bitmap) {
 
     Bounds2D default_bounds;
     default_bounds.left = 0.0f;
@@ -200,8 +200,8 @@ void hud_draw_bitmap_with_meter(RasterizerMeterParams *meter_params, BitmapData 
         default_bounds.right = bitmap_data->width;
         default_bounds.bottom = bitmap_data->height;
     }
-    if(screen_coords == NULL) {
-        screen_coords = &default_bounds;
+    if(sprite_texture_bounds == NULL) {
+        sprite_texture_bounds = &default_bounds;
     }
 
     VectorXY scale_vector;
@@ -210,8 +210,8 @@ void hud_draw_bitmap_with_meter(RasterizerMeterParams *meter_params, BitmapData 
     bool should_scale = scale_meter_offset && !meter_definition->scaling_flags.dont_scale_offset;
     math_vector_2d_scale(&meter_definition->width_scale, scale, &scale_vector);
     hud_calculate_point(meter_anchor, meter_definition, NULL, should_scale, 0.0f, &offset);
-    hud_calculate_bitmap_bounds(bitmap_data, *meter_anchor, screen_coords, &bitmap_bounds, is_interface_bitmap);
-    hud_draw_bitmap_internal(meter_params, bitmap_data, screen_coords, &bitmap_bounds, rotation, color_mask, &scale_vector, &offset);
+    hud_calculate_bitmap_bounds(bitmap_data, *meter_anchor, sprite_texture_bounds, &bitmap_bounds, is_interface_bitmap);
+    hud_draw_bitmap_internal(meter_params, bitmap_data, sprite_texture_bounds, &bitmap_bounds, rotation, color_mask, &scale_vector, &offset);
 }
 
 static uint8_t calculate_meter_alpha(int input_alpha, const HUDMeterDefinition *meter_data) {
@@ -241,7 +241,7 @@ void hud_draw_meter(HUDInterfaceAnchor *anchor, uint8_t min_alpha, uint8_t max_a
         return;
     }
 
-    Bounds2D sprite_bounds;
+    Bounds2D *sprite_bounds = NULL;
     int16_t sequence_index = meter_definition->sequence_index;
     if(sequence_index != -1) {
         if(sequence_index < bitmap->bitmap_group_sequence.count) {
@@ -249,10 +249,7 @@ void hud_draw_meter(HUDInterfaceAnchor *anchor, uint8_t min_alpha, uint8_t max_a
             int16_t sprites_count = sequence->sprites.count;
             if(sprites_count != 0) {
                 BitmapGroupSprite *sprite = &sequence->sprites.elements[0];
-                sprite_bounds.left = sprite->left;
-                sprite_bounds.top = sprite->top;
-                sprite_bounds.right = sprite->right;
-                sprite_bounds.bottom = sprite->bottom;
+                sprite_bounds = (Bounds2D *)&sprite->left;
             }
         }
     }
@@ -334,7 +331,7 @@ void hud_draw_meter(HUDInterfaceAnchor *anchor, uint8_t min_alpha, uint8_t max_a
     meter_params.background_color = meter_definition->empty_color;
     meter_params.tint_mode_2 = meter_definition->flags.use_xbox_shading;
 
-    hud_draw_bitmap_with_meter(&meter_params, bitmap_data, anchor, scale, 0.0f, 0xFFFFFFFF, flags.in_multiplayer, meter_definition, &sprite_bounds, bitmap->type == BITMAP_TYPE_INTERFACE_BITMAPS);
+    hud_draw_bitmap_with_meter(&meter_params, bitmap_data, anchor, scale, 0.0f, 0xFFFFFFFF, flags.in_multiplayer, meter_definition, sprite_bounds, bitmap->type == BITMAP_TYPE_INTERFACE_BITMAPS);
 }
 
 void hud_draw_message(wchar_t *message, float fade) {

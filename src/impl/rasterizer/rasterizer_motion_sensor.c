@@ -34,13 +34,13 @@ void rasterizer_hud_motion_sensor_blip_begin(void) {
 
     *motion_sensor_blip_being_rendered = false;
     if(!rasterizer_globals->render_targets_disabled && *motion_sensor_blip_render_enabled) {
-        bool bitmap_loaded = bitmap_load(false, true, motion_sensor_blip_bitmap);
-        if(!bitmap_loaded) {
+        void *bitmap_loaded = bitmap_load(false, true, motion_sensor_blip_bitmap);
+        if(bitmap_loaded == NULL) {
             return;
         }
 
         bitmap_loaded = bitmap_load(false, true, goo_map1);
-        if(!bitmap_loaded) {
+        if(bitmap_loaded == NULL) {
             return;
         }
 
@@ -168,14 +168,14 @@ void rasterizer_hud_motion_sensor_blip_end(float sweep_progress, VectorXY *offse
     }
 
     if(*motion_sensor_blip_being_rendered) {
-        bool bitmap_loaded = bitmap_load(false, true, motion_sensor_sweep_bitmap);
-        if(!bitmap_loaded) {
+        void *bitmap_loaded = bitmap_load(false, true, motion_sensor_sweep_bitmap);
+        if(bitmap_loaded == NULL) {
             rasterizer_dx9_render_target_set(0, 0, window_parameters->render_target);
             return;
         }
 
         bitmap_loaded = bitmap_load(false, true, motion_sensor_sweep_bitmap_mask);
-        if(!bitmap_loaded) {
+        if(bitmap_loaded == NULL) {
             rasterizer_dx9_render_target_set(0, 0, window_parameters->render_target);
             return;
         }

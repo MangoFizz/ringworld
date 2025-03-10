@@ -117,7 +117,7 @@ void pgcr_draw_scoreboard(void) {
     const wchar_t *assists_label = multiplayer_game_text_get_string(MULTIPLAYER_GAME_TEXT_ASSISTS_COLUMN_HEADER);
     const wchar_t *deaths_label = multiplayer_game_text_get_string(MULTIPLAYER_GAME_TEXT_DEATHS_COLUMN_HEADER);
     game_engine->get_score_header_string(score_column_text);
-    swprintf(row_text, 512, L"\t%s\t%s\t%s\t%s\t%s\t%s", place_label, name_label, score_column_text, kills_label, assists_label, deaths_label);
+    swprintf_s(row_text, 512, L"\t%s\t%s\t%s\t%s\t%s\t%s", place_label, name_label, score_column_text, kills_label, assists_label, deaths_label);
     pgcr_set_text_color(&pgcr_scoreboard_header_color);
     pgcr_draw_row_text(row_text, 0, 7);
 
@@ -138,12 +138,12 @@ void pgcr_draw_scoreboard(void) {
         if(player->local_player_index != -1) {
             place_color = &pgcr_scoreboard_local_player_place_color;
         }
-        swprintf(row_text, 256, L"\t%s", place_text);
+        swprintf_s(row_text, 256, L"\t%s", place_text);
         pgcr_set_text_color(place_color);
         pgcr_draw_row_text(row_text, 0, i + 8);
         
         const wchar_t *score_string = game_engine->get_score_string(row_data->player_handle.index, score_column_text);
-        swprintf(row_text, 256, L"\t\t%s\t%s\t%d\t%d\t%d", row_data->name, score_string, row_data->kills, row_data->assists, row_data->deaths);
+        swprintf_s(row_text, 256, L"\t\t%s\t%s\t%d\t%d\t%d", row_data->name, score_string, row_data->kills, row_data->assists, row_data->deaths);
         pgcr_set_text_color(&pgcr_scoreboard_header_color);
         pgcr_draw_row_text(row_text, 0, i + 8);
     }
@@ -162,11 +162,11 @@ void pgcr_draw_teams_scores(void) {
         pgcr_set_teams_scores_tabs();
         
         const wchar_t *red_team_score = multiplayer_game_text_get_string(MULTIPLAYER_GAME_TEXT_RED_TEAM_SCORE);
-        swprintf(team_score_text, 64, red_team_score, game_engine->get_team_score_string(NETWORK_GAME_TEAM_RED, team_score));
+        swprintf_s(team_score_text, 64, red_team_score, game_engine->get_team_score_string(NETWORK_GAME_TEAM_RED, team_score));
         pgcr_draw_row_text(team_score_text, 0, 4);
         
         const wchar_t *blue_team_score = multiplayer_game_text_get_string(MULTIPLAYER_GAME_TEXT_BLUE_TEAM_SCORE);
-        swprintf(team_score_text, 64, blue_team_score, game_engine->get_team_score_string(NETWORK_GAME_TEAM_BLUE, team_score));
+        swprintf_s(team_score_text, 64, blue_team_score, game_engine->get_team_score_string(NETWORK_GAME_TEAM_BLUE, team_score));
         pgcr_draw_row_text(team_score_text, 0, 5);
 
         text_reset_tab_stops();

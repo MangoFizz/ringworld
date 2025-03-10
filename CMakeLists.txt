@@ -5,6 +5,8 @@ project("ring-world"
     LANGUAGES C CXX ASM
 )
 
+set(CMAKE_C_STANDARD 17)
+
 if(NOT WIN32)
     message(FATAL_ERROR "This can only be built for 32-bit Windows. If you are cross compiling, use MinGW.")
 endif()

@@ -153,7 +153,7 @@ void loading_screen_render() {
         case LOADING_SCREEN_STATE_CONNECTING: {
             const wchar_t *format = unicode_string_list_get_string(strings, 2);
             wchar_t text[512];
-            swprintf(text, 512, format, loading_screen_server_address);
+            swprintf_s(text, 512, format, loading_screen_server_address);
             rasterizer_draw_unicode_string(&rect, NULL, NULL, 0, text);
             break;
         }
@@ -161,7 +161,7 @@ void loading_screen_render() {
         case LOADING_SCREEN_STATE_NEGOTIATING: {
             const wchar_t *format = unicode_string_list_get_string(strings, 0);
             wchar_t text[512];
-            swprintf(text, 512, format, loading_screen_server_address);
+            swprintf_s(text, 512, format, loading_screen_server_address);
             rasterizer_draw_unicode_string(&rect, NULL, NULL, 0, text);
             break;
         }
@@ -169,7 +169,7 @@ void loading_screen_render() {
         case LOADING_SCREEN_STATE_RETRYING: {
             const wchar_t *format = unicode_string_list_get_string(strings, 3);
             wchar_t text[512];
-            swprintf(text, 512, format, loading_screen_server_address, *server_connection_attempts);
+            swprintf_s(text, 512, format, loading_screen_server_address, *server_connection_attempts);
             rasterizer_draw_unicode_string(&rect, NULL, NULL, 0, text);
             break;
         }
@@ -187,7 +187,7 @@ void loading_screen_render() {
             }
             const wchar_t *format = unicode_string_list_get_string(strings, text_index);
             wchar_t text[512];
-            swprintf(text, 512, format, loading_screen_map_name);
+            swprintf_s(text, 512, format, loading_screen_map_name);
             rasterizer_draw_unicode_string(&rect, NULL, NULL, 0, text);
             break;
         }
@@ -195,7 +195,7 @@ void loading_screen_render() {
         case LOADING_SCREEN_STATE_WAITING_FOR_NEW_GAME: {
             const wchar_t *format = unicode_string_list_get_string(strings, 8);
             wchar_t text[512];
-            swprintf(text, 512, format, loading_screen_map_name);
+            swprintf_s(text, 512, format, loading_screen_map_name);
             rasterizer_draw_unicode_string(&rect, NULL, NULL, 0, text);
             break;
         }

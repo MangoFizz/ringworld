@@ -239,13 +239,13 @@ void scoreboard_draw_header(ScoreboardRowData *player_score_data, float fade) {
     if(network_game->gametype_variant.universal_variant.lives > 0) {
         uint16_t text_index;
         if(player_score_data->lives == 0) {
-            swprintf(lives_text, 32, multiplayer_game_text_get_string(MULTIPLAYER_GAME_TEXT_HEADER_NO_LIVES));
+            swprintf_s(lives_text, 32, multiplayer_game_text_get_string(MULTIPLAYER_GAME_TEXT_HEADER_NO_LIVES));
         }
         else if(player_score_data->lives == 1) {
-            swprintf(lives_text, 32, multiplayer_game_text_get_string(MULTIPLAYER_GAME_TEXT_HEADER_ONE_LIFE));
+            swprintf_s(lives_text, 32, multiplayer_game_text_get_string(MULTIPLAYER_GAME_TEXT_HEADER_ONE_LIFE));
         }
         else {
-            swprintf(lives_text, 32, multiplayer_game_text_get_string(MULTIPLAYER_GAME_TEXT_HEADER_LIVES), player_score_data->lives);
+            swprintf_s(lives_text, 32, multiplayer_game_text_get_string(MULTIPLAYER_GAME_TEXT_HEADER_LIVES), player_score_data->lives);
         }
     }
     else {
@@ -260,31 +260,31 @@ void scoreboard_draw_header(ScoreboardRowData *player_score_data, float fade) {
             int16_t blue_team_score = game_engine->get_team_score(NETWORK_GAME_TEAM_BLUE);
             
             wchar_t red_team_score_text[32];
-            swprintf(red_team_score_text, 32, L"%d", red_team_score);
+            swprintf_s(red_team_score_text, 32, L"%d", red_team_score);
             
             wchar_t blue_team_score_text[32];
-            swprintf(blue_team_score_text, 32, L"%d", blue_team_score);
+            swprintf_s(blue_team_score_text, 32, L"%d", blue_team_score);
     
             if(red_team_score == blue_team_score) {
-                swprintf(text, 256, multiplayer_game_text_get_string(MULTIPLAYER_GAME_TEXT_HEADER_TEAMS_TIED), red_team_score_text, lives_text);
+                swprintf_s(text, 256, multiplayer_game_text_get_string(MULTIPLAYER_GAME_TEXT_HEADER_TEAMS_TIED), red_team_score_text, lives_text);
             }
             else if(red_team_score > blue_team_score) {
-                swprintf(text, 256, multiplayer_game_text_get_string(MULTIPLAYER_GAME_TEXT_HEADER_RED_LEADS_BLUE), red_team_score_text, blue_team_score_text, lives_text);
+                swprintf_s(text, 256, multiplayer_game_text_get_string(MULTIPLAYER_GAME_TEXT_HEADER_RED_LEADS_BLUE), red_team_score_text, blue_team_score_text, lives_text);
             }
             else {
-                swprintf(text, 256, multiplayer_game_text_get_string(MULTIPLAYER_GAME_TEXT_HEADER_BLUE_LEADS_RED), blue_team_score_text, red_team_score_text, lives_text);
+                swprintf_s(text, 256, multiplayer_game_text_get_string(MULTIPLAYER_GAME_TEXT_HEADER_BLUE_LEADS_RED), blue_team_score_text, red_team_score_text, lives_text);
             }
         }
         else {
             wchar_t player_score_text[32];
-            swprintf(player_score_text, 32, L"%d", game_engine->get_score(player_score_data->player_handle.index, false));
+            swprintf_s(player_score_text, 32, L"%d", game_engine->get_score(player_score_data->player_handle.index, false));
     
             if(player_score_data->tied) {
-                swprintf(text, 256, multiplayer_game_text_get_string(MULTIPLAYER_GAME_TEXT_HEADER_TIED_FOR_PLACE), player_score_text, lives_text);
+                swprintf_s(text, 256, multiplayer_game_text_get_string(MULTIPLAYER_GAME_TEXT_HEADER_TIED_FOR_PLACE), player_score_text, lives_text);
             }
             else {
                 const wchar_t *place_text = multiplayer_game_text_get_place_string(player_score_data->place);
-                swprintf(text, 256, multiplayer_game_text_get_string(MULTIPLAYER_GAME_TEXT_HEADER_IN_PLACE), place_text, player_score_text, lives_text);
+                swprintf_s(text, 256, multiplayer_game_text_get_string(MULTIPLAYER_GAME_TEXT_HEADER_IN_PLACE), place_text, player_score_text, lives_text);
             }
         }
     }
@@ -302,7 +302,7 @@ void scoreboard_draw_header(ScoreboardRowData *player_score_data, float fade) {
             else {
                 text_index = MULTIPLAYER_GAME_TEXT_HEADER_TEAM_LOST;
             }
-            swprintf(text, 256, multiplayer_game_text_get_string(text_index));
+            swprintf_s(text, 256, multiplayer_game_text_get_string(text_index));
         }
         else {
             uint16_t text_index;
@@ -317,7 +317,7 @@ void scoreboard_draw_header(ScoreboardRowData *player_score_data, float fade) {
             else {
                 text_index = MULTIPLAYER_GAME_TEXT_HEADER_YOU_LOST;
             }
-            swprintf(text, 256, multiplayer_game_text_get_string(text_index));
+            swprintf_s(text, 256, multiplayer_game_text_get_string(text_index));
         }
     }
 
@@ -343,7 +343,7 @@ void scoreboard_draw_table(PlayerHandle player_handle, float fade) {
     game_type_engine->get_score_header_string(score_label);
 
     wchar_t row_text[256];
-    swprintf(row_text, 512, L"\t%s\t%s\t%s\t%s\t%s\t%s\t%s", place_label, name_label, score_label, kills_label, assists_label, deaths_label, ping_label);
+    swprintf_s(row_text, 256, L"\t%s\t%s\t%s\t%s\t%s\t%s\t%s", place_label, name_label, score_label, kills_label, assists_label, deaths_label, ping_label);
 
     ColorARGB text_color;
     text_color.a = fade;
@@ -369,7 +369,7 @@ void scoreboard_draw_table(PlayerHandle player_handle, float fade) {
             if(score_string == NULL) {
                 score_string = game_type_engine->get_score_string(row_data->player_handle.index, score_label);
             }
-            swprintf(row_text, 256, L"\t%s\t%s\t%s\t%d\t%d\t%d\t%d", place_text, row_data->name, score_string, row_data->kills, row_data->assists, row_data->deaths, row_data->ping);
+            swprintf_s(row_text, 256, L"\t%s\t%s\t%s\t%d\t%d\t%d\t%d", place_text, row_data->name, score_string, row_data->kills, row_data->assists, row_data->deaths, row_data->ping);
             
             ColorARGB row_color;
             row_color.a = fade;
@@ -449,7 +449,7 @@ void scoreboard_draw_server_info(float fade) {
 
     wchar_t server_address_text[256];
     const wchar_t *prefix = multiplayer_game_text_get_string(MULTIPLAYER_GAME_TEXT_SERVER_ADDRESS_PREFIX);
-    swprintf(server_address_text, 256, L"%s%d.%d.%d.%d:%d", prefix, address.ipv4.class_d, address.ipv4.class_c, address.ipv4.class_b, address.ipv4.class_a, server_port);
+    swprintf_s(server_address_text, 256, L"%s%d.%d.%d.%d:%d", prefix, address.ipv4.class_d, address.ipv4.class_c, address.ipv4.class_b, address.ipv4.class_a, server_port);
     
     math_rectangle_2d_translate(&rect, 0, line_height);
     rasterizer_draw_unicode_string(&rect, NULL, NULL, 0, server_address_text);

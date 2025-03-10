@@ -109,7 +109,7 @@ const char *get_extension_from_path(const char *path) {
 void iterate_directories(const wchar_t *path, IterationCallback callback, void *userdata, IterationSortCompareFunc sort_compare) {
     WIN32_FIND_DATAW findData;
     wchar_t searchPath[MAX_PATH];
-    swprintf(searchPath, MAX_PATH, L"%s\\*", path);
+    swprintf_s(searchPath, MAX_PATH, L"%s\\*", path);
 
     HANDLE hFind = FindFirstFileW(searchPath, &findData);
     if(hFind == INVALID_HANDLE_VALUE) {
@@ -146,7 +146,7 @@ void iterate_directories(const wchar_t *path, IterationCallback callback, void *
 void iterate_files_by_extension(const wchar_t *path, IterationCallback callback, void *userdata, IterationSortCompareFunc sort_compare) {
     WIN32_FIND_DATAW findData;
     wchar_t searchPath[MAX_PATH];
-    swprintf(searchPath, MAX_PATH, L"%s\\*", path);
+    swprintf_s(searchPath, MAX_PATH, L"%s\\*", path);
 
     HANDLE hFind = FindFirstFileW(searchPath, &findData);
     if(hFind == INVALID_HANDLE_VALUE) {
@@ -181,7 +181,7 @@ void iterate_files_by_extension(const wchar_t *path, IterationCallback callback,
 size_t count_files_in_directory(const wchar_t *path) {
     WIN32_FIND_DATAW findData;
     wchar_t searchPath[MAX_PATH];
-    swprintf(searchPath, MAX_PATH, L"%s\\*", path);
+    swprintf_s(searchPath, MAX_PATH, L"%s\\*", path);
 
     HANDLE hFind = FindFirstFileW(searchPath, &findData);
     if(hFind == INVALID_HANDLE_VALUE) {
@@ -202,7 +202,7 @@ size_t count_files_in_directory(const wchar_t *path) {
 size_t count_directories_in_directory(const wchar_t *path) {
     WIN32_FIND_DATAW findData;
     wchar_t searchPath[MAX_PATH];
-    swprintf(searchPath, MAX_PATH, L"%s\\*", path);
+    swprintf_s(searchPath, MAX_PATH, L"%s\\*", path);
 
     HANDLE hFind = FindFirstFileW(searchPath, &findData);
     if(hFind == INVALID_HANDLE_VALUE) {

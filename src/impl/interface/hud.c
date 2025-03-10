@@ -236,8 +236,9 @@ void hud_draw_meter(HUDInterfaceAnchor *anchor, uint8_t min_alpha, uint8_t max_a
     if(bitmap_data == NULL) {
         return;
     }
-    bool bitmap_loaded = bitmap_load(false, true, bitmap_data);
-    if(!bitmap_loaded) {
+
+    void *texture = bitmap_load(false, true, bitmap_data);
+    if(texture == NULL) {
         return;
     }
 

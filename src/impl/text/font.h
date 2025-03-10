@@ -12,7 +12,7 @@ extern "C" {
  * This function retrieves the default small font tag handle.
  * @return The tag handle of the default small font.
  */
-inline TagHandle font_get_default_small(void) {
+static inline TagHandle font_get_default_small(void) {
     return lookup_tag("ui\\small_ui", TAG_GROUP_FONT);
 }
 
@@ -20,7 +20,7 @@ inline TagHandle font_get_default_small(void) {
  * This function retrieves the default large font tag handle.
  * @return The tag handle of the default large font.
  */
-inline TagHandle font_get_default_large(void) {
+static inline TagHandle font_get_default_large(void) {
     return lookup_tag("ui\\large_ui", TAG_GROUP_FONT);
 }
 
@@ -28,7 +28,7 @@ inline TagHandle font_get_default_large(void) {
  * This function retrieves the default terminal font tag handle.
  * @return The tag handle of the default terminal font.
  */
-inline TagHandle font_get_default_terminal(void) {
+static inline TagHandle font_get_default_terminal(void) {
     return lookup_tag("ui\\ticker", TAG_GROUP_FONT);
 }
 
@@ -37,7 +37,7 @@ inline TagHandle font_get_default_terminal(void) {
  * @param font_tag_handle The tag handle of the font.
  * @return The height of the font characters.
  */
-inline uint16_t font_get_height(TagHandle font_tag_handle) {
+static inline uint16_t font_get_height(TagHandle font_tag_handle) {
     Font *font = tag_get_data(TAG_GROUP_FONT, font_tag_handle);
     return font->ascending_height + font->descending_height;
 }

@@ -40,7 +40,7 @@ typedef enum MultiplayerGameTextIndex {
  * Get the multiplayer game text tag.
  * @return Tag handle of the unicode string list 
  */
-inline TagHandle multiplayer_get_text_tag(void) {
+static inline TagHandle multiplayer_get_text_tag(void) {
     return lookup_tag("ui\\multiplayer_game_text", TAG_GROUP_UNICODE_STRING_LIST);
 }
 

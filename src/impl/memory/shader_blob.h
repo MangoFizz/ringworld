@@ -12,17 +12,17 @@ typedef struct ShaderBlobChunk {
     unsigned char data[];
 } ShaderBlobChunk;
 
-inline uint32_t shader_blob_get_count(void *pointer) {
+static inline uint32_t shader_blob_get_count(void *pointer) {
     return *(uint32_t *)pointer;
 }
 
-inline uint32_t shader_blob_read_count(void **pointer) {
+static inline uint32_t shader_blob_read_count(void **pointer) {
     uint32_t value = *(uint32_t *)*pointer;
     *pointer += 4;
     return value;
 }
 
-inline void shader_blob_read_string(void **pointer, char *buffer) {
+static inline void shader_blob_read_string(void **pointer, char *buffer) {
     uint32_t size = shader_blob_read_count(pointer);
     char *string = *pointer;
     if(buffer) {
@@ -32,7 +32,7 @@ inline void shader_blob_read_string(void **pointer, char *buffer) {
     *pointer += size;
 }
 
-inline void shader_blob_read_shader_bytecode(void **pointer, uint32_t *buffer) {
+static inline void shader_blob_read_shader_bytecode(void **pointer, uint32_t *buffer) {
     uint32_t size = shader_blob_read_count(pointer) * 4;
     char *bytecode = *pointer;
     if(buffer) {

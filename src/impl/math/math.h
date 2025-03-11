@@ -108,7 +108,7 @@ double math_pow_float(double base, double exp);
  * @param f The float value to convert.
  * @return The converted long integer.
  */
-uint32_t math_float_to_long(float f);
+int32_t math_float_to_long(float f);
 
 /**
  * Calculate the dot product of two vectors

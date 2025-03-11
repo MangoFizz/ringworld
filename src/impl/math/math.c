@@ -5,7 +5,7 @@ double math_pow_float(double base, double exp) {
     return pow(base, exp);
 }
 
-uint32_t math_float_to_long(float f) {
+int32_t math_float_to_long(float f) {
     return lrintf(f);
 }
 

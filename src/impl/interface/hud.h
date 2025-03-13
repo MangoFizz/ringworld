@@ -64,13 +64,13 @@ void hud_calculate_point(HUDInterfaceAnchor *absolute_placement, HUDMeterDefinit
 
 /**
  * Calculate the bounds of a HUD bitmap.
- * @param bitmap_data The bitmap data.
  * @param absolute_placement The absolute placement of the HUD element.
+ * @param bitmap_data The bitmap data.
  * @param screen_coords The screen coordinates of the HUD element.
  * @param output The output bounds of the HUD bitmap.
  * @param is_interface_bitmap Whether the bitmap is an interface bitmap.
  */
-void hud_calculate_bitmap_bounds(BitmapData *bitmap_data, HUDInterfaceAnchor absolute_placement, Bounds2D *screen_coords, Bounds2D *output, bool is_interface_bitmap);
+void hud_calculate_bitmap_bounds(HUDInterfaceAnchor absolute_placement, BitmapData *bitmap_data, Bounds2D *screen_coords, Bounds2D *output, bool is_interface_bitmap);
 
 /**
  * Draw a HUD bitmap on the screen.

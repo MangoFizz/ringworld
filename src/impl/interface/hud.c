@@ -85,7 +85,7 @@ void hud_calculate_point(HUDInterfaceAnchor *absolute_placement, HUDMeterDefinit
     out_position->y = math_float_to_long(pos_y);
 }
 
-void hud_calculate_bitmap_bounds(BitmapData *bitmap_data, HUDInterfaceAnchor absolute_placement, Bounds2D *screen_coords, Bounds2D *output, bool is_interface_bitmap) {
+void hud_calculate_bitmap_bounds(HUDInterfaceAnchor absolute_placement, BitmapData *bitmap_data, Bounds2D *screen_coords, Bounds2D *output, bool is_interface_bitmap) {
     uint16_t width_factor = 1;
     uint16_t height_factor = 1;
     if(!is_interface_bitmap) {
@@ -210,7 +210,7 @@ void hud_draw_bitmap_with_meter(RasterizerMeterParams *meter_params, BitmapData 
     bool should_scale = scale_meter_offset && !meter_definition->scaling_flags.dont_scale_offset;
     math_vector_2d_scale(&meter_definition->width_scale, scale, &scale_vector);
     hud_calculate_point(meter_anchor, meter_definition, NULL, should_scale, 0.0f, &offset);
-    hud_calculate_bitmap_bounds(bitmap_data, *meter_anchor, sprite_texture_bounds, &bitmap_bounds, is_interface_bitmap);
+    hud_calculate_bitmap_bounds(*meter_anchor, bitmap_data, sprite_texture_bounds, &bitmap_bounds, is_interface_bitmap);
     hud_draw_bitmap_internal(meter_params, bitmap_data, sprite_texture_bounds, &bitmap_bounds, rotation, color_mask, &scale_vector, &offset);
 }
 

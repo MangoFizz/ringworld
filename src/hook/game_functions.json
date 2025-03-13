@@ -112,7 +112,7 @@
     "weapon_build_weapon_interface_state": {"address": "0x4c5d90", "replace": false, "arguments": ["eax", "0"] },
     "hud_draw_bitmap_internal": {"address": "0x4b0140", "replace": true, "arguments": ["0", "4", "8", "12", "16", "20", "esi", "eax"] },
     "hud_calculate_point": {"address": "0x4aea80", "replace": true, "arguments": ["0", "edx", "ecx", "eax", "4", "8"] },
-    "hud_calculate_bitmap_bounds": {"address": "0x4b0040", "replace": false, "disabled": true, "arguments": ["0", "esi", "edx", "eax", "ecx"] },
+    "hud_calculate_bitmap_bounds": {"address": "0x4b0040", "replace": true, "arguments": ["0", "esi", "edx", "eax", "ecx"] },
     "hud_draw_bitmap_with_meter": {"address": "0x4afec0", "replace": true, "arguments": ["0", "4", "8", "12", "16", "20", "ecx", "edx", "eax", "ebx"] },
     "hud_draw_meter": {"address": "0x4aefb0", "replace": true, "arguments": ["0", "4", "8", "12", "16", "20", "esi"] },
     "hud_draw_message": {"address": "0x462a80", "replace": true, "arguments": ["0", "4"] },

@@ -7,6 +7,9 @@ project("ring-world"
 
 set(CMAKE_C_STANDARD 17)
 
+# Set minimum platform version to Windows 7
+add_definitions(-D_WIN32_WINNT=0x0601)
+
 if(NOT WIN32)
     message(FATAL_ERROR "This can only be built for 32-bit Windows. If you are cross compiling, use MinGW.")
 endif()

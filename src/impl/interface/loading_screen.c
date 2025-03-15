@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <windows.h>
 #include "../bitmap/bitmap.h"
+#include "../exception/exception.h"
 #include "../main/main_globals.h"
 #include "../time/time.h"
 #include "../console/console.h"
@@ -25,6 +26,26 @@ extern bool *devmode_enabled;
 
 void loading_screen_abort_connection();
 void loading_screen_timeout_connection(uint32_t counter);
+
+void loading_screen_draw_background(float alpha) {
+    TagHandle bitmap_tag = lookup_tag("ui\\shell\\bitmaps\\background", TAG_GROUP_BITMAP);
+    ASSERT_OR_RETURN(!HANDLE_IS_NULL(bitmap_tag));
+
+    Rectangle2D rect;
+    rect.left = 0;
+    rect.top = 0;
+    rect.right = render_get_screen_width();
+    rect.bottom = render_get_screen_height();
+
+    ColorARGB color_mask = {alpha, 1.0f, 1.0f, 1.0f};
+    BitmapData *background_bitmap = bitmap_group_sequence_get_bitmap_for_frame(bitmap_tag, 0, 0);
+    if(background_bitmap) {
+        Rectangle2D texture_rect = rect;
+        texture_rect.right = RASTERIZER_SCREEN_BASE_WIDTH;
+        ColorARGBInt color_int = color_encode_a8r8g8b8(&color_mask);
+        bitmap_draw_in_rect(background_bitmap, NULL, color_int, &rect, &texture_rect);
+    }
+}
 
 void loading_screen_render() {
     MainGlobals *main_globals = main_get_globals();
@@ -109,37 +130,19 @@ void loading_screen_render() {
         }
     }
 
+    loading_screen_draw_background(alpha);
+
     TagHandle font_tag = lookup_tag("ui\\large_ui", TAG_GROUP_FONT);
-    TagHandle bitmap_tag = lookup_tag("ui\\shell\\bitmaps\\background", TAG_GROUP_BITMAP);
     TagHandle strings = lookup_tag("ui\\shell\\strings\\loading", TAG_GROUP_UNICODE_STRING_LIST);
+    ASSERT_OR_RETURN(!HANDLE_IS_NULL(font_tag) && !HANDLE_IS_NULL(strings));
 
-    if(HANDLE_IS_NULL(font_tag) || HANDLE_IS_NULL(bitmap_tag) || HANDLE_IS_NULL(strings)) {
-        return;
-    }
-
-    ColorARGB text_color;
-    text_color.a = alpha;
-    text_color.r = 1.0f;
-    text_color.g = 1.0f;
-    text_color.b = 1.0f;
+    ColorARGB text_color = {alpha, 1.0f, 1.0f, 1.0f};
+    text_set_drawing_parameters(-1, 2, 0, font_tag, &text_color);
 
     Rectangle2D rect;
     rect.left = 0;
-    rect.top = 0;
-    rect.right = render_get_screen_width();
-    rect.bottom = render_get_screen_height();
-
-    BitmapData *background_bitmap = bitmap_group_sequence_get_bitmap_for_frame(bitmap_tag, 0, 0);
-    if(background_bitmap) {
-        Rectangle2D texture_rect = rect;
-        texture_rect.right = RASTERIZER_SCREEN_BASE_WIDTH;
-        ColorARGBInt color_int = color_encode_a8r8g8b8(&text_color);
-        bitmap_draw_in_rect(background_bitmap, NULL, color_int, &rect, &texture_rect);
-    }
-
-    text_set_drawing_parameters(-1, 2, 0, font_tag, &text_color);
-
     rect.top = 410;
+    rect.right = render_get_screen_width();
     rect.bottom = 430;
 
     switch(*loading_screen_state) {

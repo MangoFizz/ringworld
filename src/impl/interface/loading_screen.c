@@ -47,7 +47,7 @@ void loading_screen_draw_background(float alpha) {
     }
 }
 
-void loading_screen_render() {
+void loading_screen_render(void) {
     MainGlobals *main_globals = main_get_globals();
 
     if(*loading_screen_state == LOADING_SCREEN_STATE_OFF) {

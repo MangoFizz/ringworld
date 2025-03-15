@@ -19,6 +19,17 @@ enum UILoadingScreenState {
     NUM_OF_LOADING_SCREEN_STATES,
 };
 
+/**
+ * Draw the loading screen background.
+ * @param alpha The alpha value to use for the background.
+ */
+void loading_screen_draw_background(float alpha);
+
+/**
+ * Render the loading screen.
+ */
+void loading_screen_render(void);
+
 #ifdef __cplusplus
 }
 #endif

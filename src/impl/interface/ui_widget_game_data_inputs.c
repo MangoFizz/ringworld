@@ -30,7 +30,7 @@ void ui_widget_update_multiplayer_type_menu_extended_description(Widget *widget)
                 break;
             case 5:
             case 6:
-                extended_desc_pic->animation_data.current_frame_index = 1;
+                extended_desc_pic->animation_data.current_frame_index = 1; // this was originally set to 0
                 extended_desc_text->text_box_parameters.string_list_index = widget_index - 2;
                 break;
             case 7:

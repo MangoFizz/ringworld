@@ -7,9 +7,6 @@ project("ring-world"
 
 set(CMAKE_C_STANDARD 17)
 
-# Set minimum platform version to Windows 7
-add_definitions(-D_WIN32_WINNT=0x0601)
-
 if(NOT WIN32)
     message(FATAL_ERROR "This can only be built for 32-bit Windows. If you are cross compiling, use MinGW.")
 endif()
@@ -145,13 +142,16 @@ endif()
 
 if(RINGWORLD_BUILD_STATIC)
     add_library(ringworld STATIC ${RINGWORLD_SOURCES})
-else()
+else()    
     add_library(ringworld MODULE ${RINGWORLD_SOURCES} src/ringworld.c)
     set_target_properties(ringworld PROPERTIES PREFIX "")
     set_target_properties(ringworld PROPERTIES LINK_FLAGS "-static -static-libgcc -static-libstdc++")
 endif()
 
 target_link_libraries(ringworld d3dcompiler)
+
+# Set minimum platform version to Windows 7
+target_compile_definitions(ringworld PRIVATE -D_WIN32_WINNT=0x0601)
 
 if(RINGWORLD_BUILD_TOOL)
     if(RINGWORLD_TOOL_ENABLE_DEBUG_SHADERS)
@@ -172,4 +172,5 @@ if(RINGWORLD_BUILD_TOOL)
     )
     set_target_properties(ringworld-tool PROPERTIES LINK_FLAGS "-static -static-libgcc -static-libstdc++")
     target_link_libraries(ringworld-tool d3d9 d3dx9 d3dcompiler shlwapi)
+    target_compile_definitions(ringworld-tool PRIVATE -D_WIN32_WINNT=0x0601)
 endif()

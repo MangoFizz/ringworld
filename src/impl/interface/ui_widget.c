@@ -11,6 +11,7 @@
 #include "../tag/definitions/unicode_string_list.h"
 #include "../game/game_time.h"
 #include "../text/text.h"
+#include "../text/unicode_string_list.h"
 #include "../exception/exception.h"
 #include "../rasterizer/rasterizer_screen_geometry.h"
 #include "../rasterizer/rasterizer_text.h"
@@ -196,12 +197,43 @@ void ui_widget_new_instance(int16_t controller_index, UIWidgetDefinition *widget
     }
 }
 
+Widget *ui_widget_get_nth_child(Widget *widget, uint16_t index) {
+    Widget *child = widget->child;
+    for(size_t i = 0; i < index; i++) {
+        if(child == NULL) {
+            return NULL;
+        }
+        child = child->next;
+    }
+    return child;
+}
+
 Widget *ui_widget_get_last_child(Widget *widget) {
     Widget *last_child = widget->child;
     while(last_child && last_child->next != NULL) {
         last_child = last_child->next;
     }
     return last_child;
+}
+
+Widget *ui_widget_get_topmost_parent(Widget *widget) {
+    Widget *parent = widget;
+    for(Widget *aux = widget->parent; aux != NULL; aux = aux->parent) {
+        parent = aux;
+    }
+    return parent;
+}
+
+int16_t ui_widget_get_index_for_child(Widget *widget, Widget *child) {
+    uint16_t index = 0;
+    for(Widget *aux = widget->child; aux != NULL; aux = aux->next) {
+        if(aux == child) {
+            return index;
+        }
+        index++;
+    }
+    CRASHF_DEBUG("failed to find the index of the child in the widget");
+    return -1;
 }
 
 bool ui_widget_is_list(Widget *widget) {
@@ -307,14 +339,6 @@ bool ui_widget_load_children_recursive(UIWidgetDefinition *widget_definition, Wi
     }
 
     return result;
-}
-
-Widget *ui_widget_get_topmost_parent(Widget *widget) {
-    Widget *parent = widget;
-    for(Widget *aux = widget->parent; aux != NULL; aux = aux->parent) {
-        parent = aux;
-    }
-    return parent;
 }
 
 void ui_widget_instance_give_focus_directly(Widget *widget, Widget *child) {
@@ -735,4 +759,36 @@ bool ui_widget_is_cursor_over(Widget *widget) {
     math_rectangle_2d_translate(&bounds, offset.x, offset.y);
     bool is_over = math_rectangle_2d_contains_point(&bounds, cursor_position.x, cursor_position.y);
     return is_over;
+}
+
+const wchar_t *ui_widget_get_common_button_caption(UIWidgetButtonCaptionStringIndex index) {
+    TagHandle tag_handle = lookup_tag("ui\\shell\\strings\\common_button_captions", TAG_GROUP_UNICODE_STRING_LIST);
+    if(!HANDLE_IS_NULL(tag_handle)) {
+        const wchar_t *string = unicode_string_list_get_string_or_null(tag_handle, index);
+        if(string) {
+            return string;
+        }
+    }
+    switch(index) {
+        case UI_WIDGET_BUTTON_CAPTION_PROFILE_LABEL:
+            return L"Profile:";
+        default:
+            CRASHF_DEBUG("invalid UI widget button caption index");
+            return L"<missing string>";
+    }
+}
+
+void ui_widget_update_player_profile_text(const wchar_t *profile_name, Widget *text_widget) {
+    ASSERT(text_widget != NULL);
+    ASSERT(text_widget->type == UI_WIDGET_TYPE_TEXT_BOX);
+    ASSERT(profile_name != NULL);
+
+    const wchar_t *profile_label = ui_widget_get_common_button_caption(UI_WIDGET_BUTTON_CAPTION_PROFILE_LABEL);
+    const size_t text_buffer_size = 64;
+    wchar_t *text = text_widget->text_box_parameters.text;
+    text = memory_pool_resize_block(*ui_widget_memory_pool, text, 128);
+    ASSERT(text != NULL);
+    swprintf_s(text, text_buffer_size, L"%s %s", profile_label, profile_name);
+    text[text_buffer_size - 1] = L'\0';
+    text_widget->text_box_parameters.text = text;
 }

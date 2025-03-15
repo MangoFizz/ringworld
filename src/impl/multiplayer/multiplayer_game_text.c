@@ -4,6 +4,10 @@
 #include "../text/unicode_string_list.h"
 #include "multiplayer_game_text.h"
 
+static TagHandle multiplayer_get_text_tag(void) {
+    return lookup_tag("ui\\multiplayer_game_text", TAG_GROUP_UNICODE_STRING_LIST);
+}
+
 const wchar_t *multiplayer_game_text_get_string(MultiplayerGameTextIndex index) {
     TagHandle multiplayer_text_tag = multiplayer_get_text_tag();
     if(!HANDLE_IS_NULL(multiplayer_text_tag)) {
@@ -63,6 +67,7 @@ const wchar_t *multiplayer_game_text_get_string(MultiplayerGameTextIndex index) 
             return L"\tBlue Team\t%s";
         default:
             CRASHF_DEBUG("Invalid scoreboard string index %d. FIX ME!", index);
+            return L"<missing string>";
     }
 }
 

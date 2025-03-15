@@ -1,7 +1,7 @@
 #ifndef RINGWORLD__MEMORY__MEMORY_H
 #define RINGWORLD__MEMORY__MEMORY_H
 
-#define PACKED_ENUM __attribute__((__packed__))
+#include <stdint.h>
 
 #ifdef __cplusplus
 #define _Static_assert static_assert
@@ -19,10 +19,10 @@ extern "C" {
 #define TAG_DATA_LENGTH (size_t)(64 * 1024 * 1024) // 64 MiB 
 #endif
 
-
+// Helpers
+#define PACKED_ENUM __attribute__((__packed__))
 #define TEST_BIT(value, bit) (((value) & (1 << (bit))) != 0)
-
-#include <stdint.h>
+#define SIZEOF_ARRAY(array) (sizeof(array) / sizeof(array[0]))
 
 typedef uint8_t Bool;
 

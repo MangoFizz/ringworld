@@ -40,12 +40,18 @@
     "ui_virtual_keyboard_initialize": {"address": "0x4ab900", "replace": true, "use_return_value": true},
     "ui_virtual_keyboard_render": {"address": "0x4ac520", "replace": true},
     "ui_virtual_keyboard_render_prompt": {"address": "0x4ac310", "replace": false, "arguments": ["0"]},
+    "ui_widget_update_player_profile_text": {"address": "0x49f6a0", "replace": true, "arguments": ["0", "ebx"]},
+    
+    "ui_widget_update_multiplayer_type_menu_extended_description": {"address": "0x4a7d00", "replace": true, "arguments": ["0"]},
+    
     "loading_screen_render": {"address": "0x49a370", "replace": true},
     "scoreboard_render": {"address": "0x4682b0", "replace": true, "arguments": ["0", "4"]},
     "scoreboard_draw_row": {"address": "0x4662a0", "replace": true, "arguments": ["0", "4", "eax", "edx"]},
     "pgcr_draw_row_text": {"address": "0x45e000", "replace": true, "arguments": ["0", "4", "ecx"]},
     "pgcr_draw": {"address": "0x45e090", "replace": true},
+    
     "memory_pool_new_block": {"address": "0x4d5310", "replace": false, "use_return_value": true, "arguments": ["ecx", "eax"]},
+    "memory_pool_resize_block_og": {"address": "0x4d5380", "replace": false, "use_return_value": true, "arguments": ["0", "esi", "eax"]},
 
     "player_ui_set_active_player_profile": {"address": "0x4988d0", "replace": false, "arguments": ["0", "eax", "edx"]},
 

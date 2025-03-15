@@ -44,6 +44,15 @@ _Static_assert(sizeof(MemoryPool) == 0x34);
  */
 void *memory_pool_new_block(MemoryPool *pool, size_t size);
 
+/**
+ * Resize a memory pool block.
+ * @param pool pointer to memory pool
+ * @param block pointer to the block to resize; NULL to allocate a new block
+ * @param new_size new size of the block
+ * @return pointer to the resized block
+ */
+void *memory_pool_resize_block(MemoryPool *pool, void *block, size_t new_size);
+
 #ifdef __cplusplus
 }
 #endif

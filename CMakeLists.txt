@@ -93,9 +93,11 @@ set(RINGWORLD_SOURCES
     src/impl/interface/scoreboard.c
     src/impl/interface/ui_cursor.c
     src/impl/interface/ui_virtual_keyboard.c
+    src/impl/interface/ui_widget_game_data_inputs.c
     src/impl/interface/ui_widget.c
     src/impl/main/main_globals.c
     src/impl/memory/memory.c
+    src/impl/memory/pool.c
     src/impl/network/network_game.c
     src/impl/network/network_game_client.c
     src/impl/object/object.c

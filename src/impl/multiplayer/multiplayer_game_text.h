@@ -37,14 +37,6 @@ typedef enum MultiplayerGameTextIndex {
 } MultiplayerGameTextIndex;
 
 /**
- * Get the multiplayer game text tag.
- * @return Tag handle of the unicode string list 
- */
-static inline TagHandle multiplayer_get_text_tag(void) {
-    return lookup_tag("ui\\multiplayer_game_text", TAG_GROUP_UNICODE_STRING_LIST);
-}
-
-/**
  * Get the string for the scoreboard.
  * @param index Index of the string.
  * @return Pointer to the wide character string for the scoreboard.

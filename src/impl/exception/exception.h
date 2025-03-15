@@ -46,7 +46,13 @@ void error_box(const char *fmt, ...);
         CRASHF_DEBUG("assertion failed: " #expr); \
     }
 
-#define ASSERT_OR_RETURN(expr, ret) \
+#define ASSERT_OR_RETURN(expr) \
+    if(!(expr)) { \
+        CRASHF_DEBUG("assertion failed: " #expr); \
+        return; \
+    }
+
+#define ASSERT_OR_RETURN_VALUE(expr, ret) \
     if(!(expr)) { \
         CRASHF_DEBUG("assertion failed: " #expr); \
         return ret; \

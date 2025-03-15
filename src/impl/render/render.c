@@ -47,12 +47,12 @@ bool render_widescreen_support_enabled(void) {
 }
 
 bool render_project_point_to_screen_space(RenderCamera *camera, RenderFrustum *frustum, VectorXYZ *view_point, VectorXY *screen_point) {
-    ASSERT_OR_RETURN(camera, false);
-    ASSERT_OR_RETURN(frustum, false);
-    ASSERT_OR_RETURN(view_point, false);
-    ASSERT_OR_RETURN(screen_point, false);
+    ASSERT_OR_RETURN_VALUE(camera, false);
+    ASSERT_OR_RETURN_VALUE(frustum, false);
+    ASSERT_OR_RETURN_VALUE(view_point, false);
+    ASSERT_OR_RETURN_VALUE(screen_point, false);
     if(view_point->z <= 0.0f && view_point->z != 0.0f) {
-        ASSERT_OR_RETURN(frustum->projection_valid, false);
+        ASSERT_OR_RETURN_VALUE(frustum->projection_valid, false);
         uint16_t screen_width = render_get_screen_width();
         uint16_t screen_height = render_get_screen_height();
         float inverse_depth = -1.0f / view_point->z;

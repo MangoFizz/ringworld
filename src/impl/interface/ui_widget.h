@@ -60,16 +60,16 @@ _Static_assert(sizeof(WidgetAnimationData) == 0x8);
 typedef struct Widget {
     TagHandle definition_tag_handle;
     char *name;
-    uint16_t local_player_index;
+    int16_t local_player_index;
     VectorXYInt position;
     UIWidgetType type;
-    Bool visible;
-    Bool render_regardless_of_controller_index;
-    Bool never_receive_events;
-    Bool pauses_game_time; 
-    Bool deleted;
-    Bool is_error_dialog;
-    Bool close_if_local_player_controller_present;
+    bool visible;
+    bool render_regardless_of_controller_index;
+    bool never_receive_events;
+    bool pauses_game_time; 
+    bool deleted;
+    bool is_error_dialog;
+    bool close_if_local_player_controller_present;
     TickCount32 creation_process_start_time;
     uint32_t ms_to_close;
     uint32_t ms_to_close_fade_time;
@@ -123,6 +123,10 @@ typedef struct UIWidgetEventRecord {
     int32_t controller_index;
     int16_t unk1;
 } UIWidgetEventRecord;
+
+typedef enum UIWidgetButtonCaptionStringIndex {
+    UI_WIDGET_BUTTON_CAPTION_PROFILE_LABEL = 7
+} UIWidgetButtonCaptionStringIndex;
 
 /**
  * Get the UI widget globals.
@@ -205,6 +209,14 @@ void ui_widget_instance_give_focus_directly(Widget *widget, Widget *child);
 bool ui_widget_is_list(Widget *widget);
 
 /**
+ * Get the nth child of a widget.
+ * @param widget pointer to the widget
+ * @param index index of the child
+ * @return pointer to the nth child of the widget
+ */
+Widget *ui_widget_get_nth_child(Widget *widget, uint16_t index);
+
+/**
  * Get the last child of a widget.
  * @param widget pointer to the widget
  * @return pointer to the last child of the widget
@@ -217,6 +229,14 @@ Widget *ui_widget_get_last_child(Widget *widget);
  * @return pointer to the topmost parent of the widget
  */
 Widget *ui_widget_get_topmost_parent(Widget *widget);
+
+/**
+ * Get the index of a child in a widget.
+ * @param widget pointer to the widget
+ * @param child pointer to the child
+ * @return the index of the child in the widget
+ */
+int16_t ui_widget_get_index_for_child(Widget *widget, Widget *child);
 
 /**
  * Render a widget instance.
@@ -271,6 +291,20 @@ void ui_widget_render_spinner_list(Widget *widget, UIWidgetDefinition *definitio
  * @return the widescreen margin as a float
  */
 float ui_widget_get_widescreen_margin(void);
+
+/**
+ * Get the common button caption string by index.
+ * @param index the index of the button caption string
+ * @return the common button caption string as a wide character string
+ */
+const wchar_t *ui_widget_get_common_button_caption(UIWidgetButtonCaptionStringIndex index);
+
+/**
+ * Update the player profile text.
+ * @param text_widget pointer to the text widget
+ * @param profile_name pointer to the profile name
+ */
+void ui_widget_update_player_profile_text(const wchar_t *profile_name, Widget *text_widget);
 
 #ifdef __cplusplus
 }

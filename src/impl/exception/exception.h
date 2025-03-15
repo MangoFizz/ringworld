@@ -40,23 +40,9 @@ void error_box(const char *fmt, ...);
 #define STR(s) STR2(s)
 
 #define CRASHF_DEBUG(...) crashf(__FILE__ ":" STR(__LINE__) ": " __VA_ARGS__)
-
-#define ASSERT(expr) \
-    if(!(expr)) { \
-        CRASHF_DEBUG("assertion failed: " #expr); \
-    }
-
-#define ASSERT_OR_RETURN(expr) \
-    if(!(expr)) { \
-        CRASHF_DEBUG("assertion failed: " #expr); \
-        return; \
-    }
-
-#define ASSERT_OR_RETURN_VALUE(expr, ret) \
-    if(!(expr)) { \
-        CRASHF_DEBUG("assertion failed: " #expr); \
-        return ret; \
-    }
+#define ASSERT(expr) if(!(expr)) CRASHF_DEBUG("assertion failed: " #expr); 
+#define ASSERT_OR_RETURN(expr) if(!(expr)) return;
+#define ASSERT_OR_RETURN_VALUE(expr, ret) if(!(expr)) return ret; 
 
 #ifdef __cplusplus
 }

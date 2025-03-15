@@ -19,6 +19,7 @@ extern "C" {
 #define TAG_DATA_LENGTH (size_t)(64 * 1024 * 1024) // 64 MiB 
 #endif
 
+
 // Helpers
 #define PACKED_ENUM __attribute__((__packed__))
 #define TEST_BIT(value, bit) (((value) & (1 << (bit))) != 0)

@@ -146,12 +146,12 @@ else()
     add_library(ringworld MODULE ${RINGWORLD_SOURCES} src/ringworld.c)
     set_target_properties(ringworld PROPERTIES PREFIX "")
     set_target_properties(ringworld PROPERTIES LINK_FLAGS "-static -static-libgcc -static-libstdc++")
+    
+    # Set minimum platform version to Windows 7
+    target_compile_definitions(ringworld PRIVATE -D_WIN32_WINNT=0x0601)
 endif()
 
 target_link_libraries(ringworld d3dcompiler)
-
-# Set minimum platform version to Windows 7
-target_compile_definitions(ringworld PRIVATE -D_WIN32_WINNT=0x0601)
 
 if(RINGWORLD_BUILD_TOOL)
     if(RINGWORLD_TOOL_ENABLE_DEBUG_SHADERS)

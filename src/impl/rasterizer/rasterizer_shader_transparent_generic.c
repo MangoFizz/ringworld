@@ -529,9 +529,9 @@ void rasterizer_shader_transparent_generic_draw(TransparentGeometryGroup *group,
         float new_val = floor(numeric_count * group->animation->values[index] + 0.5f);
         int res = math_float_to_long(new_val);
         if(res < 0) {
-            index = 0;
+            numeric_count = 0;
         }
-        else if(res > numeric_count) {
+        else if(res < numeric_count) {
             numeric_count = res;
         }
 

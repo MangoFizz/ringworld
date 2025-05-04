@@ -286,8 +286,13 @@ void rasterizer_shader_transparent_chicago_draw(TransparentGeometryGroup *group,
 
                 rasterizer_dx9_set_texture_stage_state(texture_stage, D3DTSS_COLOROP, D3DTOP_MULTIPLYADD);
                 rasterizer_dx9_set_texture_stage_state(texture_stage, D3DTSS_COLORARG1, tss_option_argument | D3DTOP_BLENDCURRENTALPHA);
+#ifdef RINGWORLD_ENABLE_ENHANCEMENTS
                 rasterizer_dx9_set_texture_stage_state(texture_stage, D3DTSS_COLORARG2, tss_option_argument);
                 rasterizer_dx9_set_texture_stage_state(texture_stage, D3DTSS_COLORARG0, D3DTA_CURRENT);
+#else
+                rasterizer_dx9_set_texture_stage_state(texture_stage, D3DTSS_COLORARG2, D3DTA_CURRENT);
+                rasterizer_dx9_set_texture_stage_state(texture_stage, D3DTSS_COLORARG0, tss_option_argument);
+#endif
                 rasterizer_dx9_set_texture_stage_state(texture_stage, D3DTSS_ALPHAOP, D3DTOP_SELECTARG1);
                 rasterizer_dx9_set_texture_stage_state(texture_stage, D3DTSS_ALPHAARG1, D3DTA_CURRENT);
                 break;

@@ -187,6 +187,7 @@ void rasterizer_shader_transparent_water_render_bumpmap(ShaderTransparentWater *
                 IDirect3DSurface9 *mipmap_surface = NULL;
                 IDirect3DTexture9_GetSurfaceLevel(render_target->texture, i, &mipmap_surface);
                 rasterizer_dx9_set_render_target(0, mipmap_surface);
+                IDirect3DSurface9_Release(mipmap_surface);
 #endif
                 rasterizer_dx9_set_pixel_shader(water_bumpmap_effect->pixel_shaders[0].pixel_shader);
                 rasterizer_dx9_set_texture_stage_state(0, D3DTSS_COLOROP, D3DTOP_DISABLE);
@@ -204,6 +205,7 @@ void rasterizer_shader_transparent_water_render_bumpmap(ShaderTransparentWater *
                 IDirect3DSurface9 *mipmap_surface = NULL;
                 IDirect3DTexture9_GetSurfaceLevel(render_target->texture, i, &mipmap_surface);
                 rasterizer_dx9_set_render_target(0, mipmap_surface);
+                IDirect3DSurface9_Release(mipmap_surface);
                 HRESULT res = IDirect3DDevice9_DrawPrimitiveUP(device, D3DPT_TRIANGLEFAN, 2, vertices, sizeof(RasterizerDynamicVertex));
                 if(FAILED(res)) {
                     CRASHF_DEBUG("failed to draw shader transparent water bumpmap");

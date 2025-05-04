@@ -39,9 +39,9 @@ BitmapData *bitmap_group_sequence_get_bitmap_for_frame(TagHandle bitmap_tag, uin
  * @param bitmap The bitmap data.
  * @param block True if the load should block the thread, false otherwise.
  * @param load True if the bitmap should be loaded, false otherwise.
- * @return Pointer to the D3D9 texture interface.
+ * @return Pointer to the bitmap loaded data.
  */
-IDirect3DTexture9 *bitmap_load(bool block, bool load, BitmapData *bitmap);
+void *bitmap_load(bool block, bool load, BitmapData *bitmap);
 
 /**
  * Validate the width of a bitmap based on the format and type.

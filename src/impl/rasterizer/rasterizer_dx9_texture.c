@@ -116,9 +116,9 @@ bool rasterizer_dx9_texture_set_bitmap_data_texture_no_assert(uint32_t stage, ui
     if(bitmap->bitmap_data.count > 0) {
         BitmapData *bitmap_data = bitmap_get_data(bitmap_tag, bitmap_data_index % bitmap->bitmap_data.count);
         if(bitmap_data != NULL) {
-            void *texture = bitmap_load(true, true, bitmap_data);
-            if(texture != NULL) {
-                rasterizer_dx9_set_texture(stage, texture);
+            void *data = bitmap_load(true, true, bitmap_data);
+            if(data != NULL) {
+                rasterizer_dx9_set_texture(stage, bitmap_data->hardware_format);
                 return true;
             }
         }

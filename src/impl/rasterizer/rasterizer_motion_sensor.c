@@ -104,7 +104,7 @@ void rasterizer_hud_motion_sensor_blip_begin(void) {
 
 void rasterizer_hud_motion_sensor_blip_draw(float opacity, float blip_size, VectorXY *position, ColorRGB *color_tint) {
     if(*motion_sensor_blip_render_enabled && *motion_sensor_blip_being_rendered) {
-        float inv_screen_width = 2.0f / render_get_screen_width();
+        float inv_screen_width = 2.0f / RASTERIZER_SCREEN_BASE_WIDTH;
         float half_blip_size = blip_size * (inv_screen_width * 20.0f);
         float blip_center_x = position->x * (inv_screen_width * -10.0f);
         float blip_center_y = position->y * (inv_screen_width * -10.0f);

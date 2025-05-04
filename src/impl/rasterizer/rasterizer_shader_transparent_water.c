@@ -198,6 +198,19 @@ void rasterizer_shader_transparent_water_render_bumpmap(ShaderTransparentWater *
                 }
             }
 
+#ifdef RINGWORLD_ENABLE_ENHANCEMENTS
+            // Draw the last mipmap level to the rest of the levels
+            for(size_t i = mipmap_levels; i < RENDER_TARGET_WATER_MIPMAP_LEVELS; i++) {
+                IDirect3DSurface9 *mipmap_surface = NULL;
+                IDirect3DTexture9_GetSurfaceLevel(render_target->texture, i, &mipmap_surface);
+                rasterizer_dx9_set_render_target(0, mipmap_surface);
+                HRESULT res = IDirect3DDevice9_DrawPrimitiveUP(device, D3DPT_TRIANGLEFAN, 2, vertices, sizeof(RasterizerDynamicVertex));
+                if(FAILED(res)) {
+                    CRASHF_DEBUG("failed to draw shader transparent water bumpmap");
+                }
+            }
+#endif
+
             IDirect3DDevice9_SetSoftwareVertexProcessing(device, rasterizer_dx9_device_supports_software_vertex_processing());
         }
 

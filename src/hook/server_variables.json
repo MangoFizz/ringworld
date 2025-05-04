@@ -46,7 +46,7 @@
     "effect_collection_buffer": {"type": "RasterizerDx9ShaderEffect *", "address": "NULL"},
     "wave_functions_initialized": {"type": "bool", "address": "NULL"},
     "wave_functions": {"type": "uint8_t *[12]", "address": "NULL"},
-    "shader_transparent_water_unk1": {"type": "bool", "address": "NULL"},
+    "rasterizer_render_targets_disabled": {"type": "bool", "address": "NULL"},
     "shader_transparent_water_should_update_bumpmap": {"type": "bool", "address": "NULL"},
     "globals_rasterizer_data": {"type": "GlobalsRasterizerData *", "address": "NULL"},
     "saved_games_current_profile_id": {"type": "uint32_t", "address": "0x61864c"},

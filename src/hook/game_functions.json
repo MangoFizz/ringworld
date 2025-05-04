@@ -82,9 +82,11 @@
     "rasterizer_dx9_texture_calculate_mipmaps_levels": {"address": "0x527230", "replace": false, "use_return_value": true, "arguments": ["0", "eax", "ebx"]},
     "rasterizer_dx9_texture_create": {"address": "0x5272c0", "replace": true, "use_return_value": true, "arguments": ["esi"]},
     "rasterizer_dx9_set_stencil_mode": {"address": "0x51c900", "replace": true, "arguments": ["eax"]},
+    "rasterizer_dx9_render_targets_initialize": {"address": "0x52fb00", "replace": true, "use_return_value": true},
     "rasterizer_dx9_render_target_set": {"address": "0x52fda0", "replace": false, "arguments": ["0", "4", "eax"]},
     "rasterizer_dx9_texture_update_bitmap_2d": {"address": "0x527420", "replace": false, "arguments": ["0"]},
     "rasterizer_screen_effect_set_texture_transforms": {"address": "0x52fef0", "replace": true, "arguments": ["0", "4", "8", "12", "ecx", "eax"]},
+    "d3d_get_fvf_vertex_size": {"address": "0x586e9e", "replace": true, "disabled": true, "use_return_value": true, "arguments": ["0"]},
     
     "rasterizer_hud_motion_sensor_blip_begin": {"address": "0x52e750", "replace": true},
     "rasterizer_hud_motion_sensor_blip_draw": {"address": "0x52eb90", "replace": true, "arguments": ["0", "4", "eax", "edi"]},

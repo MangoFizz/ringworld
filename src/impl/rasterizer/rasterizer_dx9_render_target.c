@@ -141,7 +141,13 @@ bool rasterizer_dx9_render_targets_initialize(void) {
     if(*rasterizer_render_targets_disabled == false && result) {
         for(uint16_t i = 1; i < NUM_OF_RENDER_TARGETS; i++) {
             if(render_targets[i].texture == NULL && *d3d9_render_target_unk_flag == false || render_targets[1].format != D3DFMT_A8R8G8B8) {
-                HRESULT r1 = IDirect3DDevice9_CreateTexture(device, render_targets[i].width, render_targets[i].height, 1, D3DUSAGE_RENDERTARGET,
+                int mipmap_levels = RENDER_TARGET_DEFAULT_MIPMAP_LEVELS;
+#ifdef RINGWORLD_ENABLE_ENHANCEMENTS
+                if(i == RENDER_TARGET_WATER) {
+                    mipmap_levels = RENDER_TARGET_WATER_MIPMAP_LEVELS;
+                }
+#endif
+                HRESULT r1 = IDirect3DDevice9_CreateTexture(device, render_targets[i].width, render_targets[i].height, mipmap_levels, D3DUSAGE_RENDERTARGET,
                                                             render_targets[i].format, D3DPOOL_DEFAULT, &render_targets[i].texture, NULL);
                 if(FAILED(r1)) {
                     result = false;

@@ -12,7 +12,7 @@
 #include "rasterizer_dx9_texture.h"
 #include "rasterizer_shader_transparent_water.h"
 
-extern bool *shader_transparent_water_unk1;
+extern bool *rasterizer_render_targets_disabled;
 extern bool *shader_transparent_water_should_update_bumpmap;
 bool shader_transparent_water_enabled = true;
 
@@ -156,10 +156,11 @@ void rasterizer_shader_transparent_water_render_bumpmap(ShaderTransparentWater *
             ps_constants[14] = 0.0f;
             ps_constants[15] = 0.0f;
 
-            rasterizer_dx9_render_target_set(0x00000000, 0, 8);
             rasterizer_dx9_set_stencil_mode(0);
+            rasterizer_dx9_render_target_set(0x00000000, false, RENDER_TARGET_WATER);
 
             size_t mipmap_levels = min_i32(shader->ripples.mipmap_levels, 4);
+            RasterizerDx9RenderTarget *render_target = rasterizer_dx9_render_target_get(RENDER_TARGET_WATER);
 
             for(size_t i = 0; i < mipmap_levels; i++) {
                 ps_constants[12] = 0.5f;
@@ -182,6 +183,11 @@ void rasterizer_shader_transparent_water_render_bumpmap(ShaderTransparentWater *
                     rasterizer_dx9_texture_set_bitmap_data_texture_no_assert(j, ripples[j].map_index, ripple_map_handle);
                 }
 
+#ifdef RINGWORLD_ENABLE_ENHANCEMENTS
+                IDirect3DSurface9 *mipmap_surface = NULL;
+                IDirect3DTexture9_GetSurfaceLevel(render_target->texture, i, &mipmap_surface);
+                rasterizer_dx9_set_render_target(0, mipmap_surface);
+#endif
                 rasterizer_dx9_set_pixel_shader(water_bumpmap_effect->pixel_shaders[0].pixel_shader);
                 rasterizer_dx9_set_texture_stage_state(0, D3DTSS_COLOROP, D3DTOP_DISABLE);
                 rasterizer_dx9_set_texture_stage_state(0, D3DTSS_ALPHAOP, D3DTOP_DISABLE);
@@ -195,7 +201,7 @@ void rasterizer_shader_transparent_water_render_bumpmap(ShaderTransparentWater *
             IDirect3DDevice9_SetSoftwareVertexProcessing(device, rasterizer_dx9_device_supports_software_vertex_processing());
         }
 
-        rasterizer_dx9_render_target_set(0x00000000, 0, window_parameters->render_target);
+        rasterizer_dx9_render_target_set(0x00000000, false, window_parameters->render_target);
         rasterizer_dx9_set_stencil_mode(2);
     }
 }
@@ -203,7 +209,7 @@ void rasterizer_shader_transparent_water_render_bumpmap(ShaderTransparentWater *
 void rasterizer_shader_transparent_water_draw(TransparentGeometryGroup *group) {
     ASSERT(group != NULL);
 
-    if(*shader_transparent_water_unk1 == false && shader_transparent_water_enabled) {
+    if(*rasterizer_render_targets_disabled == false && shader_transparent_water_enabled) {
         ShaderTransparentWater *shader = shader_type_assert(group->shader, SHADER_TYPE_PC_TRANSPARENT_WATER);
         GlobalsRasterizerData *globals_rasterizer_data = render_get_globals_rasterizer_data();
         

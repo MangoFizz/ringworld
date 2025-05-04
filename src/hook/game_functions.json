@@ -104,6 +104,9 @@
     "rasterizer_text_set_up_vertex_shader_constants": {"address": "0x534a10", "replace": true},
     "rasterizer_text_cache_font_character": {"address": "0x518770", "replace": true, "arguments": ["0", "4"]},
     "rasterizer_draw_unicode_string_and_hack_in_icons": {"address": "0x49dd70", "replace": false, "arguments": ["0", "4", "edx"]},
+
+    "rasterizer_shader_transparent_water_draw": {"address": "0x539310", "replace": true, "arguments": ["0"]},
+    "rasterizer_shader_transparent_water_render_bumpmap": {"address": "0x538380", "replace": true, "arguments": ["0"]},
         
     "text_draw_unicode_string": {"address": "0x559bf0", "replace": false, "use_return_value": true, "arguments": ["0", "4", "8", "12", "16", "20"]},
     "text_draw_string": {"address": "0x559870", "replace": false, "use_return_value": true, "arguments": ["0", "4", "8", "12", "16", "20"]},

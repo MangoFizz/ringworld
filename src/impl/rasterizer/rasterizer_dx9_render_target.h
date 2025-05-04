@@ -24,6 +24,11 @@ enum {
     NUM_OF_RENDER_TARGETS = 9
 };
 
+enum {
+    RENDER_TARGET_DEFAULT_MIPMAP_LEVELS = 1,
+    RENDER_TARGET_WATER_MIPMAP_LEVELS = 4
+};
+
 typedef struct RasterizerDx9RenderTarget {
     uint32_t width;
     uint32_t height;

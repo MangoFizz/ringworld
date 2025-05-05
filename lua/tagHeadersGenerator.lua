@@ -55,6 +55,7 @@ local function generateHeader(definitionName, tagDefinition, dependencies)
             end
         end
     end
+    add("\n")
 
     for _, enum in ipairs(tagDefinition.enums) do
         local enumName = parser.toPascalCase(enum.name)

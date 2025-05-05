@@ -6,6 +6,7 @@
 #include "../text/text.h"
 #include "rasterizer.h"
 #include "rasterizer_dx9_texture.h"
+#include "rasterizer_dx9_render_target.h"
 #include "rasterizer_dx9_vertex_shader.h"
 #include "rasterizer_dx9_vertex_shader_constants.h"
 #include "rasterizer_text.h"
@@ -13,6 +14,8 @@
 extern RasterizerFontCache *rasterizer_font_character_cache;
 extern VertexShaderScreenprojConstants *rasterizer_text_vertex_shader_constants;
 extern uint16_t *string_draw_count;
+extern bool *rasterizer_enable_user_interface_render;
+extern bool *rasterizer_window_is_being_rendered;
 
 RasterizerFontCache *rasterizer_text_get_font_cache(void) {
     return rasterizer_font_character_cache;
@@ -52,6 +55,10 @@ void rasterizer_text_set_up_vertex_shader_constants(void) {
     screenproj->projection.w[3] = 1.0f;
     screenproj->texture_scale.x = 0.0f;
     screenproj->texture_scale.y = 0.0f;
+
+    // Probably not needed, but just in case
+    screenproj->pad1 = 0.0f;
+    screenproj->pad2 = 0.0f;
 }
 
 bool rasterizer_text_cache_initialize(void) {
@@ -71,6 +78,77 @@ bool rasterizer_text_cache_initialize(void) {
     }
 
     return font_cache->initialized;
+}
+
+void rasterizer_text_begin(RasterizerDynamicScreenGeometryParams *parameters) {
+    RasterizerWindowRenderParameters *window_parameters = rasterizer_get_window_parameters();
+    IDirect3DDevice9 *device = rasterizer_dx9_device();
+  
+    if(rasterizer_enable_user_interface_render && window_parameters->render_target == RENDER_TARGET_RENDER_PRIMARY) {
+        rasterizer_text_set_up_vertex_shader_constants();
+        rasterizer_dx9_set_framebuffer_blend_function(parameters->framebuffer_blend_function);
+        BitmapData *map = parameters->map[0];
+        if(map != NULL) {
+            bitmap_load(true, true, map);
+            IDirect3DDevice9_SetTexture(device, 0, map->hardware_format);
+        }
+        
+        rasterizer_dx9_set_render_state(D3DRS_CULLMODE, D3DCULL_CCW);
+        rasterizer_dx9_set_render_state(D3DRS_COLORWRITEENABLE, D3DCOLORWRITEENABLE_RED | D3DCOLORWRITEENABLE_GREEN | D3DCOLORWRITEENABLE_BLUE);
+        rasterizer_dx9_set_render_state(D3DRS_ALPHABLENDENABLE, TRUE);
+        rasterizer_dx9_set_render_state(D3DRS_ALPHATESTENABLE, TRUE);
+        rasterizer_dx9_set_render_state(D3DRS_ALPHAREF, 0);
+        rasterizer_dx9_set_render_state(D3DRS_ZENABLE, FALSE);
+        rasterizer_dx9_set_render_state(D3DRS_FOGENABLE, FALSE);
+
+        if(*rasterizer_window_is_being_rendered) {
+            rasterizer_dx9_set_render_state(D3DRS_FILLMODE, D3DFILL_SOLID);
+        }
+
+        rasterizer_dx9_set_vertex_declaration(VERTEX_DECLARATION_DYNAMIC_SCREEN);
+        uint32_t vertex_processing_method = rasterizer_dx9_vertex_get_processing_method(VERTEX_DECLARATION_DYNAMIC_SCREEN);
+        rasterizer_dx9_set_software_vertex_processing(vertex_processing_method & D3DUSAGE_SOFTWAREPROCESSING);
+
+        IDirect3DVertexShader9 *vs = rasterizer_dx9_shader_get_vertex_shader(VSH_SCREEN);
+        rasterizer_dx9_set_vertex_shader(vs);
+        rasterizer_dx9_set_pixel_shader(NULL);
+
+        VertexShaderScreenprojConstants *vs_constants = rasterizer_text_vertex_shader_constants;
+        vs_constants->texture_scale.x = parameters->map_texture_scale[0].x;
+        vs_constants->texture_scale.y = parameters->map_texture_scale[0].y;
+        rasterizer_dx9_set_vertex_shader_constant_f(VSH_CONSTANTS_SCREENPROJ_OFFSET, vs_constants, VSH_CONSTANTS_SCREENPROJ_COUNT);
+
+        for(size_t i = 0; i < 3; i++) {
+            map = parameters->map[i];
+            if(map == NULL) {
+                rasterizer_dx9_set_texture(i, NULL);
+                break;
+            }
+            bitmap_load(true, true, map);
+            rasterizer_dx9_set_texture(i, map->hardware_format);
+            rasterizer_dx9_set_sampler_state(i, D3DSAMP_ADDRESSU, parameters->map_wrapped[i] ? D3DTADDRESS_WRAP : D3DTADDRESS_CLAMP);
+            rasterizer_dx9_set_sampler_state(i, D3DSAMP_ADDRESSV, parameters->map_wrapped[i] ? D3DTADDRESS_WRAP : D3DTADDRESS_CLAMP);
+            rasterizer_dx9_set_sampler_state(i, D3DSAMP_MAGFILTER, parameters->point_sampled ? D3DTEXF_POINT : D3DTEXF_LINEAR);
+            rasterizer_dx9_set_sampler_state(i, D3DSAMP_MINFILTER, parameters->point_sampled ? D3DTEXF_POINT : D3DTEXF_LINEAR);
+            rasterizer_dx9_set_sampler_state(i, D3DSAMP_MIPFILTER, parameters->point_sampled ? D3DTEXF_POINT : D3DTEXF_LINEAR);
+        }
+
+        rasterizer_dx9_set_texture_stage_state(0, D3DTSS_COLOROP, D3DTOP_MODULATE);
+        rasterizer_dx9_set_texture_stage_state(0, D3DTSS_COLORARG1, D3DTA_TEXTURE);
+        rasterizer_dx9_set_texture_stage_state(0, D3DTSS_COLORARG2, D3DTA_DIFFUSE);
+        rasterizer_dx9_set_texture_stage_state(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
+        rasterizer_dx9_set_texture_stage_state(0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE);
+        rasterizer_dx9_set_texture_stage_state(0, D3DTSS_ALPHAARG2, D3DTA_DIFFUSE);
+        rasterizer_dx9_set_texture_stage_state(1, D3DTSS_COLOROP, D3DTOP_DISABLE);
+        rasterizer_dx9_set_texture_stage_state(1, D3DTSS_ALPHAOP, D3DTOP_DISABLE);
+    }
+}
+
+void rasterizer_text_end(void) {
+    if(*rasterizer_window_is_being_rendered) {
+        rasterizer_dx9_set_render_state(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
+    }
+    rasterizer_dx9_set_software_vertex_processing(rasterizer_dx9_device_supports_software_vertex_processing());
 }
 
 void rasterizer_draw_unicode_string(Rectangle2D *position, Rectangle2D *dest_rect, ColorARGBInt *color, uint32_t flags, const wchar_t *string) {

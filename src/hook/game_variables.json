@@ -93,5 +93,6 @@
     "string_draw_count": {"type": "uint16_t", "address": "0x637d4c"},
     "linear_texture_addressing_sun": {"type": "uint32_t", "address": "0x6bddfc"},
     "rng_state": {"type": "uint32_t", "address": "0x6b4d64"},
-    "pgcr_footer_fade": {"type": "float", "address": "0x815eac"}
+    "pgcr_footer_fade": {"type": "float", "address": "0x815eac"},
+    "rasterizer_window_is_being_rendered": {"type": "bool", "address": "0x6249c6"}
 }

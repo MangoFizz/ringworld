@@ -37,6 +37,7 @@ void rasterizer_dx9_set_vertex_shader(IDirect3DVertexShader9 *vertex_shader);
 /**
  * Set the vertex declaration.
  * @param vertex_buffer_type The index of the vertex declaration.
+ * @todo Move this to the vertex header.
  */
 void rasterizer_dx9_set_vertex_declaration(uint16_t vertex_buffer_type);
 

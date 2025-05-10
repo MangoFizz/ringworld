@@ -174,6 +174,12 @@ void table_remove_element(void *table, TableResourceHandle handle);
 void table_clear(void *table);
 
 /**
+ * Clear the contents of a table and mark it as valid.
+ * @param table table to mark as valid
+ */
+void table_make_valid(void *table);
+
+/**
  * Prepare a TableIterator.
  */
 void table_init_iterator(TableIterator *iterator, const void *table);

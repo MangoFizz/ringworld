@@ -353,6 +353,12 @@ typedef struct PlayerProfile {
 _Static_assert(sizeof(PlayerProfile) == 0x2000);
 
 /**
+ * Gets the path to the active player profile in the saved games directory.
+ * @return The path to the active player profile.
+ */
+const char *saved_games_get_active_player_profile_path();
+
+/**
  * Reads the player profile data from the saved games directory.
  * @param profile_id The name of the player profile.
  * @param profile_data Pointer to a buffer to store the player profile data.
@@ -380,6 +386,14 @@ uint32_t saved_games_get_player_profile_id(uint16_t local_player_index);
  * @return Pointer to the player profile.
  */
 PlayerProfile *saved_games_get_player_profile(uint16_t local_player_index);
+
+/**
+ * Gets the path to the directory enclosing the saved game file for the specified profile ID.
+ * @param profile_id The ID of the player profile.
+ * @param path Pointer to a buffer to store the directory path.
+ * @return True if the path was successfully retrieved, false otherwise.
+ */
+bool saved_game_file_get_path_to_enclosing_directory(uint32_t profile_id, char *path);
 
 
 #pragma pack(pop)

@@ -98,6 +98,7 @@ set(RINGWORLD_SOURCES
     src/impl/network/network_game.c
     src/impl/network/network_game_client.c
     src/impl/object/object.c
+    src/impl/object/object_type.c
     src/impl/memory/table.c
     src/impl/multiplayer/multiplayer_game_text.c
     src/impl/player/player.c

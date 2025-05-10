@@ -16,34 +16,12 @@ using namespace Demon;
 static std::byte *hook_heap;
 static const std::size_t hook_heap_size = 512 * 1024;
 static std::size_t hook_heap_usage;
-
 bool ringworld_server_mode = false;
 
 extern "C" wchar_t *build_number;
-extern "C" void shader_transparent_generic_switch_case_asm();
-extern "C" {
-    void shader_transparent_generic_update_instances_asm();
-    std::byte *map_load_thing = nullptr;
-    std::byte *map_load_thing_return = nullptr;
-}
 
-static void set_up_transparent_generic_hack() {
-    DWORD old_protection;
-    auto *switch_case_address = reinterpret_cast<std::uint32_t *>(0x5381f4);
-    VirtualProtect(reinterpret_cast<void *>(switch_case_address), 4, PAGE_READWRITE, &old_protection);
-    *switch_case_address = reinterpret_cast<uint32_t>(shader_transparent_generic_switch_case_asm);
-    VirtualProtect(reinterpret_cast<void *>(switch_case_address), 4, old_protection, &old_protection);
-
-    auto *map_load_thing_call = reinterpret_cast<std::byte *>(0x442851);
-    auto *instance_update = reinterpret_cast<std::byte *>(shader_transparent_generic_update_instances_asm);
-    map_load_thing = reinterpret_cast<std::byte *>(0x443600);
-    map_load_thing_return = reinterpret_cast<std::byte *>(0x442856);
-
-    VirtualProtect(reinterpret_cast<void *>(map_load_thing_call), 5, PAGE_READWRITE, &old_protection);
-    *reinterpret_cast<std::uint8_t *>(map_load_thing_call) = 0xE9;
-    *reinterpret_cast<std::uintptr_t *>(map_load_thing_call + 1) = instance_update - (map_load_thing_call + 5);
-    VirtualProtect(reinterpret_cast<void *>(map_load_thing_call), 5, old_protection, &old_protection);
-}
+void set_up_transparent_generic_hooks();
+void set_up_game_state_hooks();
 
 static void set_up_build_number() {
     const wchar_t *ringworld_version = L"" RINGWORLD_VERSION_STRING;
@@ -66,7 +44,8 @@ extern "C" void set_up_ringworld_hooks(Platform platform) {
                 ringworld_server_mode = false;
                 set_game_variables();
                 set_up_game_hooks();
-                set_up_transparent_generic_hack();
+                set_up_transparent_generic_hooks();
+                set_up_game_state_hooks();
                 break;
             case RW_PLATFORM_DEDICATED_SERVER:
                 ringworld_server_mode = true;

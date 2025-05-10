@@ -4,6 +4,11 @@
 
 extern uint32_t *saved_games_current_profile_id;
 extern PlayerProfile *saved_games_player_profiles;
+extern const char *player_profile_directory;
+
+const char *saved_games_get_active_player_profile_path() {
+    return player_profile_directory;
+}
 
 uint32_t saved_games_get_player_profile_id(uint16_t local_player_index) {
     ASSERT(local_player_index < MAX_LOCAL_PLAYERS);

@@ -24,7 +24,7 @@
     "ui_widget_load_children_recursive": {"address": "0x4909c0", "replace": true, "use_return_value": true, "arguments": ["0", "esi"]},
     "ui_widget_event_handler_dispatch": {"address": "0x491840", "replace": false, "arguments": ["0", "4", "8", "12", "16"]},
     "ui_widget_instance_give_focus_directly": {"address": "0x491d10", "replace": true, "arguments": ["eax", "ecx"]},
-    "memory_pool_new_block": {"address": "0x4bdb80", "replace": false, "use_return_value": true, "arguments": ["ecx", "eax"]},
+    "stack_memory_pool_new_block": {"address": "0x4bdb80", "replace": false, "use_return_value": true, "arguments": ["ecx", "eax"]},
     
     "player_ui_set_active_player_profile": {"address": null, "replace": false, "arguments": ["0", "eax", "edx"]},
 

@@ -121,6 +121,12 @@ void table_clear(void *table_data) {
     INIT_TABLE_NEXT_ID(table);
 }
 
+void table_make_valid(void *table_data) {
+    GenericTable *table = (GenericTable *)(table_data);
+    table->valid = true;
+    table_clear(table);
+}
+
 void table_init_iterator(TableIterator *iterator, const void *table) {
     iterator->table = (GenericTable *)(table);
     iterator->handle = NULL_HANDLE;

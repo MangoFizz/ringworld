@@ -19,6 +19,16 @@ typedef struct MemoryPoolBlock {
 _Static_assert(sizeof(MemoryPoolBlock) == 0x10);
 
 typedef struct MemoryPool {
+    unsigned int signature;
+    char name[32];
+    void *base_address;
+    int size;
+    int free_size;
+    MemoryPoolBlock *first_block;
+    MemoryPoolBlock *last_block;
+} MemoryPool;
+
+typedef struct StackMemoryPool {
     char *name;
     void *allocated_memory;
     size_t allocated_size;
@@ -33,8 +43,8 @@ typedef struct MemoryPool {
     MemoryPoolBlock *first_block;
     MemoryPoolBlock *last_block;
     MemoryPoolBlock *blocks[];
-} MemoryPool;
-_Static_assert(sizeof(MemoryPool) == 0x34);
+} StackMemoryPool;
+_Static_assert(sizeof(StackMemoryPool) == 0x34);
 
 /**
  * Create a new memory pool block.
@@ -42,7 +52,7 @@ _Static_assert(sizeof(MemoryPool) == 0x34);
  * @param size size of the block
  * @return pointer to the created block
  */
-void *memory_pool_new_block(MemoryPool *pool, size_t size);
+void *stack_memory_pool_new_block(StackMemoryPool *pool, size_t size);
 
 /**
  * Resize a memory pool block.
@@ -51,7 +61,7 @@ void *memory_pool_new_block(MemoryPool *pool, size_t size);
  * @param new_size new size of the block
  * @return pointer to the resized block
  */
-void *memory_pool_resize_block(MemoryPool *pool, void *block, size_t new_size);
+void *stack_memory_pool_resize_block(StackMemoryPool *pool, void *block, size_t new_size);
 
 #ifdef __cplusplus
 }

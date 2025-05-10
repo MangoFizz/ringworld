@@ -28,6 +28,9 @@ add_custom_command(
 
 set(RINGWORLD_HOOKS_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/src/hook/hook.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/hook/codefinder.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/hook/game_state.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/hook/shader_transparent_generic.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/hook/shader_transparent_generic.S
     ${CMAKE_CURRENT_BINARY_DIR}/game_function_hooks.cpp
     ${CMAKE_CURRENT_BINARY_DIR}/game_functions.S

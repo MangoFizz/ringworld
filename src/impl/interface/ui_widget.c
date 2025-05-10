@@ -23,7 +23,7 @@
 #define UI_WIDGET_MEMORY_POOL_SIZE 0x20000
 #define UI_WIDGET_MEMORY_POOL_BLOCKS_NUMBER 0x1000
 
-extern MemoryPool **ui_widget_memory_pool;
+extern StackMemoryPool **ui_widget_memory_pool;
 extern WidgetGlobals *widget_globals;
 extern bool *ui_widgets_unknown_1;
 extern bool *is_main_menu;
@@ -37,9 +37,9 @@ WidgetGlobals *ui_widget_get_globals(void) {
 void ui_widgets_initialize(void) {
     size_t memory_pool_size = UI_WIDGET_MEMORY_POOL_SIZE;
     void *allocated_memory = GlobalAlloc(GMEM_FIXED, memory_pool_size);
-    MemoryPool *memory_pool = *ui_widget_memory_pool;
+    StackMemoryPool *memory_pool = *ui_widget_memory_pool;
     size_t blocks_number = UI_WIDGET_MEMORY_POOL_BLOCKS_NUMBER;
-    memset(memory_pool, 0, sizeof(MemoryPool));
+    memset(memory_pool, 0, sizeof(StackMemoryPool));
     memset(memory_pool->blocks, 0, blocks_number * 4);
     memory_pool->name = "widget_memory_pool";
     memory_pool->allocated_memory = allocated_memory;
@@ -78,7 +78,7 @@ Widget *ui_widget_load_by_name_or_tag(const char *definition_tag_path, TagHandle
     }
 
     UIWidgetDefinition *definition = tag_get_data(TAG_GROUP_UI_WIDGET_DEFINITION, definition_tag);
-    Widget *widget = memory_pool_new_block(*ui_widget_memory_pool, sizeof(Widget));
+    Widget *widget = stack_memory_pool_new_block(*ui_widget_memory_pool, sizeof(Widget));
     if(widget == NULL) {
         CRASHF_DEBUG("failed to allocate memory for widget");
     }
@@ -403,7 +403,7 @@ void ui_widget_instance_give_focus_directly(Widget *widget, Widget *child) {
 }
 
 void ui_widget_new_history_node(WidgetHistoryNode *history_node_data, WidgetHistoryNode **history_top_node) {
-    WidgetHistoryNode *new_node = memory_pool_new_block(*ui_widget_memory_pool, sizeof(WidgetHistoryNode));
+    WidgetHistoryNode *new_node = stack_memory_pool_new_block(*ui_widget_memory_pool, sizeof(WidgetHistoryNode));
     if(new_node == NULL) {
         CRASHF_DEBUG("failed to allocate memory for history node");
     }
@@ -786,7 +786,7 @@ void ui_widget_update_player_profile_text(const wchar_t *profile_name, Widget *t
     const wchar_t *profile_label = ui_widget_get_common_button_caption(UI_WIDGET_BUTTON_CAPTION_PROFILE_LABEL);
     const size_t text_buffer_size = 64;
     wchar_t *text = text_widget->text_box_parameters.text;
-    text = memory_pool_resize_block(*ui_widget_memory_pool, text, 128);
+    text = stack_memory_pool_resize_block(*ui_widget_memory_pool, text, 128);
     ASSERT(text != NULL);
     swprintf_s(text, text_buffer_size, L"%s %s", profile_label, profile_name);
     text[text_buffer_size - 1] = L'\0';

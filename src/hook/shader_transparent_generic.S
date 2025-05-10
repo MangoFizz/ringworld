@@ -3,7 +3,6 @@
 .text
 
 .globl _shader_transparent_generic_switch_case_asm
-.globl _shader_transparent_generic_update_instances_asm
 _shader_transparent_generic_switch_case_asm:
     mov edx, dword ptr [ebp + 0xC]
     push edx
@@ -13,6 +12,7 @@ _shader_transparent_generic_switch_case_asm:
     mov eax, 0x5380C1
     jmp eax
 
+.globl _shader_transparent_generic_update_instances_asm
 _shader_transparent_generic_update_instances_asm:
     pushfd
     pushad

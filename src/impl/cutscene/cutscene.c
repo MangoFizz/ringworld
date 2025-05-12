@@ -5,7 +5,6 @@
 #include "../math/math.h"
 #include "../math/color.h"
 #include "../render/render.h"
-#include "../rasterizer/rasterizer_text.h"
 #include "../scenario/scenario.h"
 #include "../tag/tag.h"
 #include "../text/text.h"

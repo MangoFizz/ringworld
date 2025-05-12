@@ -6,9 +6,8 @@
 #include "../math/color.h"
 #include "../multiplayer/multiplayer_game_text.h"
 #include "../network/network_game.h"
-#include "../rasterizer/rasterizer_text.h"
 #include "../render/render.h"
-#include "../text/font.h"
+#include "../font/font.h"
 #include "../text/text.h"
 #include "hud.h"
 #include "scoreboard.h"
@@ -69,7 +68,7 @@ void pgcr_draw_row_text(wchar_t *string, uint32_t justification, int16_t row) {
     text_globals->style = -1;
     text_globals->font = font;
 
-    rasterizer_draw_unicode_string(&text_bounds, NULL, NULL, 0, string);
+    text_draw_unicode_string(&text_bounds, NULL, NULL, 0, string);
 }
 
 void pgcr_set_text_color(const ColorRGB *color) {
@@ -206,7 +205,7 @@ void pgcr_draw_footer(void) {
     }
     
     text_set_drawing_parameters(-1, 0, 0, font, &color);
-    rasterizer_draw_unicode_string_and_hack_in_icons(&rect, false, text);
+    // rasterizer_bitmap_font_draw_unicode_string_and_hack_in_icons(&rect, false, text);
 }
 
 void pgcr_draw(void) {

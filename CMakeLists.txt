@@ -77,6 +77,8 @@ set(RINGWORLD_SOURCES
     src/impl/crypto/xtea.c
     src/impl/cutscene/cutscene.c
     src/impl/exception/exception.c
+    src/impl/font/vector_font_file.c
+    src/impl/font/vector_font.c
     src/impl/game/game_engine.c
     src/impl/game/game_globals.c
     src/impl/game/game_state.c
@@ -104,6 +106,7 @@ set(RINGWORLD_SOURCES
     src/impl/memory/table.c
     src/impl/multiplayer/multiplayer_game_text.c
     src/impl/player/player.c
+    src/impl/rasterizer/rasterizer_bitmap_font.c
     src/impl/rasterizer/rasterizer.c
     src/impl/rasterizer/rasterizer_config.c
     src/impl/rasterizer/rasterizer_dx9_render_target.c
@@ -121,7 +124,6 @@ set(RINGWORLD_SOURCES
     src/impl/rasterizer/rasterizer_shader_transparent_generic.c
     src/impl/rasterizer/rasterizer_shader_transparent_water.c
     src/impl/rasterizer/rasterizer_shaders_blob.c
-    src/impl/rasterizer/rasterizer_text.c
     src/impl/render/render.c
     src/impl/rng/rng.c
     src/impl/saved_games/player_profile.c

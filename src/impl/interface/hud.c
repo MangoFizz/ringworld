@@ -8,9 +8,8 @@
 #include "../math/color.h"
 #include "../rasterizer/rasterizer_dx9_vertex.h"
 #include "../rasterizer/rasterizer_screen_geometry.h"
-#include "../rasterizer/rasterizer_text.h"
 #include "../render/render.h"
-#include "../text/font.h"
+#include "../font/font.h"
 #include "../text/text.h"
 #include "hud.h"
 
@@ -356,6 +355,6 @@ void hud_draw_message(wchar_t *message, float fade) {
     rect.bottom = rect.top + font_get_height(font);
 
     text_set_drawing_parameters(-1, 2, 8, font, &text_color);
-    rasterizer_draw_unicode_string(&rect, NULL, NULL, 0, message);
+    text_draw_unicode_string(&rect, NULL, NULL, 0, message);
     text_set_drawing_parameters(-1, 0, 0, font, &text_color);
 }

@@ -1,6 +1,7 @@
 #include <string.h>
 #include "../exception/exception.h"
 #include "../bitmap/bitmap.h"
+#include "../font/bitmap_font.h"
 #include "../math/math.h"
 #include "../render/render.h"
 #include "../text/text.h"
@@ -9,26 +10,26 @@
 #include "rasterizer_dx9_render_target.h"
 #include "rasterizer_dx9_vertex_shader.h"
 #include "rasterizer_dx9_vertex_shader_constants.h"
-#include "rasterizer_text.h"
+#include "rasterizer_bitmap_font.h"
 
-extern RasterizerFontCache *rasterizer_font_character_cache;
-extern VertexShaderScreenprojConstants *rasterizer_text_vertex_shader_constants;
+extern BitmapFontCache *rasterizer_font_character_cache;
+extern VertexShaderScreenprojConstants *rasterizer_bitmap_font_vertex_shader_constants;
 extern uint16_t *string_draw_count;
 extern bool *rasterizer_enable_user_interface_render;
 extern bool *rasterizer_window_is_being_rendered;
 
-RasterizerFontCache *rasterizer_text_get_font_cache(void) {
+BitmapFontCache *rasterizer_bitmap_font_get_cache(void) {
     return rasterizer_font_character_cache;
 }
 
-BitmapData *rasterizer_text_get_font_cache_bitmap(void) {
+BitmapData *rasterizer_bitmap_font_get_cache_bitmap(void) {
     if(rasterizer_font_character_cache->initialized) {
         return rasterizer_font_character_cache->bitmap;
     }
     return NULL;
 }
 
-void rasterizer_text_set_up_vertex_shader_constants(void) {
+void rasterizer_bitmap_font_set_up_vertex_shader_constants(void) {
     RasterizerWindowRenderParameters *window_parameters = rasterizer_get_window_parameters();
     Rectangle2D *window_bounds = &window_parameters->camera.window_bounds;
     float window_width = window_bounds->right - window_bounds->left;
@@ -36,7 +37,7 @@ void rasterizer_text_set_up_vertex_shader_constants(void) {
     float inv_screen_width = 2.0f / render_get_screen_width();
     float inv_screen_height = -2.0f / render_get_screen_height();
 
-    VertexShaderScreenprojConstants *screenproj = rasterizer_text_vertex_shader_constants;
+    VertexShaderScreenprojConstants *screenproj = rasterizer_bitmap_font_vertex_shader_constants;
     screenproj->projection.x[0] = inv_screen_width;
     screenproj->projection.x[1] = 0.0f;
     screenproj->projection.x[2] = 0.0f;
@@ -61,15 +62,15 @@ void rasterizer_text_set_up_vertex_shader_constants(void) {
     screenproj->pad2 = 0.0f;
 }
 
-bool rasterizer_text_cache_initialize(void) {
-    RasterizerFontCache *font_cache = rasterizer_text_get_font_cache();
+bool rasterizer_bitmap_font_cache_initialize(void) {
+    BitmapFontCache *font_cache = rasterizer_bitmap_font_get_cache();
     ASSERT(font_cache->initialized == false);
 
     uint16_t screen_width = render_get_screen_width();
     uint16_t screen_height = render_get_screen_height();
     BitmapData *bitmap = bitmap_new_2d_bitmap_data(screen_width, screen_height, 1, BITMAP_DATA_FORMAT_A8R8G8B8);
     if(bitmap) {
-        memset(font_cache, 0, sizeof(RasterizerFontCache));
+        memset(font_cache, 0, sizeof(BitmapFontCache));
         bool texture_created = rasterizer_dx9_texture_create(bitmap);
         if(texture_created) {
             font_cache->initialized = true;
@@ -80,12 +81,12 @@ bool rasterizer_text_cache_initialize(void) {
     return font_cache->initialized;
 }
 
-void rasterizer_text_begin(RasterizerDynamicScreenGeometryParams *parameters) {
+void rasterizer_bitmap_font_begin_text_draw(RasterizerDynamicScreenGeometryParams *parameters) {
     RasterizerWindowRenderParameters *window_parameters = rasterizer_get_window_parameters();
     IDirect3DDevice9 *device = rasterizer_dx9_device();
   
     if(rasterizer_enable_user_interface_render && window_parameters->render_target == RENDER_TARGET_RENDER_PRIMARY) {
-        rasterizer_text_set_up_vertex_shader_constants();
+        rasterizer_bitmap_font_set_up_vertex_shader_constants();
         rasterizer_dx9_set_framebuffer_blend_function(parameters->framebuffer_blend_function);
         BitmapData *map = parameters->map[0];
         if(map != NULL) {
@@ -113,7 +114,7 @@ void rasterizer_text_begin(RasterizerDynamicScreenGeometryParams *parameters) {
         rasterizer_dx9_set_vertex_shader(vs);
         rasterizer_dx9_set_pixel_shader(NULL);
 
-        VertexShaderScreenprojConstants *vs_constants = rasterizer_text_vertex_shader_constants;
+        VertexShaderScreenprojConstants *vs_constants = rasterizer_bitmap_font_vertex_shader_constants;
         vs_constants->texture_scale.x = parameters->map_texture_scale[0].x;
         vs_constants->texture_scale.y = parameters->map_texture_scale[0].y;
         rasterizer_dx9_set_vertex_shader_constant_f(VSH_CONSTANTS_SCREENPROJ_OFFSET, vs_constants, VSH_CONSTANTS_SCREENPROJ_COUNT);
@@ -144,17 +145,17 @@ void rasterizer_text_begin(RasterizerDynamicScreenGeometryParams *parameters) {
     }
 }
 
-void rasterizer_text_end(void) {
+void rasterizer_bitmap_font_end_text_draw(void) {
     if(*rasterizer_window_is_being_rendered) {
         rasterizer_dx9_set_render_state(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
     }
     rasterizer_dx9_set_software_vertex_processing(rasterizer_dx9_device_supports_software_vertex_processing());
 }
 
-void rasterizer_draw_unicode_string(Rectangle2D *position, Rectangle2D *dest_rect, ColorARGBInt *color, uint32_t flags, const wchar_t *string) {
+void rasterizer_bitmap_font_draw_unicode_string(Rectangle2D *position, Rectangle2D *dest_rect, ColorARGBInt *color, uint32_t flags, const wchar_t *string) {
     RenderGlobals *render_globals = render_get_globals();
     RasterizerWindowRenderParameters *window_parameters = rasterizer_get_window_parameters();
-    BitmapData *bitmap = rasterizer_text_get_font_cache_bitmap();
+    BitmapData *bitmap = rasterizer_bitmap_font_get_cache_bitmap();
 
     ASSERT(render_globals != NULL);
     ASSERT(string != NULL);
@@ -204,15 +205,15 @@ void rasterizer_draw_unicode_string(Rectangle2D *position, Rectangle2D *dest_rec
     screen_geometry_parameters.map[0] = bitmap;
     screen_geometry_parameters.meter_parameters = NULL;
 
-    rasterizer_text_begin(&screen_geometry_parameters);
-    text_draw_unicode_string(rasterizer_text_draw_character_with_shadow, &final_position, color, &final_rect, flags, string);
-    rasterizer_text_end();
+    rasterizer_bitmap_font_begin_text_draw(&screen_geometry_parameters);
+    bitmap_font_draw_unicode_string(rasterizer_bitmap_font_draw_character_with_shadow, &final_position, color, &final_rect, flags, string);
+    rasterizer_bitmap_font_end_text_draw();
 }
 
-void rasterizer_draw_string(Rectangle2D *position, Rectangle2D *dest_rect, ColorARGBInt *color, uint32_t flags, const char *string) {
+void rasterizer_bitmap_font_draw_string(Rectangle2D *position, Rectangle2D *dest_rect, ColorARGBInt *color, uint32_t flags, const char *string) {
     RenderGlobals *render_globals = render_get_globals();
     RasterizerWindowRenderParameters *window_parameters = rasterizer_get_window_parameters();
-    BitmapData *bitmap = rasterizer_text_get_font_cache_bitmap();
+    BitmapData *bitmap = rasterizer_bitmap_font_get_cache_bitmap();
 
     ASSERT(render_globals != NULL);
     ASSERT(string != NULL);
@@ -261,12 +262,12 @@ void rasterizer_draw_string(Rectangle2D *position, Rectangle2D *dest_rect, Color
     screen_geometry_parameters.map[0] = bitmap;
     screen_geometry_parameters.meter_parameters = NULL;
 
-    rasterizer_text_begin(&screen_geometry_parameters);
-    text_draw_string(rasterizer_text_draw_character_with_shadow, &final_position, color, &final_rect, flags, string);
-    rasterizer_text_end();
+    rasterizer_bitmap_font_begin_text_draw(&screen_geometry_parameters);
+    bitmap_font_draw_string(rasterizer_bitmap_font_draw_character_with_shadow, &final_position, color, &final_rect, flags, string);
+    rasterizer_bitmap_font_end_text_draw();
 }
 
-void rasterizer_text_dispose_font_character(FontCacheCharacter *character_cache) {
+void rasterizer_bitmap_font_dispose_font_character(BitmapFontCacheCharacter *character_cache) {
     ASSERT(character_cache != NULL);
     if(character_cache->character != NULL) {
         character_cache->character->hardware_character_index = -1;
@@ -277,8 +278,8 @@ void rasterizer_text_dispose_font_character(FontCacheCharacter *character_cache)
     }
 }
 
-void rasterizer_text_cache_font_character(Font *font, FontCharacter *character) {
-    RasterizerFontCache *font_cache = rasterizer_text_get_font_cache();
+void rasterizer_bitmap_font_cache_font_character(Font *font, FontCharacter *character) {
+    BitmapFontCache *font_cache = rasterizer_bitmap_font_get_cache();
     
     ASSERT(font_cache);
     ASSERT(font_cache->initialized);
@@ -307,9 +308,9 @@ void rasterizer_text_cache_font_character(Font *font, FontCharacter *character) 
         font_cache->position.y = 0;
         font_cache->position.x = 0;
         font_cache->maximum_character_height = 0;
-        FontCacheCharacter *character_cache = &font_cache->characters[font_cache->read_index];
+        BitmapFontCacheCharacter *character_cache = &font_cache->characters[font_cache->read_index];
         while(font_cache->read_index != font_cache->write_index && character_cache->position.y > 0) {
-            rasterizer_text_dispose_font_character(character_cache);
+            rasterizer_bitmap_font_dispose_font_character(character_cache);
             font_cache->read_index = (font_cache->read_index + 1) % MAX_FONT_CACHE_CHARACTERS;
             character_cache = &font_cache->characters[font_cache->read_index];
         }
@@ -318,9 +319,9 @@ void rasterizer_text_cache_font_character(Font *font, FontCharacter *character) 
     if(font_cache->maximum_character_height <= bitmap_height) {
         uint16_t character_baseline_y = font_cache->position.y + font_cache->maximum_character_height;
         uint16_t character_bottom_y = font_cache->position.y + bitmap_height;
-        FontCacheCharacter *character_cache = &font_cache->characters[font_cache->read_index];
+        BitmapFontCacheCharacter *character_cache = &font_cache->characters[font_cache->read_index];
         while(font_cache->read_index != font_cache->write_index && character_cache->position.y >= character_baseline_y && character_cache->position.y < character_bottom_y) {
-            rasterizer_text_dispose_font_character(character_cache);
+            rasterizer_bitmap_font_dispose_font_character(character_cache);
             font_cache->read_index = (font_cache->read_index + 1) % MAX_FONT_CACHE_CHARACTERS;
             character_cache = &font_cache->characters[font_cache->read_index];
         }
@@ -328,11 +329,11 @@ void rasterizer_text_cache_font_character(Font *font, FontCharacter *character) 
     }
 
     if(font_cache->read_index == font_cache->write_index + 1) {
-        rasterizer_text_dispose_font_character(&font_cache->characters[font_cache->read_index]);
+        rasterizer_bitmap_font_dispose_font_character(&font_cache->characters[font_cache->read_index]);
         font_cache->read_index = (font_cache->read_index + 1) % MAX_FONT_CACHE_CHARACTERS;
     }
     
-    FontCacheCharacter *character_cache = &font_cache->characters[font_cache->write_index];
+    BitmapFontCacheCharacter *character_cache = &font_cache->characters[font_cache->write_index];
     character_cache->character = character;
     character_cache->position.x = font_cache->position.x;
     character_cache->position.y = font_cache->position.y;

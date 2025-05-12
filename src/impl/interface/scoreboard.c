@@ -13,9 +13,8 @@
 #include "../multiplayer/multiplayer_game_text.h"
 #include "../player/player.h"
 #include "../text/text.h"
-#include "../text/font.h"
+#include "../font/font.h"
 #include "../render/render.h"
-#include "../rasterizer/rasterizer_text.h"
 #include "scoreboard.h"
 
 void scoreboard_draw_row(wchar_t *text, bool highlight, ColorARGB *color, int16_t row_index) {
@@ -62,7 +61,7 @@ void scoreboard_draw_row(wchar_t *text, bool highlight, ColorARGB *color, int16_
     }
 
     text_set_drawing_parameters(-1, 0, 0, font, &text_color);
-    rasterizer_draw_unicode_string(&rect, NULL, NULL, 0, text);
+    text_draw_unicode_string(&rect, NULL, NULL, 0, text);
     text_reset_tab_stops();
 }
 
@@ -438,7 +437,7 @@ void scoreboard_draw_server_info(float fade) {
     rect.bottom = screen_height - 10;
     rect.top = rect.bottom - line_height * 2;
     
-    rasterizer_draw_unicode_string(&rect, NULL, NULL, 0, network_game->server_name);
+    text_draw_unicode_string(&rect, NULL, NULL, 0, network_game->server_name);
 
     union {
         uint32_t value;
@@ -452,7 +451,7 @@ void scoreboard_draw_server_info(float fade) {
     swprintf_s(server_address_text, 256, L"%s%d.%d.%d.%d:%d", prefix, address.ipv4.class_d, address.ipv4.class_c, address.ipv4.class_b, address.ipv4.class_a, server_port);
     
     math_rectangle_2d_translate(&rect, 0, line_height);
-    rasterizer_draw_unicode_string(&rect, NULL, NULL, 0, server_address_text);
+    text_draw_unicode_string(&rect, NULL, NULL, 0, server_address_text);
 }
 
 void scoreboard_render(PlayerHandle player_handle, float fade) {

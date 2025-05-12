@@ -10,7 +10,6 @@
 #include "../math/color.h"
 #include "../text/text.h"
 #include "../text/unicode_string_list.h"
-#include "../rasterizer/rasterizer_text.h"
 #include "../render/render.h"
 #include "loading_screen.h"
 
@@ -148,7 +147,7 @@ void loading_screen_render(void) {
     switch(*loading_screen_state) {
         case LOADING_SCREEN_STATE_SERVER: {
             const wchar_t *text = unicode_string_list_get_string(strings, 1);
-            rasterizer_draw_unicode_string(&rect, NULL, NULL, 0, text);
+            text_draw_unicode_string(&rect, NULL, NULL, 0, text);
             break;
         }
 
@@ -157,7 +156,7 @@ void loading_screen_render(void) {
             const wchar_t *format = unicode_string_list_get_string(strings, 2);
             wchar_t text[512];
             swprintf_s(text, 512, format, loading_screen_server_address);
-            rasterizer_draw_unicode_string(&rect, NULL, NULL, 0, text);
+            text_draw_unicode_string(&rect, NULL, NULL, 0, text);
             break;
         }
 
@@ -165,7 +164,7 @@ void loading_screen_render(void) {
             const wchar_t *format = unicode_string_list_get_string(strings, 0);
             wchar_t text[512];
             swprintf_s(text, 512, format, loading_screen_server_address);
-            rasterizer_draw_unicode_string(&rect, NULL, NULL, 0, text);
+            text_draw_unicode_string(&rect, NULL, NULL, 0, text);
             break;
         }
 
@@ -173,13 +172,13 @@ void loading_screen_render(void) {
             const wchar_t *format = unicode_string_list_get_string(strings, 3);
             wchar_t text[512];
             swprintf_s(text, 512, format, loading_screen_server_address, *server_connection_attempts);
-            rasterizer_draw_unicode_string(&rect, NULL, NULL, 0, text);
+            text_draw_unicode_string(&rect, NULL, NULL, 0, text);
             break;
         }
 
         case LOADING_SCREEN_STATE_CONNECTED: {
             const wchar_t *text = unicode_string_list_get_string(strings, 4);
-            rasterizer_draw_unicode_string(&rect, NULL, NULL, 0, text);
+            text_draw_unicode_string(&rect, NULL, NULL, 0, text);
             break;
         }
 
@@ -191,7 +190,7 @@ void loading_screen_render(void) {
             const wchar_t *format = unicode_string_list_get_string(strings, text_index);
             wchar_t text[512];
             swprintf_s(text, 512, format, loading_screen_map_name);
-            rasterizer_draw_unicode_string(&rect, NULL, NULL, 0, text);
+            text_draw_unicode_string(&rect, NULL, NULL, 0, text);
             break;
         }
 
@@ -199,7 +198,7 @@ void loading_screen_render(void) {
             const wchar_t *format = unicode_string_list_get_string(strings, 8);
             wchar_t text[512];
             swprintf_s(text, 512, format, loading_screen_map_name);
-            rasterizer_draw_unicode_string(&rect, NULL, NULL, 0, text);
+            text_draw_unicode_string(&rect, NULL, NULL, 0, text);
             break;
         }
     }
@@ -215,14 +214,14 @@ void loading_screen_render(void) {
             rect.top = 430;
             rect.bottom = 450;
             const wchar_t *text = unicode_string_list_get_string(strings, 7);
-            rasterizer_draw_unicode_string(&rect, NULL, NULL, 0, text);
+            text_draw_unicode_string(&rect, NULL, NULL, 0, text);
         }
 
         case LOADING_SCREEN_STATE_LOADING_MP_MAP: {
             rect.top = 460;
             rect.bottom = 480;
             const wchar_t *text = unicode_string_list_get_string(strings, 9);
-            rasterizer_draw_unicode_string(&rect, NULL, NULL, 0, text);
+            text_draw_unicode_string(&rect, NULL, NULL, 0, text);
         }
     }
 }

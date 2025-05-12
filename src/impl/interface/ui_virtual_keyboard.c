@@ -1,7 +1,6 @@
 #include "../math/color.h"
 #include "../bitmap/bitmap.h"
 #include "../render/render.h"
-#include "../rasterizer/rasterizer_text.h"
 #include "../text/text.h"
 #include "../text/unicode_string_list.h"
 #include "ui_widget.h"
@@ -76,7 +75,7 @@ void ui_virtual_keyboard_render(void) {
         bounds.top = 78;
         bounds.right = render_get_screen_width();
         bounds.bottom = 110;
-        rasterizer_draw_unicode_string(&bounds, NULL, NULL, 0, string);
+        text_draw_unicode_string(&bounds, NULL, NULL, 0, string);
 
         UnicodeStringList *string_list = tag_get_data(TAG_GROUP_UNICODE_STRING_LIST, special_key_labels_strings_tag);
         if(string_list->strings.count >= 15) {
@@ -95,7 +94,7 @@ void ui_virtual_keyboard_render(void) {
     bounds.top = 414;
     bounds.right = 450;
     bounds.bottom = 630;
-    rasterizer_draw_unicode_string(&bounds, NULL, NULL, 0, label);
+    text_draw_unicode_string(&bounds, NULL, NULL, 0, label);
 
     bounds.top = 118;
     bounds.left = 0;

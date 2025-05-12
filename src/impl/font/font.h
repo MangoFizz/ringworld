@@ -9,27 +9,42 @@ extern "C" {
 #include "../tag/definitions/font.h"
 
 /**
- * This function retrieves the default small font tag handle.
+ * Retrieve the tag handle of a font by its file path.
+ * This function first attempts to find the font in the TAG_GROUP_FONT group,
+ * and if not found, it tries the TAG_GROUP_VECTOR_FONT group.
+ * @param font_path The file path of the font.
+ * @return The tag handle of the font.
+ */
+static inline TagHandle font_find_by_path(const char *font_path) {
+    TagHandle font_tag = lookup_tag(font_path, TAG_GROUP_FONT);
+    if (HANDLE_IS_NULL(font_tag)) {
+        font_tag = lookup_tag(font_path, TAG_GROUP_VECTOR_FONT);
+    }
+    return font_tag;
+}
+
+/**
+ * Retrieve the default small font tag handle.
  * @return The tag handle of the default small font.
  */
 static inline TagHandle font_get_default_small(void) {
-    return lookup_tag("ui\\small_ui", TAG_GROUP_FONT);
+    return font_find_by_path("ui\\small_ui");
 }
 
 /**
- * This function retrieves the default large font tag handle.
+ * Retrieve the default large font tag handle.
  * @return The tag handle of the default large font.
  */
 static inline TagHandle font_get_default_large(void) {
-    return lookup_tag("ui\\large_ui", TAG_GROUP_FONT);
+    return font_find_by_path("ui\\large_ui");
 }
 
 /**
- * This function retrieves the default terminal font tag handle.
+ * Retrieve the default terminal font tag handle.
  * @return The tag handle of the default terminal font.
  */
 static inline TagHandle font_get_default_terminal(void) {
-    return lookup_tag("ui\\ticker", TAG_GROUP_FONT);
+    return font_find_by_path("ui\\ticker");
 }
 
 /**

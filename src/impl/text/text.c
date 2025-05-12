@@ -1,3 +1,5 @@
+#include "../font/bitmap_font.h"
+#include "../rasterizer/rasterizer_bitmap_font.h"
 #include "text.h"
 
 extern TextDrawGlobals *text_drawing_globals;
@@ -32,4 +34,49 @@ void text_reset_tab_stops(void) {
 
 void text_set_shadow_color(ColorARGBInt color) {
     *text_shadow_color = color;
+}
+
+void text_draw_unicode_string(Rectangle2D *position, Rectangle2D *dest_rect, ColorARGBInt *color, uint32_t flags, const wchar_t *string) {
+    TextDrawGlobals *text_globals = text_get_drawing_globals();
+    if(HANDLE_IS_NULL(text_globals->font)) {
+        return;
+    }
+
+    TagEntry *entry = tag_get_entry(text_globals->font);
+    if(entry->primary_group == TAG_GROUP_FONT) {
+        rasterizer_bitmap_font_draw_unicode_string(position, dest_rect, color, flags, string);
+    }
+    else {
+        
+    }
+}
+
+void text_draw_string(Rectangle2D *position, Rectangle2D *dest_rect, ColorARGBInt *color, uint32_t flags, const char *string) {
+    TextDrawGlobals *text_globals = text_get_drawing_globals();
+    if(HANDLE_IS_NULL(text_globals->font)) {
+        return;
+    }
+
+    TagEntry *entry = tag_get_entry(text_globals->font);
+    if(entry->primary_group == TAG_GROUP_FONT) {
+        rasterizer_bitmap_font_draw_string(position, dest_rect, color, flags, string);
+    }
+    else {
+        
+    }
+}
+
+void text_calculate_unicode_string_draw_bounds(const wchar_t *string, Rectangle2D *position, Rectangle2D *first_character_position, Rectangle2D *text_bounds) {
+    TextDrawGlobals *text_globals = text_get_drawing_globals();
+    if(HANDLE_IS_NULL(text_globals->font)) {
+        return;
+    }
+
+    TagEntry *entry = tag_get_entry(text_globals->font);
+    if(entry->primary_group == TAG_GROUP_FONT) {
+        bitmap_font_calculate_draw_bounds(string, position, first_character_position, text_bounds);
+    }
+    else {
+        
+    }
 }

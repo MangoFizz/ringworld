@@ -14,7 +14,6 @@
 #include "../text/unicode_string_list.h"
 #include "../exception/exception.h"
 #include "../rasterizer/rasterizer_screen_geometry.h"
-#include "../rasterizer/rasterizer_text.h"
 #include "../render/render.h"
 #include "ui_cursor.h"
 #include "ui_virtual_keyboard.h"
@@ -457,7 +456,7 @@ void ui_widget_render_root_widget(Widget *widget) {
         ColorARGBInt color_mask = color_encode_a8r8g8b8(&color);
         TagHandle font_tag = lookup_tag("ui\\small_ui", TAG_GROUP_FONT);
         text_set_drawing_parameters(-1, 0, 0, font_tag, &color);
-        rasterizer_draw_string(&bounds, &bounds, &color_mask, 0, path);
+        text_draw_string(&bounds, &bounds, &color_mask, 0, path);
     }
 }
 

@@ -94,25 +94,29 @@
 
     "rasterizer_screen_geometry_draw": {"address": "0x5200a0", "replace": true, "arguments": ["eax", "0"]},
     "rasterizer_screen_geometry_draw_quad": {"address": "0x44a0f0", "replace": true, "arguments": ["ecx", "eax"]},
-    
-    "rasterizer_text_cache_initialize": {"address": "0x5180c0", "replace": true, "use_return_value": true},
-    "rasterizer_text_begin": {"address": "0x534ae0", "replace": true, "arguments": ["edi"]},
-    "rasterizer_text_end": {"address": "0x534df0", "replace": true},
-    "rasterizer_text_draw_character_with_shadow": {"address": "0x518580", "replace": false, "arguments": ["0", "4", "8", "12", "16", "20", "24", "28", "32", "36"]},
-    "rasterizer_draw_unicode_string": {"address": "0x518350", "replace": true, "arguments": ["ecx", "eax", "0", "4", "8"]},
-    "rasterizer_draw_string": {"address": "0x518150", "replace": true, "arguments": ["ecx", "eax", "0", "4", "8"]},
-    "rasterizer_text_set_up_vertex_shader_constants": {"address": "0x534a10", "replace": true},
-    "rasterizer_text_cache_font_character": {"address": "0x518770", "replace": true, "arguments": ["0", "4"]},
-    "rasterizer_draw_unicode_string_and_hack_in_icons": {"address": "0x49dd70", "replace": false, "arguments": ["0", "4", "edx"]},
 
     "rasterizer_shader_transparent_water_draw": {"address": "0x539310", "replace": true, "arguments": ["0"]},
     "rasterizer_shader_transparent_water_render_bumpmap": {"address": "0x538380", "replace": true, "arguments": ["0"]},
-        
-    "text_draw_unicode_string": {"address": "0x559bf0", "replace": "stub", "use_return_value": true, "arguments": ["0", "4", "8", "12", "16", "20"]},
-    "text_draw_string": {"address": "0x559870", "replace": "stub", "use_return_value": true, "arguments": ["0", "4", "8", "12", "16", "20"]},
+    
+    "rasterizer_bitmap_font_cache_initialize": {"address": "0x5180c0", "replace": true, "use_return_value": true},
+    "rasterizer_bitmap_font_begin_text_draw": {"address": "0x534ae0", "replace": true, "arguments": ["edi"]},
+    "rasterizer_bitmap_font_end_text_draw": {"address": "0x534df0", "replace": true},
+    "rasterizer_bitmap_font_draw_character_with_shadow": {"address": "0x518580", "replace": false, "arguments": ["0", "4", "8", "12", "16", "20", "24", "28", "32", "36"]},
+    "rasterizer_bitmap_font_set_up_vertex_shader_constants": {"address": "0x534a10", "replace": true},
+    "rasterizer_bitmap_font_cache_font_character": {"address": "0x518770", "replace": true, "arguments": ["0", "4"]},
+    "rasterizer_bitmap_font_draw_unicode_string_and_hack_in_icons": {"address": "0x49dd70", "replace": false, "arguments": ["0", "4", "edx"]},
+    
+    "bitmap_font_draw_unicode_string": {"address": "0x559bf0", "replace": false, "use_return_value": true, "arguments": ["0", "4", "8", "12", "16", "20"]},
+    "bitmap_font_draw_string": {"address": "0x559870", "replace": false, "use_return_value": true, "arguments": ["0", "4", "8", "12", "16", "20"]},
+    "bitmap_font_calculate_draw_bounds": {"address": "0x5596a0", "replace": false, "arguments": ["0", "4", "8", "12", "16", "20", "24", "28", "32", "36"]},
+    
     "text_set_drawing_parameters": {"address": "0x559820", "replace": true, "arguments": ["0", "4", "8", "ecx", "eax"]},
-    "unicode_string_list_get_string": {"address": "0x55ad90", "replace": true, "use_return_value": true, "arguments": ["ecx", "edx"]},
     "text_draw_initialize_for_new_map": {"address": "0x5595f0", "replace": false},
+    "text_draw_string": {"address": "0x518150", "replace": true, "arguments": ["ecx", "eax", "0", "4", "8"]},
+    "text_draw_unicode_string": {"address": "0x518350", "replace": true, "arguments": ["ecx", "eax", "0", "4", "8"]},
+    "text_calculate_unicode_string_draw_bounds": {"address": "0x559710", "replace": true, "arguments": ["0", "ebx", "esi", "edi"]},
+    
+    "unicode_string_list_get_string": {"address": "0x55ad90", "replace": true, "use_return_value": true, "arguments": ["ecx", "edx"]},
 
     "saved_games_read_player_profile": {"address": "0x53dad0", "replace": false, "use_return_value": true, "arguments": ["0", "ecx"]},
     "saved_games_write_player_profile": {"address": "0x53dcb0", "replace": false, "arguments": ["0", "4"]},

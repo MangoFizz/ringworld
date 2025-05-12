@@ -4,8 +4,8 @@
 #include "../game/game_time.h"
 #include "../math/math.h"
 #include "../math/color.h"
-#include "../rasterizer/rasterizer_text.h"
 #include "../render/render.h"
+#include "../rasterizer/rasterizer_text.h"
 #include "../scenario/scenario.h"
 #include "../tag/tag.h"
 #include "../text/text.h"
@@ -137,7 +137,7 @@ void cutscene_cinematic_render(void) {
                     text_set_shadow_color(color_encode_a8r8g8b8(&text_shadow_color));
 
                     const wchar_t *title_text = unicode_string_list_get_string(ingame_help_text_tag, title->string_index);
-                    rasterizer_draw_unicode_string(&title_pos, &title_pos, 0, 0, title_text);
+                    text_draw_unicode_string(&title_pos, &title_pos, 0, 0, title_text);
                     text_set_shadow_color(0);
 
                     uint16_t time_elapsed = 0;

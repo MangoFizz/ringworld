@@ -17,6 +17,7 @@ void table_initialize(GenericTable *table, const char *name, uint16_t maximum_co
     table->first_element = (void *)(table) + sizeof(*table);
     table->valid = true;
     table->identifier_zero_invalid = true;
+    table->next_free_element_index = 0;
     INIT_TABLE_NEXT_ID(table);
 }
 

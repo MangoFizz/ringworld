@@ -30,28 +30,6 @@ TextDrawGlobals *text_get_drawing_globals(void);
 void text_draw_initialize_for_new_map(void);
 
 /**
- * This function draws a unicode string on the screen.
- * @param draw_character A function pointer to the character drawing function.
- * @param position A pointer to the Rectangle2D structure defining the screen offset.
- * @param color The color of the text in ARGB format.
- * @param draw_rect A pointer to the Rectangle2D structure defining the screen bounds.
- * @param flags Flags to control the text drawing behavior.
- * @param string The Unicode string to be drawn.
- */
-bool text_draw_unicode_string(void (*draw_character)(), Rectangle2D *position, ColorARGBInt *color, Rectangle2D *draw_rect, uint32_t flags, const wchar_t *string);
-
-/**
- * This function draws a string on the screen.
- * @param draw_character A function pointer to the character drawing function.
- * @param position A pointer to the Rectangle2D structure defining the screen offset.
- * @param color The color of the text in ARGB format.
- * @param draw_rect A pointer to the Rectangle2D structure defining the screen bounds.
- * @param flags Flags to control the text drawing behavior.
- * @param string The string to be drawn.
- */
-bool text_draw_string(void (*draw_character)(), Rectangle2D *position, ColorARGBInt *color, Rectangle2D *draw_rect, uint32_t flags, const char *string);
-
-/**
  * This function sets the drawing parameters for text.
  * @param style The style of the text.
  * @param justification The justification of the text.
@@ -78,6 +56,35 @@ void text_reset_tab_stops(void);
  * @param color The color of the shadow in ARGB format.
  */
 void text_set_shadow_color(ColorARGBInt color);
+
+/**
+ * Draw a unicode string with the given parameters.
+ * @param position The position to draw the string.
+ * @param dest_rect The destination rectangle.
+ * @param color The color of the text.
+ * @param flags Additional flags for drawing.
+ * @param string The Unicode string to draw.
+ */
+void text_draw_unicode_string(Rectangle2D *position, Rectangle2D *dest_rect, ColorARGBInt *color, uint32_t flags, const wchar_t *string);
+
+/**
+ * Draw a string with the given parameters.
+ * @param position The position to draw the string.
+ * @param dest_rect The destination rectangle.
+ * @param color The color of the text.
+ * @param flags Additional flags for drawing.
+ * @param string The string to draw.
+ */
+void text_draw_string(Rectangle2D *position, Rectangle2D *dest_rect, ColorARGBInt *color, uint32_t flags, const char *string);
+
+/**
+ * Calculate the bounds of a Unicode string to be drawn.
+ * @param string The Unicode string to calculate bounds for.
+ * @param position A pointer to the Rectangle2D structure defining the screen offset.
+ * @param first_character_position A pointer to the Rectangle2D structure to store the position of the first character.
+ * @param text_bounds A pointer to the Rectangle2D structure to store the overall bounds of the text.
+ */
+void text_calculate_unicode_string_draw_bounds(const wchar_t *string, Rectangle2D *position, Rectangle2D *first_character_position, Rectangle2D *text_bounds);
 
 #ifdef __cplusplus
 }

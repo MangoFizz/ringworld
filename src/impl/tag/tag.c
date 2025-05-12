@@ -11,6 +11,15 @@ TagDataHeader *tag_get_data_header(void) {
     return *tag_data_header_loaded;
 }
 
+TagEntry *tag_get_entry(TagHandle tag_handle) {
+    ASSERT(tag_handle.index != NULL_HANDLE.index);
+    TagEntry *tag = &(*tag_data_header_loaded)->tags[tag_handle.index];
+    if(tag_handle.id != NULL_HANDLE.value && tag->handle.value != tag_handle.value) {
+        crashf("tag_get_entry: tag handle mismatch: %s", tag->path);
+    }
+    return tag;
+}
+
 TagHandle lookup_tag(const char *path, TagGroup group) {
     if(!*map_is_loaded) {
         return NULL_HANDLE;
@@ -21,7 +30,7 @@ TagHandle lookup_tag(const char *path, TagGroup group) {
 
     TagEntry *tag = header->tags;
     for(uint32_t i = 0; i < tag_count; i++, tag++) {
-        if(tag->primary_group == group && strcmp(path, tag->path) == 0) {
+        if((tag->primary_group == group) && strcmp(path, tag->path) == 0) {
             return tag->handle;
         }
     }

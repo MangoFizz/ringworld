@@ -208,6 +208,23 @@ typedef bool (*table_iterator_callback)(const TableIterator *iterator, void *ite
  */
 void table_iterate_simple(void *table, table_iterator_callback callback, void *user_data);
 
+/**
+ * Iterate a table from start to the end, stop if the condition is met.
+ * @param table     table to iterate
+ * @param entry_pointer pointer to the entry to fill
+ * @param condition condition to check
+ */
+#define TABLE_FIND_ELEMENT(table, entry_pointer, condition) \
+    do { \
+        TableIterator it; \
+        table_init_iterator(&it, table); \
+        while(entry_pointer = table_iterate(&it), entry_pointer != NULL) { \
+            if(condition) { \
+                break; \
+            } \
+        } \
+    } while(0)
+
 #ifdef __cplusplus
 }
 #endif

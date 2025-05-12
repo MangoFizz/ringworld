@@ -94,7 +94,11 @@ typedef enum TagGroup {
     TAG_GROUP_VEHICLE = 0x76656869,
     TAG_GROUP_WEAPON = 0x77656170,
     TAG_GROUP_WIND = 0x77696E64,
-    TAG_GROUP_WEAPON_HUD_INTERFACE = 0x77706869
+    TAG_GROUP_WEAPON_HUD_INTERFACE = 0x77706869,
+#ifdef RINGWORLD_ENABLE_ENHANCEMENTS
+    TAG_GROUP_VECTOR_FONT = 0x76666E74,
+    TAG_GROUP_VECTOR_FONT_DATA = 0x76666E64,
+#endif
 } TagGroup;
 
 typedef union TableResourceHandle TagHandle;
@@ -156,6 +160,13 @@ _Static_assert(sizeof(TagBlockDefinition) == 0x14);
  * @return pointer to tag data header
  */
 TagDataHeader *tag_get_data_header(void);
+
+/**
+ * Get the tag entry for a tag handle.
+ * @param tag_handle tag handle
+ * @return pointer to tag entry
+ */
+TagEntry *tag_get_entry(TagHandle tag_handle);
 
 /**
  * Lookup the tag.

@@ -77,6 +77,7 @@ set(RINGWORLD_SOURCES
     src/impl/crypto/xtea.c
     src/impl/cutscene/cutscene.c
     src/impl/exception/exception.c
+    src/impl/font/bitmap_font.c
     src/impl/font/vector_font_file.c
     src/impl/font/vector_font.c
     src/impl/game/game_engine.c
@@ -116,6 +117,7 @@ set(RINGWORLD_SOURCES
     src/impl/rasterizer/rasterizer_dx9_vertex_shader.c
     src/impl/rasterizer/rasterizer_dx9_vertex.c
     src/impl/rasterizer/rasterizer_dx9.c
+    src/impl/rasterizer/rasterizer_font.c
     src/impl/rasterizer/rasterizer_geometry_group.c
     src/impl/rasterizer/rasterizer_motion_sensor.c
     src/impl/rasterizer/rasterizer_screen_effect.c
@@ -157,7 +159,7 @@ else()
     target_compile_definitions(ringworld PRIVATE -D_WIN32_WINNT=0x0601)
 endif()
 
-target_link_libraries(ringworld d3dcompiler)
+target_link_libraries(ringworld d3dcompiler d3dx9)
 
 if(RINGWORLD_BUILD_TOOL)
     if(RINGWORLD_TOOL_ENABLE_DEBUG_SHADERS)

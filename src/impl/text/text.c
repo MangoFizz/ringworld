@@ -36,7 +36,7 @@ void text_set_shadow_color(ColorARGBInt color) {
     *text_shadow_color = color;
 }
 
-void text_draw_unicode_string(Rectangle2D *position, Rectangle2D *dest_rect, ColorARGBInt *color, uint32_t flags, const wchar_t *string) {
+void text_draw_unicode_string(const Rectangle2D *bounds, const Rectangle2D *text_rect, VectorXYInt *offset_out, uint32_t flags, const wchar_t *string) {
     TextDrawGlobals *text_globals = text_get_drawing_globals();
     if(HANDLE_IS_NULL(text_globals->font)) {
         return;
@@ -44,14 +44,14 @@ void text_draw_unicode_string(Rectangle2D *position, Rectangle2D *dest_rect, Col
 
     TagEntry *entry = tag_get_entry(text_globals->font);
     if(entry->primary_group == TAG_GROUP_FONT) {
-        rasterizer_bitmap_font_draw_unicode_string(position, dest_rect, color, flags, string);
+        rasterizer_bitmap_font_draw_unicode_string(bounds, text_rect, offset_out, flags, string);
     }
     else {
         
     }
 }
 
-void text_draw_string(Rectangle2D *position, Rectangle2D *dest_rect, ColorARGBInt *color, uint32_t flags, const char *string) {
+void text_draw_string(const Rectangle2D *bounds, const Rectangle2D *text_rect, VectorXYInt *offset_out, uint32_t flags, const char *string) {
     TextDrawGlobals *text_globals = text_get_drawing_globals();
     if(HANDLE_IS_NULL(text_globals->font)) {
         return;
@@ -59,14 +59,14 @@ void text_draw_string(Rectangle2D *position, Rectangle2D *dest_rect, ColorARGBIn
 
     TagEntry *entry = tag_get_entry(text_globals->font);
     if(entry->primary_group == TAG_GROUP_FONT) {
-        rasterizer_bitmap_font_draw_string(position, dest_rect, color, flags, string);
+        rasterizer_bitmap_font_draw_string(bounds, text_rect, offset_out, flags, string);
     }
     else {
         
     }
 }
 
-void text_calculate_unicode_string_draw_bounds(const wchar_t *string, Rectangle2D *position, Rectangle2D *first_character_position, Rectangle2D *text_bounds) {
+void text_calculate_unicode_string_draw_bounds(const wchar_t *string, const Rectangle2D *position, Rectangle2D *first_character_position, Rectangle2D *text_bounds) {
     TextDrawGlobals *text_globals = text_get_drawing_globals();
     if(HANDLE_IS_NULL(text_globals->font)) {
         return;
@@ -74,7 +74,7 @@ void text_calculate_unicode_string_draw_bounds(const wchar_t *string, Rectangle2
 
     TagEntry *entry = tag_get_entry(text_globals->font);
     if(entry->primary_group == TAG_GROUP_FONT) {
-        bitmap_font_calculate_draw_bounds(string, position, first_character_position, text_bounds);
+        bitmap_font_calculate_unicode_string_draw_bounds(string, position, first_character_position, text_bounds);
     }
     else {
         

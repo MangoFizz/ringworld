@@ -2,6 +2,7 @@
 #include <windows.h>
 #include "../bitmap/bitmap.h"
 #include "../exception/exception.h"
+#include "../font/font.h"
 #include "../main/main_globals.h"
 #include "../time/time.h"
 #include "../console/console.h"
@@ -131,7 +132,7 @@ void loading_screen_render(void) {
 
     loading_screen_draw_background(alpha);
 
-    TagHandle font_tag = lookup_tag("ui\\large_ui", TAG_GROUP_FONT);
+    TagHandle font_tag = font_get_default_large();
     TagHandle strings = lookup_tag("ui\\shell\\strings\\loading", TAG_GROUP_UNICODE_STRING_LIST);
     ASSERT_OR_RETURN(!HANDLE_IS_NULL(font_tag) && !HANDLE_IS_NULL(strings));
 

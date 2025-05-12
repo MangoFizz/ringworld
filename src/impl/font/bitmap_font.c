@@ -1,3 +1,4 @@
+#include "../exception/exception.h"
 #include "../font/bitmap_font.h"
 #include "../tag/tag.h"
 #include "../tag/definitions/font.h"
@@ -7,11 +8,11 @@
 extern Rectangle2D *text_draw_bounds;
 extern Font **text_draw_font;
 
-void bitmap_font_calculate_unicode_string_draw_bounds(const wchar_t *string, Rectangle2D *position, Rectangle2D *first_character_position, Rectangle2D *text_bounds) {
-    text_draw_bounds->top = INT16_MIN;
-    text_draw_bounds->left = INT16_MIN;
-    text_draw_bounds->bottom = INT16_MAX;
-    text_draw_bounds->right = INT16_MAX;
+void bitmap_font_calculate_unicode_string_draw_bounds(const wchar_t *string, const Rectangle2D *position, Rectangle2D *first_character_position, Rectangle2D *text_bounds) {
+    text_draw_bounds->top = INT16_MAX;
+    text_draw_bounds->left = INT16_MAX;
+    text_draw_bounds->bottom = INT16_MIN;
+    text_draw_bounds->right = INT16_MIN;
 
     TextDrawGlobals *globals = text_get_drawing_globals();
     TagHandle font_tag = globals->font;
@@ -35,10 +36,12 @@ void bitmap_font_calculate_unicode_string_draw_bounds(const wchar_t *string, Rec
             font_tag = globals->font;
         }
     }
+    ASSERT(!HANDLE_IS_NULL(font_tag));
+    font_data = tag_get_data(TAG_GROUP_FONT, font_tag);
     *text_draw_font = font_data;
 
-    VectorXYInt offset; // Maybe it's a Vector2DInt instead of Rectangle2D
-    bitmap_font_draw_unicode_string(bitmap_font_calculate_draw_bounds, position, NULL, (Rectangle2D *)&offset, 0, string); // @todo Check dest_rect parameter
+    VectorXYInt offset; 
+    bitmap_font_draw_unicode_string(bitmap_font_calculate_draw_bounds, position, &offset, NULL, 0, string); // @todo Check dest_rect parameter
 
     first_character_position->left = offset.x;
     first_character_position->right = offset.x + 1;

@@ -33,6 +33,11 @@ typedef struct BitmapFontCache {
 _Static_assert(sizeof(BitmapFontCache) == 0x10 + MAX_FONT_CACHE_CHARACTERS * sizeof(BitmapFontCacheCharacter));
 
 /**
+ * Initialize the bitmap font cache.
+ */
+bool rasterizer_bitmap_font_cache_initialize(void);
+
+/**
  * Get the font cache.
  */
 BitmapFontCache *rasterizer_bitmap_font_get_cache(void);
@@ -60,24 +65,24 @@ void rasterizer_bitmap_font_end_text_draw(void);
 void rasterizer_bitmap_font_draw_character_with_shadow();
 
 /**
- * Draw a unicode string with the given parameters.
- * @param position The position to draw the string.
- * @param dest_rect The destination rectangle.
- * @param color The color of the text.
- * @param flags Additional flags for drawing.
- * @param string The Unicode string to draw.
+ * Draw a Unicode string within the specified bounds and text rectangle.
+ * @param bounds The bounding rectangle where the string will be drawn.
+ * @param text_rect The rectangle defining the text area.
+ * @param offset_out Pointer to store the output offset after drawing the string.
+ * @param flags Flags specifying additional drawing options (e.g., style).
+ * @param string The Unicode string to be drawn.
  */
-void rasterizer_bitmap_font_draw_unicode_string(Rectangle2D *position, Rectangle2D *dest_rect, ColorARGBInt *color, uint32_t flags, const wchar_t *string);
+void rasterizer_bitmap_font_draw_unicode_string(const Rectangle2D *bounds, const Rectangle2D *text_rect, VectorXYInt *offset_out, uint32_t flags, const wchar_t *string);
 
 /**
- * Draw a string with the given parameters.
- * @param position The position to draw the string.
- * @param dest_rect The destination rectangle.
- * @param color The color of the text.
- * @param flags Additional flags for drawing.
- * @param string The string to draw.
+ * Draw an ASCII string within the specified bounds and text rectangle.
+ * @param bounds The bounding rectangle where the string will be drawn.
+ * @param text_rect The rectangle defining the text area.
+ * @param offset_out Pointer to store the output offset after drawing the string.
+ * @param flags Flags specifying additional drawing options (e.g., style).
+ * @param string The ASCII string to be drawn.
  */
-void rasterizer_bitmap_font_draw_string(Rectangle2D *position, Rectangle2D *dest_rect, ColorARGBInt *color, uint32_t flags, const char *string);
+void rasterizer_bitmap_font_draw_string(const Rectangle2D *bounds, const Rectangle2D *text_rect, VectorXYInt *offset_out, uint32_t flags, const char *string);
 
 /**
  * Draw a unicode string with the given parameters and a drop shadow.

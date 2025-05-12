@@ -7,6 +7,7 @@ extern "C" {
 
 #include "../tag/tag.h"
 #include "../tag/definitions/font.h"
+#include "../tag/definitions/vector_font.h"
 
 /**
  * Retrieve the tag handle of a font by its file path.
@@ -17,7 +18,7 @@ extern "C" {
  */
 static inline TagHandle font_find_by_path(const char *font_path) {
     TagHandle font_tag = lookup_tag(font_path, TAG_GROUP_FONT);
-    if (HANDLE_IS_NULL(font_tag)) {
+    if(HANDLE_IS_NULL(font_tag)) {
         font_tag = lookup_tag(font_path, TAG_GROUP_VECTOR_FONT);
     }
     return font_tag;
@@ -53,8 +54,15 @@ static inline TagHandle font_get_default_terminal(void) {
  * @return The height of the font characters.
  */
 static inline uint16_t font_get_height(TagHandle font_tag_handle) {
-    Font *font = tag_get_data(TAG_GROUP_FONT, font_tag_handle);
-    return font->ascending_height + font->descending_height;
+    TagEntry *tag_entry = tag_get_entry(font_tag_handle);
+    if(tag_entry->primary_group == TAG_GROUP_FONT) {
+        Font *font = tag_get_data(TAG_GROUP_FONT, font_tag_handle);
+        return font->ascending_height + font->descending_height;
+    }
+    else {
+        VectorFont *font = tag_get_data(TAG_GROUP_VECTOR_FONT, font_tag_handle);
+        return font->font_size;
+    }
 }
 
 #ifdef __cplusplus

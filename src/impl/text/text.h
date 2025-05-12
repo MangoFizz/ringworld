@@ -58,24 +58,24 @@ void text_reset_tab_stops(void);
 void text_set_shadow_color(ColorARGBInt color);
 
 /**
- * Draw a unicode string with the given parameters.
- * @param position The position to draw the string.
- * @param dest_rect The destination rectangle.
- * @param color The color of the text.
- * @param flags Additional flags for drawing.
- * @param string The Unicode string to draw.
+ * Draw a Unicode string within the specified bounds and text rectangle.
+ * @param bounds The bounding rectangle where the string will be drawn.
+ * @param text_rect The rectangle defining the text area.
+ * @param offset_out Pointer to store the output offset after drawing the string.
+ * @param flags Flags specifying additional drawing options (e.g., style).
+ * @param string The Unicode string to be drawn.
  */
-void text_draw_unicode_string(Rectangle2D *position, Rectangle2D *dest_rect, ColorARGBInt *color, uint32_t flags, const wchar_t *string);
+void text_draw_unicode_string(const Rectangle2D *bounds, const Rectangle2D *text_rect, VectorXYInt *offset_out, uint32_t flags, const wchar_t *string);
 
 /**
- * Draw a string with the given parameters.
- * @param position The position to draw the string.
- * @param dest_rect The destination rectangle.
- * @param color The color of the text.
- * @param flags Additional flags for drawing.
- * @param string The string to draw.
+ * Draw an ASCII string within the specified bounds and text rectangle.
+ * @param bounds The bounding rectangle where the string will be drawn.
+ * @param text_rect The rectangle defining the text area.
+ * @param offset_out Pointer to store the output offset after drawing the string.
+ * @param flags Flags specifying additional drawing options (e.g., style).
+ * @param string The ASCII string to be drawn.
  */
-void text_draw_string(Rectangle2D *position, Rectangle2D *dest_rect, ColorARGBInt *color, uint32_t flags, const char *string);
+void text_draw_string(const Rectangle2D *bounds, const Rectangle2D *text_rect, VectorXYInt *offset_out, uint32_t flags, const char *string);
 
 /**
  * Calculate the bounds of a Unicode string to be drawn.
@@ -84,7 +84,7 @@ void text_draw_string(Rectangle2D *position, Rectangle2D *dest_rect, ColorARGBIn
  * @param first_character_position A pointer to the Rectangle2D structure to store the position of the first character.
  * @param text_bounds A pointer to the Rectangle2D structure to store the overall bounds of the text.
  */
-void text_calculate_unicode_string_draw_bounds(const wchar_t *string, Rectangle2D *position, Rectangle2D *first_character_position, Rectangle2D *text_bounds);
+void text_calculate_unicode_string_draw_bounds(const wchar_t *string, const Rectangle2D *position, Rectangle2D *first_character_position, Rectangle2D *text_bounds);
 
 #ifdef __cplusplus
 }

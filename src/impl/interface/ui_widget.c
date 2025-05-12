@@ -3,6 +3,7 @@
 #include "../../event/event.h"
 #include "../bitmap/bitmap.h"
 #include "../console/console.h"
+#include "../font/font.h"
 #include "../memory/pool.h"
 #include "../main/main_globals.h"
 #include "../math/math.h"
@@ -446,17 +447,16 @@ void ui_widget_render_root_widget(Widget *widget) {
     bounds.right = screen_width;
     bounds.bottom = screen_height;
     float widescreen_margin = ui_widget_get_widescreen_margin();
-    VectorXYInt offset = { widescreen_margin, 0 };
-    ui_widget_instance_render_recursive(widget, &bounds, offset, true, false);
+    VectorXYInt widescreen_offset = { widescreen_margin, 0 };
+    ui_widget_instance_render_recursive(widget, &bounds, widescreen_offset, true, false);
     
     if(widget_globals->debug_show_path) {
         math_rectangle_2d_translate(&bounds, 32, 32);
         char *path = tag_get_path(widget->definition_tag_handle);
         ColorARGB color = { 1.0f, 1.0f, 1.0f, 1.0f };
-        ColorARGBInt color_mask = color_encode_a8r8g8b8(&color);
-        TagHandle font_tag = lookup_tag("ui\\small_ui", TAG_GROUP_FONT);
+        TagHandle font_tag = font_get_default_small();
         text_set_drawing_parameters(-1, 0, 0, font_tag, &color);
-        text_draw_string(&bounds, &bounds, &color_mask, 0, path);
+        text_draw_string(&bounds, &bounds, NULL, 0, path);
     }
 }
 

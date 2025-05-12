@@ -108,10 +108,11 @@
     "rasterizer_shader_transparent_water_draw": {"address": "0x539310", "replace": true, "arguments": ["0"]},
     "rasterizer_shader_transparent_water_render_bumpmap": {"address": "0x538380", "replace": true, "arguments": ["0"]},
         
-    "text_draw_unicode_string": {"address": "0x559bf0", "replace": false, "use_return_value": true, "arguments": ["0", "4", "8", "12", "16", "20"]},
-    "text_draw_string": {"address": "0x559870", "replace": false, "use_return_value": true, "arguments": ["0", "4", "8", "12", "16", "20"]},
+    "text_draw_unicode_string": {"address": "0x559bf0", "replace": "stub", "use_return_value": true, "arguments": ["0", "4", "8", "12", "16", "20"]},
+    "text_draw_string": {"address": "0x559870", "replace": "stub", "use_return_value": true, "arguments": ["0", "4", "8", "12", "16", "20"]},
     "text_set_drawing_parameters": {"address": "0x559820", "replace": true, "arguments": ["0", "4", "8", "ecx", "eax"]},
     "unicode_string_list_get_string": {"address": "0x55ad90", "replace": true, "use_return_value": true, "arguments": ["ecx", "edx"]},
+    "text_draw_initialize_for_new_map": {"address": "0x5595f0", "replace": false},
 
     "saved_games_read_player_profile": {"address": "0x53dad0", "replace": false, "use_return_value": true, "arguments": ["0", "ecx"]},
     "saved_games_write_player_profile": {"address": "0x53dcb0", "replace": false, "arguments": ["0", "4"]},
@@ -132,7 +133,9 @@
     "hud_draw_bitmap_with_meter": {"address": "0x4afec0", "replace": true, "arguments": ["0", "4", "8", "12", "16", "20", "ecx", "edx", "eax", "ebx"] },
     "hud_draw_meter": {"address": "0x4aefb0", "replace": true, "arguments": ["0", "4", "8", "12", "16", "20", "esi"] },
     "hud_draw_message": {"address": "0x462a80", "replace": true, "arguments": ["0", "4"] },
-
+    "hud_initialize": {"address": "0x4ac790", "replace": false},
+    "hud_initialize_for_new_map": {"address": "0x4ac8e0", "replace": false},
+    
     "color_interpolate": {"address": "0x43f6a0", "replace": false, "arguments": ["ecx", "eax", "0", "4", "8"] },
     
     "time_query_performance_counter_ms": {"address": "0x449b80", "replace": false, "use_return_value": true },
@@ -152,5 +155,11 @@
     "game_state_savegame_write_thread": {"address": "0x53bcd0", "replace": false },
     "game_state_initialize_savegame": {"address": "0x53b940", "replace": true, "use_return_value": true, "arguments": ["0", "ecx"] },
     "game_state_initialize_for_new_map": {"address": "0x53b270", "replace": true},
-    "game_state_open_savegame": {"address": "0x53cc30", "replace": true, "use_return_value": true, "arguments": ["0"]}
+    "game_state_open_savegame": {"address": "0x53cc30", "replace": true, "use_return_value": true, "arguments": ["0"]},
+
+    "cache_file_read_request": {"address": "0x443410", "replace": false, "use_return_value": true, "arguments": ["0", "4", "8", "12", "16", "esi"]},
+
+    "terminal_initialize": {"address": "0x499330", "replace": true},
+
+    "interface_initialize_for_new_map": {"address": "0x49c0a0", "replace": true}
 }

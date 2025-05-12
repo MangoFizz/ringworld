@@ -18,7 +18,7 @@ extern HUDGlobals **hud_globals;
 
 VectorXYInt hud_interface_safe_zones = { 0, 0 };
 
-HUDGlobals *hud_get_globals(void) {
+const HUDGlobals *hud_get_globals(void) {
     return *hud_globals;
 }
 
@@ -336,7 +336,7 @@ void hud_draw_meter(HUDInterfaceAnchor *anchor, uint8_t min_alpha, uint8_t max_a
 }
 
 void hud_draw_message(wchar_t *message, float fade) {
-    HUDGlobals *hud_globals = hud_get_globals();
+    const HUDGlobals *hud_globals = hud_get_globals();
     
     TagHandle font = font = hud_globals->messaging_parameters.splitscreen_font.tag_handle;
     if(HANDLE_IS_NULL(font)) {

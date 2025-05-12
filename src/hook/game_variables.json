@@ -106,5 +106,7 @@
     "rng_state": {"type": "uint32_t", "address": "0x6b4d64"},
     "pgcr_footer_fade": {"type": "float", "address": "0x815eac"},
     "rasterizer_window_is_being_rendered": {"type": "bool", "address": "0x6249c6"},
-    "saved_game_state_buffer": {"type": "void *", "address": "0x67dda4"}
+    "saved_game_state_buffer": {"type": "void *", "address": "0x67dda4"},
+    "terminal_globals": {"type": "TerminalGlobals", "address": "0x64de2c"},
+    "first_person_weapons": {"type": "FirstPersonWeapons *", "address": "0x64dcc8"}
 }

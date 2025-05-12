@@ -144,7 +144,7 @@ void *table_get_element(void *table, TableResourceHandle handle);
  * @param identifier    identifier to find
  * @return pointer to the element, or NULL if not found
  */
-void *table_find_element(void *table_data, int16_t identifier);
+void *table_find_element_by_identifier(void *table_data, int16_t identifier);
 
 /**
  * Initialize a table element.

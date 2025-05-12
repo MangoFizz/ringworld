@@ -135,10 +135,16 @@ typedef struct ObjectValidOutGoingFunctions {
 _Static_assert(sizeof(ObjectValidOutGoingFunctions) == 0x1);
 
 typedef struct ObjectAnimationState {
-    uint16_t index;
+    int16_t index;
     uint16_t frame;
 } ObjectAnimationState;
 _Static_assert(sizeof(ObjectAnimationState) == 0x4);
+
+typedef struct AnimationStateInterpolation {
+    ObjectAnimationState state;
+    float frame_index;
+} AnimationStateInterpolation;
+_Static_assert(sizeof(AnimationStateInterpolation) == 0x8);
 
 typedef struct ObjectAnimationData {
     TagHandle animation_tag_handle;

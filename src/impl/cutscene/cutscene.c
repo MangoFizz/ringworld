@@ -20,7 +20,7 @@ CinematicGlobals *cutscene_get_globals(void) {
 
 void cutscene_cinematic_render(void) {
     CinematicGlobals *cinematic_globals = cutscene_get_globals();
-    HUDGlobals *hud_globals = hud_get_globals();
+    const HUDGlobals *hud_globals = hud_get_globals();
     WidgetGlobals *widget_globals = ui_widget_get_globals();
     GameTimeGlobals *game_time_globals = game_time_get_globals();
     RenderGlobals *render_globals = render_get_globals();

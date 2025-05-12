@@ -49,7 +49,17 @@ _Static_assert(sizeof(HUDMeterDrawFlags) == 4);
  * Get the global HUD settings.
  * @return A pointer to the global HUD settings.
  */
-HUDGlobals *hud_get_globals(void);
+const HUDGlobals *hud_get_globals(void);
+
+/**
+ * Initialize the HUD resources.
+ */
+void hud_initialize(void);
+
+/**
+ * Initialize the HUD for a new map.
+ */
+void hud_initialize_for_new_map(void);
 
 /**
  * Calculate the position of a HUD element on the screen.

@@ -46,7 +46,7 @@ void pgcr_draw_row_text(wchar_t *string, uint32_t justification, int16_t row) {
     TextDrawGlobals *text_globals = text_get_drawing_globals();
     uint16_t canvas_width = render_get_screen_width();
     uint16_t canvas_height = render_get_screen_height();
-    HUDGlobals *hud_globals = hud_get_globals();
+    const HUDGlobals *hud_globals = hud_get_globals();
 
     TagHandle font = hud_globals->messaging_parameters.fullscreen_font.tag_handle;
     if(HANDLE_IS_NULL(font)) {
@@ -84,7 +84,7 @@ void pgcr_draw_background(void) {
     uint16_t screen_width = render_get_screen_width();
     uint16_t screen_height = render_get_screen_height();
     float widescreen_margin = ((float)screen_width - RASTERIZER_SCREEN_BASE_WIDTH) / 2.0f;
-    HUDGlobals *hud_globals = hud_get_globals();
+    const HUDGlobals *hud_globals = hud_get_globals();
 
     TagHandle background_tag_handle = hud_globals->more_hud_crap.carnage_report_bitmap.tag_handle;
     if(!HANDLE_IS_NULL(background_tag_handle)) {
@@ -175,7 +175,7 @@ void pgcr_draw_teams_scores(void) {
 
 void pgcr_draw_footer(void) {
     MainGlobals *main_globals = main_get_globals();
-    HUDGlobals *hud_globals = hud_get_globals();
+    const HUDGlobals *hud_globals = hud_get_globals();
     float widescreen_margin = ((float)render_get_screen_width() - RASTERIZER_SCREEN_BASE_WIDTH) / 2.0f;
 
     Rectangle2D rect;

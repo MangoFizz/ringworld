@@ -84,7 +84,9 @@ set(RINGWORLD_SOURCES
     src/impl/math/color.c
     src/impl/math/math.c
     src/impl/math/wave_functions.c
+    src/impl/interface/first_person_weapon.c
     src/impl/interface/hud.c
+    src/impl/interface/interface.c
     src/impl/interface/loading_screen.c
     src/impl/interface/pgcr.c
     src/impl/interface/scoreboard.c
@@ -127,6 +129,7 @@ set(RINGWORLD_SOURCES
     src/impl/script/hsc.c
     src/impl/shader/shader.c
     src/impl/tag/tag.c
+    src/impl/terminal/terminal.c
     src/impl/text/text.c
     src/impl/text/unicode_string_list.c
     ${RINGWORLD_HOOKS_SOURCES}

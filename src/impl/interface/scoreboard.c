@@ -19,7 +19,7 @@
 #include "scoreboard.h"
 
 void scoreboard_draw_row(wchar_t *text, bool highlight, ColorARGB *color, int16_t row_index) {
-    HUDGlobals *hud_globals = hud_get_globals();
+    const HUDGlobals *hud_globals = hud_get_globals();
 
     TagHandle font = hud_globals->messaging_parameters.splitscreen_font.tag_handle;
     if(HANDLE_IS_NULL(font)) {
@@ -219,7 +219,7 @@ void scoreboard_build_rows(PlayerHandle player_handle, ScoreboardRowData *scoreb
 }
 
 void scoreboard_draw_header(ScoreboardRowData *player_score_data, float fade) {
-    HUDGlobals *hud_globals = hud_get_globals();
+    const HUDGlobals *hud_globals = hud_get_globals();
     NetworkGame *network_game = network_game_get();
     GameEngineInterface *game_engine = game_engine_get_current_interface();
     GameEngineGlobals *game_engine_globals = game_engine_get_globals();
@@ -415,7 +415,7 @@ void scoreboard_draw_background(float fade) {
 }
 
 void scoreboard_draw_server_info(float fade) {
-    HUDGlobals *hud_globals = hud_get_globals();
+    const HUDGlobals *hud_globals = hud_get_globals();
     NetworkGame *network_game = network_game_get();
     uint16_t screen_width = render_get_screen_width();
     uint16_t screen_height = render_get_screen_height();

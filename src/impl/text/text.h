@@ -25,6 +25,11 @@ typedef struct TextDrawGlobals {
 TextDrawGlobals *text_get_drawing_globals(void);
 
 /**
+ * Initialize the text drawing system for a new map.
+ */
+void text_draw_initialize_for_new_map(void);
+
+/**
  * This function draws a unicode string on the screen.
  * @param draw_character A function pointer to the character drawing function.
  * @param position A pointer to the Rectangle2D structure defining the screen offset.

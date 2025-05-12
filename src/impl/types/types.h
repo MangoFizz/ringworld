@@ -167,6 +167,13 @@ typedef struct GenericTagBlock {
 } GenericTagBlock;
 _Static_assert(sizeof(GenericTagBlock) == 0xC);
 
+typedef struct NodeOrientation {
+    Quaternion rotation;
+    VectorXYZ position;
+    float scale;
+} NodeOrientation;
+_Static_assert(sizeof(NodeOrientation) == 0x20);
+
 #ifdef __cplusplus
 }
 #endif

@@ -54,7 +54,7 @@ void *table_get_element(void *table_data, TableResourceHandle handle) {
     return element;
 }
 
-void *table_find_element(void *table_data, int16_t identifier) {
+void *table_find_element_by_identifier(void *table_data, int16_t identifier) {
     if(identifier != -1) {
         GenericTable *table = (GenericTable *)(table_data);
         for(size_t i = 0; i < table->current_size; i++) {

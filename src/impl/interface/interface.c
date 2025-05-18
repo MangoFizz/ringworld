@@ -11,7 +11,6 @@ void interface_initialize(void) {
     terminal_initialize();
     hud_initialize();
     first_person_weapon_initialize();
-    vector_font_initialize();
 }
 
 void interface_initialize_for_new_map(void) {
@@ -25,5 +24,4 @@ void interface_initialize_for_new_map(void) {
         font_tag = interface_bitmaps->font_terminal.tag_handle;
     }
     text_set_drawing_parameters(-1, 0, 0, font_tag, &color_argb_white);
-    vector_font_release_cache();
 }

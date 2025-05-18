@@ -68,7 +68,7 @@
     "object_unk3": {"type": "uint32_t", "address": "0x7fb72c"},
     "object_type_interface_list": {"type": "uint32_t", "address": "0x7fb73c"},
     "rasterizer_enable_user_interface_render": {"type": "bool", "address": "0x6249e2"},
-    "rasterizer_font_character_cache": {"type": "FontCache", "address": "0x673758"},
+    "rasterizer_font_character_cache": {"type": "BitmapFontCache", "address": "0x673758"},
     "rasterizer_bitmap_font_vertex_shader_constants": {"type": "VertexShaderScreenprojConstants", "address": "0x67ccc8"},
     "local_player_index_for_draw_string_and_hack_in_icons": {"type": "bool", "address": "0x8153f0"},
     "virtual_keyboard_globals": {"type": "VirtualKeyboardGlobals", "address": "0x6b4430"},

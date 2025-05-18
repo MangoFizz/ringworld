@@ -5,15 +5,54 @@
 extern "C" {
 #endif
 
-/**
- * Initialize the vector font resources.
- */
-void vector_font_initialize(void);
+#include "../memory/dynamic_buffer.h"
+#include "../text/text.h"
+#include "../tag/tag.h"
+
+typedef struct DynamicArray DynamicArray;
+
+typedef struct VectorFontTextRect {
+    DynamicBuffer text;
+    bool is_unicode;
+    int16_t x;
+    int16_t y;
+    int16_t width;
+    int16_t height;
+    TextJustification justification;
+} VectorFontTextRect;
 
 /**
- * Release the cached vector font resources.
+ * Calculate the draw bounds for a Unicode string.
+ * @param string The Unicode string to calculate bounds for.
+ * @param position The position rectangle.
+ * @param first_character_position Pointer to store the first character position.
+ * @param text_bounds Pointer to store the text bounds.
  */
-void vector_font_release_cache(void);
+void vector_font_calculate_unicode_string_draw_bounds(const wchar_t *string, const Rectangle2D *position, Rectangle2D *first_character_position, Rectangle2D *text_bounds);
+
+/**
+ * Handle string formatting for vector fonts.
+ * @param str The string to format.
+ * @param x The x position.
+ * @param y The y position.
+ * @param width The width of the text area.
+ * @param height The height of the text area.
+ * @param text_recs Pointer to store the formatted text rectangles.
+ * @param count Pointer to store the number of formatted text rectangles.
+ */
+void vector_font_handle_string_formatting(const char *text, int16_t x, int16_t y, int16_t width, int16_t height, DynamicArray *text_recs);
+
+/**
+ * Handle Unicode string formatting for vector fonts.
+ * @param str The Unicode string to format.
+ * @param x The x position.
+ * @param y The y position.
+ * @param width The width of the text area.
+ * @param height The height of the text area.
+ * @param text_recs Pointer to store the formatted text rectangles.
+ * @param count Pointer to store the number of formatted text rectangles.
+ */
+void vector_font_handle_unicode_string_formatting(const wchar_t *text, int16_t x, int16_t y, int16_t width, int16_t height, DynamicArray *text_recs);
 
 #ifdef __cplusplus
 }

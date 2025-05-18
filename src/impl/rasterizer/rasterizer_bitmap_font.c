@@ -81,6 +81,19 @@ bool rasterizer_bitmap_font_cache_initialize(void) {
     return font_cache->initialized;
 }
 
+void rasterizer_bitmap_font_cache_flush(void) {
+    BitmapFontCache *font_cache = rasterizer_bitmap_font_get_cache();
+    if(font_cache->initialized) {
+        for(size_t i = 0; i < MAX_FONT_CACHE_CHARACTERS; i++) {
+            BitmapFontCacheCharacter *character = &font_cache->characters[i];
+            if(character->character != NULL) {
+                character->character->hardware_character_index = -1;
+            }
+            character->character = NULL;
+        }
+    }
+}
+
 void rasterizer_bitmap_font_begin_text_draw(RasterizerDynamicScreenGeometryParams *parameters) {
     RasterizerWindowRenderParameters *window_parameters = rasterizer_get_window_parameters();
     IDirect3DDevice9 *device = rasterizer_dx9_device();
@@ -153,11 +166,9 @@ void rasterizer_bitmap_font_end_text_draw(void) {
 }
 
 void rasterizer_bitmap_font_draw_unicode_string(const Rectangle2D *bounds, const Rectangle2D *text_rect, VectorXYInt *offset_out, uint32_t flags, const wchar_t *string) {
-    RenderGlobals *render_globals = render_get_globals();
     RasterizerWindowRenderParameters *window_parameters = rasterizer_get_window_parameters();
     BitmapData *bitmap = rasterizer_bitmap_font_get_cache_bitmap();
 
-    ASSERT(render_globals != NULL);
     ASSERT(string != NULL);
     ASSERT(bitmap != NULL);
 
@@ -166,33 +177,6 @@ void rasterizer_bitmap_font_draw_unicode_string(const Rectangle2D *bounds, const
     }
 
     *string_draw_count = *string_draw_count + 1;
-
-    size_t string_length = wcslen(string);
-    Rectangle2D render_bounds;
-    if(bounds != NULL) {
-        render_bounds = *bounds;
-    }
-    else {
-        render_bounds = render_globals->camera.window_bounds;
-        math_rectangle_2d_translate(&render_bounds, render_globals->camera.viewport_bounds.left * -1, render_globals->camera.viewport_bounds.top * -1);
-    }
-
-    Rectangle2D text_draw_rect;
-    uint16_t screen_width = render_get_screen_width();
-    uint16_t screen_height = render_get_screen_height();
-    if(text_rect != NULL) {
-        text_draw_rect.bottom = clamp_i32(text_rect->bottom, 0, screen_height);
-        text_draw_rect.right = clamp_i32(text_rect->right, 0, screen_width);
-        text_draw_rect.top = clamp_i32(text_rect->top, 0, screen_height);
-        text_draw_rect.left = clamp_i32(text_rect->left, 0, screen_width);
-    }
-    else {
-        // @todo use viewport bounds for calculating this
-        text_draw_rect.bottom = screen_height;
-        text_draw_rect.right = screen_width;
-        text_draw_rect.top = 0;
-        text_draw_rect.left = 0;
-    }
 
     RasterizerDynamicScreenGeometryParams screen_geometry_parameters;
     memset(&screen_geometry_parameters, 0, sizeof(screen_geometry_parameters));
@@ -206,16 +190,14 @@ void rasterizer_bitmap_font_draw_unicode_string(const Rectangle2D *bounds, const
     screen_geometry_parameters.meter_parameters = NULL;
 
     rasterizer_bitmap_font_begin_text_draw(&screen_geometry_parameters);
-    bitmap_font_draw_unicode_string(rasterizer_bitmap_font_draw_character_with_shadow, &render_bounds, offset_out, &text_draw_rect, flags, string);
+    bitmap_font_draw_unicode_string(rasterizer_bitmap_font_draw_character_with_shadow, bounds, offset_out, text_rect, flags, string);
     rasterizer_bitmap_font_end_text_draw();
 }
 
 void rasterizer_bitmap_font_draw_string(const Rectangle2D *bounds, const Rectangle2D *text_rect, VectorXYInt *offset_out, uint32_t flags, const char *string) {
-    RenderGlobals *render_globals = render_get_globals();
     RasterizerWindowRenderParameters *window_parameters = rasterizer_get_window_parameters();
     BitmapData *bitmap = rasterizer_bitmap_font_get_cache_bitmap();
 
-    ASSERT(render_globals != NULL);
     ASSERT(string != NULL);
     ASSERT(bitmap != NULL);
 
@@ -224,33 +206,6 @@ void rasterizer_bitmap_font_draw_string(const Rectangle2D *bounds, const Rectang
     }
 
     *string_draw_count = *string_draw_count + 1;
-
-    size_t string_length = strlen(string);
-    Rectangle2D render_bounds;
-    if(bounds != NULL) {
-        render_bounds = *bounds;
-    }
-    else {
-        render_bounds = render_globals->camera.window_bounds;
-        math_rectangle_2d_translate(&render_bounds, render_globals->camera.viewport_bounds.left * -1, render_globals->camera.viewport_bounds.top * -1);
-    }
-
-    Rectangle2D text_draw_rect;
-    uint16_t screen_width = render_get_screen_width();
-    uint16_t screen_height = render_get_screen_height();
-    if(text_rect != NULL) {
-        text_draw_rect.bottom = clamp_i32(text_rect->bottom, 0, screen_height);
-        text_draw_rect.right = clamp_i32(text_rect->right, 0, screen_width);
-        text_draw_rect.top = clamp_i32(text_rect->top, 0, screen_height);
-        text_draw_rect.left = clamp_i32(text_rect->left, 0, screen_width);
-    }
-    else {
-        // @todo use viewport bounds for calculating this
-        text_draw_rect.bottom = screen_height;
-        text_draw_rect.right = screen_width;
-        text_draw_rect.top = 0;
-        text_draw_rect.left = 0;
-    }
 
     RasterizerDynamicScreenGeometryParams screen_geometry_parameters;
     memset(&screen_geometry_parameters, 0, sizeof(screen_geometry_parameters));
@@ -264,7 +219,7 @@ void rasterizer_bitmap_font_draw_string(const Rectangle2D *bounds, const Rectang
     screen_geometry_parameters.meter_parameters = NULL;
 
     rasterizer_bitmap_font_begin_text_draw(&screen_geometry_parameters);
-    bitmap_font_draw_string(rasterizer_bitmap_font_draw_character_with_shadow, &render_bounds, offset_out, &text_draw_rect, flags, string);
+    bitmap_font_draw_string(rasterizer_bitmap_font_draw_character_with_shadow, bounds, offset_out, text_rect, flags, string);
     rasterizer_bitmap_font_end_text_draw();
 }
 

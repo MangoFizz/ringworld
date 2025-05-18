@@ -19,8 +19,7 @@ typedef union TableResourceHandle {
     };
 } TableResourceHandle;
 
-/** Null handle that refers to no object */
-#define NULL_HANDLE ((TableResourceHandle)(0xFFFFFFFF))
+#define NULL_HANDLE ((TableResourceHandle){ 0xFFFFFFFF })
 
 /**
  * Check if the handle is null

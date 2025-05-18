@@ -6,28 +6,17 @@ extern "C" {
 #endif
 
 #include <stdint.h>
+#include <stdlib.h>
+#include <string.h>
 
 typedef struct DynamicBuffer {
     uint32_t lenght;
     void *data;
 } DynamicBuffer;
 
-static inline void dynamic_buffer_init(DynamicBuffer *buffer) {
-    buffer->lenght = 0;
-    buffer->data = NULL;
-}
-
-static inline void dynamic_buffer_push_data(DynamicBuffer *buffer, const void *data, uint32_t data_size) {
-    buffer->data = realloc(buffer->data, buffer->lenght + data_size);
-    memcpy(buffer->data + buffer->lenght, data, data_size);
-    buffer->lenght += data_size;
-}
-
-static inline void dynamic_buffer_free(DynamicBuffer *buffer) {
-    free(buffer->data);
-    buffer->data = NULL;
-    buffer->lenght = 0;
-}
+void dynamic_buffer_init(DynamicBuffer *buffer);
+void dynamic_buffer_push_data(DynamicBuffer *buffer, const void *data, uint32_t data_size);
+void dynamic_buffer_free(DynamicBuffer *buffer);
 
 #ifdef __cplusplus
 }

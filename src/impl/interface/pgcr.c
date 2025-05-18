@@ -6,6 +6,7 @@
 #include "../math/color.h"
 #include "../multiplayer/multiplayer_game_text.h"
 #include "../network/network_game.h"
+#include "../rasterizer/rasterizer_bitmap_font.h"
 #include "../render/render.h"
 #include "../font/font.h"
 #include "../text/text.h"
@@ -18,27 +19,27 @@ const ColorRGB pgcr_scoreboard_header_color = { 0.4588235f, 0.7294118f, 1.0f }; 
 const ColorRGB pgcr_scoreboard_local_player_place_color = { 1.0f, 1.0f, 0.0f }; // yellow
 
 void pgcr_set_scoreboard_tabs(void) {
-    uint16_t tabs[] = { 6, 50, 125, 250, 350, 410, 500 };
+    uint16_t tabs[] = { 50, 125, 250, 350, 410, 500 };
     if(render_widescreen_support_enabled()) {
         uint16_t canvas_width = render_get_screen_width();
         float widescreen_margin = (float)(canvas_width - RASTERIZER_SCREEN_BASE_WIDTH) / 2.0f;
-        for(size_t i = 1; i < sizeof(tabs) / sizeof(tabs[0]); i++) {
+        for(size_t i = 0; i < SIZEOF_ARRAY(tabs); i++) {
             tabs[i] += widescreen_margin;
         }
     }
-    text_set_tab_stops(tabs, 7);
+    text_set_tab_stops(tabs, 6);
 }
 
 void pgcr_set_teams_scores_tabs(void) {
-    uint16_t tabs[] = { 6, 50, 200 };
+    uint16_t tabs[] = { 50, 200 };
     if(render_widescreen_support_enabled()) {
         uint16_t canvas_width = render_get_screen_width();
         float widescreen_margin = (float)(canvas_width - RASTERIZER_SCREEN_BASE_WIDTH) / 2.0f;
-        for(size_t i = 1; i < sizeof(tabs) / sizeof(tabs[0]); i++) {
+        for(size_t i = 0; i < SIZEOF_ARRAY(tabs); i++) {
             tabs[i] += widescreen_margin;
         }
     }
-    text_set_tab_stops(tabs, 3);
+    text_set_tab_stops(tabs, 2);
 }
 
 void pgcr_draw_row_text(wchar_t *string, uint32_t justification, int16_t row) {
@@ -52,16 +53,13 @@ void pgcr_draw_row_text(wchar_t *string, uint32_t justification, int16_t row) {
         font = font_get_default_large();
     }
     
+    uint16_t font_height = font_get_height(font);
+    
     Rectangle2D text_bounds;
     text_bounds.left = 0;
     text_bounds.right = canvas_width;
     text_bounds.top = row * 18;
-    text_bounds.bottom = text_bounds.top + 26;
-
-    if(render_widescreen_support_enabled()) {
-        float widescreen_margin = (float)(canvas_width - RASTERIZER_SCREEN_BASE_WIDTH) / 2.0f;
-        math_rectangle_2d_translate(&text_bounds, widescreen_margin, 0);
-    }
+    text_bounds.bottom = text_bounds.top + font_height;
 
     text_globals->justification = justification;
     text_globals->flags = 0;
@@ -179,7 +177,7 @@ void pgcr_draw_footer(void) {
 
     Rectangle2D rect;
     rect.left = widescreen_margin;
-    rect.right = render_get_screen_width();
+    rect.right = render_get_screen_width() - rect.left;
     rect.top = 410;
     rect.bottom = render_get_screen_height();
 
@@ -205,7 +203,7 @@ void pgcr_draw_footer(void) {
     }
     
     text_set_drawing_parameters(-1, 0, 0, font, &color);
-    // rasterizer_bitmap_font_draw_unicode_string_and_hack_in_icons(&rect, false, text);
+    rasterizer_bitmap_font_draw_unicode_string_and_hack_in_icons(&rect, false, text);
 }
 
 void pgcr_draw(void) {

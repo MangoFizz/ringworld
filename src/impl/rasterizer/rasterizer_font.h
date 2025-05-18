@@ -12,6 +12,11 @@ extern "C" {
  */
 bool rasterizer_font_initialize(void);
 
+/**
+ * Flush the font caches.
+ */
+void rasterizer_font_cache_flush(void);
+
 #ifdef __cplusplus
 }
 #endif

@@ -27,31 +27,30 @@ void scoreboard_draw_row(wchar_t *text, bool highlight, ColorARGB *color, int16_
 
     uint16_t screen_width = render_get_screen_width();
     float widescreen_margin = ((float)screen_width - RASTERIZER_SCREEN_BASE_WIDTH) / 2.0f;
-
-    if(row_index != 0) {
-        uint16_t tabs[8];
-        tabs[0] = 7;
-        tabs[1] = 25 + widescreen_margin;
-        tabs[2] = 90 + widescreen_margin;
-        tabs[3] = 300 + widescreen_margin;
-        tabs[4] = 365 + widescreen_margin;
-        tabs[5] = 430 + widescreen_margin;
-        tabs[6] = 495 + widescreen_margin;
-        tabs[7] = 560 + widescreen_margin;
-        text_set_tab_stops(tabs, 8);
-    }
-    else {
-        text_reset_tab_stops();
-    }
-
     uint16_t font_height = font_get_height(font);
 
     Rectangle2D rect;
     rect.left = 10;
-    rect.right = RASTERIZER_SCREEN_BASE_WIDTH;
+    rect.right = render_get_screen_width() - (rect.left * 2);
     rect.top = 60;
     rect.bottom = rect.top + font_height;
-    math_rectangle_2d_translate(&rect, widescreen_margin, row_index * font_height + 3);
+    math_rectangle_2d_translate(&rect, 0, row_index * font_height + 3);
+
+    if(row_index != 0) {
+        uint16_t tabs[] = { 25, 90, 300, 365, 430, 495, 560 };
+        if(render_widescreen_support_enabled()) {
+            uint16_t canvas_width = render_get_screen_width();
+            float widescreen_margin = (float)(canvas_width - RASTERIZER_SCREEN_BASE_WIDTH) / 2.0f;
+            for(size_t i = 0; i < SIZEOF_ARRAY(tabs); i++) {
+                tabs[i] += widescreen_margin;
+            }
+        }
+        text_set_tab_stops(tabs, 7);
+    }
+    else {
+        text_reset_tab_stops();
+        math_rectangle_2d_translate(&rect, widescreen_margin, 0);
+    }
 
     ColorARGB text_color = *color;
     if(highlight) {

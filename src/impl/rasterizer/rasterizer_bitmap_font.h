@@ -38,6 +38,11 @@ _Static_assert(sizeof(BitmapFontCache) == 0x10 + MAX_FONT_CACHE_CHARACTERS * siz
 bool rasterizer_bitmap_font_cache_initialize(void);
 
 /**
+ * Flush the bitmap font cache.
+ */
+void rasterizer_bitmap_font_cache_flush(void);
+
+/**
  * Get the font cache.
  */
 BitmapFontCache *rasterizer_bitmap_font_get_cache(void);

@@ -16,6 +16,7 @@ extern ManagedHeapMap *managed_heap_map;
 
 void memory_map_initialize(void) {
     managed_heap_map->game_state_base_address = VirtualAlloc(MANAGED_HEAP_BASE_ADDRESS, MANAGED_HEAP_SIZE, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
+    memset(managed_heap_map->game_state_base_address, 0, MANAGED_HEAP_SIZE);
     managed_heap_map->tag_data_base_address = TAG_DATA_LOAD_ADDRESS;
     *sound_cache = NULL;
     *texture_cache = NULL;

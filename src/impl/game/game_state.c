@@ -113,7 +113,7 @@ HANDLE game_state_open_savegame(const char *path) {
     return INVALID_HANDLE_VALUE;
 }
 
-void game_state_initialize_for_new_map(void) {
+void game_state_initialize(void) {
     game_state_globals->allocation_size_checksum = -1;
     game_state_globals->base_address = game_state_initialize_savegame(GAME_STATE_SIZE, 0x40000);
     game_state_globals->header = game_state_allocate_heap(sizeof(GameStateHeader));

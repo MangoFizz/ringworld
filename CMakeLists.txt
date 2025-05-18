@@ -78,7 +78,6 @@ set(RINGWORLD_SOURCES
     src/impl/cutscene/cutscene.c
     src/impl/exception/exception.c
     src/impl/font/bitmap_font.c
-    src/impl/font/vector_font_file.c
     src/impl/font/vector_font.c
     src/impl/game/game_engine.c
     src/impl/game/game_globals.c
@@ -98,6 +97,8 @@ set(RINGWORLD_SOURCES
     src/impl/interface/ui_widget_game_data_inputs.c
     src/impl/interface/ui_widget.c
     src/impl/main/main_globals.c
+    src/impl/memory/dynamic_array.c
+    src/impl/memory/dynamic_buffer.c
     src/impl/memory/memory.c
     src/impl/memory/pool.c
     src/impl/network/network_game.c
@@ -126,6 +127,7 @@ set(RINGWORLD_SOURCES
     src/impl/rasterizer/rasterizer_shader_transparent_generic.c
     src/impl/rasterizer/rasterizer_shader_transparent_water.c
     src/impl/rasterizer/rasterizer_shaders_blob.c
+    src/impl/rasterizer/rasterizer_vector_font.c
     src/impl/render/render.c
     src/impl/rng/rng.c
     src/impl/saved_games/player_profile.c

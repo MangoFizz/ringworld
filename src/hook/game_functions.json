@@ -99,6 +99,7 @@
     "rasterizer_shader_transparent_water_render_bumpmap": {"address": "0x538380", "replace": true, "arguments": ["0"]},
     
     "rasterizer_font_initialize": {"address": "0x5180c0", "replace": true, "use_return_value": true},
+    "rasterizer_font_cache_flush": {"address": "0x518550", "replace": true},
 
     "rasterizer_bitmap_font_begin_text_draw": {"address": "0x534ae0", "replace": true, "arguments": ["edi"]},
     "rasterizer_bitmap_font_end_text_draw": {"address": "0x534df0", "replace": true},
@@ -159,7 +160,7 @@
     "game_state_memory_pool_new": {"address": "0x53b430", "replace": false, "use_return_value": true, "arguments": ["0", "ebx"] },
     "game_state_savegame_write_thread": {"address": "0x53bcd0", "replace": false },
     "game_state_initialize_savegame": {"address": "0x53b940", "replace": true, "use_return_value": true, "arguments": ["0", "ecx"] },
-    "game_state_initialize_for_new_map": {"address": "0x53b270", "replace": true},
+    "game_state_initialize": {"address": "0x53b270", "replace": true},
     "game_state_open_savegame": {"address": "0x53cc30", "replace": true, "use_return_value": true, "arguments": ["0"]},
 
     "cache_file_read_request": {"address": "0x443410", "replace": false, "use_return_value": true, "arguments": ["0", "4", "8", "12", "16", "esi"]},
@@ -167,5 +168,5 @@
     "terminal_initialize": {"address": "0x499330", "replace": true},
 
     "interface_initialize": {"address": "0x497100", "replace": true},
-    "interface_initialize_for_new_map": {"address": "0x49c0a0", "replace": true}
+    "interface_initialize_for_new_map": {"address": "0x497150", "replace": true}
 }

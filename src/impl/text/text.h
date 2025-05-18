@@ -6,17 +6,31 @@ extern "C" {
 #endif
 
 #include "../tag/tag.h"
+#include "../tag/definitions/font.h"
 #include "../types/types.h"
+
+typedef enum PACKED_ENUM TextJustification {
+    TEXT_JUSTIFICATION_LEFT,
+    TEXT_JUSTIFICATION_RIGHT,
+    TEXT_JUSTIFICATION_CENTER,
+    NUMBER_OF_TEXT_JUSTIFICATIONS,
+    TEXT_JUSTIFICATION_SIZE = 0xFFFF
+} TextJustification;
 
 typedef struct TextDrawGlobals {
     TagHandle font;
     uint32_t flags;
     int16_t style;
-    int16_t justification;
+    TextJustification justification;
     ColorARGB color;
-    int16_t tabs[0x12];
-    VectorXYInt offset;
+    int16_t tabs_count;
+    int16_t tabs[0x10];
+    int16_t unk1;
+    int16_t unk2;
+    int16_t first_line_indentation;
+    int16_t indentation; // to be confirmed
 } TextDrawGlobals;
+_Static_assert(sizeof(TextDrawGlobals) == 72);
 
 /**
  * This function retrieves the global text drawing settings.
@@ -50,6 +64,12 @@ void text_set_tab_stops(uint16_t *tab_stops, size_t count);
  * This function resets the tab stops for text.
  */
 void text_reset_tab_stops(void);
+
+/**
+ * This function retrieves the shadow color for text.
+ * @return The shadow color in ARGB format.
+ */
+ColorARGBInt text_get_shadow_color(void);
 
 /**
  * This function sets the shadow color for text.

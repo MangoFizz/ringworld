@@ -3,7 +3,23 @@
 #include "../rasterizer/rasterizer_vector_font.h"
 #include "../tag/definitions/vector_font.h"
 #include "../memory/dynamic_array.h"
+#include "font.h"
 #include "vector_font.h"
+
+VectorFontStyle *vector_font_get_style(VectorFont *font, FontStyle style) {
+    switch(style) {
+        case FONT_STYLE_BOLD:
+            return &font->bold;
+        case FONT_STYLE_ITALIC:
+            return &font->italic;
+        case FONT_STYLE_CONDENSED:
+            return &font->condensed;
+        case FONT_STYLE_UNDERLINE:
+            return &font->underline;
+        default:
+            return &font->regular;
+    }
+}
 
 static void add_new_unicode_string_rect(DynamicArray *text_recs, const wchar_t *str, size_t tabs, int16_t start, int16_t end, int16_t x, int16_t y, int16_t width, int16_t height, TextJustification justification) {
     int16_t substr_size = end - start;
@@ -219,8 +235,10 @@ void vector_font_handle_string_formatting(const char *text, int16_t x, int16_t y
 
 void vector_font_calculate_unicode_string_draw_bounds(const wchar_t *string, const Rectangle2D *position, Rectangle2D *first_character_position, Rectangle2D *text_bounds) {
     TextDrawGlobals *text_globals = text_get_drawing_globals();
+    VectorFont *font = tag_get_data(TAG_GROUP_VECTOR_FONT, text_globals->font);
+    
     Rectangle2D bounds;
-    rasterizer_vector_font_calculate_unicode_string_draw_bounds(string, &bounds);
+    rasterizer_vector_font_calculate_unicode_string_draw_bounds(string, font, text_globals->style, &bounds);
     bounds.left += position->left;
     bounds.top += position->top;
     bounds.right += position->left;
@@ -231,4 +249,10 @@ void vector_font_calculate_unicode_string_draw_bounds(const wchar_t *string, con
     first_character_position->top = bounds.top;
     first_character_position->bottom = bounds.bottom;
     *text_bounds = bounds; 
+}
+
+uint32_t vector_font_calculate_unicode_string_width(wchar_t *string, VectorFont *font, FontStyle style) {
+    Rectangle2D bounds;
+    rasterizer_vector_font_calculate_unicode_string_draw_bounds(string, font, style, &bounds);
+    return bounds.right - bounds.left;
 }

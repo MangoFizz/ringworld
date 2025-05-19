@@ -19,25 +19,15 @@ static float get_scale_factor(void) {
     return (float)render_target->height / RASTERIZER_SCREEN_BASE_HEIGHT;
 }
 
+static uint16_t upscale_offset(uint16_t offset) {
+    float scale = get_scale_factor();
+    return ceil(offset * scale);
+}
+
 static uint16_t calculate_space_width(ID3DXFont *font) {
     RECT wrapper_rect = {0, 0, 0, 0};
     ID3DXFont_DrawTextW(font, NULL, L"_", -1, &wrapper_rect, DT_CALCRECT, 0xFFFFFFFF);
     return wrapper_rect.right;
-}
-
-static VectorFontStyle *rasterizer_vector_font_get_style(VectorFont *font, int style) {
-    switch(style) {
-        case 1:
-            return &font->bold;
-        case 2:
-            return &font->italic;
-        case 3:
-            return &font->condensed;
-        case 4:
-            return &font->underline;
-        default:
-            return &font->regular;
-    }
 }
 
 void *rasterizer_vector_font_load_data(VectorFontData *font_data) {
@@ -56,29 +46,29 @@ void rasterizer_vector_font_release_data(VectorFontData *font_data) {
     }
 }
 
-ID3DXFont *rasterizer_vector_font_get_hardware_format(VectorFont *font, int style) {
-    VectorFontStyle *font_style = rasterizer_vector_font_get_style(font, style);
-    VectorFontData *font_data = tag_get_data(TAG_GROUP_VECTOR_FONT_DATA, font_style->data.tag_handle);
+ID3DXFont *rasterizer_vector_font_get_hardware_format(VectorFont *font, FontStyle font_style) {
+    VectorFontStyle *font_style_data = vector_font_get_style(font, font_style);
+    VectorFontData *font_data = tag_get_data(TAG_GROUP_VECTOR_FONT_DATA, font_style_data->data.tag_handle);
     rasterizer_vector_font_load_data(font_data);
 
-    if(font_style->hardware_format != NULL) {
-        return font_style->hardware_format;
+    if(font_style_data->hardware_format != NULL) {
+        return font_style_data->hardware_format;
     }
 
     IDirect3DDevice9 *device = rasterizer_dx9_device();
     float scaled_size = font->font_size * get_scale_factor();
     const char *font_name = font_data->font_family_name.string;
-    font_style->hardware_format = NULL;
-    HRESULT hr = D3DXCreateFontA(device, scaled_size, 0, 400, 1, style == 1, DEFAULT_CHARSET, 
+    font_style_data->hardware_format = NULL;
+    HRESULT hr = D3DXCreateFontA(device, scaled_size, 0, 400, 1, font_style == FONT_STYLE_ITALIC, DEFAULT_CHARSET, 
                                 OUT_DEFAULT_PRECIS, ANTIALIASED_QUALITY, DEFAULT_PITCH | FF_DONTCARE, 
-                                font_name, (ID3DXFont **)&font_style->hardware_format);
+                                font_name, (ID3DXFont **)&font_style_data->hardware_format);
     if(FAILED(hr)) {
         CRASHF_DEBUG("Failed to create D3DX9 font instance");
     }
 
-    font_style->space_width = calculate_space_width(font_style->hardware_format);
+    font_style_data->space_width = calculate_space_width(font_style_data->hardware_format);
 
-    return font_style->hardware_format;
+    return font_style_data->hardware_format;
 }
 
 void rasterizer_vector_font_release_hardware_format(VectorFontStyle *style) {
@@ -119,11 +109,9 @@ void rasterizer_vector_fonts_flush(void) {
     }
 }
 
-void rasterizer_vector_font_calculate_unicode_string_draw_bounds(const wchar_t *string, Rectangle2D *bounds) {
-    TextDrawGlobals *text_globals = text_get_drawing_globals();
-    VectorFont *font = tag_get_data(TAG_GROUP_VECTOR_FONT, text_globals->font);
-    VectorFontStyle *font_style = rasterizer_vector_font_get_style(font, text_globals->style);
-    ID3DXFont *d3dx9_font = rasterizer_vector_font_get_hardware_format(font, text_globals->style);
+void rasterizer_vector_font_calculate_unicode_string_draw_bounds(const wchar_t *string, VectorFont *font, FontStyle font_style, Rectangle2D *bounds) {
+    VectorFontStyle *font_style_data = vector_font_get_style(font, font_style);
+    ID3DXFont *d3dx9_font = rasterizer_vector_font_get_hardware_format(font, font_style);
     float scale = get_scale_factor();
     uint16_t screen_width = render_get_screen_width();
     uint16_t screen_height = render_get_screen_height();
@@ -142,7 +130,7 @@ void rasterizer_vector_font_calculate_unicode_string_draw_bounds(const wchar_t *
 
         RECT rect = { 0, 0, 0, 0 };
         ID3DXFont_DrawTextW(d3dx9_font, NULL, text, -1, &rect, DT_CALCRECT, 0xFFFFFFFF);
-        int16_t width = (float)(rect.right - font_style->space_width) / scale;
+        int16_t width = (float)(rect.right - font_style_data->space_width) / scale;
         int16_t height = (float)rect.bottom / scale;
 
         if(text_rect->x < bounds->left) {
@@ -183,7 +171,7 @@ void rasterizer_vector_font_draw_unicode_string(const Rectangle2D *bounds, const
     RasterizerWindowRenderParameters *window_parameters = rasterizer_get_window_parameters();
     TextDrawGlobals *text_globals = text_get_drawing_globals();
     VectorFont *font = tag_get_data(TAG_GROUP_VECTOR_FONT, text_globals->font);
-    VectorFontStyle *font_style = rasterizer_vector_font_get_style(font, text_globals->style);
+    VectorFontStyle *font_style_data = vector_font_get_style(font, text_globals->style);
     ID3DXFont *d3dx9_font = rasterizer_vector_font_get_hardware_format(font, text_globals->style);
     float scale = get_scale_factor();
     uint16_t screen_width = render_get_screen_width();
@@ -276,7 +264,7 @@ void rasterizer_vector_font_draw_string(const Rectangle2D *bounds, const Rectang
     RasterizerWindowRenderParameters *window_parameters = rasterizer_get_window_parameters();
     TextDrawGlobals *text_globals = text_get_drawing_globals();
     VectorFont *font = tag_get_data(TAG_GROUP_VECTOR_FONT, text_globals->font);
-    VectorFontStyle *font_style = rasterizer_vector_font_get_style(font, text_globals->style);
+    VectorFontStyle *font_style_data = vector_font_get_style(font, text_globals->style);
     ID3DXFont *d3dx9_font = rasterizer_vector_font_get_hardware_format(font, text_globals->style);
     float scale = get_scale_factor();
     uint16_t screen_width = render_get_screen_width();

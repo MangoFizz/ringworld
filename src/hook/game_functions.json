@@ -119,6 +119,10 @@
     "text_calculate_unicode_string_draw_bounds": {"address": "0x559710", "replace": true, "arguments": ["0", "ebx", "esi", "edi"]},
     
     "unicode_string_list_get_string": {"address": "0x55ad90", "replace": true, "use_return_value": true, "arguments": ["ecx", "edx"]},
+    
+    "string_parse_state_init": {"address": "0x559f70", "replace": true, "arguments": ["0", "4", "ecx", "edx", "ebx", "esi"]},
+    "string_parse_unicode_string": {"address": "0x55a380", "replace": true, "use_return_value": true, "arguments": ["eax"]},
+    "string_calculate_line_break": {"address": "0x55a9a0", "replace": true, "use_return_value": true, "arguments": ["ecx", "0"]},
 
     "saved_games_read_player_profile": {"address": "0x53dad0", "replace": false, "use_return_value": true, "arguments": ["0", "ecx"]},
     "saved_games_write_player_profile": {"address": "0x53dcb0", "replace": false, "arguments": ["0", "4"]},

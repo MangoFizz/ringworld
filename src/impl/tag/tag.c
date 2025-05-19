@@ -54,6 +54,12 @@ char *tag_get_path(TagHandle tag_handle) {
     return (*tag_data_header_loaded)->tags[tag_handle.index].path;
 }
 
+TagGroup tag_get_primary_group(TagHandle tag_handle) {
+    ASSERT(tag_handle.index != NULL_HANDLE.index);
+    TagEntry *tag = &(*tag_data_header_loaded)->tags[tag_handle.index];
+    return tag->primary_group;
+}
+
 void *tag_get_block(GenericTagBlock *block, uint32_t index, uint32_t size) {
     ASSERT(block);
     ASSERT(index < block->count);

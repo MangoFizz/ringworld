@@ -190,6 +190,13 @@ void *tag_get_data(TagGroup tag_group, TagHandle tag_handle);
 char *tag_get_path(TagHandle tag_handle);
 
 /**
+ * Get the tag primary group for a tag handle.
+ * @param tag_handle tag handle
+ * @return tag group
+ */
+TagGroup tag_get_primary_group(TagHandle tag_handle);
+
+/**
  * Get an element from a reflexive block.
  * @param block reflexive block
  * @param index element index

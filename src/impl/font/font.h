@@ -9,6 +9,22 @@ extern "C" {
 #include "../tag/definitions/font.h"
 #include "../tag/definitions/vector_font.h"
 
+typedef enum PACKED_ENUM FontStyle {
+    FONT_STYLE_REGULAR = -1,
+    FONT_STYLE_BOLD,
+    FONT_STYLE_ITALIC,
+    FONT_STYLE_CONDENSED,
+    FONT_STYLE_UNDERLINE
+} FontStyle;
+
+/**
+ * Get the font data for a given font tag handle and style.
+ * If the font is a bitmap font, it retrieves the data for the specified 
+ * style; if the font is a vector font, it retrieves the data which 
+ * contains all styles.
+ */
+void *font_get_data(TagHandle font_tag_handle, FontStyle style);
+
 /**
  * Retrieve the tag handle of a font by its file path.
  * This function first attempts to find the font in the TAG_GROUP_FONT group,

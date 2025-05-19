@@ -22,6 +22,14 @@ typedef struct VectorFontTextRect {
 } VectorFontTextRect;
 
 /**
+ * Get the vector font style of a given font.
+ * @param font The vector font to get the style from.
+ * @param style The font style to retrieve.
+ * @return A pointer to the VectorFontStyle structure corresponding to the requested style.
+ */
+VectorFontStyle *vector_font_get_style(VectorFont *font, FontStyle style);
+
+/**
  * Calculate the draw bounds for a Unicode string.
  * @param string The Unicode string to calculate bounds for.
  * @param position The position rectangle.
@@ -53,6 +61,15 @@ void vector_font_handle_string_formatting(const char *text, int16_t x, int16_t y
  * @param count Pointer to store the number of formatted text rectangles.
  */
 void vector_font_handle_unicode_string_formatting(const wchar_t *text, int16_t x, int16_t y, int16_t width, int16_t height, DynamicArray *text_recs);
+
+/**
+ * Calculate the width of a Unicode string.
+ * @param string The Unicode string to calculate the width for.
+ * @param font The vector font to be used.
+ * @param style The style of the font.
+ * @return The calculated width of the string.
+ */
+uint32_t vector_font_calculate_unicode_string_width(wchar_t *string, VectorFont *font, FontStyle style);
 
 #ifdef __cplusplus
 }

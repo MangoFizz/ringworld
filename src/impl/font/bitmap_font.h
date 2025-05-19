@@ -6,6 +6,24 @@ extern "C" {
 #endif
 
 #include "../types/types.h"
+#include "../tag/tag.h"
+#include "font.h"
+
+/**
+ * Get the bitmap font style of a given font.
+ * @param font_tag The tag handle of the font to get the style from.
+ * @param style The font style to retrieve.
+ * @return The tag handle of the bitmap font style.
+ */
+TagHandle bitmap_font_get_style(TagHandle font_tag, FontStyle style);
+
+/**
+ * Retrieves the font character information for a given Unicode character.
+ * @param font The font to search in.
+ * @param character The Unicode character to retrieve.
+ * @return A pointer to the FontCharacter structure for the specified character, or NULL if not found.
+ */
+FontCharacter *bitmap_font_get_character(Font *font, wchar_t character);
 
 /**
  * This function draws a Unicode string on the screen.

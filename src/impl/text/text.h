@@ -5,6 +5,7 @@
 extern "C" {
 #endif
 
+#include "../font/font.h"
 #include "../tag/tag.h"
 #include "../tag/definitions/font.h"
 #include "../types/types.h"
@@ -13,14 +14,13 @@ typedef enum PACKED_ENUM TextJustification {
     TEXT_JUSTIFICATION_LEFT,
     TEXT_JUSTIFICATION_RIGHT,
     TEXT_JUSTIFICATION_CENTER,
-    NUMBER_OF_TEXT_JUSTIFICATIONS,
-    TEXT_JUSTIFICATION_SIZE = 0xFFFF
+    NUMBER_OF_TEXT_JUSTIFICATIONS
 } TextJustification;
 
 typedef struct TextDrawGlobals {
     TagHandle font;
     uint32_t flags;
-    int16_t style;
+    FontStyle style;
     TextJustification justification;
     ColorARGB color;
     int16_t tabs_count;

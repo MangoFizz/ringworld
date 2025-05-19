@@ -212,14 +212,14 @@ void rasterizer_vector_font_draw_unicode_string(const Rectangle2D *bounds, const
     for(size_t i = 0; i < text_rects.lenght; i++) {
         VectorFontTextRect *text_rect = dynamic_array_get(&text_rects, i);
 
-        int16_t scaled_font_offset_x = ceil(font->offset_x * scale);
-        int16_t scaled_font_offset_y = ceil(font->offset_y * scale);
+        int16_t scaled_font_offset_x = font->offset_x * scale;
+        int16_t scaled_font_offset_y = font->offset_y * scale;
 
         RECT text_rect_area;
-        text_rect_area.left = (text_rect->x) * scale + scaled_font_offset_x;
-        text_rect_area.right = (text_rect->x + text_rect->width) * scale + scaled_font_offset_x;
-        text_rect_area.top = (text_rect->y) * scale + scaled_font_offset_y;
-        text_rect_area.bottom = (text_rect->y + text_rect->height) * scale + scaled_font_offset_y;
+        text_rect_area.left = ceil(text_rect->x * scale + scaled_font_offset_x);
+        text_rect_area.right = ceil((text_rect->x + text_rect->width) * scale + scaled_font_offset_x);
+        text_rect_area.top = ceil(text_rect->y * scale + scaled_font_offset_y);
+        text_rect_area.bottom = ceil((text_rect->y + text_rect->height) * scale + scaled_font_offset_y);
 
         uint32_t align = DT_LEFT;
         switch(text_rect->justification) {
@@ -305,11 +305,14 @@ void rasterizer_vector_font_draw_string(const Rectangle2D *bounds, const Rectang
     for(size_t i = 0; i < text_rects.lenght; i++) {
         VectorFontTextRect *text_rect = dynamic_array_get(&text_rects, i);
 
+        int16_t scaled_font_offset_x = font->offset_x * scale;
+        int16_t scaled_font_offset_y = font->offset_y * scale;
+
         RECT text_rect_area;
-        text_rect_area.left = (text_rect->x + font->offset_x) * scale;
-        text_rect_area.right = (text_rect->x + text_rect->width + font->offset_x) * scale;
-        text_rect_area.top = (text_rect->y + font->offset_y) * scale;
-        text_rect_area.bottom = (text_rect->y + text_rect->height + font->offset_y) * scale;
+        text_rect_area.left = ceil(text_rect->x * scale + scaled_font_offset_x);
+        text_rect_area.right = ceil((text_rect->x + text_rect->width) * scale + scaled_font_offset_x);
+        text_rect_area.top = ceil(text_rect->y * scale + scaled_font_offset_y);
+        text_rect_area.bottom = ceil((text_rect->y + text_rect->height) * scale + scaled_font_offset_y);
 
         uint32_t align = DT_LEFT;
         switch(text_rect->justification) {

@@ -52,6 +52,12 @@ _Static_assert(sizeof(HUDMeterDrawFlags) == 4);
 const HUDGlobals *hud_get_globals(void);
 
 /**
+ * Get the global HUD messaging parameters.
+ * @return A pointer to the global HUD messaging parameters.
+ */
+const HUDGlobalsMessagingParameters *hud_get_messaging_parameters(void);
+
+/**
  * Initialize the HUD resources.
  */
 void hud_initialize(void);

@@ -22,6 +22,7 @@ extern "C" wchar_t *build_number;
 
 void set_up_transparent_generic_hooks();
 void set_up_game_state_hooks();
+void set_up_hud_hooks();
 
 static void set_up_build_number() {
     const wchar_t *ringworld_version = L"" RINGWORLD_VERSION_STRING;
@@ -46,6 +47,7 @@ extern "C" void set_up_ringworld_hooks(Platform platform) {
                 set_up_game_hooks();
                 set_up_transparent_generic_hooks();
                 set_up_game_state_hooks();
+                set_up_hud_hooks();
                 break;
             case RW_PLATFORM_DEDICATED_SERVER:
                 ringworld_server_mode = true;

@@ -14,11 +14,16 @@
 #include "hud.h"
 
 extern HUDGlobals **hud_globals;
+extern HUDGlobalsMessagingParameters **hud_messaging_parameters;
 
 VectorXYInt hud_interface_safe_zones = { 0, 0 };
 
 const HUDGlobals *hud_get_globals(void) {
     return *hud_globals;
+}
+
+const HUDGlobalsMessagingParameters *hud_get_messaging_parameters(void) {
+    return *hud_messaging_parameters;
 }
 
 void hud_calculate_point(HUDInterfaceAnchor *absolute_placement, HUDMeterDefinition *meter_definition,

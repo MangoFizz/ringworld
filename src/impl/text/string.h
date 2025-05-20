@@ -5,6 +5,7 @@
 extern "C" {
 #endif
 
+#include "../memory/memory.h"
 #include "../tag/tag.h"
 #include "../tag/definitions/font.h"
 #include "text.h"
@@ -12,11 +13,12 @@ extern "C" {
 /**
  * @todo Investigate the other values of this enum.
  */
-typedef enum StringParseResult {
+typedef enum PACKED_ENUM StringParseResult {
     STRING_PARSE_RESULT_END = 0,
     STRING_PARSE_RESULT_LINE_BREAK,
     STRING_PARSE_RESULT_TAB = 3,
-    STRING_PARSE_RESULT_CHARACTER = 6
+    STRING_PARSE_RESULT_CHARACTER = 6,
+    STRING_PARSE_RESULT_SIZE = 0xFFFF
 } StringParseResult;
 
 typedef struct StringParseState {
@@ -30,6 +32,7 @@ typedef struct StringParseState {
     StringParseResult result;
     ColorARGBInt color; // I'm not sure if this is actually a color but what else could it be?
 } StringParseState;
+_Static_assert(sizeof(StringParseState) == 28);
 
 /**
  * This function initializes the string parsing state.

@@ -38,14 +38,10 @@ StringParseResult string_parse_unicode_string(StringParseState *state) {
                 state->character = L'\r';
                 state->result = STRING_PARSE_RESULT_LINE_BREAK;
             }
-            else if(character == L't') {
-                state->character = L'\t';
-                state->result = STRING_PARSE_RESULT_TAB;
-            }
             else {
+                state->offset = offset + 1;
                 state->result = STRING_PARSE_RESULT_CHARACTER;
             }
-            state->offset = offset + 1;
             break;
         default:
             state->result = STRING_PARSE_RESULT_CHARACTER;

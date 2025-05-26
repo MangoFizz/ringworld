@@ -154,17 +154,55 @@ void rasterizer_vector_font_calculate_unicode_string_draw_bounds(const wchar_t *
         bounds->right = 0;
         bounds->bottom = font->font_size;
     }
-
     dynamic_array_free(&text_rects);
+}
 
-    /**
-     * For some reason, the game subtracts 3 pixels from the right bound.
-     * Probably the game adds 3 pixels as margin when it calculates the 
-     * bounds of the text when using bitmap fonts.
-     * 
-     * @todo Fix this on the function that calls this one.
-     */
-    bounds->right += 3;
+void rasterizer_vector_font_calculate_string_draw_bounds(const char *string, VectorFont *font, FontStyle font_style, Rectangle2D *bounds) {
+    VectorFontStyle *font_style_data = vector_font_get_style(font, font_style);
+    ID3DXFont *d3dx9_font = rasterizer_vector_font_get_hardware_format(font, font_style);
+    float scale = get_scale_factor();
+    uint16_t screen_width = render_get_screen_width();
+    uint16_t screen_height = render_get_screen_height();
+
+    bounds->left = INT16_MAX;
+    bounds->top = INT16_MAX;
+    bounds->right = INT16_MIN;
+    bounds->bottom = INT16_MIN;
+    
+    DynamicArray text_rects;
+    vector_font_handle_string_formatting(string, 0, 0, screen_width, screen_height, &text_rects);
+    for(size_t i = 0; i < text_rects.lenght; i++) {
+        VectorFontTextRect *text_rect = dynamic_array_get(&text_rects, i);
+        char text[strlen(text_rect->text.data) + 2];
+        sprintf_s(text, SIZEOF_ARRAY(text), "%s_", text_rect->text.data);
+
+        RECT rect = { 0, 0, 0, 0 };
+        ID3DXFont_DrawTextA(d3dx9_font, NULL, text, -1, &rect, DT_CALCRECT, 0xFFFFFFFF);
+        int16_t width = (float)(rect.right - font_style_data->space_width) / scale;
+        int16_t height = (float)rect.bottom / scale;
+
+        if(text_rect->x < bounds->left) {
+            bounds->left = text_rect->x;
+        }
+        if(text_rect->y < bounds->top) {
+            bounds->top = text_rect->y;
+        }
+        if(bounds->right < text_rect->x + width) {
+            bounds->right = text_rect->x + width;
+        }
+        if(bounds->bottom < height + text_rect->y) {
+            bounds->bottom = height + text_rect->y;
+        }
+
+        dynamic_buffer_free(&text_rect->text);
+    }
+    if(text_rects.lenght == 0) {
+        bounds->left = 0;
+        bounds->top = 0;
+        bounds->right = 0;
+        bounds->bottom = font->font_size;
+    }
+    dynamic_array_free(&text_rects);
 }
 
 void rasterizer_vector_font_draw_unicode_string(const Rectangle2D *bounds, const Rectangle2D *text_rect, VectorXYInt *offset_out, uint32_t flags, const wchar_t *string) {
@@ -182,10 +220,10 @@ void rasterizer_vector_font_draw_unicode_string(const Rectangle2D *bounds, const
     }
 
     RECT rect;
-    rect.left = bounds->left + text_rect->left;
-    rect.right = min_i32(bounds->right, bounds->left + text_rect->right);
-    rect.top = bounds->top + text_rect->top;
-    rect.bottom = min_i32(bounds->bottom, bounds->top + text_rect->bottom);
+    rect.left = bounds->left;
+    rect.right = bounds->right;
+    rect.top = bounds->top;
+    rect.bottom = bounds->bottom;
 
     Rectangle2D text_final_rect;
     text_final_rect.top = INT16_MAX;
@@ -195,8 +233,21 @@ void rasterizer_vector_font_draw_unicode_string(const Rectangle2D *bounds, const
 
     D3DCOLOR encoded_color = color_encode_a8r8g8b8(&text_globals->color);
 
+    // Calculate the alignment offset based on the justification
+    int16_t align_offset_x = 0;
+    Rectangle2D text_bounds;
+    rasterizer_vector_font_calculate_unicode_string_draw_bounds(string, font, text_globals->style, &text_bounds);
+    switch(text_globals->justification) {
+        case TEXT_JUSTIFICATION_RIGHT:
+            align_offset_x += (rect.right - rect.left) - (text_bounds.right - text_bounds.left);
+            break;
+        case TEXT_JUSTIFICATION_CENTER:
+            align_offset_x += ((rect.right - rect.left) - (text_bounds.right - text_bounds.left)) / 2;
+            break;
+    }
+
     DynamicArray text_rects;
-    vector_font_handle_unicode_string_formatting(string, rect.left, rect.top, rect.right - rect.left, rect.bottom - rect.top, &text_rects);
+    vector_font_handle_unicode_string_formatting(string, rect.left + align_offset_x, rect.top, rect.right - rect.left, rect.bottom - rect.top, &text_rects);
     for(size_t i = 0; i < text_rects.lenght; i++) {
         VectorFontTextRect *text_rect = dynamic_array_get(&text_rects, i);
 
@@ -209,19 +260,6 @@ void rasterizer_vector_font_draw_unicode_string(const Rectangle2D *bounds, const
         text_rect_area.top = ceil(text_rect->y * scale + scaled_font_offset_y);
         text_rect_area.bottom = ceil((text_rect->y + text_rect->height) * scale + scaled_font_offset_y);
 
-        uint32_t align = DT_LEFT;
-        switch(text_rect->justification) {
-            case TEXT_JUSTIFICATION_LEFT:
-                align = DT_LEFT;
-                break;
-            case TEXT_JUSTIFICATION_RIGHT:
-                align = DT_RIGHT;
-                break;
-            case TEXT_JUSTIFICATION_CENTER:
-                align = DT_CENTER;
-                break;
-        }
-
         D3DCOLOR shadow_color = text_get_shadow_color() | (0xFF000000 & encoded_color);
         
         RECT shadow_rect_area = text_rect_area;
@@ -230,9 +268,9 @@ void rasterizer_vector_font_draw_unicode_string(const Rectangle2D *bounds, const
         shadow_rect_area.top += 1 * scale;
         shadow_rect_area.bottom += 1 * scale;
 
-        ID3DXFont_DrawTextW(d3dx9_font, NULL, text_rect->text.data, -1, &shadow_rect_area, align, shadow_color);
+        ID3DXFont_DrawTextW(d3dx9_font, NULL, text_rect->text.data, -1, &shadow_rect_area, DT_LEFT, shadow_color);
 
-        ID3DXFont_DrawTextW(d3dx9_font, NULL, text_rect->text.data, -1, &text_rect_area, align, encoded_color);
+        ID3DXFont_DrawTextW(d3dx9_font, NULL, text_rect->text.data, -1, &text_rect_area, DT_LEFT, encoded_color);
 
         if(offset_out != NULL) {
             if(text_rect->x < text_final_rect.left) {
@@ -275,10 +313,10 @@ void rasterizer_vector_font_draw_string(const Rectangle2D *bounds, const Rectang
     }
 
     RECT rect;
-    rect.left = bounds->left + text_rect->left;
-    rect.right = min_i32(bounds->right, bounds->left + text_rect->right);
-    rect.top = bounds->top + text_rect->top;
-    rect.bottom = min_i32(bounds->bottom, bounds->top + text_rect->bottom);
+    rect.left = bounds->left;
+    rect.right = bounds->right;
+    rect.top = bounds->top;
+    rect.bottom = bounds->bottom;
 
     Rectangle2D text_final_rect;
     text_final_rect.top = INT16_MAX;
@@ -288,8 +326,24 @@ void rasterizer_vector_font_draw_string(const Rectangle2D *bounds, const Rectang
 
     D3DCOLOR encoded_color = color_encode_a8r8g8b8(&text_globals->color);
 
+    // Calculate the alignment offset based on the justification
+    int16_t align_offset_x = 0;
+    Rectangle2D text_bounds;
+    rasterizer_vector_font_calculate_string_draw_bounds(string, font, text_globals->style, &text_bounds);
+    switch(text_globals->justification) {
+        case TEXT_JUSTIFICATION_LEFT:
+            align_offset_x = 0;
+            break;
+        case TEXT_JUSTIFICATION_RIGHT:
+            align_offset_x = (rect.right - rect.left) - (text_bounds.right - text_bounds.left);
+            break;
+        case TEXT_JUSTIFICATION_CENTER:
+            align_offset_x = ((rect.right - rect.left) - (text_bounds.right - text_bounds.left)) / 2;
+            break;
+    }
+
     DynamicArray text_rects;
-    vector_font_handle_string_formatting(string, rect.left, rect.top, rect.right - rect.left, rect.bottom - rect.top, &text_rects);
+    vector_font_handle_string_formatting(string, rect.left + align_offset_x, rect.top, rect.right - rect.left, rect.bottom - rect.top, &text_rects);
     for(size_t i = 0; i < text_rects.lenght; i++) {
         VectorFontTextRect *text_rect = dynamic_array_get(&text_rects, i);
 
@@ -302,19 +356,6 @@ void rasterizer_vector_font_draw_string(const Rectangle2D *bounds, const Rectang
         text_rect_area.top = ceil(text_rect->y * scale + scaled_font_offset_y);
         text_rect_area.bottom = ceil((text_rect->y + text_rect->height) * scale + scaled_font_offset_y);
 
-        uint32_t align = DT_LEFT;
-        switch(text_rect->justification) {
-            case TEXT_JUSTIFICATION_LEFT:
-                align = DT_LEFT;
-                break;
-            case TEXT_JUSTIFICATION_RIGHT:
-                align = DT_RIGHT;
-                break;
-            case TEXT_JUSTIFICATION_CENTER:
-                align = DT_CENTER;
-                break;
-        }
-
         D3DCOLOR shadow_color = text_get_shadow_color() | (0xFF000000 & encoded_color);
         
         RECT shadow_rect_area = text_rect_area;
@@ -323,9 +364,9 @@ void rasterizer_vector_font_draw_string(const Rectangle2D *bounds, const Rectang
         shadow_rect_area.top += 1 * scale;
         shadow_rect_area.bottom += 1 * scale;
 
-        ID3DXFont_DrawTextA(d3dx9_font, NULL, text_rect->text.data, -1, &shadow_rect_area, align, shadow_color);
+        ID3DXFont_DrawTextA(d3dx9_font, NULL, text_rect->text.data, -1, &shadow_rect_area, DT_LEFT, shadow_color);
 
-        ID3DXFont_DrawTextA(d3dx9_font, NULL, text_rect->text.data, -1, &text_rect_area, align, encoded_color);
+        ID3DXFont_DrawTextA(d3dx9_font, NULL, text_rect->text.data, -1, &text_rect_area, DT_LEFT, encoded_color);
 
         if(offset_out != NULL) {
             if(text_rect->x < text_final_rect.left) {

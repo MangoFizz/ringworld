@@ -1,6 +1,7 @@
 #include <windows.h>
 #include "../exception/exception.h"
 #include "../font/font.h"
+#include "../math/math.h"
 #include "../rasterizer/rasterizer_vector_font.h"
 #include "../tag/definitions/vector_font.h"
 #include "../tag/definitions/vector_font_data.h"
@@ -264,6 +265,15 @@ void vector_font_calculate_unicode_string_draw_bounds(const wchar_t *string, con
     bounds.top += position->top;
     bounds.right += position->left;
     bounds.bottom += position->top;
+
+    /**
+     * For some reason, the game subtracts 3 pixels from the left bound.
+     * Probably the game adds 3 pixels as margin when it calculates the 
+     * bounds of the text when using bitmap fonts.
+     * 
+     * @todo Fix this on the function that calls this one.
+     */
+    math_rectangle_2d_translate(&bounds, 3, 0);
 
     if(first_character_position) {
         first_character_position->left = bounds.right;

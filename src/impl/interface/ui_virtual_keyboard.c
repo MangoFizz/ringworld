@@ -179,15 +179,8 @@ void ui_virtual_keyboard_render_input_cursor(const Rectangle2D *bounds) {
         text[i] = L'\0';
 
         Rectangle2D cursor_bounds;
-        int32_t current_align = text_drawing_globals->justification;
         text_drawing_globals->justification = TEXT_JUSTIFICATION_LEFT;
         text_calculate_unicode_string_draw_bounds(text, bounds, &cursor_bounds, NULL);
-        text_drawing_globals->justification = current_align;
-
-        /**
-         * The calculated bounds have 3 extra pixels on the right due HUD render functions subtracting those 3 pixels.
-         * @todo Remove this once all the functions are reimplemented.
-         */
         math_rectangle_2d_translate(&cursor_bounds, -3, 0);
 
         BitmapData *caret_bitmap = bitmap_group_sequence_get_bitmap_for_frame(globals->caret_bitmap_tag, 0, 0);
@@ -210,36 +203,22 @@ void ui_virtual_keyboard_render_prompt(const Rectangle2D *bounds) {
 
     Rectangle2D text_rect;
     text_calculate_unicode_string_draw_bounds(globals->text_buffer, bounds, NULL, &text_rect);
-    text_rect.left -= UI_VIRTUAL_KEYBOARD_INPUT_PADDING;
-    text_rect.right += UI_VIRTUAL_KEYBOARD_INPUT_PADDING;  
+    math_rectangle_2d_translate(&text_rect, -3, 0);
 
     if(globals->text_is_selected) {
+        Rectangle2D selection_rect = text_rect;
+        selection_rect.left -= UI_VIRTUAL_KEYBOARD_INPUT_PADDING;
+        selection_rect.right += UI_VIRTUAL_KEYBOARD_INPUT_PADDING;  
         BitmapData *selection_bitmap = bitmap_group_sequence_get_bitmap_for_frame(globals->caret_bitmap_tag, 0, 0);
         if(selection_bitmap) {
-            bitmap_draw_in_rect(selection_bitmap, NULL, TEXT_SELECTION_COLOR, &text_rect, bounds);
+            bitmap_draw_in_rect(selection_bitmap, NULL, TEXT_SELECTION_COLOR, &selection_rect, bounds);
         }
         else {
-            rasterizer_screen_geometry_draw_quad(&text_rect, TEXT_SELECTION_COLOR);
+            rasterizer_screen_geometry_draw_quad(&selection_rect, TEXT_SELECTION_COLOR);
         }
     }
 
-    /**
-     * Center text manually within the bounds.
-     * This is necessary because D3DX9 does not center text correctly when the text has trailing spaces.
-     */
-    if(tag_get_primary_group(globals->text_font_tag) == TAG_GROUP_VECTOR_FONT) {
-        text_drawing_globals->justification = TEXT_JUSTIFICATION_LEFT;
-        Rectangle2D centered_text_rect = text_rect;
-        int32_t bounds_width = bounds->right - bounds->left;
-        int32_t text_width = text_rect.right - text_rect.left;
-        centered_text_rect.left = (bounds_width - text_width) / 2 + UI_VIRTUAL_KEYBOARD_INPUT_PADDING;
-        centered_text_rect.right = centered_text_rect.left + (text_rect.right - text_rect.left);
-        text_draw_unicode_string(&centered_text_rect, NULL, NULL, 0, globals->text_buffer);
-        text_rect.left += UI_VIRTUAL_KEYBOARD_INPUT_PADDING;
-    } 
-    else {
-        text_draw_unicode_string(bounds, NULL, NULL, 0, globals->text_buffer);
-    }
+    text_draw_unicode_string(bounds, NULL, NULL, 0, globals->text_buffer);
 
     ui_virtual_keyboard_render_input_cursor(&text_rect);
 }

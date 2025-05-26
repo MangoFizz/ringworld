@@ -10,18 +10,23 @@ extern Font **text_draw_font;
 
 TagHandle bitmap_font_get_style(TagHandle font_tag, FontStyle style) {
     Font *font_data = tag_get_data(TAG_GROUP_FONT, font_tag);
+    TagHandle font_handle = NULL_HANDLE;
     switch(style) {
         case FONT_STYLE_BOLD:
-            return font_data->bold.tag_handle;
+            font_handle = font_data->bold.tag_handle;
         case FONT_STYLE_ITALIC:
-            return font_data->italic.tag_handle;
+            font_handle = font_data->italic.tag_handle;
         case FONT_STYLE_CONDENSED:
-            return font_data->condense.tag_handle;
+            font_handle = font_data->condense.tag_handle;
         case FONT_STYLE_UNDERLINE:
-            return font_data->underline.tag_handle;
+            font_handle = font_data->underline.tag_handle;
         default:
-            return font_tag;
+            font_handle = font_tag;
     }
+    if(HANDLE_IS_NULL(font_handle)) {
+        font_handle = font_tag;
+    }
+    return font_handle;
 }
 
 FontCharacter *bitmap_font_get_character(Font *font, wchar_t character) {

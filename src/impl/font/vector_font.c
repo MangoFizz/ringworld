@@ -10,18 +10,23 @@
 #include "vector_font.h"
 
 VectorFontStyle *vector_font_get_style(VectorFont *font, FontStyle style) {
+    VectorFontStyle *font_style = NULL;
     switch(style) {
         case FONT_STYLE_BOLD:
-            return &font->bold;
+            font_style = &font->bold;
         case FONT_STYLE_ITALIC:
-            return &font->italic;
+            font_style = &font->italic;
         case FONT_STYLE_CONDENSED:
-            return &font->condensed;
+            font_style = &font->condensed;
         case FONT_STYLE_UNDERLINE:
-            return &font->underline;
+            font_style = &font->underline;
         default:
-            return &font->regular;
+            font_style = &font->regular;
     }
+    if(HANDLE_IS_NULL(font_style->data.tag_handle)) {
+        font_style = &font->regular;
+    }
+    return font_style;
 }
 
 static void add_new_unicode_string_rect(DynamicArray *text_recs, const wchar_t *str, size_t tabs, int16_t start, int16_t end, int16_t x, int16_t y, int16_t width, int16_t height, TextJustification justification) {

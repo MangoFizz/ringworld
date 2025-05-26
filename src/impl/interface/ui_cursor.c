@@ -44,6 +44,13 @@ void ui_cursor_update(void) {
     x_delta *= (1.0 + fabs(x_delta) * UI_CURSOR_ACCELERATION);
     y_delta *= (1.0 + fabs(y_delta) * UI_CURSOR_ACCELERATION);
 
+    if(x_delta * x_delta < 1) {
+        x_delta = *mouse_x_delta;
+    }
+    if(y_delta * y_delta < 1) {
+        y_delta = *mouse_y_delta;
+    }
+
     // move the cursor, and 'activate' widgets if we moved the cursor
     ui_cursor_displace(+x_delta, -y_delta);
 }

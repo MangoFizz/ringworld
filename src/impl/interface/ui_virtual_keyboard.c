@@ -217,8 +217,14 @@ void ui_virtual_keyboard_render_prompt(const Rectangle2D *bounds) {
             rasterizer_screen_geometry_draw_quad(&selection_rect, TEXT_SELECTION_COLOR);
         }
     }
-
-    text_draw_unicode_string(bounds, NULL, NULL, 0, globals->text_buffer);
+    
+    Rectangle2D adjusted_text_rect = text_rect;
+    if(tag_get_primary_group(globals->text_font_tag) == TAG_GROUP_FONT) {
+        Font *font = tag_get_data(TAG_GROUP_FONT, globals->text_font_tag);
+        text_drawing_globals->justification = TEXT_JUSTIFICATION_LEFT;
+        adjusted_text_rect.left -= font->leading_width;
+    } 
+    text_draw_unicode_string(&adjusted_text_rect, NULL, NULL, 0, globals->text_buffer);
 
     ui_virtual_keyboard_render_input_cursor(&text_rect);
 }

@@ -131,7 +131,7 @@ BitmapData *bitmap_new_2d_bitmap_data(uint16_t width, uint16_t height, uint16_t 
     return bitmap_data;
 }
 
-void bitmap_draw(BitmapData *bitmap, Bounds2D *bounds, float scale, float rotation, float fade, VectorXYInt *offset) {
+void bitmap_draw(BitmapData *bitmap, const Bounds2D *bounds, float scale, float rotation, float fade, const VectorXYInt *offset) {
     float sin_rotation = sin(rotation);
     float cos_rotation = cos(rotation);
     uint32_t color = (uint32_t)(fade * 255.0f) << 24 | 0xFFFFFF;

@@ -52,6 +52,12 @@ void string_parse_state_init(TagHandle font_tag, ColorARGB *color, const wchar_t
  */
 StringParseResult string_parse_unicode_string(StringParseState *state);
 
+/**
+ * Trims leading and trailing whitespace characters from a wide character string.
+ * @param str The wide character string to be trimmed.
+ */
+void string_trim_whitespaces(wchar_t *str);
+
 #ifdef __cplusplus
 }
 #endif

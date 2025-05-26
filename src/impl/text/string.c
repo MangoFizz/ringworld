@@ -1,3 +1,6 @@
+#include <wctype.h>
+#include <ctype.h>
+#include <wchar.h>
 #include "../math/color.h"
 #include "../font/font.h"
 #include "../font/bitmap_font.h"
@@ -102,4 +105,33 @@ uint16_t string_calculate_line_break(wchar_t *string, uint32_t *width) {
             }
         }
     }
+}
+
+bool string_contains_non_whitespace(const wint_t *str) {
+    while(*str != 0) {
+        if(!iswspace(*str)) {
+            return true;
+        }
+        str++;
+    }
+    return false;
+}
+
+void string_trim_whitespaces(wchar_t *str) {
+    if(str==NULL||*str==L'\0') {
+        return;
+    }
+    wchar_t *start = str;
+    wchar_t *end = str + wcslen(str) - 1;
+    while(iswspace(*start)) {
+        start++;
+    }
+    while(end > start && iswspace(*end)) {
+        end--;
+    }
+    size_t new_len = end - start + 1;
+    if(start != str) {
+        wmemmove(str, start, new_len);
+    }
+    str[new_len] = L'\0';
 }

@@ -128,6 +128,13 @@ typedef enum UIWidgetButtonCaptionStringIndex {
     UI_WIDGET_BUTTON_CAPTION_PROFILE_LABEL = 7
 } UIWidgetButtonCaptionStringIndex;
 
+typedef enum FeedbackSound {
+    FEEDBACK_SOUND_CURSOR = 1,
+    FEEDBACK_SOUND_FORWARD,
+    FEEDBACK_SOUND_BACK,
+    FEEDBACK_SOUND_FLAG_FAILURE
+} FeedbackSound;
+
 /**
  * Get the UI widget globals.
  * @return pointer to the UI widget globals
@@ -305,6 +312,21 @@ const wchar_t *ui_widget_get_common_button_caption(UIWidgetButtonCaptionStringIn
  * @param profile_name pointer to the profile name
  */
 void ui_widget_update_player_profile_text(const wchar_t *profile_name, Widget *text_widget);
+
+/**
+ * Play a feedback sound.
+ * @param sound the feedback sound to play
+ */
+void ui_widget_play_feedback_sound(FeedbackSound sound);
+
+/**
+ * Display an error modal.
+ * @param error_string the error string to display
+ * @param local_player the local player handle
+ * @param display_modal true if the modal should be displayed, false otherwise
+ * @param display_paused true if the modal should be displayed while paused, false otherwise
+ */
+void ui_widget_display_error_modal(int16_t error_string, PlayerHandle local_player, bool display_modal, bool display_paused);
 
 #ifdef __cplusplus
 }

@@ -52,12 +52,17 @@ void bitmap_font_calculate_unicode_string_draw_bounds(const wchar_t *string, con
     VectorXYInt offset; 
     bitmap_font_draw_unicode_string(bitmap_font_calculate_draw_bounds, position, &offset, NULL, 0, string); // @todo Check dest_rect parameter
 
-    first_character_position->left = offset.x;
-    first_character_position->right = offset.x + 1;
-    first_character_position->top = offset.y - font_data->ascending_height;
-    first_character_position->bottom = font_data->descending_height + offset.y;
-    text_bounds->left = text_draw_bounds->left;
-    text_bounds->top = position->top;
-    text_bounds->right = text_draw_bounds->right;
-    text_bounds->bottom = first_character_position->bottom;
+    if(first_character_position) {
+        first_character_position->left = offset.x;
+        first_character_position->right = offset.x + 1;
+        first_character_position->top = offset.y - font_data->ascending_height;
+        first_character_position->bottom = font_data->descending_height + offset.y;
+    }
+
+    if(text_bounds) {
+        text_bounds->left = text_draw_bounds->left;
+        text_bounds->top = position->top;
+        text_bounds->right = text_draw_bounds->right;
+        text_bounds->bottom = font_data->descending_height + offset.y;
+    }
 }

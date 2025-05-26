@@ -34,9 +34,6 @@ TagHandle lookup_tag(const char *path, TagGroup group) {
             return tag->handle;
         }
     }
-
-    console_printf_debug_err("lookup_tag failed!");
-    console_printf_debug_err("    path: %s.%s", path, group_fourcc_to_name(group));
     return NULL_HANDLE;
 }
 

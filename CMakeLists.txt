@@ -84,11 +84,13 @@ set(RINGWORLD_SOURCES
     src/impl/game/game_globals.c
     src/impl/game/game_state.c
     src/impl/game/game_time.c
+    src/impl/input/input.c
     src/impl/math/color.c
     src/impl/math/math.c
     src/impl/math/wave_functions.c
     src/impl/interface/first_person_weapon.c
     src/impl/interface/hud.c
+    src/impl/interface/input_event.c
     src/impl/interface/interface.c
     src/impl/interface/loading_screen.c
     src/impl/interface/pgcr.c

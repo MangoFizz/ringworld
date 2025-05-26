@@ -37,10 +37,20 @@
     "ui_widget_adjust_spinner_list_bounds": {"address": "0x49c920", "replace": true, "arguments": ["eax", "ecx"]},
     "ui_widget_get_cursor_focused_widget": {"address": "0x49ca60", "replace": true, "use_return_value": true, "arguments": ["0", "4", "8", "12"]},
     "ui_widget_is_cursor_over": {"address": "0x49c980", "replace": true, "use_return_value": true, "arguments": ["eax"]},
-    "ui_virtual_keyboard_initialize": {"address": "0x4ab900", "replace": true, "use_return_value": true},
-    "ui_virtual_keyboard_render": {"address": "0x4ac520", "replace": true},
-    "ui_virtual_keyboard_render_prompt": {"address": "0x4ac310", "replace": false, "arguments": ["0"]},
     "ui_widget_update_player_profile_text": {"address": "0x49f6a0", "replace": true, "arguments": ["0", "ebx"]},
+    "ui_widget_play_feedback_sound": {"address": "0x49be20", "replace": false, "arguments": ["eax"]},
+    "ui_widget_display_error_modal": {"address": "0x49beb0", "replace": false, "arguments": ["0", "4", "8", "12"]},
+    
+    "ui_virtual_keyboard_initialize": {"address": "0x4ab900", "replace": true, "use_return_value": true},
+    "ui_virtual_keyboard_launch": {"address": "0x4ab9b0", "replace": true, "use_return_value": true, "arguments": ["0", "4", "esi"]},
+    "ui_virtual_keyboard_render": {"address": "0x4ac520", "replace": true},
+    "ui_virtual_keyboard_render_prompt": {"address": "0x4ac310", "replace": true, "arguments": ["0"]},
+    "ui_virtual_keyboard_cancel": {"address": "0x4ac260", "replace": true, "use_return_value": true},
+    "ui_virtual_keyboard_backspace": {"address": "0x4ac700", "replace": true},
+    "ui_virtual_keyboard_process": {"address": "0x4abbf0", "replace": true},
+    "ui_virtual_keyboard_validate_input_character": {"address": "0x4abb90", "replace": false, "use_return_value": true, "arguments": ["ecx", "eax"]},
+    
+    "string_contains_non_whitespace": {"address": "0x4abb20", "replace": true, "use_return_value": true, "arguments": ["eax"]},
     
     "ui_widget_update_multiplayer_type_menu_extended_description": {"address": "0x4a7d00", "replace": true, "arguments": ["0"]},
     
@@ -127,6 +137,10 @@
     "saved_games_read_player_profile": {"address": "0x53dad0", "replace": false, "use_return_value": true, "arguments": ["0", "ecx"]},
     "saved_games_write_player_profile": {"address": "0x53dcb0", "replace": false, "arguments": ["0", "4"]},
     "saved_game_file_get_path_to_enclosing_directory": {"address": "0x5403e0", "replace": false, "use_return_value": true, "arguments": ["eax", "esi"]},
+    "saved_game_file_name_is_unique": {"address": "0x540540", "replace": false, "use_return_value": true, "arguments": ["eax"]},
+    "saved_games_name_is_from_player_profile": {"address": "0x498dd0", "replace": false, "use_return_value": true, "arguments": ["0"]},
+    
+    "game_variant_is_not_stock": {"address": "0x4abb60", "replace": false, "use_return_value": true, "arguments": ["edi"]},
 
     "object_get_and_verify_type": {"address": "0x4fa7d0", "replace": true, "use_return_value": true, "arguments": ["ecx", "0"]},
     "object_placement_data_new": {"address": "0x4f8cb0", "replace": true, "use_return_value": true, "arguments": ["eax", "0", "4"]},

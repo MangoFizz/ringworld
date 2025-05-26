@@ -71,6 +71,15 @@ void vector_font_handle_unicode_string_formatting(const wchar_t *text, int16_t x
  */
 uint32_t vector_font_calculate_unicode_string_width(wchar_t *string, VectorFont *font, FontStyle style);
 
+/**
+ * Checks if a glyph for the specified character exists in the given vector font and style.
+ * @param font Pointer to the VectorFont structure to search in.
+ * @param font_style The style of the font (e.g., bold, italic) to consider when searching for the glyph.
+ * @param character The character to check for glyph existence.
+ * @return true if the glyph exists in the font for the specified style and character, false otherwise.
+ */
+bool vector_font_glyph_exists(VectorFont *font, FontStyle font_style, char character);
+
 #ifdef __cplusplus
 }
 #endif

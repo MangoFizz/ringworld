@@ -1,7 +1,9 @@
+#include <windows.h>
 #include "../exception/exception.h"
 #include "../font/font.h"
 #include "../rasterizer/rasterizer_vector_font.h"
 #include "../tag/definitions/vector_font.h"
+#include "../tag/definitions/vector_font_data.h"
 #include "../memory/dynamic_array.h"
 #include "font.h"
 #include "vector_font.h"
@@ -239,20 +241,74 @@ void vector_font_calculate_unicode_string_draw_bounds(const wchar_t *string, con
     
     Rectangle2D bounds;
     rasterizer_vector_font_calculate_unicode_string_draw_bounds(string, font, text_globals->style, &bounds);
+
+    switch(text_globals->justification) {
+        case TEXT_JUSTIFICATION_LEFT:
+            break;
+        case TEXT_JUSTIFICATION_RIGHT: {
+            uint16_t width = bounds.right - bounds.left;
+            bounds.left = position->right - width;
+            bounds.right = position->right;
+            break;
+        }
+        case TEXT_JUSTIFICATION_CENTER: {
+            uint16_t width = bounds.right - bounds.left;
+            int16_t center = (position->right - position->left) / 2;
+            bounds.left = center - (width / 2);
+            bounds.right = center + (width / 2);
+            break;
+        }
+    }
+
     bounds.left += position->left;
     bounds.top += position->top;
     bounds.right += position->left;
     bounds.bottom += position->top;
 
-    first_character_position->left = bounds.right;
-    first_character_position->right = bounds.right + 1;
-    first_character_position->top = bounds.top;
-    first_character_position->bottom = bounds.bottom;
-    *text_bounds = bounds; 
+    if(first_character_position) {
+        first_character_position->left = bounds.right;
+        first_character_position->right = bounds.right + 1;
+        first_character_position->top = bounds.top;
+        first_character_position->bottom = bounds.bottom;
+    }
+    
+    if(text_bounds) {
+        *text_bounds = bounds; 
+    }
 }
 
 uint32_t vector_font_calculate_unicode_string_width(wchar_t *string, VectorFont *font, FontStyle style) {
     Rectangle2D bounds;
     rasterizer_vector_font_calculate_unicode_string_draw_bounds(string, font, style, &bounds);
     return bounds.right - bounds.left;
+}
+
+bool vector_font_glyph_exists(VectorFont *font, FontStyle font_style, char character) {
+    VectorFontStyle *font_style_data = vector_font_get_style(font, font_style);
+    VectorFontData *font_data = tag_get_data(TAG_GROUP_VECTOR_FONT_DATA, font_style_data->data.tag_handle);
+    
+    LOGFONTA lf = {0};
+    lf.lfHeight = -12; 
+    strncpy(lf.lfFaceName, font_data->font_family_name.string, LF_FACESIZE - 1);
+
+    HFONT hFont = CreateFontIndirectA(&lf);
+    if(!hFont) {
+        return false;
+    }
+
+    HDC hdc = GetDC(NULL);
+    if(!hdc) {
+        DeleteObject(hFont);
+        return false;
+    }
+
+    HGDIOBJ oldFont = SelectObject(hdc, hFont);
+    WORD glyphIndex = 0xFFFF;
+    GetGlyphIndicesA(hdc, &character, 1, &glyphIndex, GGI_MARK_NONEXISTING_GLYPHS);
+
+    SelectObject(hdc, oldFont);
+    ReleaseDC(NULL, hdc);
+    DeleteObject(hFont);
+
+    return glyphIndex != 0xFFFF;
 }

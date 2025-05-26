@@ -126,7 +126,7 @@ void rasterizer_vector_font_calculate_unicode_string_draw_bounds(const wchar_t *
     for(size_t i = 0; i < text_rects.lenght; i++) {
         VectorFontTextRect *text_rect = dynamic_array_get(&text_rects, i);
         wchar_t text[wcslen(text_rect->text.data) + 2];
-        swprintf_s(text, sizeof(text) / sizeof(wchar_t), L"%s_", text_rect->text.data);
+        swprintf_s(text, SIZEOF_ARRAY(text), L"%s_", text_rect->text.data);
 
         RECT rect = { 0, 0, 0, 0 };
         ID3DXFont_DrawTextW(d3dx9_font, NULL, text, -1, &rect, DT_CALCRECT, 0xFFFFFFFF);
@@ -152,7 +152,7 @@ void rasterizer_vector_font_calculate_unicode_string_draw_bounds(const wchar_t *
         bounds->left = 0;
         bounds->top = 0;
         bounds->right = 0;
-        bounds->bottom = 0;
+        bounds->bottom = font->font_size;
     }
 
     dynamic_array_free(&text_rects);

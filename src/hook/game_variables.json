@@ -111,5 +111,8 @@
     "terminal_globals": {"type": "TerminalGlobals", "address": "0x64de2c"},
     "first_person_weapons": {"type": "FirstPersonWeapons *", "address": "0x64dcc8"},
     "text_draw_bounds": {"type": "Rectangle2D", "address": "0x67f6d4"},
-    "text_draw_font": {"type": "Font *", "address": "0x67f6dc"}
+    "text_draw_font": {"type": "Font *", "address": "0x67f6dc"},
+    "input_globals": {"type": "InputGlobals", "address": "0x64c528"},
+    "input_flags": {"type": "uint8_t", "address": "0x6ad572"},
+    "input_events_globals": {"type": "InputEventsGlobals", "address": "0x6add08"}
 }

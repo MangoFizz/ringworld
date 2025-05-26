@@ -27,6 +27,14 @@ typedef enum PACKED_ENUM FontStyle {
 void *font_get_data(TagHandle font_tag_handle, FontStyle style);
 
 /**
+ * Check if a character exists in the specified font.
+ * @param font_tag_handle The tag handle of the font.
+ * @param character The character to check for existence.
+ * @return True if the character exists in the font, false otherwise.
+ */
+bool font_character_exists(TagHandle font_tag_handle, wchar_t character);
+
+/**
  * Retrieve the tag handle of a font by its file path.
  * This function first attempts to find the font in the TAG_GROUP_FONT group,
  * and if not found, it tries the TAG_GROUP_VECTOR_FONT group.

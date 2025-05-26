@@ -395,6 +395,19 @@ PlayerProfile *saved_games_get_player_profile(uint16_t local_player_index);
  */
 bool saved_game_file_get_path_to_enclosing_directory(uint32_t profile_id, char *path);
 
+/**
+ * Checks if the saved game file name is unique for the specified profile name.
+ * @param profile_name The name of the player profile.
+ * @return True if the saved game file name is unique, false otherwise.
+ */
+bool saved_game_file_name_is_unique(const wchar_t *profile_name);
+
+/**
+ * Checks if the saved game file name is from the player profile with the specified ID.
+ * @param name The name of the saved game file.
+ * @return True if the name is from the player profile, false otherwise.
+ */
+bool saved_games_name_is_from_player_profile(const wchar_t *name);
 
 #pragma pack(pop)
 

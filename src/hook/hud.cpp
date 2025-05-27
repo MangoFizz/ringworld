@@ -10,6 +10,11 @@
 #include "../impl/tag/definitions/font.h"
 #include "../impl/tag/definitions/vector_font.h"
 #include "../impl/interface/hud.h"
+#include "../impl/render/render.h"
+
+static float *screen_center_x_constant_1 = reinterpret_cast<float *>(0x6128e4);
+static uint32_t *screen_center_x_constant_2 = reinterpret_cast<uint32_t *>(0x4b2b06);
+static float *screen_width_constant = reinterpret_cast<float *>(0x612268);
 
 extern "C" {
     void hud_calculate_font_height_asm();
@@ -39,6 +44,15 @@ extern "C" {
         else {
             return ((VectorFont *)font_data)->font_size;
         }
+    }
+
+    void navpoints_update_screen_dimentions_hack() {
+        float new_screen_width_constant = render_get_screen_width();
+        float new_screen_center_x_constant_f = new_screen_width_constant / 2.0f;
+        int new_screen_center_x_constant = static_cast<int>(new_screen_center_x_constant_f);
+        overwrite(screen_center_x_constant_1, new_screen_center_x_constant_f);
+        overwrite(screen_center_x_constant_2, new_screen_center_x_constant);
+        overwrite(screen_width_constant, new_screen_width_constant);
     }
 }
 

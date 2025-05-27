@@ -3,6 +3,7 @@
 
 #include <cstdint>
 #include <vector>
+#include <windows.h>
 
 namespace Demon {
     enum HookType {
@@ -116,6 +117,37 @@ namespace Demon {
     void set_up_server_hooks();
     void set_game_variables();
     void set_server_variables();
+}
+
+/**
+ * Overwrite the data at the pointer with the given data even if this pointer is read-only.
+ * @param pointer This is the pointer that points to the data to be overwritten.
+ * @param data    This is the pointer that points to the data to be copied.
+ * @param length  This is the length of the data.
+ */
+template<typename T> inline void overwrite(void *pointer, const T *data, std::size_t length) noexcept {
+    // Instantiate our new_protection and old_protection variables.
+    DWORD new_protection = PAGE_EXECUTE_READWRITE, old_protection;
+
+    // Apply read/write/execute protection
+    VirtualProtect(pointer, length, new_protection, &old_protection);
+
+    // Copy
+    std::copy(data, data + length, reinterpret_cast<T *>(pointer));
+
+    // Restore the older protection unless it's the same
+    if(new_protection != old_protection) {
+        VirtualProtect(pointer, length, old_protection, &new_protection);
+    }
+}
+
+/**
+ * Overwrite the data at the pointer with the given data even if this pointer is read-only.
+ * @param pointer This is the pointer that points to the data to be overwritten.
+ * @param data    This is the pointer that points to the data to be copied.
+ */
+template<typename T> inline void overwrite(void *pointer, const T &data) noexcept {
+    return overwrite(pointer, &data, 1);
 }
 
 #endif

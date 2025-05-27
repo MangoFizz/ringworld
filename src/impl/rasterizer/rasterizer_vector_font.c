@@ -66,6 +66,8 @@ ID3DXFont *rasterizer_vector_font_get_hardware_format(VectorFont *font, FontStyl
         CRASHF_DEBUG("Failed to create D3DX9 font instance");
     }
 
+    ID3DXFont_PreloadGlyphs((ID3DXFont *)font_style_data->hardware_format, 32, 136);
+
     font_style_data->space_width = calculate_space_width(font_style_data->hardware_format);
 
     return font_style_data->hardware_format;

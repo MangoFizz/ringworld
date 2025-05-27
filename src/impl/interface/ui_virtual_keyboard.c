@@ -13,6 +13,7 @@
 #include "../text/unicode_string_list.h"
 #include "../time/time.h"
 #include "input_event.h"
+#include "ui_error_modal.h"
 #include "ui_widget.h"
 #include "ui_virtual_keyboard.h"
 
@@ -67,7 +68,7 @@ bool ui_virtual_keyboard_launch(uint16_t buffer_size, int16_t caption_index, wch
     globals->last_key = -1;
     globals->number_of_event_repeats = 0;
     globals->caption_index = caption_index;
-    globals->saved = false;
+    globals->buffer_modified = false;
     globals->text_is_selected = true;
     globals->text_buffer = text;
     globals->insertion_point = text + wcslen(text);
@@ -245,7 +246,7 @@ bool ui_virtual_keyboard_cancel(void) {
     }
     virtual_keyboard_globals->text_buffer = NULL;
     virtual_keyboard_globals->original_buffer[0] = L'\0';
-    virtual_keyboard_globals->saved = false;
+    virtual_keyboard_globals->buffer_modified = false;
     *input_flags = *input_flags & 0xFB;
 
     input_flush_keyboard_buffered_keys();    
@@ -290,7 +291,7 @@ bool ui_virtual_keyboard_insert(char character) {
         return false;
     }
 
-   if(!ui_virtual_keyboard_validate_input_character(character, globals->validate_mode)) {
+    if(!ui_virtual_keyboard_validate_input_character(character, globals->validate_mode)) {
         return false;
     }
 
@@ -345,7 +346,7 @@ void ui_virtual_keyboard_save_changes(void) {
     
     if(wcscmp(globals->text_buffer, globals->original_buffer) == 0) {
         ui_virtual_keyboard_cancel();
-        globals->saved = false;
+        globals->buffer_modified = false;
         return;
     }
 
@@ -353,13 +354,15 @@ void ui_virtual_keyboard_save_changes(void) {
         case INPUT_VALIDATION_PROFILE_NAME: {
             string_trim_whitespaces(globals->text_buffer);
             if(wcslen(globals->text_buffer) == 0) {
-                ui_widget_display_error_modal(0x1D, NULL_HANDLE, 1, 0); // you can't create a saved game file with an empty name
+                ui_widget_play_feedback_sound(FEEDBACK_SOUND_FLAG_FAILURE);
+                ui_error_modal_show(UI_ERROR_MODAL_EMPTY_NAME, NULL_HANDLE, 1, 0); 
                 ui_virtual_keyboard_cancel();
                 return;
             }
             if(!saved_game_file_name_is_unique(globals->text_buffer)) {
                 if(!saved_games_name_is_from_player_profile(globals->text_buffer)) {
-                    ui_widget_display_error_modal(0x1B, NULL_HANDLE, 1, 0); // there is already a saved gametype or profile with that name
+                    ui_widget_play_feedback_sound(FEEDBACK_SOUND_FLAG_FAILURE);
+                    ui_error_modal_show(UI_ERROR_MODAL_SAVE_FILE_ALREADY_EXISTS, NULL_HANDLE, 1, 0); 
                     ui_virtual_keyboard_cancel();
                     return;
                 }
@@ -372,7 +375,8 @@ void ui_virtual_keyboard_save_changes(void) {
             if(!saved_game_file_name_is_unique(globals->text_buffer)) {
                 if(!saved_games_name_is_from_player_profile(globals->text_buffer)) {
                     if(!game_variant_is_not_stock(globals->text_buffer)) {
-                        ui_widget_display_error_modal(0x1D, NULL_HANDLE, 1, 0); // you can't create a saved game file with an empty name
+                        ui_widget_play_feedback_sound(FEEDBACK_SOUND_FLAG_FAILURE);
+                        ui_error_modal_show(UI_ERROR_MODAL_EMPTY_NAME, NULL_HANDLE, 1, 0); 
                         ui_virtual_keyboard_cancel();
                         return;
                     }
@@ -395,7 +399,7 @@ void ui_virtual_keyboard_save_changes(void) {
 
     *input_flags = *input_flags & 0xFB;
     globals->active = false;
-    globals->saved = true;
+    globals->buffer_modified = true;
     ui_widget_play_feedback_sound(FEEDBACK_SOUND_BACK);
     input_flush_keyboard_buffered_keys();
 }

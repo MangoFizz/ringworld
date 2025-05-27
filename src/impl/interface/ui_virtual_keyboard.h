@@ -37,7 +37,7 @@ typedef struct VirtualKeyboardGlobals {
     int16_t last_key;
     uint16_t number_of_event_repeats;
     int16_t caption_index;
-    bool saved; // true if the buffer wasn't saved yet
+    bool buffer_modified; 
     bool text_is_selected;
     wchar_t *text_buffer;
     wchar_t *insertion_point;

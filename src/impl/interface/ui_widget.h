@@ -319,15 +319,6 @@ void ui_widget_update_player_profile_text(const wchar_t *profile_name, Widget *t
  */
 void ui_widget_play_feedback_sound(FeedbackSound sound);
 
-/**
- * Display an error modal.
- * @param error_string the error string to display
- * @param local_player the local player handle
- * @param display_modal true if the modal should be displayed, false otherwise
- * @param display_paused true if the modal should be displayed while paused, false otherwise
- */
-void ui_widget_display_error_modal(int16_t error_string, PlayerHandle local_player, bool display_modal, bool display_paused);
-
 #ifdef __cplusplus
 }
 #endif

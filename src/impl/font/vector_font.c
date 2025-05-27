@@ -16,15 +16,15 @@ VectorFontStyle *vector_font_get_style(VectorFont *font, FontStyle style) {
             font_style = &font->bold;
         case FONT_STYLE_ITALIC:
             font_style = &font->italic;
-        case FONT_STYLE_CONDENSED:
-            font_style = &font->condensed;
+        case FONT_STYLE_CONDENSE:
+            font_style = &font->condense;
         case FONT_STYLE_UNDERLINE:
             font_style = &font->underline;
         default:
-            font_style = &font->regular;
+            font_style = &font->plain;
     }
     if(HANDLE_IS_NULL(font_style->data.tag_handle)) {
-        font_style = &font->regular;
+        font_style = &font->plain;
     }
     return font_style;
 }

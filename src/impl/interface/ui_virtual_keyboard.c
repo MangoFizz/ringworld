@@ -200,7 +200,7 @@ void ui_virtual_keyboard_render_prompt(const Rectangle2D *bounds) {
 
     text_drawing_globals->font = globals->text_font_tag;
     text_drawing_globals->flags = 0;
-    text_drawing_globals->style = FONT_STYLE_REGULAR;
+    text_drawing_globals->style = FONT_STYLE_PLAIN;
     text_drawing_globals->justification = TEXT_JUSTIFICATION_CENTER;
     text_drawing_globals->color.a = 1.0;
     text_drawing_globals->color.b = 0.9;

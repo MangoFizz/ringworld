@@ -10,10 +10,10 @@ extern "C" {
 #include "../tag/definitions/vector_font.h"
 
 typedef enum PACKED_ENUM FontStyle {
-    FONT_STYLE_REGULAR = -1,
+    FONT_STYLE_PLAIN = -1,
     FONT_STYLE_BOLD,
     FONT_STYLE_ITALIC,
-    FONT_STYLE_CONDENSED,
+    FONT_STYLE_CONDENSE,
     FONT_STYLE_UNDERLINE,
     FONT_STYLE_SIZE = 0x7FFF
 } FontStyle;

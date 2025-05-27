@@ -16,7 +16,7 @@ bool font_character_exists(TagHandle font_tag_handle, wchar_t character) {
     TagGroup font_group = tag_get_primary_group(font_tag_handle);
     if(font_group == TAG_GROUP_VECTOR_FONT) {
         VectorFont *font = tag_get_data(TAG_GROUP_VECTOR_FONT, font_tag_handle);
-        if(vector_font_glyph_exists(font, FONT_STYLE_REGULAR, character)) {
+        if(vector_font_glyph_exists(font, FONT_STYLE_PLAIN, character)) {
             return true;
         }
     }

@@ -95,10 +95,10 @@ void rasterizer_vector_fonts_flush(void) {
         if(tag_entry->primary_group == TAG_GROUP_VECTOR_FONT) {
             VectorFont *font = tag_entry->data;
             if(font != NULL) {
-                rasterizer_vector_font_release_hardware_format(&font->regular);
+                rasterizer_vector_font_release_hardware_format(&font->plain);
                 rasterizer_vector_font_release_hardware_format(&font->bold);
                 rasterizer_vector_font_release_hardware_format(&font->italic);
-                rasterizer_vector_font_release_hardware_format(&font->condensed);
+                rasterizer_vector_font_release_hardware_format(&font->condense);
                 rasterizer_vector_font_release_hardware_format(&font->underline);
             }
             continue;

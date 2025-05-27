@@ -16,7 +16,7 @@ TagHandle bitmap_font_get_style(TagHandle font_tag, FontStyle style) {
             font_handle = font_data->bold.tag_handle;
         case FONT_STYLE_ITALIC:
             font_handle = font_data->italic.tag_handle;
-        case FONT_STYLE_CONDENSED:
+        case FONT_STYLE_CONDENSE:
             font_handle = font_data->condense.tag_handle;
         case FONT_STYLE_UNDERLINE:
             font_handle = font_data->underline.tag_handle;

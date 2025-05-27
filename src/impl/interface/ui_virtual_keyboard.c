@@ -125,7 +125,7 @@ void ui_virtual_keyboard_render(void) {
         Rectangle2D bounds;
         bounds.left = 0;
         bounds.top = 78;
-        bounds.right = render_get_screen_width();
+        bounds.right = RASTERIZER_SCREEN_BASE_WIDTH;
         bounds.bottom = 110;
         text_draw_unicode_string(&bounds, NULL, NULL, 0, string);
 
@@ -139,13 +139,18 @@ void ui_virtual_keyboard_render(void) {
         }
     }
 
-    text_set_drawing_parameters(-1, 1, 0, globals->caption_font_tag, &text_color);
+    text_set_drawing_parameters(-1, TEXT_JUSTIFICATION_RIGHT, 0, globals->caption_font_tag, &text_color);
 
     Rectangle2D bounds;
+    uint16_t screen_width = RASTERIZER_SCREEN_BASE_WIDTH;
+    if(render_widescreen_support_enabled()) {
+        screen_width = render_get_screen_width();
+    }
     bounds.left = 0;
     bounds.top = 414;
-    bounds.right = 450;
+    bounds.right = screen_width - 30;
     bounds.bottom = 630;
+    
     text_draw_unicode_string(&bounds, NULL, NULL, 0, label);
 
     bounds.top = 118;

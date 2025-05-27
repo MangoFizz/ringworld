@@ -11,6 +11,10 @@ extern "C" {
 
 typedef struct DynamicArray DynamicArray;
 
+enum {
+    VECTOR_FONT_SHADOW_SIZE = 1 // pixels
+};
+
 typedef struct VectorFontTextRect {
     DynamicBuffer text;
     bool is_unicode;

@@ -239,10 +239,10 @@ void rasterizer_vector_font_draw_unicode_string(const Rectangle2D *bounds, const
     rasterizer_vector_font_calculate_unicode_string_draw_bounds(string, font, text_globals->style, &text_bounds);
     switch(text_globals->justification) {
         case TEXT_JUSTIFICATION_RIGHT:
-            align_offset_x += (rect.right - rect.left) - (text_bounds.right - text_bounds.left);
+            align_offset_x = (rect.right - rect.left) - (text_bounds.right - text_bounds.left);
             break;
         case TEXT_JUSTIFICATION_CENTER:
-            align_offset_x += ((rect.right - rect.left) - (text_bounds.right - text_bounds.left)) / 2;
+            align_offset_x = (float)((rect.right - rect.left) - (text_bounds.right - text_bounds.left)) / 2;
             break;
     }
 
@@ -263,10 +263,10 @@ void rasterizer_vector_font_draw_unicode_string(const Rectangle2D *bounds, const
         D3DCOLOR shadow_color = text_get_shadow_color() | (0xFF000000 & encoded_color);
         
         RECT shadow_rect_area = text_rect_area;
-        shadow_rect_area.left += 1 * scale;
-        shadow_rect_area.right += 1 * scale;
-        shadow_rect_area.top += 1 * scale;
-        shadow_rect_area.bottom += 1 * scale;
+        shadow_rect_area.left += VECTOR_FONT_SHADOW_SIZE * scale;
+        shadow_rect_area.right += VECTOR_FONT_SHADOW_SIZE * scale;
+        shadow_rect_area.top += VECTOR_FONT_SHADOW_SIZE * scale;
+        shadow_rect_area.bottom += VECTOR_FONT_SHADOW_SIZE * scale;
 
         ID3DXFont_DrawTextW(d3dx9_font, NULL, text_rect->text.data, -1, &shadow_rect_area, DT_LEFT, shadow_color);
 
@@ -331,14 +331,11 @@ void rasterizer_vector_font_draw_string(const Rectangle2D *bounds, const Rectang
     Rectangle2D text_bounds;
     rasterizer_vector_font_calculate_string_draw_bounds(string, font, text_globals->style, &text_bounds);
     switch(text_globals->justification) {
-        case TEXT_JUSTIFICATION_LEFT:
-            align_offset_x = 0;
-            break;
         case TEXT_JUSTIFICATION_RIGHT:
             align_offset_x = (rect.right - rect.left) - (text_bounds.right - text_bounds.left);
             break;
         case TEXT_JUSTIFICATION_CENTER:
-            align_offset_x = ((rect.right - rect.left) - (text_bounds.right - text_bounds.left)) / 2;
+            align_offset_x = (float)((rect.right - rect.left) - (text_bounds.right - text_bounds.left)) / 2;
             break;
     }
 
@@ -359,10 +356,10 @@ void rasterizer_vector_font_draw_string(const Rectangle2D *bounds, const Rectang
         D3DCOLOR shadow_color = text_get_shadow_color() | (0xFF000000 & encoded_color);
         
         RECT shadow_rect_area = text_rect_area;
-        shadow_rect_area.left += 1 * scale;
-        shadow_rect_area.right += 1 * scale;
-        shadow_rect_area.top += 1 * scale;
-        shadow_rect_area.bottom += 1 * scale;
+        shadow_rect_area.left += VECTOR_FONT_SHADOW_SIZE * scale;
+        shadow_rect_area.right += VECTOR_FONT_SHADOW_SIZE * scale;
+        shadow_rect_area.top += VECTOR_FONT_SHADOW_SIZE * scale;
+        shadow_rect_area.bottom += VECTOR_FONT_SHADOW_SIZE * scale;
 
         ID3DXFont_DrawTextA(d3dx9_font, NULL, text_rect->text.data, -1, &shadow_rect_area, DT_LEFT, shadow_color);
 

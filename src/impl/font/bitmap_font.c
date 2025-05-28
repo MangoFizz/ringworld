@@ -71,3 +71,32 @@ void bitmap_font_calculate_unicode_string_draw_bounds(const wchar_t *string, con
         text_bounds->bottom = font_data->descending_height + offset.y;
     }
 }
+
+void bitmap_font_calculate_string_draw_bounds(const char *string, const Rectangle2D *position, Rectangle2D *first_character_position, Rectangle2D *text_bounds) {
+    text_draw_bounds->top = INT16_MAX;
+    text_draw_bounds->left = INT16_MAX;
+    text_draw_bounds->bottom = INT16_MIN;
+    text_draw_bounds->right = INT16_MIN;
+
+    TextDrawGlobals *globals = text_get_drawing_globals();
+    TagHandle font_tag = bitmap_font_get_style(globals->font, globals->style);
+    Font *font_data = tag_get_data(TAG_GROUP_FONT, font_tag);
+    *text_draw_font = font_data;
+
+    VectorXYInt offset; 
+    bitmap_font_draw_string(bitmap_font_calculate_draw_bounds, position, &offset, NULL, 0, string); // @todo Check dest_rect parameter
+
+    if(first_character_position) {
+        first_character_position->left = offset.x;
+        first_character_position->right = offset.x + 1;
+        first_character_position->top = offset.y - font_data->ascending_height;
+        first_character_position->bottom = font_data->descending_height + offset.y;
+    }
+
+    if(text_bounds) {
+        text_bounds->left = text_draw_bounds->left;
+        text_bounds->top = position->top;
+        text_bounds->right = text_draw_bounds->right;
+        text_bounds->bottom = font_data->descending_height + offset.y;
+    }
+}

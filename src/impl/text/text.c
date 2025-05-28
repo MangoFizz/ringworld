@@ -142,3 +142,18 @@ void text_calculate_unicode_string_draw_bounds(const wchar_t *string, const Rect
         vector_font_calculate_unicode_string_draw_bounds(string, position, first_character_position, text_bounds);
     }
 }
+
+void text_calculate_string_draw_bounds(const char *string, const Rectangle2D *position, Rectangle2D *first_character_position, Rectangle2D *text_bounds) {
+    TextDrawGlobals *text_globals = text_get_drawing_globals();
+    if(HANDLE_IS_NULL(text_globals->font)) {
+        return;
+    }
+
+    TagEntry *entry = tag_get_entry(text_globals->font);
+    if(entry->primary_group == TAG_GROUP_FONT) {
+        bitmap_font_calculate_string_draw_bounds(string, position, first_character_position, text_bounds);
+    }
+    else {
+        vector_font_calculate_string_draw_bounds(string, position, first_character_position, text_bounds);
+    }
+}

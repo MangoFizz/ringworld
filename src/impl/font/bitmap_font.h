@@ -63,6 +63,15 @@ void bitmap_font_calculate_draw_bounds();
  */
 void bitmap_font_calculate_unicode_string_draw_bounds(const wchar_t *string, const Rectangle2D *position, Rectangle2D *first_character_position, Rectangle2D *text_bounds);
 
+/**
+ * Calculate the bounds of an ASCII string to be drawn.
+ * @param string The ASCII string to calculate bounds for.
+ * @param position A pointer to the Rectangle2D structure defining the screen offset.
+ * @param first_character_position A pointer to the Rectangle2D structure to store the position of the first character.
+ * @param text_bounds A pointer to the Rectangle2D structure to store the overall bounds of the text.
+ */
+void bitmap_font_calculate_string_draw_bounds(const char *string, const Rectangle2D *position, Rectangle2D *first_character_position, Rectangle2D *text_bounds);
+
 #ifdef __cplusplus
 }
 #endif

@@ -292,6 +292,57 @@ void vector_font_calculate_unicode_string_draw_bounds(const wchar_t *string, con
     }
 }
 
+void vector_font_calculate_string_draw_bounds(const char *string, const Rectangle2D *position, Rectangle2D *first_character_position, Rectangle2D *text_bounds) {
+    TextDrawGlobals *text_globals = text_get_drawing_globals();
+    VectorFont *font = tag_get_data(TAG_GROUP_VECTOR_FONT, text_globals->font);
+    
+    Rectangle2D bounds;
+    rasterizer_vector_font_calculate_string_draw_bounds(string, font, text_globals->style, &bounds);
+
+    switch(text_globals->justification) {
+        case TEXT_JUSTIFICATION_LEFT:
+            break;
+        case TEXT_JUSTIFICATION_RIGHT: {
+            uint16_t width = bounds.right - bounds.left;
+            bounds.left = position->right - width;
+            bounds.right = position->right;
+            break;
+        }
+        case TEXT_JUSTIFICATION_CENTER: {
+            uint16_t width = bounds.right - bounds.left;
+            int16_t center = (position->right - position->left) / 2;
+            bounds.left = center - (width / 2);
+            bounds.right = center + (width / 2);
+            break;
+        }
+    }
+
+    bounds.left += position->left;
+    bounds.top += position->top;
+    bounds.right += position->left;
+    bounds.bottom += position->top;
+
+    /**
+     * For some reason, the game subtracts 3 pixels from the left bound.
+     * Probably the game adds 3 pixels as margin when it calculates the 
+     * bounds of the text when using bitmap fonts.
+     * 
+     * @todo Fix this on the function that calls this one.
+     */
+    math_rectangle_2d_translate(&bounds, 3, 0);
+
+    if(first_character_position) {
+        first_character_position->left = bounds.right;
+        first_character_position->right = bounds.right + 1;
+        first_character_position->top = bounds.top;
+        first_character_position->bottom = bounds.bottom;
+    }
+    
+    if(text_bounds) {
+        *text_bounds = bounds; 
+    }
+}
+
 uint32_t vector_font_calculate_unicode_string_width(wchar_t *string, VectorFont *font, FontStyle style) {
     Rectangle2D bounds;
     rasterizer_vector_font_calculate_unicode_string_draw_bounds(string, font, style, &bounds);

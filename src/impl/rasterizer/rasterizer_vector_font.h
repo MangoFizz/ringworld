@@ -42,6 +42,15 @@ void rasterizer_vector_font_draw_string(const Rectangle2D *bounds, const Rectang
  */
 void rasterizer_vector_font_calculate_unicode_string_draw_bounds(const wchar_t *string, VectorFont *font, FontStyle font_style, Rectangle2D *bounds);
 
+/**
+ * Calculate the bounds of an ASCII string to be drawn.
+ * @param string The ASCII string to calculate bounds for.
+ * @param font The vector font to be used.
+ * @param font_style The style of the font.
+ * @param bounds A pointer to the Rectangle2D structure defining the screen bounds.
+ */
+void rasterizer_vector_font_calculate_string_draw_bounds(const char *string, VectorFont *font, FontStyle font_style, Rectangle2D *bounds);
+
 #ifdef __cplusplus
 }
 #endif

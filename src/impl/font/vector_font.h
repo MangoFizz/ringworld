@@ -43,6 +43,15 @@ VectorFontStyle *vector_font_get_style(VectorFont *font, FontStyle style);
 void vector_font_calculate_unicode_string_draw_bounds(const wchar_t *string, const Rectangle2D *position, Rectangle2D *first_character_position, Rectangle2D *text_bounds);
 
 /**
+ * Calculate the draw bounds for a string.
+ * @param string The string to calculate bounds for.
+ * @param position The position rectangle.
+ * @param first_character_position Pointer to store the first character position.
+ * @param text_bounds Pointer to store the text bounds.
+ */
+void vector_font_calculate_string_draw_bounds(const char *string, const Rectangle2D *position, Rectangle2D *first_character_position, Rectangle2D *text_bounds);
+
+/**
  * Handle string formatting for vector fonts.
  * @param str The string to format.
  * @param x The x position.

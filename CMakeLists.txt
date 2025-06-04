@@ -175,6 +175,7 @@ if(RINGWORLD_BUILD_TOOL)
         src/impl/exception/exception.c
         src/impl/crypto/md5.c
         src/impl/crypto/xtea.c
+        src/impl/memory/dynamic_buffer.c
         src/impl/rasterizer/rasterizer_dx9_shader_compiler.c
         src/impl/rasterizer/rasterizer_shaders_blob.c
         src/tool/d3d_shader.c

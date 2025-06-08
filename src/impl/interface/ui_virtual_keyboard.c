@@ -288,7 +288,7 @@ void ui_virtual_keyboard_clear_text_buffer(void) {
 bool ui_virtual_keyboard_insert(char character) {
     VirtualKeyboardGlobals *globals = ui_virtual_keyboard_get_globals();
     if(globals->text_buffer == NULL || globals->insertion_point == NULL) {
-        CRASHF_DEBUG("Virtual keyboard text buffer or insertion point is NULL");
+        exception_throw_runtime_error("Virtual keyboard text buffer or insertion point is NULL");
         return false;
     }
 

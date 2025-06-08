@@ -1,6 +1,6 @@
 #include "../math/color.h"
 #include "../game/game_globals.h"
-#include "../exception/exception.h"
+#include "../debug/assertion.h"
 #include "rasterizer_dx9.h"
 #include "rasterizer_dx9_shader_compiler.h"
 #include "rasterizer_dx9_shader_effect.h"

@@ -187,5 +187,7 @@
     "terminal_initialize": {"address": "0x499330", "replace": true},
 
     "interface_initialize": {"address": "0x497100", "replace": true},
-    "interface_initialize_for_new_map": {"address": "0x497150", "replace": true}
+    "interface_initialize_for_new_map": {"address": "0x497150", "replace": true},
+
+    "seh_exception_handler": {"address": "0x5cd84c", "replace": true, "use_return_value": true, "arguments": ["0", "4", "8", "12"]}
 }

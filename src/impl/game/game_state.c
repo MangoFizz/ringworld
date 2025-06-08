@@ -19,7 +19,7 @@ void game_state_savegame_write_thread(void);
 void *game_state_allocate_heap(size_t size) {
     size_t remaining_bytes = GAME_STATE_SIZE - game_state_globals->allocation_size;
     if(remaining_bytes < size) {
-        crashf("allocate_heap(): Can't allocate 0x%08zX bytes (only 0x%08zX bytes remaining)", size, remaining_bytes);
+        exception_throw_runtime_error("allocate_heap(): Can't allocate 0x%08zX bytes (only 0x%08zX bytes remaining)", size, remaining_bytes);
     }
     void *allocated = game_state_globals->base_address + game_state_globals->allocation_size;
     game_state_globals->allocation_size += size;
@@ -58,15 +58,15 @@ void game_state_create_savegame_file(void) {
     DWORD access = GENERIC_READ | GENERIC_WRITE;
     saved_game_state_globals->handle = CreateFileA(path, access, 0, NULL, OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
     if(saved_game_state_globals->handle == INVALID_HANDLE_VALUE) {
-        THROW_EXCEPTION("Failed to create savegame file: %s", path); // @todo define a way to handle errors
+        exception_throw_runtime_error("Failed to create savegame file: %s", path); // @todo define a way to handle errors
     }
     DWORD res = SetFilePointer(saved_game_state_globals->handle, SAVEGAME_FILE_SIZE, NULL, FILE_BEGIN);
     if(res == INVALID_SET_FILE_POINTER) {
-        THROW_EXCEPTION("Failed to set file pointer for savegame file: %s", path); 
+        exception_throw_runtime_error("Failed to set file pointer for savegame file: %s", path); 
     }
     res = SetEndOfFile(saved_game_state_globals->handle);
     if(res == 0) {
-        THROW_EXCEPTION("Failed to set end of file for savegame file: %s", path); 
+        exception_throw_runtime_error("Failed to set end of file for savegame file: %s", path); 
     }
     saved_game_state_globals->file_open = true;
 }
@@ -109,7 +109,7 @@ HANDLE game_state_open_savegame(const char *path) {
     CloseHandle(file);
     DeleteFileA(savegame_path);
 
-    THROW_EXCEPTION("Failed to open savegame file: %s", savegame_path);
+    exception_throw_runtime_error("Failed to open savegame file: %s", savegame_path);
     return INVALID_HANDLE_VALUE;
 }
 

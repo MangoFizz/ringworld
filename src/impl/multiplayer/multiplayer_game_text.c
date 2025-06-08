@@ -66,7 +66,7 @@ const wchar_t *multiplayer_game_text_get_string(MultiplayerGameTextIndex index) 
         case MULTIPLAYER_GAME_TEXT_BLUE_TEAM_SCORE:
             return L"\tBlue Team\t%s";
         default:
-            CRASHF_DEBUG("Invalid scoreboard string index %d. FIX ME!", index);
+            exception_throw_runtime_error("Invalid scoreboard string index %d. FIX ME!", index);
             return L"<missing string>";
     }
 }

@@ -7,9 +7,8 @@
 #include <stdexcept>
 
 #include "hook/hook.hpp"
-#include "impl/exception/exception.h"
 #include "ringworld.h"
-#include "version.hpp"
+#include "version.h"
 
 using namespace Demon;
 
@@ -19,6 +18,7 @@ static std::size_t hook_heap_usage;
 bool ringworld_server_mode = false;
 
 extern "C" wchar_t *build_number;
+extern "C" void exception_throw_forbidden_function_called(const char *function_name, void *from);
 
 void set_up_transparent_generic_hooks();
 void set_up_game_state_hooks();
@@ -91,7 +91,7 @@ void *Hook::write_hook() {
         HOOK_PUSH_DWORD(reinterpret_cast<std::uintptr_t>(this->name));
 
         // Now let's call this error handler
-        std::uintptr_t call_instruction_end = reinterpret_cast<std::byte *>(crash_forbidden_function) - (hook_offset + 5);
+        std::uintptr_t call_instruction_end = reinterpret_cast<std::byte *>(exception_throw_forbidden_function_called) - (hook_offset + 5);
         HOOK_PUSH_BYTE(0xE8);
         HOOK_PUSH_DWORD(call_instruction_end);
 

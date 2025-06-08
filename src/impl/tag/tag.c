@@ -1,6 +1,7 @@
 #include <string.h>
 
 #include "../console/console.h"
+#include "../debug/assertion.h"
 #include "../exception/exception.h"
 #include "tag.h"
 
@@ -15,7 +16,7 @@ TagEntry *tag_get_entry(TagHandle tag_handle) {
     ASSERT(tag_handle.index != NULL_HANDLE.index);
     TagEntry *tag = &(*tag_data_header_loaded)->tags[tag_handle.index];
     if(tag_handle.id != NULL_HANDLE.value && tag->handle.value != tag_handle.value) {
-        crashf("tag_get_entry: tag handle mismatch: %s", tag->path);
+        exception_throw_runtime_error("tag_get_entry: tag handle mismatch: %s", tag->path);
     }
     return tag;
 }
@@ -41,7 +42,7 @@ void *tag_get_data(TagGroup group, TagHandle tag_handle) {
     ASSERT(tag_handle.index != NULL_HANDLE.index);
     TagEntry *tag = &(*tag_data_header_loaded)->tags[tag_handle.index];
     if(tag->primary_group != group && tag->secondary_group != group && tag->tertiary_group != group) {
-        crashf("tag group mismatch: %s is not a %s", tag->path, group_fourcc_to_name(group));
+        exception_throw_runtime_error("tag group mismatch: %s is not a %s", tag->path, group_fourcc_to_name(group));
     }
     return tag->data;
 }

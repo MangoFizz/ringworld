@@ -1,4 +1,5 @@
 #include <math.h>
+#include "../debug/assertion.h"
 #include "../exception/exception.h"
 #include "../rasterizer/rasterizer_dx9_texture.h"
 #include "../rasterizer/rasterizer_dx9_vertex.h"
@@ -11,7 +12,7 @@ uint8_t bitmap_format_bits_per_pixel[] = { 0x08, 0x08, 0x08, 0x10, 0x00, 0x00, 0
 BitmapData *bitmap_get_data(TagHandle bitmap_tag, uint16_t bitmap_data_index) {
     Bitmap *bitmap = tag_get_data(TAG_GROUP_BITMAP, bitmap_tag);
     if(bitmap->bitmap_data.count == 0 || bitmap_data_index >= bitmap->bitmap_data.count) {
-        CRASHF_DEBUG("Bitmap data index is out of bounds: %d >= %d", bitmap_data_index, bitmap->bitmap_data.count);
+        exception_throw_runtime_error("Bitmap data index is out of bounds: %d >= %d", bitmap_data_index, bitmap->bitmap_data.count);
     }
     return TAG_BLOCK_GET_ELEMENT(bitmap->bitmap_data, bitmap_data_index);
 }
@@ -102,7 +103,7 @@ BitmapData *bitmap_new_2d_bitmap_data(uint16_t width, uint16_t height, uint16_t 
 
     BitmapData *bitmap_data = GlobalAlloc(GPTR, sizeof(BitmapData));
     if(bitmap_data == NULL) {
-        CRASHF_DEBUG("Failed to allocate memory for bitmap data");
+        exception_throw_runtime_error("Failed to allocate memory for bitmap data");
     }
 
     bitmap_data->signature = TAG_GROUP_BITMAP;

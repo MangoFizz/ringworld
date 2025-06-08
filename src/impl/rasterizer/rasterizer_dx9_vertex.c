@@ -1,6 +1,6 @@
 #include <stdio.h>
 
-#include "../exception/exception.h"
+#include "../debug/assertion.h"
 #include "rasterizer_dx9_vertex.h"
 
 extern DynamicVertices *dynamic_vertices;

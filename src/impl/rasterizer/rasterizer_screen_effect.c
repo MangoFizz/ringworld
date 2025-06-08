@@ -1,4 +1,4 @@
-#include "../exception/exception.h"
+#include "../debug/assertion.h"
 #include "../render/render.h"
 #include "../rng/rng.h"
 #include "rasterizer_dx9_vertex_shader_constants.h"

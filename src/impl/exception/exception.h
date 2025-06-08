@@ -1,49 +1,19 @@
-#ifndef DEMON__IMPL_EXCEPTION_EXCEPTION_H
-#define DEMON__IMPL_EXCEPTION_EXCEPTION_H
+#ifndef RINGWORLD__EXCEPTION__EXCEPTION_H
+#define RINGWORLD__EXCEPTION__EXCEPTION_H
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-/**
- * Terminate the process with a format.
- * @param fmt format
- */
-void crashf(const char *fmt, ...);
+#include <stdint.h>
 
 /**
- * Terminate the process due to a function being improperly called.
- * @param function_name function name
- * @param from          caller address
+ * Throw an runtime error exception.
+ * This function is used to report assertion failures and other critical errors.
+ * @param fmt  The format string for the error message.
+ * @param ...  The values to format into the error message.
  */
-void crash_forbidden_function(const char *function_name, void *from);
-
-/**
- * Print a debug message.
- * @param fmt format
- */
-void debug_printf(const char *fmt, ...);
-
-/**
- * Print a message box.
- * @param fmt format
- */
-void message_box(const char *fmt, ...);
-
-/**
- * Print an error box.
- * @param fmt format
- */
-void error_box(const char *fmt, ...);
-
-#define STR2(s) # s
-#define STR(s) STR2(s)
-
-#define CRASHF_DEBUG(...) crashf(__FILE__ ":" STR(__LINE__) ": " __VA_ARGS__)
-#define THROW_EXCEPTION(...) crashf(__FILE__ ":" STR(__LINE__) ": " __VA_ARGS__)
-#define ASSERT(expr) if(!(expr)) CRASHF_DEBUG("assertion failed: " #expr); 
-#define ASSERT_OR_RETURN(expr) if(!(expr)) return;
-#define ASSERT_OR_RETURN_VALUE(expr, ret) if(!(expr)) return ret; 
+void exception_throw_runtime_error(const char* fmt, ...);
 
 #ifdef __cplusplus
 }

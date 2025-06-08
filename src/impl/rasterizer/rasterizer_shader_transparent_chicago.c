@@ -2,6 +2,7 @@
 #include <stdio.h>
 
 #include "../console/console.h"
+#include "../debug/assertion.h"
 #include "../exception/exception.h"
 #include "../shader/shader.h"
 #include "../tag/definitions/shader_transparent_chicago.h"
@@ -107,7 +108,7 @@ void rasterizer_shader_transparent_chicago_draw(TransparentGeometryGroup *group,
                         fisrt_map_texture_mode = D3DTADDRESS_CLAMP;
                         break;
                     default:
-                        CRASHF_DEBUG("Invalid bitmap type: %d", bitmap_type);
+                        exception_throw_runtime_error("Invalid bitmap type: %d", bitmap_type);
                         break;
                 }
 
@@ -244,7 +245,7 @@ void rasterizer_shader_transparent_chicago_draw(TransparentGeometryGroup *group,
                 tss_option_argument = D3DTA_SPECULAR;
                 break;
             default:
-                CRASHF_DEBUG("Unknown framebuffer fade mode: %d", shader_data->properties.framebuffer_fade_mode);
+                exception_throw_runtime_error("Unknown framebuffer fade mode: %d", shader_data->properties.framebuffer_fade_mode);
                 break;
         }
 

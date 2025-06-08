@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <windows.h>
 #include "../bitmap/bitmap.h"
-#include "../exception/exception.h"
+#include "../debug/assertion.h"
 #include "../font/font.h"
 #include "../main/main_globals.h"
 #include "../time/time.h"

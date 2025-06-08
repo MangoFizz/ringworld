@@ -1,6 +1,7 @@
 #include <stdbool.h>
 #include <stdio.h>
 
+#include "../debug/assertion.h"
 #include "../exception/exception.h"
 #include "../bitmap/bitmap.h"
 #include "rasterizer_dx9_texture.h"
@@ -31,7 +32,7 @@ D3DFORMAT rasterizer_dx9_texture_get_d3d_format(BitmapDataFormat format) {
             return D3DFMT_A8L8;
 #endif
         default:
-            CRASHF_DEBUG("Unsupported bitmap data format: %d", format);
+            exception_throw_runtime_error("Unsupported bitmap data format: %d", format);
             return D3DFMT_UNKNOWN;         
     }
 }

@@ -1,7 +1,7 @@
 #include <stdint.h>
 #include <math.h>
 #include "../types/types.h"
-#include "../exception/exception.h"
+#include "../debug/assertion.h"
 #include "../rasterizer/rasterizer_dx9_render_target.h"
 #include "render.h"
 

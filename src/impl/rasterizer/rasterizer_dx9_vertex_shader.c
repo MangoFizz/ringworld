@@ -2,7 +2,7 @@
 #include <windows.h>
 #include <d3d9.h>
 
-#include "../exception/exception.h"
+#include "../debug/assertion.h"
 #include "rasterizer_dx9.h"
 #include "rasterizer_shaders_blob.h"
 #include "rasterizer_dx9_vertex_shader.h"

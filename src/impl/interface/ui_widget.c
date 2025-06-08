@@ -3,6 +3,8 @@
 #include "../../event/event.h"
 #include "../bitmap/bitmap.h"
 #include "../console/console.h"
+#include "../debug/assertion.h"
+#include "../exception/exception.h"
 #include "../font/font.h"
 #include "../memory/pool.h"
 #include "../main/main_globals.h"
@@ -13,7 +15,7 @@
 #include "../game/game_time.h"
 #include "../text/text.h"
 #include "../text/unicode_string_list.h"
-#include "../exception/exception.h"
+#include "../debug/assertion.h"
 #include "../rasterizer/rasterizer_screen_geometry.h"
 #include "../render/render.h"
 #include "ui_cursor.h"
@@ -80,7 +82,7 @@ Widget *ui_widget_load_by_name_or_tag(const char *definition_tag_path, TagHandle
     UIWidgetDefinition *definition = tag_get_data(TAG_GROUP_UI_WIDGET_DEFINITION, definition_tag);
     Widget *widget = stack_memory_pool_new_block(*ui_widget_memory_pool, sizeof(Widget));
     if(widget == NULL) {
-        CRASHF_DEBUG("failed to allocate memory for widget");
+        exception_throw_runtime_error("failed to allocate memory for widget");
     }
 
     if(parent == NULL) {
@@ -161,7 +163,7 @@ void ui_widget_new_instance(int16_t controller_index, UIWidgetDefinition *widget
     
     if(widget_globals->dont_load_children_recursive == false) {
         if(!ui_widget_load_children_recursive(widget_definition, widget)) {
-            CRASHF_DEBUG("failed to load children for widget");
+            exception_throw_runtime_error("failed to load children for widget");
         }
     }
     
@@ -232,7 +234,7 @@ int16_t ui_widget_get_index_for_child(Widget *widget, Widget *child) {
         }
         index++;
     }
-    CRASHF_DEBUG("failed to find the index of the child in the widget");
+    exception_throw_runtime_error("failed to find the index of the child in the widget");
     return -1;
 }
 
@@ -405,7 +407,7 @@ void ui_widget_instance_give_focus_directly(Widget *widget, Widget *child) {
 void ui_widget_new_history_node(WidgetHistoryNode *history_node_data, WidgetHistoryNode **history_top_node) {
     WidgetHistoryNode *new_node = stack_memory_pool_new_block(*ui_widget_memory_pool, sizeof(WidgetHistoryNode));
     if(new_node == NULL) {
-        CRASHF_DEBUG("failed to allocate memory for history node");
+        exception_throw_runtime_error("failed to allocate memory for history node");
     }
     new_node->previous_menu = history_node_data->previous_menu;
     new_node->previous_menu_list = history_node_data->previous_menu_list;
@@ -772,7 +774,7 @@ const wchar_t *ui_widget_get_common_button_caption(UIWidgetButtonCaptionStringIn
         case UI_WIDGET_BUTTON_CAPTION_PROFILE_LABEL:
             return L"Profile:";
         default:
-            CRASHF_DEBUG("invalid UI widget button caption index");
+            exception_throw_runtime_error("invalid UI widget button caption index");
             return L"<missing string>";
     }
 }

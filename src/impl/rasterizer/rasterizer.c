@@ -1,4 +1,4 @@
-#include "../exception/exception.h"
+#include "../debug/assertion.h"
 #include "rasterizer.h"
 
 extern RasterizerGlobals *rasterizer_globals;

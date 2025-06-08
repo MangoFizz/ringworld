@@ -63,7 +63,7 @@ ID3DXFont *rasterizer_vector_font_get_hardware_format(VectorFont *font, FontStyl
                                 OUT_DEFAULT_PRECIS, ANTIALIASED_QUALITY, DEFAULT_PITCH | FF_DONTCARE, 
                                 font_name, (ID3DXFont **)&font_style_data->hardware_format);
     if(FAILED(hr)) {
-        CRASHF_DEBUG("Failed to create D3DX9 font instance");
+        exception_throw_runtime_error("Failed to create D3DX9 font instance");
     }
 
     ID3DXFont_PreloadGlyphs((ID3DXFont *)font_style_data->hardware_format, 32, 136);

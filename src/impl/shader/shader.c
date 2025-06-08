@@ -1,3 +1,4 @@
+#include "../debug/assertion.h"
 #include "../exception/exception.h"
 #include "shader.h"
 
@@ -16,7 +17,7 @@ BitmapType shader_bitmap_type_for_shader_transparent_generic_first_map(ShaderFir
         case SHADER_FIRST_MAP_TYPE_FIRST_MAP_IS_VIEWER_CENTERED_CUBE_MAP:
             return BITMAP_TYPE_CUBE_MAPS;
         default:
-            CRASHF_DEBUG("Unknown first map type: %d", first_map_type);
+            exception_throw_runtime_error("Unknown first map type: %d", first_map_type);
             return BITMAP_TYPE_2D_TEXTURES;
     }
 }

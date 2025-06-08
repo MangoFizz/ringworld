@@ -4,7 +4,7 @@
 
 #include "../crypto/md5.h"
 #include "../crypto/xtea.h"
-#include "../exception/exception.h"
+#include "../debug/assertion.h"
 #include "rasterizer_shaders_blob.h"
 
 #ifndef RASTERIZER_SHADER_BLOB_XTEA_KEY

@@ -2,6 +2,7 @@
 #include <stdio.h>
 
 #include "../console/console.h"
+#include "../debug/assertion.h"
 #include "../shader/shader.h"
 #include "../tag/definitions/shader_transparent_generic.h"
 #include "../interface/numeric_countdown.h"
@@ -207,7 +208,7 @@ static D3D_SHADER_MACRO *generate_defines(ShaderTransparentGeneric *shader_data)
             input_alpha = SHADER_TRANSPARENT_GENERIC_STAGE_INPUT_ALPHA_VERTEX_BLUE_1_FADE_PARALLEL;
             break;
         default:
-            CRASHF_DEBUG("invalid framebuffer fade mode: %d", framebuffer_mode);
+            exception_throw_runtime_error("invalid framebuffer fade mode: %d", framebuffer_mode);
             break;
     }
     FramebufferBlendFunction framebuffer_blend_function = shader_data->properties.framebuffer_blend_function;
@@ -255,7 +256,7 @@ static D3D_SHADER_MACRO *generate_defines(ShaderTransparentGeneric *shader_data)
             break;
 
         default:
-            CRASHF_DEBUG("invalid framebuffer blend function: %d", framebuffer_blend_function);
+            exception_throw_runtime_error("invalid framebuffer blend function: %d", framebuffer_blend_function);
             break;
     }
     params.is_fog_stage = true;
@@ -293,7 +294,7 @@ static void free_defines(D3D_SHADER_MACRO *defines) {
 ID3DBlob *rasterizer_shader_transparent_generic_compile_shader(D3D_SHADER_MACRO *defines) {
     ID3DBlob *compiled_shader = NULL;
     if(!rasterizer_dx9_shader_compiler_compile_shader_from_blob(shader_transparent_generic_source, "main", "ps_3_0", defines, &compiled_shader)) {
-        CRASHF_DEBUG("failed to compile shader transparent generic\n");
+        exception_throw_runtime_error("failed to compile shader transparent generic\n");
     }
     return compiled_shader;
 }
@@ -314,14 +315,14 @@ ShaderTransparentGenericInstance *rasterizer_shader_transparent_generic_get_or_c
         if(cache_entry->shader_data == tag) {
             ShaderTransparentGenericInstance *instance = table_get_element(shader_transparent_generic_instances, cache_entry->shader_instance);
             if(instance == NULL) {
-                CRASHF_DEBUG("shader transparent generic instance not found in the instance table");
+                exception_throw_runtime_error("shader transparent generic instance not found in the instance table");
             }
             return instance;
         }
     }
     
     if(shader_transparent_generic_instances->count == MAX_SHADER_TRANSPARENT_GENERIC_INSTANCES) {
-        CRASHF_DEBUG("maximum number of shader transparent generic instances reached");
+        exception_throw_runtime_error("maximum number of shader transparent generic instances reached");
     }
 
     D3D_SHADER_MACRO *defines = generate_defines(tag);
@@ -363,7 +364,7 @@ void rasterizer_shader_transparent_generic_create_instances_for_current_map(void
 
     TagDataHeader *tag_data_header = tag_get_data_header();
     if(tag_data_header == NULL) {
-        CRASHF_DEBUG("tag data header is NULL");
+        exception_throw_runtime_error("tag data header is NULL");
     }
     
     for(size_t i = 0; i < tag_data_header->tag_count; i++) {
@@ -408,7 +409,7 @@ void rasterizer_shader_transparent_generic_update_instances_for_current_map(void
 
     TagDataHeader *tag_data_header = tag_get_data_header();
     if(tag_data_header == NULL) {
-        CRASHF_DEBUG("tag data header is NULL");
+        exception_throw_runtime_error("tag data header is NULL");
     }
     ShaderTransparentGeneric *tag[MAX_SHADER_TRANSPARENT_GENERIC_PER_MAP];
     size_t tag_count = 0;
@@ -416,7 +417,7 @@ void rasterizer_shader_transparent_generic_update_instances_for_current_map(void
         TagEntry *tag_entry = tag_data_header->tags + i;
         if(tag_entry->primary_group == TAG_GROUP_SHADER_TRANSPARENT_GENERIC) {
             if(tag_count > MAX_SHADER_TRANSPARENT_GENERIC_PER_MAP) {
-                CRASHF_DEBUG("maximum number of shader transparent generic tags reached");
+                exception_throw_runtime_error("maximum number of shader transparent generic tags reached");
             }
             else {
                 tag[tag_count++] = tag_entry->data;
@@ -476,7 +477,7 @@ IDirect3DPixelShader9 *rasterizer_shader_transparent_generic_get_pixel_shader(Sh
         ID3DBlob *compiled_shader = instance->compiled_shader;
         IDirect3DPixelShader9 *shader;
         if(FAILED(IDirect3DDevice9_CreatePixelShader(rasterizer_dx9_device(), (DWORD *)ID3D10Blob_GetBufferPointer(compiled_shader), &shader))) {
-            CRASHF_DEBUG("failed to create pixel shader for shader transparent generic\n");
+            exception_throw_runtime_error("failed to create pixel shader for shader transparent generic\n");
         }
         ID3D10Blob_Release(compiled_shader);
         instance->compiled_shader = NULL;
@@ -565,7 +566,7 @@ void rasterizer_shader_transparent_generic_draw(TransparentGeometryGroup *group,
                         first_map_texture_mode = D3DTADDRESS_CLAMP;
                         break;
                     default:
-                        CRASHF_DEBUG("Invalid bitmap type: %d", bitmap_type);
+                        exception_throw_runtime_error("Invalid bitmap type: %d", bitmap_type);
                         break;
                 }
 
@@ -683,10 +684,10 @@ void rasterizer_dx9_transparent_generic_preprocess(TransparentGeometryGroup *gro
     for(size_t map_index = 0; map_index < shader_data->maps.count; map_index++) {
         ShaderTransparentGenericMap *map = TAG_BLOCK_GET_ELEMENT(shader_data->maps, map_index);
         if(HANDLE_IS_NULL(map->parameters.map.tag_handle)) {
-            CRASHF_DEBUG("transparent generic shader map %d has a no bitmap", map_index);
+            exception_throw_runtime_error("transparent generic shader map %d has a no bitmap", map_index);
         }
         if(map->parameters.mipmap_bias != map->parameters.mipmap_bias || map->parameters.mipmap_bias != 0.0f) {
-            CRASHF_DEBUG("transparent generic shader map %d has a non-zero mipmap bias", map_index);
+            exception_throw_runtime_error("transparent generic shader map %d has a non-zero mipmap bias", map_index);
         }
     }
 

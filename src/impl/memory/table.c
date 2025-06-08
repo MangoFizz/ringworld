@@ -36,13 +36,13 @@ void *table_get_element(void *table_data, TableResourceHandle handle) {
     }
 
     if(!table->valid) {
-        CRASHF_DEBUG("Invalid access of element in table 0x%08X (%s) that is not valid", (uintptr_t)(table), table->name);
+        exception_throw_runtime_error("Invalid access of element in table 0x%08X (%s) that is not valid", (uintptr_t)(table), table->name);
         return NULL;
     }
 
     size_t max_elements = table->max_elements;
     if(handle.index >= max_elements) {
-        CRASHF_DEBUG("Out-of-bounds access of element %zu / %zu for table 0x%08X (%s) with ID 0x%08X", handle.index, max_elements, (uintptr_t)(table), table->name, handle.value);
+        exception_throw_runtime_error("Out-of-bounds access of element %zu / %zu for table 0x%08X (%s) with ID 0x%08X", handle.index, max_elements, (uintptr_t)(table), table->name, handle.value);
         return NULL;
     }
     

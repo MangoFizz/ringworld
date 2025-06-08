@@ -117,6 +117,6 @@ const ColorRGB *network_game_get_player_color(NetworkGamePlayerColor color) {
         case NETWORK_GAME_PLAYER_COLOR_RANDOM:
             return &PLAYER_COLORS[color];
         default:
-            CRASHF_DEBUG("Unknown player color %d", color);
+            exception_throw_runtime_error("Unknown player color %d", color);
     }
 }

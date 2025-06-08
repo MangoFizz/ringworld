@@ -23,7 +23,7 @@ void create_directory(const char *path) {
 
 void change_directory(const char *path) {
     if(!directory_exists(path)) {
-        CRASHF_DEBUG("Directory \"%s\" does not exist.", path);
+        exception_throw_runtime_error("Directory \"%s\" does not exist.", path);
     }
     SetCurrentDirectoryA(path);
 }
@@ -49,7 +49,7 @@ void write_file(const char *path, void *data, size_t lenght) {
     if(lenght > 0) {
         HANDLE file = CreateFileA(path, GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
         if(file == INVALID_HANDLE_VALUE) {
-            CRASHF_DEBUG("Could not open file \"%s\" for writing.", path);
+            exception_throw_runtime_error("Could not open file \"%s\" for writing.", path);
         }
         DWORD bytes_written;
         WriteFile(file, data, lenght, &bytes_written, NULL);
@@ -64,7 +64,7 @@ void read_file(const char *path, void **data, size_t *lenght) {
     ASSERT(lenght != NULL);
     HANDLE file = CreateFileA(path, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
     if(file == INVALID_HANDLE_VALUE) {
-        CRASHF_DEBUG("Could not open file \"%s\" for reading.", path);
+        exception_throw_runtime_error("Could not open file \"%s\" for reading.", path);
     }
     *lenght = GetFileSize(file, NULL);
     *data = GlobalAlloc(GPTR, *lenght);

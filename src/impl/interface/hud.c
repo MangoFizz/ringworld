@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <math.h>
 #include "../bitmap/bitmap.h"
+#include "../debug/assertion.h"
 #include "../exception/exception.h"
 #include "../tag/definitions/bitmap.h"
 #include "../tag/tag.h"
@@ -76,13 +77,13 @@ void hud_calculate_point(HUDInterfaceAnchor *absolute_placement, HUDMeterDefinit
             break;
         }
         default: {
-            CRASHF_DEBUG("Invalid HUD interface anchor: %d", *absolute_placement);
+            exception_throw_runtime_error("Invalid HUD interface anchor: %d", *absolute_placement);
         }
     }
 
     // @todo: implement anchor adjustments (seems to be unused)
     if(anchor_adjustments != NULL) {
-        CRASHF_DEBUG("Anchor adjustments are not implemented");
+        exception_throw_runtime_error("Anchor adjustments are not implemented");
     }
 
     out_position->x = math_float_to_long(pos_x);
@@ -137,7 +138,7 @@ void hud_calculate_bitmap_bounds(HUDInterfaceAnchor absolute_placement, BitmapDa
             break;
         }
         default: {
-            CRASHF_DEBUG("Invalid HUD interface anchor: %d", absolute_placement);
+            exception_throw_runtime_error("Invalid HUD interface anchor: %d", absolute_placement);
         }
     }
 }

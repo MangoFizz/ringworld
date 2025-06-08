@@ -37,12 +37,12 @@ void memory_map_initialize(void) {
                 memset(filename, 0, sizeof(filename));
                 GetMappedFileNameA(GetCurrentProcess(), MANAGED_HEAP_BASE_ADDRESS, filename, MAX_PATH);
                 if(filename[0] != '\0') {
-                    crashf("memory_map_initialize(): Address 0x%08X is already mapped to %s", MANAGED_HEAP_BASE_ADDRESS, filename);
+                    exception_throw_runtime_error("memory_map_initialize(): Address 0x%08X is already mapped to %s", MANAGED_HEAP_BASE_ADDRESS, filename);
                 }
             }
             FreeLibrary(psapi);
         }
-       crashf("memory_map_initialize(): Failed to allocate required memory at 0x%08X", MANAGED_HEAP_BASE_ADDRESS);
+       exception_throw_runtime_error("memory_map_initialize(): Failed to allocate required memory at 0x%08X", MANAGED_HEAP_BASE_ADDRESS);
     }
 }
 

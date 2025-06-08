@@ -1,5 +1,5 @@
-#include "../exception/exception.h"
-#include "../saved_games/player_profile.h"
+#include "debug/assertion.h"
+#include "saved_games/player_profile.h"
 #include "ui_widget.h"
 
 void ui_widget_update_multiplayer_type_menu_extended_description(Widget *widget) {

@@ -1,6 +1,7 @@
 #include <math.h>
 
 #include "../types/types.h"
+#include "../debug/assertion.h"
 #include "../exception/exception.h"
 #include "math.h"
 #include "wave_functions.h"
@@ -16,7 +17,7 @@ double wave_function_calculate_value(double period, WaveFunction function) {
     ASSERT(WAVE_FUNCTION_ONE >= 0 && WAVE_FUNCTION_ONE < WAVE_FUNCTION_MAX);
 
     if(*wave_functions_initialized == false) {
-        CRASHF_DEBUG("wave functions not initialized yet");
+        exception_throw_runtime_error("wave functions not initialized yet");
     }
 
     if(function == WAVE_FUNCTION_ONE) {

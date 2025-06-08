@@ -34,6 +34,7 @@ include("src/hook/hooks.cmake")
 include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/include
     ${CMAKE_CURRENT_SOURCE_DIR}/src
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/impl
 )
 
 # If we have Git, try to see if we are in a git repo
@@ -55,10 +56,10 @@ else()
 endif()
 
 add_custom_command(
-    OUTPUT "${CMAKE_CURRENT_SOURCE_DIR}/src/version.hpp"
-    COMMAND "${CMAKE_COMMAND}" "-DGIT_EXECUTABLE=${GIT_EXECUTABLE}" "-DGIT_DIR=${GIT_DIR}" "-DOUT_FILE=${CMAKE_CURRENT_SOURCE_DIR}/src/version.hpp" -DPROJECT_VERSION_MAJOR=${PROJECT_VERSION_MAJOR} -DPROJECT_VERSION_MINOR=${PROJECT_VERSION_MINOR} -DPROJECT_VERSION_PATCH=${PROJECT_VERSION_PATCH} -DIN_GIT_REPO=${IN_GIT_REPO} -P "${CMAKE_CURRENT_SOURCE_DIR}/src/version.cmake"
+    OUTPUT "${CMAKE_CURRENT_SOURCE_DIR}/src/version.h"
+    COMMAND "${CMAKE_COMMAND}" "-DGIT_EXECUTABLE=${GIT_EXECUTABLE}" "-DGIT_DIR=${GIT_DIR}" "-DOUT_FILE=${CMAKE_CURRENT_SOURCE_DIR}/src/version.h" -DPROJECT_VERSION_MAJOR=${PROJECT_VERSION_MAJOR} -DPROJECT_VERSION_MINOR=${PROJECT_VERSION_MINOR} -DPROJECT_VERSION_PATCH=${PROJECT_VERSION_PATCH} -DIN_GIT_REPO=${IN_GIT_REPO} -P "${CMAKE_CURRENT_SOURCE_DIR}/src/version.cmake"
     DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/src/version.cmake" "$<$<BOOL:${IN_GIT_REPO}>:${GIT_DIR}/refs/heads>"
-    COMMENT "Generating version.hpp"
+    COMMENT "Generating version.h"
 )
 
 # Add debug define for debug builds
@@ -76,6 +77,8 @@ set(RINGWORLD_SOURCES
     src/impl/crypto/md5.c
     src/impl/crypto/xtea.c
     src/impl/cutscene/cutscene.c
+    src/impl/debug/assertion.c
+    src/impl/debug/log.c
     src/impl/exception/exception.c
     src/impl/font/bitmap_font.c
     src/impl/font/font.c
@@ -137,6 +140,7 @@ set(RINGWORLD_SOURCES
     src/impl/scenario/scenario.c
     src/impl/script/hsc.c
     src/impl/shader/shader.c
+    src/impl/shell/shell.c
     src/impl/tag/tag.c
     src/impl/terminal/terminal.c
     src/impl/text/string.c
@@ -144,7 +148,7 @@ set(RINGWORLD_SOURCES
     src/impl/text/unicode_string_list.c
     ${RINGWORLD_HOOKS_SOURCES}
     ${TAG_DEFINITION_HPP_FILES}
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/version.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/version.h
 )
 
 if(RINGWORLD_ENABLE_EVENTS_BUS)
@@ -165,7 +169,7 @@ else()
     target_compile_definitions(ringworld PRIVATE -D_WIN32_WINNT=0x0601)
 endif()
 
-target_link_libraries(ringworld d3dcompiler d3dx9)
+target_link_libraries(ringworld d3dcompiler d3d9 d3dx9 dbghelp)
 
 if(RINGWORLD_BUILD_TOOL)
     if(RINGWORLD_TOOL_ENABLE_DEBUG_SHADERS)

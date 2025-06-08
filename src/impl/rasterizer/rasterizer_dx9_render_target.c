@@ -1,3 +1,4 @@
+#include "../debug/assertion.h"
 #include "../exception/exception.h"
 #include "rasterizer_dx9.h"
 #include "rasterizer_dx9_render_target.h"
@@ -102,14 +103,14 @@ bool rasterizer_dx9_render_targets_initialize(void) {
         HRESULT r1 = IDirect3DDevice9_GetRenderTarget(device, 0, &render_targets[0].surface);
         if(FAILED(r1)) {
             result = false;
-            CRASHF_DEBUG("failed to get render target 0");
+            exception_throw_runtime_error("failed to get render target 0");
         }
 
         D3DSURFACE_DESC desc;
         HRESULT r2 = IDirect3DSurface9_GetDesc(render_targets[0].surface, &desc) == D3D_OK;
         if(FAILED(r2)) {
             result = false;
-            CRASHF_DEBUG("failed to get render target 0 desc");
+            exception_throw_runtime_error("failed to get render target 0 desc");
         }
 
         render_targets[0].width = desc.Width;
@@ -124,13 +125,13 @@ bool rasterizer_dx9_render_targets_initialize(void) {
     else {
         if(FAILED(IDirect3DDevice9_GetRenderTarget(device, 0, &render_targets[1].surface))) {
             result = false;
-            CRASHF_DEBUG("failed to get render target 1");
+            exception_throw_runtime_error("failed to get render target 1");
         }
 
         D3DSURFACE_DESC desc;
         if(FAILED(IDirect3DSurface9_GetDesc(render_targets[1].surface, &desc))) {
             result = false;
-            CRASHF_DEBUG("failed to get render target 1 desc");
+            exception_throw_runtime_error("failed to get render target 1 desc");
         }
 
         render_targets[1].width = desc.Width;
@@ -151,16 +152,16 @@ bool rasterizer_dx9_render_targets_initialize(void) {
                                                             render_targets[i].format, D3DPOOL_DEFAULT, &render_targets[i].texture, NULL);
                 if(FAILED(r1)) {
                     result = false;
-                    CRASHF_DEBUG("failed to create render target %d", i);
+                    exception_throw_runtime_error("failed to create render target %d", i);
                 }
 
                 if(render_targets[i].texture == NULL) {
-                    crashf("failed to create render target %d texture", i);
+                    exception_throw_runtime_error("failed to create render target %d texture", i);
                 }
                 
                 if(FAILED(IDirect3DTexture9_GetSurfaceLevel(render_targets[i].texture, 0, &render_targets[i].surface))) {
                     result = false;
-                    CRASHF_DEBUG("failed to get render target %d surface", i);
+                    exception_throw_runtime_error("failed to get render target %d surface", i);
                 }
             }
         }
@@ -168,7 +169,7 @@ bool rasterizer_dx9_render_targets_initialize(void) {
 
     if(FAILED(IDirect3DDevice9_CreateIndexBuffer(device, 8, 8, D3DFMT_INDEX16, D3DPOOL_DEFAULT, d3d9_render_target_index_buffer, NULL))) {
         result = false;
-        CRASHF_DEBUG("failed to create index buffer");
+        exception_throw_runtime_error("failed to create index buffer");
     }
 
     if(*d3d9_render_target_index_buffer == NULL) {
@@ -178,7 +179,7 @@ bool rasterizer_dx9_render_targets_initialize(void) {
     uint16_t *indices = NULL;
     if(FAILED(IDirect3DIndexBuffer9_Lock(*d3d9_render_target_index_buffer, 0, 4, (void **)&indices, 0))) {
         result = false;
-        CRASHF_DEBUG("failed to lock index buffer");
+        exception_throw_runtime_error("failed to lock index buffer");
     }
 
     if(indices != NULL) {
@@ -188,7 +189,7 @@ bool rasterizer_dx9_render_targets_initialize(void) {
 
         if(FAILED(IDirect3DIndexBuffer9_Unlock(*d3d9_render_target_index_buffer))) {
             result = false;
-            CRASHF_DEBUG("failed to unlock index buffer");
+            exception_throw_runtime_error("failed to unlock index buffer");
         }
     }
     
@@ -199,7 +200,7 @@ bool rasterizer_dx9_render_targets_initialize(void) {
         if(FAILED(IDirect3DDevice9_CreateVertexBuffer(device, 4 * fvf_size, usage_flags, fvf,
                                                         D3DPOOL_DEFAULT, d3d9_render_target_vertex_buffer, NULL))) {
             result = false;
-            CRASHF_DEBUG("failed to create vertex buffer");
+            exception_throw_runtime_error("failed to create vertex buffer");
         }
     }
 

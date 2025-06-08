@@ -1,6 +1,6 @@
 #include <string.h>
 #include <stdio.h>
-#include "../exception/exception.h"
+#include "../debug/assertion.h"
 #include "../game/game_state.h"
 #include "../memory/pool.h"
 #include "../light/light.h"

@@ -2,8 +2,11 @@
 #include <windows.h>
 #include <d3d9.h>
 
-#include "../exception/exception.h"
-#include "../memory/shader_blob.h"
+#include "debug/assertion.h"
+#include "debug/log.h"
+#include "exception/exception.h"
+#include "memory/shader_blob.h"
+#include "shell/shell.h"
 #include "rasterizer_dx9.h"
 #include "rasterizer_shaders_blob.h"
 #include "rasterizer_dx9_shader_effect.h"
@@ -39,7 +42,8 @@ bool rasterizer_dx9_shader_effect_load_collection_from_binary(void) {
     size_t effect_collection_blob_size;
     if(!rasterizer_shaders_blob_read_file(&effect_collection_blob, &effect_collection_blob_size, "shaders/EffectCollection_ps_3_0.enc")) {
         if(!rasterizer_shaders_blob_read_file(&effect_collection_blob, &effect_collection_blob_size, "shaders/EffectCollection_ps_2_0.enc")) {
-            error_box("ERROR: Failed to load shader effect collection.\n\nPlease make sure the EffectCollection_ps_2_0.enc file is present in your shaders directory.", "Error", MB_ICONERROR);
+            log_error("Failed to load shader effect collection file");
+            shell_error_box("ERROR: Failed to load shader effect collection.\n\nPlease make sure the EffectCollection_ps_2_0.enc file is present in your shaders directory.");
             return false;
         }
     }

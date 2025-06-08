@@ -1,10 +1,12 @@
 #include <string.h>
-#include "../exception/exception.h"
-#include "../bitmap/bitmap.h"
-#include "../font/bitmap_font.h"
-#include "../math/math.h"
-#include "../render/render.h"
-#include "../text/text.h"
+#include "debug/assertion.h"
+#include "debug/log.h"
+#include "exception/exception.h"
+#include "bitmap/bitmap.h"
+#include "font/bitmap_font.h"
+#include "math/math.h"
+#include "render/render.h"
+#include "text/text.h"
 #include "rasterizer.h"
 #include "rasterizer_dx9_texture.h"
 #include "rasterizer_dx9_render_target.h"
@@ -228,7 +230,7 @@ void rasterizer_bitmap_font_dispose_font_character(BitmapFontCacheCharacter *cha
     if(character_cache->character != NULL) {
         character_cache->character->hardware_character_index = -1;
         if(character_cache->character->draw_generation == *string_draw_count) {
-            debug_printf("Trying to dispose of a character that is still in use: %d\n", character_cache->character->hardware_character_index);
+            log_warn("Trying to dispose of a character that is still in use: %d\n", character_cache->character->hardware_character_index);
         }
         character_cache->character = NULL;
     }

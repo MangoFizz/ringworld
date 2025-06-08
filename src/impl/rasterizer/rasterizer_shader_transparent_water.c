@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <math.h>
 
+#include "../debug/assertion.h"
 #include "../exception/exception.h"
 #include "../shader/shader.h"
 #include "../math/math.h"
@@ -180,7 +181,9 @@ void rasterizer_shader_transparent_water_render_bumpmap(ShaderTransparentWater *
                     if(j < shader->ripples.ripples.count) {
                         ripple_map_handle = shader->ripples.maps.tag_handle;
                     }
-                    rasterizer_dx9_texture_set_bitmap_data_texture_no_assert(j, ripples[j].map_index, ripple_map_handle);
+                    if(!HANDLE_IS_NULL(ripple_map_handle)) {
+                        rasterizer_dx9_texture_set_bitmap_data_texture_no_assert(j, ripples[j].map_index, ripple_map_handle);
+                    }
                 }
 
 #ifdef RINGWORLD_ENABLE_ENHANCEMENTS
@@ -195,7 +198,7 @@ void rasterizer_shader_transparent_water_render_bumpmap(ShaderTransparentWater *
                 rasterizer_dx9_set_pixel_shader_constant_f(0, ps_constants, 4);
                 HRESULT res = IDirect3DDevice9_DrawPrimitiveUP(device, D3DPT_TRIANGLEFAN, 2, vertices, sizeof(RasterizerDynamicVertex));
                 if(FAILED(res)) {
-                    CRASHF_DEBUG("failed to draw shader transparent water bumpmap");
+                    exception_throw_runtime_error("failed to draw shader transparent water bumpmap");
                 }
             }
 
@@ -208,7 +211,7 @@ void rasterizer_shader_transparent_water_render_bumpmap(ShaderTransparentWater *
                 IDirect3DSurface9_Release(mipmap_surface);
                 HRESULT res = IDirect3DDevice9_DrawPrimitiveUP(device, D3DPT_TRIANGLEFAN, 2, vertices, sizeof(RasterizerDynamicVertex));
                 if(FAILED(res)) {
-                    CRASHF_DEBUG("failed to draw shader transparent water bumpmap");
+                    exception_throw_runtime_error("failed to draw shader transparent water bumpmap");
                 }
             }
 #endif

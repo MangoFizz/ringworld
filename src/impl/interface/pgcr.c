@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include "../bitmap/bitmap.h"
-#include "../exception/exception.h"
+#include "../debug/assertion.h"
 #include "../game/game_engine.h"
 #include "../main/main_globals.h"
 #include "../math/color.h"

@@ -766,7 +766,7 @@ void rasterizer_dx9_transparent_generic_preprocess(TransparentGeometryGroup *gro
             constant_color0.g = stage->color_0_animation[0].g + constant_color0.g * progress;
             constant_color0.b = stage->color_0_animation[0].b + constant_color0.b * progress;
 
-            if(stage->color_0_source > 0 && stage->color_0_source < FUNCTION_NAME_NULLABLE_MAX) {
+            if(stage->color_0_source > 0 && stage->color_0_source < FUNCTION_NAME_NULLABLE_MAX_VALUE) {
                 if(group->animation != NULL && group->animation->colors != NULL) {
                     ColorRGB *external_color = &group->animation->colors[stage->color_0_source - 1];
                     constant_color0.r *= external_color->r;

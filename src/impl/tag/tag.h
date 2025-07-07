@@ -174,7 +174,7 @@ TagEntry *tag_get_entry(TagHandle tag_handle);
  * @param group group of the tag
  * @return tag ID if found, NULL_ID if not
  */
-TagHandle lookup_tag(const char *path, TagGroup group);
+TagHandle tag_lookup(const char *path, TagGroup group);
 
 /**
  * Get the data for the tag.

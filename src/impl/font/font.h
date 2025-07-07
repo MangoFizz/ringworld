@@ -42,9 +42,9 @@ bool font_character_exists(TagHandle font_tag_handle, wchar_t character);
  * @return The tag handle of the font.
  */
 static inline TagHandle font_find_by_path(const char *font_path) {
-    TagHandle font_tag = lookup_tag(font_path, TAG_GROUP_FONT);
+    TagHandle font_tag = tag_lookup(font_path, TAG_GROUP_FONT);
     if(HANDLE_IS_NULL(font_tag)) {
-        font_tag = lookup_tag(font_path, TAG_GROUP_VECTOR_FONT);
+        font_tag = tag_lookup(font_path, TAG_GROUP_VECTOR_FONT);
     }
     return font_tag;
 }

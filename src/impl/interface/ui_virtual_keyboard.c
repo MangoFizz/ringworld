@@ -31,7 +31,7 @@ bool ui_virtual_keyboard_initialize(void) {
     virtual_keyboard_globals->shift_active = false;
     virtual_keyboard_globals->caps_active = false;
     virtual_keyboard_globals->symbols_active = false;
-    TagHandle virtual_keyboard_tag = lookup_tag("ui\\english", TAG_GROUP_VIRTUAL_KEYBOARD);
+    TagHandle virtual_keyboard_tag = tag_lookup("ui\\english", TAG_GROUP_VIRTUAL_KEYBOARD);
     bool virtual_keyboard_found = false;
     if(!HANDLE_IS_NULL(virtual_keyboard_tag)) {
         virtual_keyboard_globals->keyboard = tag_get_data(TAG_GROUP_VIRTUAL_KEYBOARD, virtual_keyboard_tag);
@@ -47,7 +47,7 @@ bool ui_virtual_keyboard_initialize(void) {
         virtual_keyboard_globals->cursor_blink_time = 1;
         virtual_keyboard_found = true;
     }
-    virtual_keyboard_globals->caret_bitmap_tag = lookup_tag("ui\\shell\\bitmaps\\white", TAG_GROUP_BITMAP);
+    virtual_keyboard_globals->caret_bitmap_tag = tag_lookup("ui\\shell\\bitmaps\\white", TAG_GROUP_BITMAP);
     return virtual_keyboard_found;
 }
 

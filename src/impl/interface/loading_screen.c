@@ -28,7 +28,7 @@ void loading_screen_abort_connection();
 void loading_screen_timeout_connection(uint32_t counter);
 
 void loading_screen_draw_background(float alpha) {
-    TagHandle bitmap_tag = lookup_tag("ui\\shell\\bitmaps\\background", TAG_GROUP_BITMAP);
+    TagHandle bitmap_tag = tag_lookup("ui\\shell\\bitmaps\\background", TAG_GROUP_BITMAP);
     ASSERT_OR_RETURN(!HANDLE_IS_NULL(bitmap_tag));
 
     Rectangle2D rect;
@@ -133,7 +133,7 @@ void loading_screen_render(void) {
     loading_screen_draw_background(alpha);
 
     TagHandle font_tag = font_get_default_large();
-    TagHandle strings = lookup_tag("ui\\shell\\strings\\loading", TAG_GROUP_UNICODE_STRING_LIST);
+    TagHandle strings = tag_lookup("ui\\shell\\strings\\loading", TAG_GROUP_UNICODE_STRING_LIST);
     ASSERT_OR_RETURN(!HANDLE_IS_NULL(font_tag) && !HANDLE_IS_NULL(strings));
 
     ColorARGB text_color = {alpha, 1.0f, 1.0f, 1.0f};

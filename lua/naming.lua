@@ -3,10 +3,12 @@
 -- https://gist.github.com/MangoFizz/2f311ae13b3bd77f3143028c0543b85b
 
 local exceptions = {}
+local exceptionsMap = {}
 
 local function addExceptions(newExceptions)
     for _, exception in ipairs(newExceptions) do
         table.insert(exceptions, exception)
+        exceptionsMap[exception:lower()] = exception
     end
     table.sort(exceptions, function(a, b) return #a > #b end)
 end
@@ -89,15 +91,28 @@ end
 local function toPascalCase(input)
     local words = splitWords(input)
     for i = 1, #words do
-        words[i] = words[i]:sub(1, 1):upper() .. words[i]:sub(2)
+        local original = exceptionsMap[words[i]]
+        if original then
+            words[i] = original
+        else
+            words[i] = words[i]:sub(1, 1):upper() .. words[i]:sub(2)
+        end
     end
     return table.concat(words)
 end
 
 local function toCamelCase(input)
     local words = splitWords(input)
-    for i = 2, #words do
-        words[i] = words[i]:sub(1, 1):upper() .. words[i]:sub(2)
+    for i = 1, #words do
+        local original = exceptionsMap[words[i]]
+        if original then
+            words[i] = original
+        elseif i == 1 then
+            -- palabra inicial en minúscula
+            words[i] = words[i]:lower()
+        else
+            words[i] = words[i]:sub(1, 1):upper() .. words[i]:sub(2)
+        end
     end
     return table.concat(words)
 end

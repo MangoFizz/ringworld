@@ -14,7 +14,7 @@ enum {
 };
 
 double wave_function_calculate_value(double period, WaveFunction function) {
-    ASSERT(WAVE_FUNCTION_ONE >= 0 && WAVE_FUNCTION_ONE < WAVE_FUNCTION_MAX);
+    ASSERT(WAVE_FUNCTION_ONE >= 0 && WAVE_FUNCTION_ONE < WAVE_FUNCTION_MAX_VALUE);
 
     if(*wave_functions_initialized == false) {
         exception_throw_runtime_error("wave functions not initialized yet");

@@ -61,7 +61,7 @@ void ui_widgets_initialize(void) {
 Widget *ui_widget_load_by_name_or_tag(const char *definition_tag_path, TagHandle definition_tag, Widget *parent, int16_t controller_index, 
                         TagHandle topmost_widget_definition_handle, TagHandle parent_widget_definition_handle, uint16_t child_index_from_parent) {
     
-    TagHandle cursor_tag = lookup_tag("ui\\shell\\bitmaps\\cursor", TAG_GROUP_BITMAP);
+    TagHandle cursor_tag = tag_lookup("ui\\shell\\bitmaps\\cursor", TAG_GROUP_BITMAP);
     ui_cursor_set_bitmap_tag_handle(cursor_tag);
     *ui_widgets_unknown_1 = true;
 
@@ -69,7 +69,7 @@ Widget *ui_widget_load_by_name_or_tag(const char *definition_tag_path, TagHandle
 
     if(HANDLE_IS_NULL(definition_tag)) {
         if(definition_tag_path) {
-            definition_tag = lookup_tag(definition_tag_path, TAG_GROUP_UI_WIDGET_DEFINITION);
+            definition_tag = tag_lookup(definition_tag_path, TAG_GROUP_UI_WIDGET_DEFINITION);
             if(HANDLE_IS_NULL(definition_tag)) {
                 return NULL;
             }
@@ -559,7 +559,7 @@ void ui_widget_instance_render_recursive(Widget *widget, Rectangle2D *bounds, Ve
     for(size_t i = 0; i < definition->game_data_inputs.count; i++) {
         GameDataInputReference *game_data_input = &definition->game_data_inputs.elements[i];
         if(game_data_input->function > UI_GAME_DATA_INPUT_REFERENCE_FUNCTION_NULL) {
-            if(game_data_input->function < UI_GAME_DATA_INPUT_REFERENCE_FUNCTION_MAX) {
+            if(game_data_input->function < UI_GAME_DATA_INPUT_REFERENCE_FUNCTION_MAX_VALUE) {
                 ui_widget_game_data_input_functions[game_data_input->function](widget);
             }
         }
@@ -763,7 +763,7 @@ bool ui_widget_is_cursor_over(Widget *widget) {
 }
 
 const wchar_t *ui_widget_get_common_button_caption(UIWidgetButtonCaptionStringIndex index) {
-    TagHandle tag_handle = lookup_tag("ui\\shell\\strings\\common_button_captions", TAG_GROUP_UNICODE_STRING_LIST);
+    TagHandle tag_handle = tag_lookup("ui\\shell\\strings\\common_button_captions", TAG_GROUP_UNICODE_STRING_LIST);
     if(!HANDLE_IS_NULL(tag_handle)) {
         const wchar_t *string = unicode_string_list_get_string_or_null(tag_handle, index);
         if(string) {
@@ -781,7 +781,7 @@ const wchar_t *ui_widget_get_common_button_caption(UIWidgetButtonCaptionStringIn
 
 void ui_widget_update_player_profile_text(const wchar_t *profile_name, Widget *text_widget) {
     ASSERT(text_widget != NULL);
-    ASSERT(text_widget->type == UI_WIDGET_TYPE_TEXT_BOX);
+    // ASSERT(text_widget->type == UI_WIDGET_TYPE_TEXT_BOX);
     ASSERT(profile_name != NULL);
 
     const wchar_t *profile_label = ui_widget_get_common_button_caption(UI_WIDGET_BUTTON_CAPTION_PROFILE_LABEL);

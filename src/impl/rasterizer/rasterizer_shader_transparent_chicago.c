@@ -94,7 +94,7 @@ void rasterizer_shader_transparent_chicago_draw(TransparentGeometryGroup *group,
                     bitmap_type = BITMAP_TYPE_2D_TEXTURES;
                 }
 
-                ASSERT(first_map_type >= 0 && first_map_type < SHADER_FIRST_MAP_TYPE_MAX);
+                ASSERT(first_map_type >= 0 && first_map_type < SHADER_FIRST_MAP_TYPE_MAX_VALUE);
                 ASSERT(shader_data->base.radiosity.flags.transparent_lit == false || first_map_type == SHADER_FIRST_MAP_TYPE_2D_MAP);
 
                 rasterizer_dx9_texture_set_bitmap_data_texture(map_index, bitmap_type, BITMAP_USAGE_ALPHA_BLEND, bitmap_data_index, map->parameters.map.tag_handle);

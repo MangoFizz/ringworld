@@ -71,6 +71,18 @@ local naming = require "naming"
 ---@field bitfields ParsedTagBitfield[]
 ---@field structs ParsedTagStruct[]
 
+local primitiveTypes = {
+    "float",
+    "int8_t",
+    "int16_t",
+    "int32_t",
+    "uint8_t",
+    "uint16_t",
+    "uint32_t",
+    "char",
+    "void *"
+}
+
 local commonTypes = {
     float = { alias = "float", size = 4 },
     compressed_float = { alias = "int16_t", size = 2 },
@@ -209,6 +221,8 @@ local tagGroups = {
     "unit",
     "unicode_string_list",
     "virtual_keyboard",
+    "vector_font",
+    "vector_font_data",
     "vehicle",
     "weapon",
     "wind",
@@ -216,12 +230,15 @@ local tagGroups = {
 }
 
 -- Add exceptions to the naming convention
-naming.addExceptions({"UTF16", "2D", "3D", "HUD", "ARGB", "RGB", "AI", "GBX", "UI", "BSP"})
+naming.addExceptions({"UTF16", "2D", "3D", "HUD", "ARGB", "RGB", "AI", "GBXModel", "UI", "BSP"})
 naming.addExceptions({"R5G6B5", "A1R5G5B5", "A4R4G4B4", "X8R8G8B8", "A8R8G8B8", "DXT1", "DXT3", "DXT5", "A8Y8"})
 
 ---@param typeName string|nil
----@return string
+---@return string|nil
 local function getNameForType(typeName)
+    if not typeName then
+        return typeName
+    end
     local snakeCaseName = naming.toSnakeCase(typeName)
     if commonTypes[snakeCaseName] then
         return commonTypes[snakeCaseName].alias
@@ -248,7 +265,7 @@ local function parseStruct(structDefinition)
     local struct = {
         name = structDefinition.name,
         size = structDefinition.size,
-        inherits = structDefinition.inherits,
+        inherits = getNameForType(structDefinition.inherits),
         fields = {}
     }
     local fieldCount = 0
@@ -257,7 +274,7 @@ local function parseStruct(structDefinition)
             local structField = {}
             structField.name = getNameForField(field.name)
             structField.type = getNameForType(field.type)
-            structField.struct = field.struct
+            structField.struct = getNameForType(field.struct)
             structField.size = field.size or field.count
             structField.cacheOnly = field.cache_only or false
             structField.pointer = field.pointer or false
@@ -424,6 +441,7 @@ return {
     parseTagDefinition = parseTagDefinition,
     getDependenciesForTagDefinition = getDependenciesForTagDefinition,
     types = commonTypes,
+    primitiveTypes = primitiveTypes,
     commonEnums = commonEnums,
     commonBitfields = commonBitfields,
     tagGroups = tagGroups,

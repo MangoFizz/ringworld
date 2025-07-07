@@ -5,7 +5,7 @@
 #include "multiplayer_game_text.h"
 
 static TagHandle multiplayer_get_text_tag(void) {
-    return lookup_tag("ui\\multiplayer_game_text", TAG_GROUP_UNICODE_STRING_LIST);
+    return tag_lookup("ui\\multiplayer_game_text", TAG_GROUP_UNICODE_STRING_LIST);
 }
 
 const wchar_t *multiplayer_game_text_get_string(MultiplayerGameTextIndex index) {

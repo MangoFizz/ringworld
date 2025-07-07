@@ -3,7 +3,7 @@
 extern ObjectTypeInterface **object_type_interface_list;
 
 ObjectTypeInterface *object_type_interface_get(ObjectType type) {
-    if (type >= OBJECT_TYPE_MAX) {
+    if (type >= OBJECT_TYPE_MAX_VALUE) {
         return NULL;
     }
     return object_type_interface_list[type];

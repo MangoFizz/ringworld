@@ -21,7 +21,7 @@ TagEntry *tag_get_entry(TagHandle tag_handle) {
     return tag;
 }
 
-TagHandle lookup_tag(const char *path, TagGroup group) {
+TagHandle tag_lookup(const char *path, TagGroup group) {
     if(!*map_is_loaded) {
         return NULL_HANDLE;
     }

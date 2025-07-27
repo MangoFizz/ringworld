@@ -63,6 +63,7 @@ typedef struct ProjectileObjectFlags {
     Bool pad_1 : 5;
     char pad_2[3];
 } ProjectileObjectFlags;
+_Static_assert(sizeof(ProjectileObjectFlags) == sizeof(uint32_t));
 
 typedef struct ProjectileNetworkData {
     VectorXYZ position;

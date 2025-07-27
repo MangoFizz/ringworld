@@ -6,9 +6,9 @@ extern "C" {
 #endif
 
 #include <stdint.h>
-#include "../object/object.h"
+#include "../object/object_item.h"
 
-typedef struct WeaponTrigger {
+typedef struct WeaponObjectTrigger {
     int8_t idle_time;
     int8_t state;
     TickCount16 trigger_time;
@@ -23,20 +23,20 @@ typedef struct WeaponTrigger {
     TableResourceHandle charing_effect;
     int8_t network_delay_ticks;
     char pad_2[3];
-} WeaponTrigger;
-_Static_assert(sizeof(WeaponTrigger) == 0x28);
+} WeaponObjectTrigger;
+_Static_assert(sizeof(WeaponObjectTrigger) == 0x28);
 
-typedef struct WeaponMagazine {
+typedef struct WeaponObjectMagazine {
     int16_t state;
     TickCount16 reload_ticks_remaining;
     TickCount16 reload_ticks;
     int16_t rounds_unloaded;
     int16_t rounds_loaded;
     int16_t rounds_left_to_recharge; 
-    int16_t unknown; 
-    int16_t unknown2; 
-} WeaponMagazine; 
-_Static_assert(sizeof(WeaponMagazine) == 0x10);
+    int16_t unk_1; 
+    int16_t unk_2; 
+} WeaponObjectMagazine; 
+_Static_assert(sizeof(WeaponObjectMagazine) == 0x10);
 
 typedef struct WeaponReloadStartData {
     int16_t total_rounds[2];
@@ -82,8 +82,8 @@ typedef struct WeaponObject {
     char pad_4[8];
     int16_t alt_shots_loaded;
     char pad_5[2];
-    WeaponTrigger triggers[2];
-    WeaponMagazine magazines[2]; 
+    WeaponObjectTrigger triggers[2];
+    WeaponObjectMagazine magazines[2]; 
     TickCount32 last_trigger_fire_tick;
     WeaponReloadStartData reload_starting_point;
     char pad_6[4];

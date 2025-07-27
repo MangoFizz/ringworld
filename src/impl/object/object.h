@@ -64,6 +64,24 @@ typedef struct ObjectClusterPartition {
     GenericTable *cluster_references_table;
 } ObjectClusterPartition;
 
+
+/**
+ * Retrieves the global object table instance.
+ * 
+ * @return Pointer to the global objects table.
+ */
+ObjectTable *object_table_get();
+
+/**
+ * Retrieves and verifies the type of a dynamic object.
+ *
+ * @param object_handle The handle to the object to be retrieved and verified.
+ * @param types A bitmask or set of expected types to verify against.
+ * @return A pointer to the dynamic object if the type matches; otherwise,
+ *         returns NULL.
+ */
+DynamicObjectBase *object_get_and_verify_type(ObjectHandle object_handle, uint32_t types);
+
 /**
  * Initialize object placement data.
  * @param data The object placement data to initialize.

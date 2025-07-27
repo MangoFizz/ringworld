@@ -119,6 +119,17 @@ typedef struct MultiplayerPlayerInfo {
     bool odd_man_out;
 } MultiplayerPlayerInfo;
 
+typedef struct PlayerActions {
+    uint16_t melee : 1;
+    uint16_t action : 1;
+    uint16_t pad_9 : 1;
+    uint16_t flashlight : 1;
+    uint16_t pad_10 : 9;
+    uint16_t reload : 1;
+    uint16_t pad_11 : 2;
+} PlayerActions;
+_Static_assert(sizeof(PlayerActions) == 2);
+
 typedef struct Player {
     uint16_t player_id;
     int16_t local_player_index;
@@ -164,13 +175,7 @@ typedef struct Player {
     char pad_7[16];
     VectorXYZ position;
     char pad_8[24];
-    uint16_t melee : 1;
-    uint16_t action : 1;
-    uint16_t pad_9 : 1;
-    uint16_t flashlight : 1;
-    uint16_t pad_10 : 9;
-    uint16_t reload : 1;
-    uint16_t pad_11 : 2;
+    PlayerActions actions;
     char pad_12[2];
     char pad_13[24];
     float baseline_update_xy_aim;

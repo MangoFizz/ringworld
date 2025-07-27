@@ -28,9 +28,20 @@ typedef struct GameEngineGlobals {
 } GameEngineGlobals;
 _Static_assert(sizeof(GameEngineGlobals) == 0x20);
 
+typedef enum PACKED_ENUM GameEngineType {
+    GAME_ENGINE_TYPE_NONE,
+    GAME_ENGINE_TYPE_CTF,
+    GAME_ENGINE_TYPE_SLAYER,
+    GAME_ENGINE_TYPE_ODDBALL,
+    GAME_ENGINE_TYPE_KING,
+    GAME_ENGINE_TYPE_RACE,
+    GAME_ENGINE_TYPE_MAX_VALUE,
+    GAME_ENGINE_TYPE_SIZE = 0xFFFF
+} GameEngineType;
+
 typedef struct GameEngineInterface {
     const char *name;
-    uint16_t type;
+    GameEngineType type;
     void (*dispose)();
     bool (*initialize_for_new_map)();
     void (*dispose_from_old_map)();

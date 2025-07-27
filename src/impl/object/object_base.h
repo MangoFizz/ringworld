@@ -47,13 +47,13 @@ typedef struct BaseDynamicObjectFlags {
 _Static_assert(sizeof(BaseDynamicObjectFlags) == sizeof(uint32_t));
 
 typedef struct BaseObjectNetwork {
-    Bool valid_position;
+    bool valid_position;
     VectorXYZ position;
-    Bool valid_forward_and_up;
+    bool valid_forward_and_up;
     VectorXYZ orientation[2];
-    Bool valid_transitional_velocity;
+    bool valid_transitional_velocity;
     VectorXYZ transitional_velocity;
-    Bool valid_timestamp;
+    bool valid_timestamp;
     TickCount32 timestamp;
 } BaseObjectNetwork;
 _Static_assert(sizeof(BaseObjectNetwork) == 0x44);
@@ -188,7 +188,7 @@ typedef struct DynamicObjectBase {
     ObjectHandle parent_object;
     uint8_t parent_attachment_node;
     uint8_t pad_4;
-    char force_shield_update;
+    bool force_shield_update;
     ObjectValidOutGoingFunctions valid_outgoing_functions; 
     float incoming_function_values[4];
     float outgoing_function_values[4];

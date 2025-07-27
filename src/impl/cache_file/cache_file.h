@@ -7,6 +7,40 @@ extern "C" {
 
 #include <stdint.h>
 #include <stdbool.h>
+#include "../types/types.h"
+
+enum {
+    CACHE_FILE_HEAD_LITERAL = 0x68656164,
+    CACHE_FILE_FOOT_LITERAL = 0x666F6F74
+};
+
+typedef enum PACKED_ENUM CacheFileType {
+    CACHE_FILE_TYPE_SINGLE_PLAYER = 0,
+    CACHE_FILE_TYPE_MULTIPLAYER,
+    CACHE_FILE_TYPE_USER_INTERFACE,
+    CACHE_FILE_TYPE_MAX_VALUE,
+    CACHE_FILE_TYPE_SIZE = 0xFFFF
+} CacheFileType;
+_Static_assert(sizeof(CacheFileType) == 2);
+
+typedef struct CacheFileHeader {
+    uint32_t head;
+    int engine_type;
+    uint32_t file_size;
+    char pad01[4];
+    uint32_t tag_data_offset;
+    uint32_t tag_data_size;
+    char pad02[8];
+    String32 name;
+    String32 build;
+    CacheFileType game_type;
+    char pad03[2];
+    uint32_t crc32;
+    char pad04[0x2B0];
+    char pad05[0x4E4];
+    uint32_t foot;
+} CacheFileHeader;
+_Static_assert(sizeof(CacheFileHeader) == 0x800);
 
 typedef void (*CacheFileRequestFinishedProc)(void *params);
 

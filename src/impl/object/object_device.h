@@ -14,18 +14,28 @@ typedef struct DeviceObjectState {
     float change;
 } DeviceObjectState;
 
-typedef struct DeviceObject {
-    DynamicObjectBase base;
+typedef struct DeviceObjectFlags1 {
     Bool position_reversed : 1;
     Bool not_usable_from_any_side : 1;
     Bool pad_1 : 6;
     char pad_2[3];
-    DeviceObjectState power;
-    DeviceObjectState position;
+} DeviceObjectFlags1;
+_Static_assert(sizeof(DeviceObjectFlags1) == 4);
+
+typedef struct DeviceObjectFlags2 {
     Bool one_sided : 1;
     Bool operates_automatically : 1;
     Bool pad_3 : 6;
     char pad_4[3];
+} DeviceObjectFlags2;
+_Static_assert(sizeof(DeviceObjectFlags2) == 4);
+
+typedef struct DeviceObject {
+    DynamicObjectBase base;
+    DeviceObjectFlags1 flags_1;
+    DeviceObjectState power;
+    DeviceObjectState position;
+    DeviceObjectFlags2 flags_2;
 } DeviceObject;
 _Static_assert(sizeof(DeviceObject) == 0x20 + sizeof(DynamicObjectBase));
 
@@ -37,6 +47,7 @@ typedef struct DeviceMachineObjectFlags {
     Bool pad_1 : 4;
     char pad_2[3];
 } DeviceMachineObjectFlags;
+_Static_assert(sizeof(DeviceMachineObjectFlags) == 4);
 
 typedef struct DeviceMachineObject {
     DeviceObject base;
@@ -51,6 +62,7 @@ typedef struct DeviceControlObjectFlags {
     Bool pad_1 : 7;
     char pad_2[3];
 } DeviceControlObjectFlags;
+_Static_assert(sizeof(DeviceControlObjectFlags) == 4);
 
 typedef struct DeviceControlObject {
     DeviceObject base;

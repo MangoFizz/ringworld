@@ -89,6 +89,9 @@ local function splitWords(rawInput)
 end
 
 local function toPascalCase(input)
+    if input == nil then
+        return nil
+    end
     local words = splitWords(input)
     for i = 1, #words do
         local original = exceptionsMap[words[i]]
@@ -102,6 +105,9 @@ local function toPascalCase(input)
 end
 
 local function toCamelCase(input)
+    if input == nil then
+        return nil
+    end
     local words = splitWords(input)
     for i = 1, #words do
         local original = exceptionsMap[words[i]]
@@ -118,16 +124,25 @@ local function toCamelCase(input)
 end
 
 local function toSnakeCase(input)
+    if input == nil then
+        return nil
+    end
     local words = splitWords(input)
     return table.concat(words, "_"):lower()
 end
 
 local function toKebabCase(input)
+    if input == nil then
+        return nil
+    end
     local words = splitWords(input)
     return table.concat(words, "-")
 end
 
 local function toSentenceCase(input)
+    if input == nil then
+        return nil
+    end
     local words = splitWords(input)
     words[1] = words[1]:sub(1, 1):upper() .. words[1]:sub(2)
     return table.concat(words, " ")

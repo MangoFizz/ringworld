@@ -229,6 +229,24 @@ local tagGroups = {
     "weapon_hud_interface"
 }
 
+local isCommonType = function(typeName)
+    for _, typeInfo in pairs(commonTypes) do
+        if typeInfo.alias == typeName then
+            return true
+        end
+    end
+    return false
+end
+
+local isPrimitiveType = function(typeName)
+    for _, primitiveType in ipairs(primitiveTypes) do
+        if primitiveType == typeName then
+            return true
+        end
+    end
+    return false
+end
+
 -- Add exceptions to the naming convention
 naming.addExceptions({"UTF16", "2D", "3D", "HUD", "ARGB", "RGB", "AI", "GBXModel", "UI", "BSP"})
 naming.addExceptions({"R5G6B5", "A1R5G5B5", "A4R4G4B4", "X8R8G8B8", "A8R8G8B8", "DXT1", "DXT3", "DXT5", "A8Y8"})
@@ -438,6 +456,7 @@ return {
     toSnakeCase = naming.toSnakeCase,
     toPascalCase = naming.toPascalCase,
     toCamelCase = naming.toCamelCase,
+    toSentenceCase = naming.toSentenceCase,
     parseTagDefinition = parseTagDefinition,
     getDependenciesForTagDefinition = getDependenciesForTagDefinition,
     types = commonTypes,
@@ -445,4 +464,6 @@ return {
     commonEnums = commonEnums,
     commonBitfields = commonBitfields,
     tagGroups = tagGroups,
+    isCommonType = isCommonType,
+    isPrimitiveType = isPrimitiveType
 }

@@ -154,6 +154,13 @@ WidgetGlobals *ui_widget_get_globals(void);
 void ui_widgets_initialize(void);
 
 /**
+ * Get the active widget for a specific controller index.
+ * @param controller_index controller index
+ * @return pointer to the active widget for the specified controller index
+ */
+Widget *ui_widget_get_active_widget(int16_t controller_index);
+
+/**
  * Delete a widget and all of its children.
  * @param widget pointer widget to delete
  * @param widget_memory_pool pointer to the memory pool
@@ -197,6 +204,33 @@ bool ui_widget_load_children_recursive(UIWidgetDefinition *definition_tag_data, 
  * @return pointer to the loaded widget; NULL if the widget could not be loaded
  */
 Widget *ui_widget_load_by_name_or_tag(const char *definition_tag_path, TagHandle definition_tag, Widget *parent, int16_t controller_index, TagHandle topmost_widget_definition_handle, TagHandle parent_widget_definition_handle, uint16_t child_index_from_parent);
+
+/**
+ * Launch a widget.
+ * @param widget pointer to the widget to launch
+ * @param definition_tag_handle handle of the widget definition tag
+ */
+Widget *ui_widget_launch(Widget *widget, TagHandle definition_tag_handle);
+
+/**
+ * Close a widget.
+ */
+void ui_widget_close(void);
+
+/**
+ * Replace a widget with a new one.
+ * @param widget pointer to the old widget
+ * @param new_widget_definition handle of the new widget definition tag
+ * @return pointer to the new widget
+ */
+Widget *ui_widget_replace(Widget *widget, TagHandle new_widget_definition);
+
+/**
+ * Reload a widget.
+ * @param widget pointer to the widget to reload
+ * @return pointer to the reloaded widget
+ */
+Widget *ui_widget_reload(Widget *widget);
 
 /**
  * Dispatch an event to a widget.

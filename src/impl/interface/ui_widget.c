@@ -58,6 +58,13 @@ void ui_widgets_initialize(void) {
     globals->initialized = allocated_memory != NULL;
 }
 
+Widget *ui_widget_get_active_widget(int16_t controller_index) {
+    if(controller_index < 0 || controller_index >= MAX_LOCAL_PLAYERS) {
+        exception_throw_runtime_error("Invalid controller index in ui_widget_get_active_widget");
+    }
+    return widget_globals->active_widget[controller_index];
+}
+
 Widget *ui_widget_load_by_name_or_tag(const char *definition_tag_path, TagHandle definition_tag, Widget *parent, int16_t controller_index, 
                         TagHandle topmost_widget_definition_handle, TagHandle parent_widget_definition_handle, uint16_t child_index_from_parent) {
     
@@ -236,6 +243,67 @@ int16_t ui_widget_get_index_for_child(Widget *widget, Widget *child) {
     }
     exception_throw_runtime_error("failed to find the index of the child in the widget");
     return -1;
+}
+
+Widget *ui_widget_replace(Widget *widget, TagHandle new_widget_definition) {
+    Widget *new_widget = ui_widget_load_by_name_or_tag(NULL, new_widget_definition, widget->parent, widget->local_player_index, NULL_HANDLE, NULL_HANDLE, -1);
+    Widget *old_widget = widget;
+    Widget *old_widget_parent = widget->parent;
+    Widget *old_widget_previous = widget->previous;
+    Widget *old_widget_next = widget->next;
+    Widget *old_widget_focused = widget->focused_child;
+
+    new_widget->position.x = old_widget->position.x;
+    new_widget->position.y = old_widget->position.y;
+
+    new_widget->parent = NULL;
+    new_widget->previous = NULL;
+    new_widget->next = NULL;
+    new_widget->focused_child = NULL;
+
+    if(old_widget_parent) {
+        new_widget->parent = old_widget_parent;
+
+        if(old_widget_parent->child == old_widget) {
+            old_widget_parent->child = new_widget;
+        }
+
+        if(old_widget_parent->focused_child == old_widget) {
+            old_widget_parent->focused_child = new_widget;
+        } 
+        
+        old_widget->parent = NULL;
+    }
+
+    if(old_widget_previous) {
+        new_widget->previous = old_widget_previous;
+        old_widget_previous->next = new_widget;
+        old_widget->previous = NULL;
+    }
+
+    if(old_widget_next) {
+        new_widget->next = old_widget_next;
+        old_widget_next->previous = new_widget;
+        old_widget->next = NULL;
+    }
+
+    if(new_widget->type == UI_WIDGET_TYPE_COLUMN_LIST) {
+        new_widget->focused_child = new_widget->child;
+    }
+
+    WidgetGlobals *globals = ui_widget_get_globals();
+    Widget *active_widget = globals->active_widget[0];
+    if(old_widget == active_widget) {
+        globals->active_widget[0] = new_widget;
+    }
+
+    ui_widget_delete_recursive(old_widget);
+
+    return new_widget;
+}
+
+Widget *ui_widget_reload(Widget *widget) {
+    ui_widget_replace(widget, widget->definition_tag_handle);
 }
 
 bool ui_widget_is_list(Widget *widget) {

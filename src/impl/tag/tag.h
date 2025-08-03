@@ -172,7 +172,7 @@ TagEntry *tag_get_entry(TagHandle tag_handle);
  * Lookup the tag.
  * @param path  path of the tag (not including file extension)
  * @param group group of the tag
- * @return tag ID if found, NULL_ID if not
+ * @return tag ID if found, NULL_ID if not or if the map is not loaded
  */
 TagHandle tag_lookup(const char *path, TagGroup group);
 

@@ -118,8 +118,15 @@ typedef struct WidgetGlobals {
 } WidgetGlobals;
 _Static_assert(sizeof(WidgetGlobals) == 0x34);
 
+typedef enum PACKED_ENUM UIWidgetEventRecordType {
+    EVENT_TYPE_NONE = 0x0,
+    EVENT_TYPE_KEYBOARD = 0x3,
+    EVENT_TYPE_MOUSE = 0x4,
+    EVENT_TYPE_SIZE = 0xFFFF
+} UIWidgetEventRecordType;
+
 typedef struct UIWidgetEventRecord {
-    int16_t type;
+    UIWidgetEventRecordType type;
     int32_t controller_index;
     int16_t unk1;
 } UIWidgetEventRecord;

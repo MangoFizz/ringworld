@@ -31,10 +31,13 @@ for hook in hooks:
             sys.exit(1)
     else:
         if sys.argv[5] == "true":
-            lib_fns += "    extern void *{}_address;\n".format(hook)
+            lib_fns += "    extern void *{}_function_address;\n".format(hook)
+            lib_fns += "    extern void *{}_hook_function;\n".format(hook)
         else:
-            lib_fns += "    void *{}_address = nullptr;\n".format(hook)
-        hook_fn += "        {hook}_address = Hook(\"{hook}\", {address})".format(hook=hook, address=hook_info["address"])
+            lib_fns += "    void *{}_function_address = nullptr;\n".format(hook)
+            lib_fns += "    void *{}_hook_function = nullptr;\n".format(hook)
+        hook_fn += "        {hook}_function_address = reinterpret_cast<void *>({address});\n".format(hook=hook, address=hook_info["address"])
+        hook_fn += "        {hook}_hook_function = Hook(\"{hook}\", {address})".format(hook=hook, address=hook_info["address"])
 
     if "arguments" in hook_info:
         for arg in hook_info["arguments"]:
@@ -85,7 +88,7 @@ if sys.argv[5] == "false":
             asm_source_code += """
     .globl _{hook}
     _{hook}:
-        jmp dword ptr [_{hook}_address]
+        jmp dword ptr [_{hook}_hook_function]
     """.format(hook=hook)
 
     with open(sys.argv[4], "w") as f:

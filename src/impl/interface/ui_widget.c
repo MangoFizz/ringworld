@@ -1,5 +1,6 @@
-#include <windows.h>
+#include <stdio.h>
 #include <math.h>
+#include <windows.h>
 #include "../../event/event.h"
 #include "../bitmap/bitmap.h"
 #include "../console/console.h"
@@ -181,7 +182,8 @@ void ui_widget_new_instance(int16_t controller_index, UIWidgetDefinition *widget
                 UIWidgetEventRecord event_record;
                 event_record.type = 0;
                 event_record.controller_index = widget->local_player_index;
-                event_record.unk1 = 0;
+                event_record.analog_input.x = 0;
+                event_record.analog_input.y = 0;
                 ui_widget_event_handler_dispatch(widget, widget_definition, &event_record, event_handler, &controller_index);
             }
         }
@@ -243,6 +245,16 @@ int16_t ui_widget_get_index_for_child(Widget *widget, Widget *child) {
     }
     exception_throw_runtime_error("failed to find the index of the child in the widget");
     return -1;
+}
+
+void ui_widget_disable_widget(Widget *widget) {
+    widget->never_receive_events = true;
+    widget->alpha_modifier = 0.333f;
+}
+
+void ui_widget_enable_widget(Widget *widget) {
+    widget->never_receive_events = false;
+    widget->alpha_modifier = 1.0f;
 }
 
 Widget *ui_widget_replace(Widget *widget, TagHandle new_widget_definition) {
@@ -505,8 +517,6 @@ VectorXYInt ui_widget_get_relative_cursor_position(void) {
     return relative_cursor_position;
 }
 
-#include <stdio.h>
-
 void ui_widget_render_root_widget(Widget *widget) {
     ASSERT(widget != NULL);
     uint16_t screen_width = render_get_screen_width();
@@ -747,7 +757,8 @@ void ui_widget_instance_render_recursive(Widget *widget, Rectangle2D *bounds, Ve
             UIWidgetEventRecord event_record;
             event_record.controller_index = widget->local_player_index;
             event_record.type = 0;
-            event_record.unk1 = 0;
+            event_record.analog_input.x = 0;
+            event_record.analog_input.y = 0;
             int16_t controller_index;
             ui_widget_event_handler_dispatch(widget, definition, &event_record, event_handler, &controller_index);
         }

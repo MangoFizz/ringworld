@@ -127,8 +127,8 @@ typedef enum PACKED_ENUM UIWidgetEventRecordType {
 
 typedef struct UIWidgetEventRecord {
     UIWidgetEventRecordType type;
-    int32_t controller_index;
-    int16_t unk1;
+    int16_t controller_index;
+    VectorXYInt analog_input; // this could be actually an union
 } UIWidgetEventRecord;
 
 typedef enum UIWidgetButtonCaptionStringIndex {
@@ -285,6 +285,18 @@ Widget *ui_widget_get_topmost_parent(Widget *widget);
  * @return the index of the child in the widget
  */
 int16_t ui_widget_get_index_for_child(Widget *widget, Widget *child);
+
+/**
+ * Disable a widget instance.
+ * @param widget pointer to the widget instance
+ */
+void ui_widget_disable_widget(Widget *widget);
+
+/**
+ * Enable a widget instance.
+ * @param widget pointer to the widget instance
+ */
+void ui_widget_enable_widget(Widget *widget);
 
 /**
  * Render a widget instance.

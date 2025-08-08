@@ -9,6 +9,7 @@ extern "C" {
 
 static ColorRGB color_rgb_white = {1.0f, 1.0f, 1.0f};
 static ColorARGB color_argb_white = {1.0f, 1.0f, 1.0f, 1.0f};
+static ColorRGB color_rgb_black = {0.0f, 0.0f, 0.0f};
 
 enum {
     COLOR_INTERPOLATE_IN_HSV_SPACE = 1,

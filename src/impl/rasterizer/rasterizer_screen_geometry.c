@@ -342,8 +342,19 @@ void rasterizer_screen_geometry_draw(RasterizerDynamicScreenGeometryParams *para
         psh_constants.map_fade_0 = map_fade_0;
         psh_constants.map_tint_1 = *map_tint_1;
         psh_constants.map_fade_1 = map_fade_1;
+#ifdef RINGWORLD_ENABLE_ENHANCEMENTS
+        if(params->map[2] != NULL) {
+            psh_constants.map_tint_2 = *map_tint_2;
+            psh_constants.map_fade_2 = map_fade_2;
+        }
+        else {
+            psh_constants.map_tint_2 = color_rgb_black;
+            psh_constants.map_fade_2 = 0.0f;
+        }
+#else
         psh_constants.map_tint_2 = *map_tint_2;
         psh_constants.map_fade_2 = map_fade_2;
+#endif
         psh_constants.plasma_fade.r = params->plasma_fade.r;
         psh_constants.plasma_fade.g = params->plasma_fade.g;
         psh_constants.plasma_fade.b = params->plasma_fade.b;
@@ -353,6 +364,23 @@ void rasterizer_screen_geometry_draw(RasterizerDynamicScreenGeometryParams *para
 
         if(params->map[1] != NULL) {
             switch(params->map0_to_1_blend_function) {
+#ifdef RINGWORLD_ENABLE_ENHANCEMENTS
+                case 0:
+                    shader_effect_index = SHADER_EFFECT_SCREEN_MULTITEXTURE_ADD_SUBTRACT;
+                    break;
+                case 1:
+                    shader_effect_index = SHADER_EFFECT_SCREEN_MULTITEXTURE_MULTIPLY_SUBTRACT;
+                    break;
+                case 2: 
+                    shader_effect_index = SHADER_EFFECT_SCREEN_MULTITEXTURE_SUBTRACT_SUBTRACT;
+                    break;
+                case 3:
+                    shader_effect_index = SHADER_EFFECT_SCREEN_MULTITEXTURE_MULTIPLY2X_SUBTRACT;
+                    break;
+                case 4:
+                    shader_effect_index = SHADER_EFFECT_SCREEN_MULTITEXTURE_DOT_SUBTRACT;
+                    break;
+#else
                 case 1:
                     shader_effect_index = SHADER_EFFECT_SCREEN_MULTITEXTURE_DOT_SUBTRACT;
                     break;
@@ -365,11 +393,29 @@ void rasterizer_screen_geometry_draw(RasterizerDynamicScreenGeometryParams *para
                 case 4:
                     shader_effect_index = SHADER_EFFECT_SCREEN_MULTITEXTURE_ADD_SUBTRACT;
                     break;
+#endif
             }
         }
 
         if(params->map[2] != NULL) {
             switch(params->map1_to_2_blend_function) {
+#ifdef RINGWORLD_ENABLE_ENHANCEMENTS
+                case 0:
+                    shader_effect_index -= 4;
+                    break;
+                case 1:
+                    shader_effect_index -= 2;
+                    break;
+                case 2: 
+                    shader_effect_index -= 0;
+                    break;
+                case 3:
+                    shader_effect_index -= 1;
+                    break;
+                case 4:
+                    shader_effect_index -= 3;
+                    break;
+#else
                 case 1:
                     shader_effect_index += 2;
                     break;
@@ -382,6 +428,7 @@ void rasterizer_screen_geometry_draw(RasterizerDynamicScreenGeometryParams *para
                 case 4:
                     shader_effect_index += 1;
                     break;
+#endif
             }
         }
 

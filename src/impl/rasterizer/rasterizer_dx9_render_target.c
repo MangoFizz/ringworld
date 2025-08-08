@@ -119,8 +119,13 @@ bool rasterizer_dx9_render_targets_initialize(void) {
         render_targets[1].width = desc.Width;
         render_targets[1].height = desc.Height;
         render_targets[1].format = D3DFMT_A8R8G8B8;
+#ifdef RINGWORLD_ENABLE_ENHANCEMENTS
+        render_targets[2].width = desc.Width;
+        render_targets[2].height = desc.Height;
+#else
         render_targets[2].width = desc.Width >> 1;
         render_targets[2].height = desc.Height >> 1;
+#endif
     }
     else {
         if(FAILED(IDirect3DDevice9_GetRenderTarget(device, 0, &render_targets[1].surface))) {

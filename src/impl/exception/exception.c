@@ -8,10 +8,13 @@
 #include <time.h>
 #include "shell/shell.h"
 #include "debug/log.h"
+#include "debug/debug_symbols.h"
+#include "debug/stacktrace.h"
 #include "exception.h"
 
 enum {
-    RINGWORLD_EXCEPTION_CODE = 0xE000DEAD
+    RINGWORLD_EXCEPTION_CODE = 0xE000DEAD,
+    MAX_STACKTRACE_STACK_FRAMES = 32
 };
 
 void exception_print_exception_info(EXCEPTION_RECORD *record) {
@@ -37,39 +40,33 @@ void exception_print_context(CONTEXT *context) {
 void exception_print_stack_trace(CONTEXT *context) {
     log_info("Stack Trace");
 
-    HANDLE hProcess = GetCurrentProcess();
-    HANDLE hThread = GetCurrentThread();
+    DebugStackFrame frames[MAX_STACKTRACE_STACK_FRAMES];
+    stacktrace_build_trace(context, frames, MAX_STACKTRACE_STACK_FRAMES);
 
-    STACKFRAME stack = { 0 };
-    stack.AddrPC.Offset = context->Eip;
-    stack.AddrPC.Mode = AddrModeFlat;
-    stack.AddrFrame.Offset = context->Ebp;
-    stack.AddrFrame.Mode = AddrModeFlat;
-    stack.AddrStack.Offset = context->Esp;
-    stack.AddrStack.Mode = AddrModeFlat;
-
-    SymInitialize(hProcess, NULL, TRUE);
-
-    for(int frame = 0; frame < 32; frame++) {
-        if(!StackWalk(IMAGE_FILE_MACHINE_I386, hProcess, hThread, &stack, context, NULL, SymFunctionTableAccess, SymGetModuleBase, NULL)) {
-            break;
+    for(int i = 0; i < MAX_STACKTRACE_STACK_FRAMES; i++) {
+        DebugStackFrame *frame = &frames[i];
+        if(frame->index == -1) {
+            break; 
         }
 
-        if(stack.AddrPC.Offset == 0) {
-            break;
-        }
-
-        BYTE symbolBuffer[sizeof(SYMBOL_INFO) + MAX_SYM_NAME] = {0};
-        PSYMBOL_INFO pSymbol = (PSYMBOL_INFO)symbolBuffer;
-        pSymbol->SizeOfStruct = sizeof(SYMBOL_INFO);
-        pSymbol->MaxNameLen = MAX_SYM_NAME;
-
-        DWORD64 displacement = 0;
-        if(SymFromAddr(hProcess, stack.AddrPC.Offset, &displacement, pSymbol)) {
-            log_info("  %02d: %s + 0x%llX", frame, pSymbol->Name, displacement);
+        char symbol_name[256];
+        bool has_symbol = strlen(frame->symbol) > 0;
+        if(has_symbol) {
+            debug_symbols_demangle(frame->symbol, symbol_name, sizeof(symbol_name));
         } 
         else {
-            log_info("  %02d: 0x%08X", frame, (DWORD)stack.AddrPC.Offset);
+            snprintf(symbol_name, sizeof(symbol_name), "??");
+        }
+
+        log_info("  [%02d]: %s", frame->index, symbol_name);
+        if(frame->address) {
+            log_info("      Address: 0x%.8X", frame->address);
+        }
+        if(has_symbol) {
+            log_info("      Raw Symbol: %s + 0x%X", frame->symbol, frame->offset);
+        }
+        if(frame->source_info.filename) {
+            log_info("      Source: %s:%d", frame->source_info.filename, frame->source_info.line_number);
         }
     }
 }

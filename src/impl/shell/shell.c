@@ -7,6 +7,12 @@
 
 static const char *message_box_title = "ringworld";
 
+uintptr_t shell_get_current_module_handle() {
+    HMODULE hModule = NULL;
+    GetModuleHandleEx(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS, (LPCTSTR)shell_get_current_module_handle, &hModule);
+    return (uintptr_t)hModule;
+}
+
 void shell_get_documents_directory_path(char *buffer) {
     if(SHGetFolderPathA(NULL, CSIDL_PERSONAL, NULL, SHGFP_TYPE_CURRENT, buffer) != S_OK) {
         exception_throw_runtime_error("Failed to get documents directory path");

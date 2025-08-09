@@ -21,6 +21,7 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake")
 find_package(LuaRuntime REQUIRED)
 find_package(Python3 COMPONENTS Interpreter REQUIRED)
 find_package(Git REQUIRED)
+find_package(Backtrace)
 
 set(RINGWORLD_BUILD_STATIC OFF CACHE BOOL "Build a static library instead of the standalone module")
 set(RINGWORLD_BUILD_TOOL OFF CACHE BOOL "Build ringworld's tool")
@@ -78,6 +79,9 @@ set(RINGWORLD_SOURCES
     src/impl/crypto/xtea.c
     src/impl/cutscene/cutscene.c
     src/impl/debug/assertion.c
+    src/impl/debug/debug_symbols.c
+    src/impl/debug/debug_symbols.cpp
+    src/impl/debug/stacktrace.c
     src/impl/debug/log.c
     src/impl/exception/exception.c
     src/impl/font/bitmap_font.c
@@ -170,6 +174,13 @@ else()
 endif()
 
 target_link_libraries(ringworld d3dcompiler d3d9 d3dx9 dbghelp)
+
+if(Backtrace_FOUND)
+    target_link_libraries(ringworld backtrace)
+else()
+    target_compile_definitions(ringworld PRIVATE -DRINGWORLD_NO_BACKTRACE)
+    message(WARNING "Backtrace library not found. Debugging features may be limited.")
+endif()
 
 if(RINGWORLD_BUILD_TOOL)
     if(RINGWORLD_TOOL_ENABLE_DEBUG_SHADERS)

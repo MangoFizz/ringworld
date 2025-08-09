@@ -5,10 +5,12 @@
 extern "C" {
 #endif
 
-#include <stddef.h>
-#include <stdbool.h>
-
-typedef struct _iobuf FILE;
+/**
+ * Get the current module handle.
+ * This is useful for getting the module path or for debugging purposes.
+ * @return The handle to the current module.
+ */
+uintptr_t shell_get_current_module_handle();
 
 /**
  * Get the path to the documents directory.
@@ -35,6 +37,7 @@ void shell_message_box(const char *fmt, ...);
  * @param ... The values to format.
  */
 void shell_error_box(const char *fmt, ...);
+
 
 #ifdef __cplusplus
 }

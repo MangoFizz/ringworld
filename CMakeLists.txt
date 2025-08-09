@@ -167,8 +167,13 @@ if(RINGWORLD_BUILD_STATIC)
 else()    
     add_library(ringworld MODULE ${RINGWORLD_SOURCES} src/ringworld.c)
     set_target_properties(ringworld PROPERTIES PREFIX "")
-    set_target_properties(ringworld PROPERTIES LINK_FLAGS "-static -static-libgcc -static-libstdc++")
-    
+    if(NOT CMAKE_BUILD_TYPE MATCHES Release)
+        set(RINGWORLD_LINK_FLAGS "-static -static-libgcc -static-libstdc++ -Wl,--export-all-symbols")
+    else()
+        set(RINGWORLD_LINK_FLAGS "-static -static-libgcc -static-libstdc++ -s")
+    endif()
+    set_target_properties(ringworld PROPERTIES LINK_FLAGS "${RINGWORLD_LINK_FLAGS}")
+
     # Set minimum platform version to Windows 7
     target_compile_definitions(ringworld PRIVATE -D_WIN32_WINNT=0x0601)
 endif()

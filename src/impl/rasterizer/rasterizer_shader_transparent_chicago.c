@@ -25,13 +25,6 @@ void rasterizer_shader_transparent_chicago_draw(TransparentGeometryGroup *group,
     RasterizerWindowRenderParameters *window_parameters = rasterizer_get_window_parameters();
     ShaderTransparentChicago *shader_data = shader_type_assert(group->shader, SHADER_TYPE_PC_TRANSPARENT_CHICAGO);
 
-    uint16_t vertex_permutation = shader_get_vertex_shader_permutation(group->shader);
-    uint16_t vertex_buffer_type = rasterizer_geometry_group_get_vertex_buffer_type(group);
-    IDirect3DVertexShader9 *vertex_shader = rasterizer_dx9_shader_get_vertex_shader_for_permutation(vertex_permutation, vertex_buffer_type);
-    rasterizer_dx9_set_vertex_shader(vertex_shader);
-    rasterizer_dx9_set_vertex_declaration(vertex_buffer_type);
-    rasterizer_dx9_set_pixel_shader(NULL);
-
     for(int i = 0; i < shader_data->properties.extra_layers.count; i++) {
         TransparentGeometryGroup extra_layer_group = {};
         memcpy(&extra_layer_group, group, sizeof(TransparentGeometryGroup));
@@ -40,6 +33,13 @@ void rasterizer_shader_transparent_chicago_draw(TransparentGeometryGroup *group,
         extra_layer_group.sorted_index = -1;
         rasterizer_transparent_geometry_group_draw(&extra_layer_group, param_2);
     }
+
+    uint16_t vertex_permutation = shader_get_vertex_shader_permutation(group->shader);
+    uint16_t vertex_buffer_type = rasterizer_geometry_group_get_vertex_buffer_type(group);
+    IDirect3DVertexShader9 *vertex_shader = rasterizer_dx9_shader_get_vertex_shader_for_permutation(vertex_permutation, vertex_buffer_type);
+    rasterizer_dx9_set_vertex_shader(vertex_shader);
+    rasterizer_dx9_set_vertex_declaration(vertex_buffer_type);
+    rasterizer_dx9_set_pixel_shader(NULL);
 
     rasterizer_dx9_set_render_state(D3DRS_CULLMODE, shader_data->properties.flags.two_sided ? D3DCULL_NONE : D3DCULL_CCW);
     rasterizer_dx9_set_render_state(D3DRS_COLORWRITEENABLE, D3DCOLORWRITEENABLE_RED | D3DCOLORWRITEENABLE_GREEN | D3DCOLORWRITEENABLE_BLUE);
@@ -195,190 +195,190 @@ void rasterizer_shader_transparent_chicago_draw(TransparentGeometryGroup *group,
         }
 
         rasterizer_dx9_set_vertex_shader_constant_f(VSH_CONSTANTS_TEXANIM_OFFSET, animation_vsh_constants, VSH_CONSTANTS_TEXANIM_COUNT);
+    }
         
-        rasterizer_shader_transparent_chicago_preprocess(shader_data);
-    
+    rasterizer_shader_transparent_chicago_preprocess(shader_data);
+
+    if(group->geometry_flags.sky && shader_data->properties.framebuffer_blend_function == FRAMEBUFFER_BLEND_FUNCTION_ALPHA_BLEND) {
         uint16_t maps_count = shader_data->maps.count;
-        if(group->geometry_flags.sky && shader_data->properties.framebuffer_blend_function == FRAMEBUFFER_BLEND_FUNCTION_ALPHA_BLEND) {
-            rasterizer_dx9_set_texture(maps_count, NULL);
-            rasterizer_dx9_set_texture_stage_state(maps_count, D3DTSS_COLOROP, D3DTOP_DISABLE);
-            rasterizer_dx9_set_texture_stage_state(maps_count, D3DTSS_ALPHAOP, D3DTOP_DISABLE);
-            rasterizer_transparent_geometry_group_draw_vertices(false, group);
-            rasterizer_dx9_set_render_state(D3DRS_BLENDOP, D3DTOP_DISABLE);
-            return;
-        }
+        rasterizer_dx9_set_texture(maps_count, NULL);
+        rasterizer_dx9_set_texture_stage_state(maps_count, D3DTSS_COLOROP, D3DTOP_DISABLE);
+        rasterizer_dx9_set_texture_stage_state(maps_count, D3DTSS_ALPHAOP, D3DTOP_DISABLE);
+        rasterizer_transparent_geometry_group_draw_vertices(false, group);
+        rasterizer_dx9_set_render_state(D3DRS_BLENDOP, D3DTOP_DISABLE);
+        return;
+    }
 
-        float vertex_constants[3 * 4];
-        vertex_constants[0] = 0.0f;
-        vertex_constants[1] = 0.0f;
-        vertex_constants[2] = 0.0f;
-        vertex_constants[3] = 0.0f;
-        vertex_constants[4] = 0.0f;
-        vertex_constants[5] = 0.0f;
-        vertex_constants[6] = 0.0f;
-        vertex_constants[7] = 0.0f;
-        vertex_constants[8] = 0.0f;
-        vertex_constants[9] = 0.0f;
-        vertex_constants[10] = 1.0f;
-        vertex_constants[11] = 0.0f;
+    float vertex_constants[3 * 4];
+    vertex_constants[0] = 0.0f;
+    vertex_constants[1] = 0.0f;
+    vertex_constants[2] = 0.0f;
+    vertex_constants[3] = 0.0f;
+    vertex_constants[4] = 0.0f;
+    vertex_constants[5] = 0.0f;
+    vertex_constants[6] = 0.0f;
+    vertex_constants[7] = 0.0f;
+    vertex_constants[8] = 0.0f;
+    vertex_constants[9] = 0.0f;
+    vertex_constants[10] = 1.0f;
+    vertex_constants[11] = 0.0f;
 
-        if(group->effect.type == RENDER_MODEL_EFFECT_TYPE_ACTIVE_CAMOUFLAGE && shader_data->extra_flags.dont_fade_active_camouflage == false) {
-            vertex_constants[10] = clamp_f32(1.0f - group->effect.intensity, 0.0f, 1.0f);
-        }
+    if(group->effect.type == RENDER_MODEL_EFFECT_TYPE_ACTIVE_CAMOUFLAGE && shader_data->extra_flags.dont_fade_active_camouflage == false) {
+        vertex_constants[10] = clamp_f32(1.0f - group->effect.intensity, 0.0f, 1.0f);
+    }
 
-        if(shader_data->properties.framebuffer_fade_source > 0 && group->animation != NULL && group->animation->values != NULL) {
-            vertex_constants[10] *= group->animation->values[shader_data->properties.framebuffer_fade_source - 1];
-            ASSERT(!nan_f32(vertex_constants[10])); // check for NaN, just in case
-        }
+    if(shader_data->properties.framebuffer_fade_source > 0 && group->animation != NULL && group->animation->values != NULL) {
+        vertex_constants[10] *= group->animation->values[shader_data->properties.framebuffer_fade_source - 1];
+        ASSERT(!nan_f32(vertex_constants[10])); // check for NaN, just in case
+    }
 
-        rasterizer_dx9_set_vertex_shader_constant_f(10, vertex_constants, 3);
+    rasterizer_dx9_set_vertex_shader_constant_f(10, vertex_constants, 3);
 
-        int tss_option_argument;
-        switch(shader_data->properties.framebuffer_fade_mode) {
-            case FRAMEBUFFER_FADE_MODE_NONE:
-                tss_option_argument = D3DTA_ALPHAREPLICATE;
-                break;
-            case FRAMEBUFFER_FADE_MODE_FADE_WHEN_PERPENDICULAR:
-                tss_option_argument = D3DTA_ALPHAREPLICATE | D3DTA_SPECULAR;
-                break;
-            case FRAMEBUFFER_FADE_MODE_FADE_WHEN_PARALLEL:
-                tss_option_argument = D3DTA_SPECULAR;
-                break;
-            default:
-                exception_throw_runtime_error("Unknown framebuffer fade mode: %d", shader_data->properties.framebuffer_fade_mode);
-                break;
-        }
+    int tss_option_argument;
+    switch(shader_data->properties.framebuffer_fade_mode) {
+        case FRAMEBUFFER_FADE_MODE_NONE:
+            tss_option_argument = D3DTA_ALPHAREPLICATE;
+            break;
+        case FRAMEBUFFER_FADE_MODE_FADE_WHEN_PERPENDICULAR:
+            tss_option_argument = D3DTA_ALPHAREPLICATE | D3DTA_SPECULAR;
+            break;
+        case FRAMEBUFFER_FADE_MODE_FADE_WHEN_PARALLEL:
+            tss_option_argument = D3DTA_SPECULAR;
+            break;
+        default:
+            exception_throw_runtime_error("Unknown framebuffer fade mode: %d", shader_data->properties.framebuffer_fade_mode);
+            break;
+    }
 
-        D3DCAPS9 *device_caps = rasterizer_dx9_device_caps();
-        uint32_t max_simultaneous_textures = device_caps->MaxSimultaneousTextures;
-    
-        uint16_t texture_stage;
-        switch(shader_data->properties.framebuffer_blend_function) {
-            case FRAMEBUFFER_BLEND_FUNCTION_ALPHA_BLEND: {
-                if(max_simultaneous_textures == 2 && shader_data->maps.count > 1) {
-                    texture_stage = shader_data->maps.count - 1;
-                    if(texture_stage < 2) {
-                        texture_stage = 1;
-                    }
-                    rasterizer_dx9_set_texture_stage_state(0, D3DTSS_ALPHAOP, D3DTA_TFACTOR);
-                    rasterizer_dx9_set_texture_stage_state(0, D3DTSS_ALPHAARG2, tss_option_argument);
-                    break;
+    D3DCAPS9 *device_caps = rasterizer_dx9_device_caps();
+    uint32_t max_simultaneous_textures = device_caps->MaxSimultaneousTextures;
+
+    uint16_t texture_stage;
+    switch(shader_data->properties.framebuffer_blend_function) {
+        case FRAMEBUFFER_BLEND_FUNCTION_ALPHA_BLEND: {
+            if(max_simultaneous_textures == 2 && shader_data->maps.count > 1) {
+                texture_stage = shader_data->maps.count - 1;
+                if(texture_stage < 2) {
+                    texture_stage = 1;
                 }
-                texture_stage = shader_data->maps.count;
-                rasterizer_dx9_set_texture_stage_state(texture_stage, D3DTSS_COLOROP, D3DTOP_SELECTARG1);
-                rasterizer_dx9_set_texture_stage_state(texture_stage, D3DTSS_COLORARG1, D3DTA_CURRENT);
-                rasterizer_dx9_set_texture_stage_state(texture_stage, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
-                rasterizer_dx9_set_texture_stage_state(texture_stage, D3DTSS_ALPHAARG1, D3DTA_CURRENT);
-                rasterizer_dx9_set_texture_stage_state(texture_stage, D3DTSS_ALPHAARG2, tss_option_argument);
-                break;
-            }
-
-            case FRAMEBUFFER_BLEND_FUNCTION_MULTIPLY:
-            case FRAMEBUFFER_BLEND_FUNCTION_COMPONENT_MIN: {
-                if(max_simultaneous_textures < 3) {
-                    texture_stage = shader_data->maps.count - 1;
-                    if(texture_stage < 2) {
-                        texture_stage = 1;
-                    }
-                }
-                else {
-                    texture_stage = shader_data->maps.count;
-                }
-
-                rasterizer_dx9_set_texture_stage_state(texture_stage, D3DTSS_COLOROP, D3DTOP_MULTIPLYADD);
-                rasterizer_dx9_set_texture_stage_state(texture_stage, D3DTSS_COLORARG1, tss_option_argument | D3DTOP_BLENDCURRENTALPHA);
-#ifdef RINGWORLD_ENABLE_ENHANCEMENTS
-                rasterizer_dx9_set_texture_stage_state(texture_stage, D3DTSS_COLORARG2, tss_option_argument);
-                rasterizer_dx9_set_texture_stage_state(texture_stage, D3DTSS_COLORARG0, D3DTA_CURRENT);
-#else
-                rasterizer_dx9_set_texture_stage_state(texture_stage, D3DTSS_COLORARG2, D3DTA_CURRENT);
-                rasterizer_dx9_set_texture_stage_state(texture_stage, D3DTSS_COLORARG0, tss_option_argument);
-#endif
-                rasterizer_dx9_set_texture_stage_state(texture_stage, D3DTSS_ALPHAOP, D3DTOP_SELECTARG1);
-                rasterizer_dx9_set_texture_stage_state(texture_stage, D3DTSS_ALPHAARG1, D3DTA_CURRENT);
-                break;
-            }
-
-            case FRAMEBUFFER_BLEND_FUNCTION_DOUBLE_MULTIPLY: {
-                if(max_simultaneous_textures < 3) {
-                    texture_stage = shader_data->maps.count - 1;
-                    if(texture_stage < 2) {
-                        texture_stage = 1;
-                    }
-                }
-                else {
-                    texture_stage = shader_data->maps.count;
-                }
-
-                rasterizer_dx9_set_render_state(D3DRS_TEXTUREFACTOR, 0x7F7F7F7F);
-                rasterizer_dx9_set_texture_stage_state(texture_stage, D3DTSS_COLOROP, D3DTOP_LERP);
-                rasterizer_dx9_set_texture_stage_state(texture_stage, D3DTSS_COLORARG1, tss_option_argument);
-                rasterizer_dx9_set_texture_stage_state(texture_stage, D3DTSS_COLORARG2, D3DTA_CURRENT);
-                rasterizer_dx9_set_texture_stage_state(texture_stage, D3DTSS_COLORARG0, D3DTA_TFACTOR);
-                rasterizer_dx9_set_texture_stage_state(texture_stage, D3DTSS_ALPHAOP, D3DTOP_SELECTARG1);
-                rasterizer_dx9_set_texture_stage_state(texture_stage, D3DTSS_ALPHAARG1, D3DTA_CURRENT);
-                break;
-            }
-
-            case FRAMEBUFFER_BLEND_FUNCTION_ADD:
-            case FRAMEBUFFER_BLEND_FUNCTION_SUBTRACT:
-            case FRAMEBUFFER_BLEND_FUNCTION_COMPONENT_MAX: {
-                if(max_simultaneous_textures != 2 || shader_data->maps.count < 2) {
-                    texture_stage = shader_data->maps.count;
-                    rasterizer_dx9_set_texture_stage_state(texture_stage, D3DTSS_COLOROP, D3DTOP_MODULATE);
-                    rasterizer_dx9_set_texture_stage_state(texture_stage, D3DTSS_COLORARG1, D3DTA_CURRENT);
-                    rasterizer_dx9_set_texture_stage_state(texture_stage, D3DTSS_COLORARG2, tss_option_argument);
-                    rasterizer_dx9_set_texture_stage_state(texture_stage, D3DTSS_ALPHAOP, D3DTOP_SELECTARG1);
-                    rasterizer_dx9_set_texture_stage_state(texture_stage, D3DTSS_ALPHAARG1, D3DTA_CURRENT);
-                    break;
-                }
-
-                uint16_t stage = shader_data->maps.count - 1;
-                if(stage < 2) {
-                    stage = 1;
-                }
-                rasterizer_dx9_set_texture_stage_state(0, D3DTSS_COLOROP, D3DTOP_MODULATE);
-                rasterizer_dx9_set_texture_stage_state(0, D3DTSS_COLORARG2, tss_option_argument);
-                break;
-            }
-
-            case FRAMEBUFFER_BLEND_FUNCTION_ALPHA_MULTIPLY_ADD: {
-                if(max_simultaneous_textures == 2 && shader_data->maps.count > 1) {
-                    texture_stage = shader_data->maps.count - 1;
-                    if(texture_stage < 2) {
-                        texture_stage = 1;
-                    }
-                    rasterizer_dx9_set_texture_stage_state(0, D3DTSS_COLOROP, D3DTOP_MODULATE);
-                    rasterizer_dx9_set_texture_stage_state(0, D3DTSS_COLORARG2, tss_option_argument);
-                    rasterizer_dx9_set_texture_stage_state(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
-                }
-                else {
-                    texture_stage = shader_data->maps.count;
-                    rasterizer_dx9_set_texture_stage_state(texture_stage, D3DTSS_COLOROP, D3DTOP_SELECTARG1);
-                    rasterizer_dx9_set_texture_stage_state(texture_stage, D3DTSS_COLORARG1, D3DTA_CURRENT);
-                    rasterizer_dx9_set_texture_stage_state(texture_stage, D3DTSS_COLORARG2, tss_option_argument);
-                    rasterizer_dx9_set_texture_stage_state(texture_stage, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
-                    rasterizer_dx9_set_texture_stage_state(texture_stage, D3DTSS_ALPHAARG1, D3DTA_CURRENT);
-                }
+                rasterizer_dx9_set_texture_stage_state(0, D3DTSS_ALPHAOP, D3DTA_TFACTOR);
                 rasterizer_dx9_set_texture_stage_state(0, D3DTSS_ALPHAARG2, tss_option_argument);
                 break;
             }
-
-            default: {
-                rasterizer_dx9_set_texture(texture_stage, NULL);
-                rasterizer_dx9_set_texture_stage_state(texture_stage, D3DTSS_COLOROP, D3DTA_CURRENT);
-                rasterizer_dx9_set_texture_stage_state(texture_stage, D3DTSS_ALPHAOP, D3DTA_CURRENT);
-                rasterizer_transparent_geometry_group_draw_vertices(group, 0);
-                rasterizer_dx9_set_render_state(D3DRS_BLENDOP, D3DBLENDOP_ADD);
-                return;
-            }
+            texture_stage = shader_data->maps.count;
+            rasterizer_dx9_set_texture_stage_state(texture_stage, D3DTSS_COLOROP, D3DTOP_SELECTARG1);
+            rasterizer_dx9_set_texture_stage_state(texture_stage, D3DTSS_COLORARG1, D3DTA_CURRENT);
+            rasterizer_dx9_set_texture_stage_state(texture_stage, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
+            rasterizer_dx9_set_texture_stage_state(texture_stage, D3DTSS_ALPHAARG1, D3DTA_CURRENT);
+            rasterizer_dx9_set_texture_stage_state(texture_stage, D3DTSS_ALPHAARG2, tss_option_argument);
+            break;
         }
 
-        texture_stage = texture_stage + 1;
-        rasterizer_dx9_set_texture(texture_stage, NULL);
-        rasterizer_dx9_set_texture_stage_state(texture_stage, D3DTSS_COLOROP, D3DTA_CURRENT);
-        rasterizer_dx9_set_texture_stage_state(texture_stage, D3DTSS_ALPHAOP, D3DTA_CURRENT);
-        rasterizer_transparent_geometry_group_draw_vertices(false, group);
-        rasterizer_dx9_set_render_state(D3DRS_BLENDOP, D3DBLENDOP_ADD);
+        case FRAMEBUFFER_BLEND_FUNCTION_MULTIPLY:
+        case FRAMEBUFFER_BLEND_FUNCTION_COMPONENT_MIN: {
+            if(max_simultaneous_textures < 3) {
+                texture_stage = shader_data->maps.count - 1;
+                if(texture_stage < 2) {
+                    texture_stage = 1;
+                }
+            }
+            else {
+                texture_stage = shader_data->maps.count;
+            }
+
+            rasterizer_dx9_set_texture_stage_state(texture_stage, D3DTSS_COLOROP, D3DTOP_MULTIPLYADD);
+            rasterizer_dx9_set_texture_stage_state(texture_stage, D3DTSS_COLORARG1, tss_option_argument | D3DTOP_BLENDCURRENTALPHA);
+#ifdef RINGWORLD_ENABLE_ENHANCEMENTS
+            rasterizer_dx9_set_texture_stage_state(texture_stage, D3DTSS_COLORARG2, tss_option_argument);
+            rasterizer_dx9_set_texture_stage_state(texture_stage, D3DTSS_COLORARG0, D3DTA_CURRENT);
+#else
+            rasterizer_dx9_set_texture_stage_state(texture_stage, D3DTSS_COLORARG2, D3DTA_CURRENT);
+            rasterizer_dx9_set_texture_stage_state(texture_stage, D3DTSS_COLORARG0, tss_option_argument);
+#endif
+            rasterizer_dx9_set_texture_stage_state(texture_stage, D3DTSS_ALPHAOP, D3DTOP_SELECTARG1);
+            rasterizer_dx9_set_texture_stage_state(texture_stage, D3DTSS_ALPHAARG1, D3DTA_CURRENT);
+            break;
+        }
+
+        case FRAMEBUFFER_BLEND_FUNCTION_DOUBLE_MULTIPLY: {
+            if(max_simultaneous_textures < 3) {
+                texture_stage = shader_data->maps.count - 1;
+                if(texture_stage < 2) {
+                    texture_stage = 1;
+                }
+            }
+            else {
+                texture_stage = shader_data->maps.count;
+            }
+
+            rasterizer_dx9_set_render_state(D3DRS_TEXTUREFACTOR, 0x7F7F7F7F);
+            rasterizer_dx9_set_texture_stage_state(texture_stage, D3DTSS_COLOROP, D3DTOP_LERP);
+            rasterizer_dx9_set_texture_stage_state(texture_stage, D3DTSS_COLORARG1, tss_option_argument);
+            rasterizer_dx9_set_texture_stage_state(texture_stage, D3DTSS_COLORARG2, D3DTA_CURRENT);
+            rasterizer_dx9_set_texture_stage_state(texture_stage, D3DTSS_COLORARG0, D3DTA_TFACTOR);
+            rasterizer_dx9_set_texture_stage_state(texture_stage, D3DTSS_ALPHAOP, D3DTOP_SELECTARG1);
+            rasterizer_dx9_set_texture_stage_state(texture_stage, D3DTSS_ALPHAARG1, D3DTA_CURRENT);
+            break;
+        }
+
+        case FRAMEBUFFER_BLEND_FUNCTION_ADD:
+        case FRAMEBUFFER_BLEND_FUNCTION_SUBTRACT:
+        case FRAMEBUFFER_BLEND_FUNCTION_COMPONENT_MAX: {
+            if(max_simultaneous_textures != 2 || shader_data->maps.count < 2) {
+                texture_stage = shader_data->maps.count;
+                rasterizer_dx9_set_texture_stage_state(texture_stage, D3DTSS_COLOROP, D3DTOP_MODULATE);
+                rasterizer_dx9_set_texture_stage_state(texture_stage, D3DTSS_COLORARG1, D3DTA_CURRENT);
+                rasterizer_dx9_set_texture_stage_state(texture_stage, D3DTSS_COLORARG2, tss_option_argument);
+                rasterizer_dx9_set_texture_stage_state(texture_stage, D3DTSS_ALPHAOP, D3DTOP_SELECTARG1);
+                rasterizer_dx9_set_texture_stage_state(texture_stage, D3DTSS_ALPHAARG1, D3DTA_CURRENT);
+                break;
+            }
+
+            uint16_t stage = shader_data->maps.count - 1;
+            if(stage < 2) {
+                stage = 1;
+            }
+            rasterizer_dx9_set_texture_stage_state(0, D3DTSS_COLOROP, D3DTOP_MODULATE);
+            rasterizer_dx9_set_texture_stage_state(0, D3DTSS_COLORARG2, tss_option_argument);
+            break;
+        }
+
+        case FRAMEBUFFER_BLEND_FUNCTION_ALPHA_MULTIPLY_ADD: {
+            if(max_simultaneous_textures == 2 && shader_data->maps.count > 1) {
+                texture_stage = shader_data->maps.count - 1;
+                if(texture_stage < 2) {
+                    texture_stage = 1;
+                }
+                rasterizer_dx9_set_texture_stage_state(0, D3DTSS_COLOROP, D3DTOP_MODULATE);
+                rasterizer_dx9_set_texture_stage_state(0, D3DTSS_COLORARG2, tss_option_argument);
+                rasterizer_dx9_set_texture_stage_state(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
+            }
+            else {
+                texture_stage = shader_data->maps.count;
+                rasterizer_dx9_set_texture_stage_state(texture_stage, D3DTSS_COLOROP, D3DTOP_SELECTARG1);
+                rasterizer_dx9_set_texture_stage_state(texture_stage, D3DTSS_COLORARG1, D3DTA_CURRENT);
+                rasterizer_dx9_set_texture_stage_state(texture_stage, D3DTSS_COLORARG2, tss_option_argument);
+                rasterizer_dx9_set_texture_stage_state(texture_stage, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
+                rasterizer_dx9_set_texture_stage_state(texture_stage, D3DTSS_ALPHAARG1, D3DTA_CURRENT);
+            }
+            rasterizer_dx9_set_texture_stage_state(0, D3DTSS_ALPHAARG2, tss_option_argument);
+            break;
+        }
+
+        default: {
+            rasterizer_dx9_set_texture(texture_stage, NULL);
+            rasterizer_dx9_set_texture_stage_state(texture_stage, D3DTSS_COLOROP, D3DTA_CURRENT);
+            rasterizer_dx9_set_texture_stage_state(texture_stage, D3DTSS_ALPHAOP, D3DTA_CURRENT);
+            rasterizer_transparent_geometry_group_draw_vertices(group, 0);
+            rasterizer_dx9_set_render_state(D3DRS_BLENDOP, D3DBLENDOP_ADD);
+            return;
+        }
     }
+
+    texture_stage = texture_stage + 1;
+    rasterizer_dx9_set_texture(texture_stage, NULL);
+    rasterizer_dx9_set_texture_stage_state(texture_stage, D3DTSS_COLOROP, D3DTA_CURRENT);
+    rasterizer_dx9_set_texture_stage_state(texture_stage, D3DTSS_ALPHAOP, D3DTA_CURRENT);
+    rasterizer_transparent_geometry_group_draw_vertices(false, group);
+    rasterizer_dx9_set_render_state(D3DRS_BLENDOP, D3DBLENDOP_ADD);
 }

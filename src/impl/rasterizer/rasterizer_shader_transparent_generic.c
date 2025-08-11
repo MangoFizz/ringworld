@@ -495,13 +495,6 @@ void rasterizer_shader_transparent_generic_draw(TransparentGeometryGroup *group,
         return;
     }
 
-    uint16_t vertex_permutation = shader_get_vertex_shader_permutation(group->shader);
-    uint16_t vertex_buffer_type = rasterizer_geometry_group_get_vertex_buffer_type(group);
-    IDirect3DVertexShader9 *vertex_shader = rasterizer_dx9_shader_get_vertex_shader_for_permutation(vertex_permutation, vertex_buffer_type);
-    rasterizer_dx9_set_vertex_shader(vertex_shader);
-    rasterizer_dx9_set_vertex_declaration(vertex_buffer_type);
-    rasterizer_dx9_set_pixel_shader(NULL);
-
     for(int i = 0; i < shader_data->properties.extra_layers.count; i++) {
         TransparentGeometryGroup extra_layer_group = {};
         memcpy(&extra_layer_group, group, sizeof(TransparentGeometryGroup));
@@ -510,6 +503,13 @@ void rasterizer_shader_transparent_generic_draw(TransparentGeometryGroup *group,
         extra_layer_group.sorted_index = -1;
         rasterizer_transparent_geometry_group_draw(&extra_layer_group, param_2);
     }
+
+    uint16_t vertex_permutation = shader_get_vertex_shader_permutation(group->shader);
+    uint16_t vertex_buffer_type = rasterizer_geometry_group_get_vertex_buffer_type(group);
+    IDirect3DVertexShader9 *vertex_shader = rasterizer_dx9_shader_get_vertex_shader_for_permutation(vertex_permutation, vertex_buffer_type);
+    rasterizer_dx9_set_vertex_shader(vertex_shader);
+    rasterizer_dx9_set_vertex_declaration(vertex_buffer_type);
+    rasterizer_dx9_set_pixel_shader(NULL);
 
     rasterizer_dx9_set_render_state(D3DRS_CULLMODE, shader_data->properties.flags.two_sided ? D3DCULL_NONE : D3DCULL_CCW);
     rasterizer_dx9_set_render_state(D3DRS_COLORWRITEENABLE, D3DCOLORWRITEENABLE_RED | D3DCOLORWRITEENABLE_GREEN | D3DCOLORWRITEENABLE_BLUE);
@@ -594,26 +594,24 @@ void rasterizer_shader_transparent_generic_draw(TransparentGeometryGroup *group,
 
                 uint32_t maps_count = shader_data->maps.count;
                 if(is_first_map && shader_data->properties.first_map_type != SHADER_FIRST_MAP_TYPE_2D_MAP) {
-                    if(shader_data->properties.flags.first_map_is_in_screenspace == false) {
-                        animation_vsh_constants[map_index * 8 + 0] = 1.0;
-                        animation_vsh_constants[map_index * 8 + 1] = 0.0;
-                        animation_vsh_constants[map_index * 8 + 2] = 0.0;
-                        animation_vsh_constants[map_index * 8 + 3] = 0.0;
-                        animation_vsh_constants[map_index * 8 + 4] = 0.0;
-                        animation_vsh_constants[map_index * 8 + 5] = 1.0;
-                        animation_vsh_constants[map_index * 8 + 6] = 0.0;
-                        animation_vsh_constants[map_index * 8 + 7] = 0.0;
-                    } 
-                    else {
+                    if(shader_data->properties.flags.first_map_is_in_screenspace) {
                         animation_vsh_constants[map_index * 8 + 0] = window_parameters->frustum.view_to_world.forward.i;
                         animation_vsh_constants[map_index * 8 + 1] = window_parameters->frustum.view_to_world.forward.j;
                         animation_vsh_constants[map_index * 8 + 2] = window_parameters->frustum.view_to_world.forward.k;
-                        animation_vsh_constants[map_index * 8 + 3] = 0.0;
                         animation_vsh_constants[map_index * 8 + 4] = window_parameters->frustum.view_to_world.left.i;
                         animation_vsh_constants[map_index * 8 + 5] = window_parameters->frustum.view_to_world.left.j;
                         animation_vsh_constants[map_index * 8 + 6] = window_parameters->frustum.view_to_world.left.k;
-                        animation_vsh_constants[map_index * 8 + 7] = 0.0;
+                    } 
+                    else {
+                        animation_vsh_constants[map_index * 8 + 0] = 1.0;
+                        animation_vsh_constants[map_index * 8 + 1] = 0.0;
+                        animation_vsh_constants[map_index * 8 + 2] = 0.0;
+                        animation_vsh_constants[map_index * 8 + 4] = 0.0;
+                        animation_vsh_constants[map_index * 8 + 5] = 1.0;
+                        animation_vsh_constants[map_index * 8 + 6] = 0.0;
                     }
+                    animation_vsh_constants[map_index * 8 + 3] = 0.0;
+                    animation_vsh_constants[map_index * 8 + 7] = 0.0;    
                 }
                 else {
                     float map_v_scale = map->parameters.map_v_scale;
@@ -654,13 +652,13 @@ void rasterizer_shader_transparent_generic_draw(TransparentGeometryGroup *group,
         }
 
         rasterizer_dx9_set_vertex_shader_constant_f(13, animation_vsh_constants, 8);
-        
-        rasterizer_dx9_transparent_generic_preprocess(group); 
-        IDirect3DPixelShader9 *shader = rasterizer_shader_transparent_generic_get_pixel_shader(shader_data);
-        rasterizer_dx9_set_pixel_shader(shader);
-        rasterizer_transparent_geometry_group_draw_vertices(false, group);
-        rasterizer_dx9_set_render_state(D3DRS_BLENDOP, D3DBLENDOP_ADD);
     }
+
+    rasterizer_dx9_transparent_generic_preprocess(group); 
+    IDirect3DPixelShader9 *shader = rasterizer_shader_transparent_generic_get_pixel_shader(shader_data);
+    rasterizer_dx9_set_pixel_shader(shader);
+    rasterizer_transparent_geometry_group_draw_vertices(false, group);
+    rasterizer_dx9_set_render_state(D3DRS_BLENDOP, D3DBLENDOP_ADD);
 }
 
 void rasterizer_dx9_transparent_generic_preprocess(TransparentGeometryGroup *group) {

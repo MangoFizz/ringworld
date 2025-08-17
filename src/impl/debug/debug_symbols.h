@@ -29,6 +29,11 @@ void debug_symbols_demangle(const char *symbol, char *buffer, size_t buffer_size
  */
 bool debug_symbols_get_address_source_info(uintptr_t addr, DebugAddressSourceInfo *out_info);
 
+/**
+ * Initializes the backtrace state for symbol resolution if the backtrace library is present.
+ */
+void debug_symbols_initialize(void);
+
 #ifdef __cplusplus
 }
 #endif

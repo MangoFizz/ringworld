@@ -10,7 +10,7 @@
 struct backtrace_state *backtrace_state = NULL;
 
 static void backtrace_print_error_callback(void *data, const char *msg, int errnum) {
-    log_debug("Backtrace error: %s (%d)", msg, errnum);
+    log_debug("Backtrace: %s (%d)", msg, errnum);
 }
 
 static int backtrace_resolve_callback(void *data, uintptr_t pc, const char *filename, int lineno, const char *function) {
@@ -23,21 +23,8 @@ static int backtrace_resolve_callback(void *data, uintptr_t pc, const char *file
 bool debug_symbols_get_address_source_info(uintptr_t addr, DebugAddressSourceInfo *out_info) {
 #ifndef RINGWORLD_NO_BACKTRACE
     if(!backtrace_state) {
-        HMODULE module = (HMODULE)shell_get_current_module_handle();
-        char module_path[MAX_PATH];
-        if(GetModuleFileNameA(module, module_path, sizeof(module_path)) == 0) {
-            log_error("Failed to get module file name");
-            return false;
-        }
-        // If we don't lowercase the drive letter, backtrace will not find the file for some reason X_x
-        if(module_path[1] == ':') {
-            module_path[0] = tolower(module_path[0]);
-        }
-        backtrace_state = backtrace_create_state(module_path, 0, backtrace_print_error_callback, NULL);
-        if(!backtrace_state) {
-            log_error("Failed to create backtrace state");
-            return false;
-        }
+        log_error("Backtrace state is not initialized");
+        return false;
     }
     memset(out_info, 0, sizeof(DebugAddressSourceInfo));
     int ret = backtrace_pcinfo(backtrace_state, addr, backtrace_resolve_callback, backtrace_print_error_callback, out_info);
@@ -46,4 +33,32 @@ bool debug_symbols_get_address_source_info(uintptr_t addr, DebugAddressSourceInf
     }
 #endif
     return false;
+}
+
+void debug_symbols_initialize(void) {
+#ifndef RINGWORLD_NO_BACKTRACE
+    if(backtrace_state) {
+        log_error("Backtrace state is already initialized");
+        return;
+    }
+    HMODULE module = (HMODULE)shell_get_current_module_handle();
+    char module_path[MAX_PATH];
+    if(GetModuleFileNameA(module, module_path, sizeof(module_path)) == 0) {
+        log_error("Failed to get module file name");
+        return;
+    }
+    // If we don't lowercase the drive letter, backtrace will not find the file for some reason X_x
+    if(module_path[1] == ':') {
+        module_path[0] = tolower(module_path[0]);
+    }
+    backtrace_state = backtrace_create_state(module_path, 0, backtrace_print_error_callback, NULL);
+    if(!backtrace_state) {
+        log_error("Failed to create backtrace state");
+        return;
+    }
+    // Force backtrace to load symbols at startup
+    DebugAddressSourceInfo out_info;
+    uintptr_t dummy_address = (uintptr_t)debug_symbols_initialize;
+    backtrace_pcinfo(backtrace_state, dummy_address, backtrace_resolve_callback, backtrace_print_error_callback, &out_info);
+#endif
 }

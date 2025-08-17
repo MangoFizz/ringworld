@@ -6,6 +6,7 @@ extern "C" {
 #endif
 
 typedef enum {
+    LOG_DEBUG,
     LOG_INFO,
     LOG_WARN,
     LOG_ERROR
@@ -18,6 +19,13 @@ typedef enum {
  * @param ...   The values to format into the log message.
  */
 void log_write(LogLevel level, const char* fmt, ...);
+
+/**
+ * Write a debug log message.
+ * @param fmt The format string for the log message.
+ * @param ... The values to format into the log message.
+ */
+#define log_debug(...)  log_write(LOG_DEBUG, __VA_ARGS__)
 
 /**
  * Write an info log message.

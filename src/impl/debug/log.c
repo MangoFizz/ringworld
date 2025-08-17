@@ -63,6 +63,9 @@ void log_write(LogLevel level, const char* fmt, ...) {
 
     const char* level_str = "";
     switch(level) {
+        case LOG_DEBUG:
+            level_str = "DEBUG";
+            break;
         case LOG_INFO:  
             level_str = "INFO";  
             break;
@@ -83,7 +86,13 @@ void log_write(LogLevel level, const char* fmt, ...) {
     va_end(args);
 
     va_start(args, fmt);
-    vprintf(fmt, args);
-    fputc('\n', stdout);
+    if(level != LOG_ERROR) {
+        vprintf(fmt, args);
+        fputc('\n', stdout);
+    }
+    else {
+        vfprintf(stderr, fmt, args);
+        fputc('\n', stderr);
+    }
     va_end(args);
 }

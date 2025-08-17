@@ -6,6 +6,18 @@ extern "C" {
 #endif
 
 #include <stdint.h>
+#include <windows.h>
+
+/**
+ * Print the stack trace of the current thread.
+ * 
+ * This function is used to display the call stack at the point of an exception.
+ * It will display the address of each function, its symbol, and, if libbacktrace 
+ * is available, its source code location.
+ * 
+ * @param context The context of the thread to print the stack trace for.
+ */
+void exception_print_stack_trace(CONTEXT *context);
 
 /**
  * Throw an runtime error exception.

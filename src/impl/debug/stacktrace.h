@@ -26,6 +26,13 @@ typedef struct DebugStackFrame {
  */
 void stacktrace_build_trace(CONTEXT *context, DebugStackFrame *frames, size_t max_frames);
 
+/**
+ * Get the address of the caller function from the current context.
+ * @param context The context to get the caller address from.
+ * @return The address of the caller function, or NULL if not found.
+ */
+void *stacktrace_get_caller_address(CONTEXT *context);
+
 #ifdef __cplusplus
 }
 #endif

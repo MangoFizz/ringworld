@@ -49,3 +49,21 @@ void stacktrace_build_trace(CONTEXT *context, DebugStackFrame *frames, size_t ma
         }
     }
 }
+
+void *stacktrace_get_caller_address(CONTEXT *context) {
+    STACKFRAME stack = { 0 };
+    stack.AddrPC.Offset = context->Eip;
+    stack.AddrPC.Mode = AddrModeFlat;
+    stack.AddrFrame.Offset = context->Ebp;
+    stack.AddrFrame.Mode = AddrModeFlat;
+    stack.AddrStack.Offset = context->Esp;
+    stack.AddrStack.Mode = AddrModeFlat;
+
+    HANDLE hProcess = GetCurrentProcess();
+    HANDLE hThread = GetCurrentThread();
+
+    if(StackWalk(IMAGE_FILE_MACHINE_I386, hProcess, hThread, &stack, context, NULL, SymFunctionTableAccess, SymGetModuleBase, NULL)) {
+        return (void *)stack.AddrPC.Offset;
+    }
+    return NULL;
+}

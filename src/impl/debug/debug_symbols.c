@@ -23,7 +23,7 @@ static int backtrace_resolve_callback(void *data, uintptr_t pc, const char *file
 bool debug_symbols_get_address_source_info(uintptr_t addr, DebugAddressSourceInfo *out_info) {
 #ifndef RINGWORLD_NO_BACKTRACE
     if(!backtrace_state) {
-        log_error("Backtrace state is not initialized");
+        log_debug("Backtrace state is not initialized");
         return false;
     }
     memset(out_info, 0, sizeof(DebugAddressSourceInfo));
@@ -38,7 +38,7 @@ bool debug_symbols_get_address_source_info(uintptr_t addr, DebugAddressSourceInf
 void debug_symbols_initialize(void) {
 #ifndef RINGWORLD_NO_BACKTRACE
     if(backtrace_state) {
-        log_error("Backtrace state is already initialized");
+        log_debug("Backtrace state is already initialized");
         return;
     }
     HMODULE module = (HMODULE)shell_get_current_module_handle();

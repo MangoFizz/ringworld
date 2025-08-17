@@ -99,10 +99,12 @@ void log_write(LogLevel level, const char* fmt, ...) {
     if(level != LOG_ERROR) {
         vprintf(fmt, args);
         fputc('\n', stdout);
+        fflush(stdout);
     }
     else {
         vfprintf(stderr, fmt, args);
         fputc('\n', stderr);
+        fflush(stderr);
     }
     va_end(args);
 }

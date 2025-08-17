@@ -860,8 +860,8 @@ const wchar_t *ui_widget_get_common_button_caption(UIWidgetButtonCaptionStringIn
 
 void ui_widget_update_player_profile_text(const wchar_t *profile_name, Widget *text_widget) {
     ASSERT(text_widget != NULL);
-    // ASSERT(text_widget->type == UI_WIDGET_TYPE_TEXT_BOX);
     ASSERT(profile_name != NULL);
+    ASSERT_WITH_CONTEXT(text_widget->type == UI_WIDGET_TYPE_TEXT_BOX, "widget: %s", text_widget->name);
 
     const wchar_t *profile_label = ui_widget_get_common_button_caption(UI_WIDGET_BUTTON_CAPTION_PROFILE_LABEL);
     const size_t text_buffer_size = 64;

@@ -10,7 +10,7 @@
 struct backtrace_state *backtrace_state = NULL;
 
 static void backtrace_print_error_callback(void *data, const char *msg, int errnum) {
-    log_error("Backtrace error: %s (%d)", msg, errnum);
+    log_debug("Backtrace error: %s (%d)", msg, errnum);
 }
 
 static int backtrace_resolve_callback(void *data, uintptr_t pc, const char *filename, int lineno, const char *function) {

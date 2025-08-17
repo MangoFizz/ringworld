@@ -18,30 +18,30 @@ enum {
 };
 
 void exception_print_exception_info(EXCEPTION_RECORD *record) {
-    log_info("Code: 0x%08X", record->ExceptionCode);
-    log_info("Address: 0x%p", record->ExceptionAddress);
-    log_info("Flags: 0x%X", record->ExceptionFlags);
+    log_debug("Code: 0x%08X", record->ExceptionCode);
+    log_debug("Address: 0x%p", record->ExceptionAddress);
+    log_debug("Flags: 0x%X", record->ExceptionFlags);
 }
 
 void exception_print_context(CONTEXT *context) {
-    log_info("CPU Registers (Context)");
-    log_info("  EAX = 0x%08X", context->Eax);
-    log_info("  EBX = 0x%08X", context->Ebx);
-    log_info("  ECX = 0x%08X", context->Ecx);
-    log_info("  EDX = 0x%08X", context->Edx);
-    log_info("  ESI = 0x%08X", context->Esi);
-    log_info("  EDI = 0x%08X", context->Edi);
-    log_info("  EBP = 0x%08X", context->Ebp);
-    log_info("  ESP = 0x%08X", context->Esp);
-    log_info("  EIP = 0x%08X", context->Eip);
-    log_info("  EFLAGS = 0x%08X", context->EFlags);
+    log_debug("CPU Registers (Context)");
+    log_debug("  EAX = 0x%08X", context->Eax);
+    log_debug("  EBX = 0x%08X", context->Ebx);
+    log_debug("  ECX = 0x%08X", context->Ecx);
+    log_debug("  EDX = 0x%08X", context->Edx);
+    log_debug("  ESI = 0x%08X", context->Esi);
+    log_debug("  EDI = 0x%08X", context->Edi);
+    log_debug("  EBP = 0x%08X", context->Ebp);
+    log_debug("  ESP = 0x%08X", context->Esp);
+    log_debug("  EIP = 0x%08X", context->Eip);
+    log_debug("  EFLAGS = 0x%08X", context->EFlags);
 }
 
 void exception_print_stack_trace(CONTEXT *context) {
-    log_info("Stack Trace");
-
     DebugStackFrame frames[MAX_STACKTRACE_STACK_FRAMES];
     stacktrace_build_trace(context, frames, MAX_STACKTRACE_STACK_FRAMES);
+
+    log_debug("Stack Trace");
 
     for(int i = 0; i < MAX_STACKTRACE_STACK_FRAMES; i++) {
         DebugStackFrame *frame = &frames[i];
@@ -58,21 +58,21 @@ void exception_print_stack_trace(CONTEXT *context) {
             snprintf(symbol_name, sizeof(symbol_name), "??");
         }
 
-        log_info("  [%02d]: %s", frame->index, symbol_name);
+        log_debug("  [%02d]: %s", frame->index, symbol_name);
         if(frame->address) {
-            log_info("      Address: 0x%.8X", frame->address);
+            log_debug("      Address: 0x%.8X", frame->address);
         }
         if(has_symbol) {
-            log_info("      Raw Symbol: %s + 0x%X", frame->symbol, frame->offset);
+            log_debug("      Raw Symbol: %s + 0x%X", frame->symbol, frame->offset);
         }
         if(frame->source_info.filename) {
-            log_info("      Source: %s:%d", frame->source_info.filename, frame->source_info.line_number);
+            log_debug("      Source: %s:%d", frame->source_info.filename, frame->source_info.line_number);
         }
     }
 }
 
 void exception_print_report(EXCEPTION_RECORD *record, CONTEXT *context) {
-    log_info("EXCEPTION REPORT:");
+    log_debug("EXCEPTION REPORT:");
     exception_print_exception_info(record);
     exception_print_context(context);
     exception_print_stack_trace(context);

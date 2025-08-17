@@ -60,7 +60,7 @@ TagGroup tag_get_primary_group(TagHandle tag_handle) {
 
 void *tag_get_block(GenericTagBlock *block, uint32_t index, uint32_t size) {
     ASSERT(block);
-    ASSERT(index < block->count);
+    ASSERT_OR_RETURN_VALUE(index < block->count, NULL);
     return block->elements + index * size;
 }
 

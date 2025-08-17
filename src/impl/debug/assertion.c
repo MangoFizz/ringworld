@@ -22,7 +22,11 @@ typedef struct TrackedAssertion {
 
 MAKE_TABLE_STRUCT(AssertionTable, TrackedAssertion);
 
+#ifdef DEBUG
+bool assertion_enforcing = true;
+#else
 bool assertion_enforcing = false;
+#endif
 
 static AssertionTable *assertion_tracking_table = NULL;
 

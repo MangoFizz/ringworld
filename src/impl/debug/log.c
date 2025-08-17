@@ -6,6 +6,12 @@
 #include "version.h"
 #include "log.h"
 
+#ifdef DEBUG
+LogLevel current_log_level = LOG_DEBUG;
+#else
+LogLevel current_log_level = LOG_INFO;
+#endif
+
 static FILE *log_file = NULL;
 static int log_initialized = 0;
 
@@ -56,6 +62,10 @@ void log_close() {
 void log_write(LogLevel level, const char* fmt, ...) {
     if(!log_file) {
         log_init();
+    }
+
+    if(level > current_log_level) {
+        return;
     }
 
     char timestamp[32];

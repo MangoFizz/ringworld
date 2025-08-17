@@ -6,10 +6,10 @@ extern "C" {
 #endif
 
 typedef enum {
-    LOG_DEBUG,
-    LOG_INFO,
+    LOG_ERROR,
     LOG_WARN,
-    LOG_ERROR
+    LOG_INFO,
+    LOG_DEBUG
 } LogLevel;
 
 /**

@@ -213,7 +213,7 @@ if(RINGWORLD_BUILD_TOOL)
         src/tool/resources.rc
     )
     set_target_properties(ringworld-tool PROPERTIES LINK_FLAGS "-static -static-libgcc -static-libstdc++")
-    target_link_libraries(ringworld-tool d3d9 d3dx9 d3dcompiler shlwapi dbghelp backtrace)
+    target_link_libraries(ringworld-tool d3d9 d3dx9 d3dcompiler shlwapi dbghelp)
     target_compile_definitions(ringworld-tool PRIVATE -D_WIN32_WINNT=0x0601)
     
     if(Backtrace_FOUND)

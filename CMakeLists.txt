@@ -218,6 +218,8 @@ if(RINGWORLD_BUILD_TOOL)
     
     if(Backtrace_FOUND)
         target_link_libraries(ringworld-tool backtrace)
+    else()
+        target_compile_definitions(ringworld-tool PRIVATE -DRINGWORLD_NO_BACKTRACE)
     endif()
 endif()
 

@@ -3,6 +3,7 @@
 #include <windows.h>
 #include <shlwapi.h>
 #include "../impl/exception/exception.h"
+#include "../impl/debug/assertion.h"
 #include "file.h"
 
 bool directory_exists(const char *path) {

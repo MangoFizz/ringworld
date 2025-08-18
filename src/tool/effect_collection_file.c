@@ -4,6 +4,7 @@
 #include <windows.h>
 #include <shlwapi.h>
 #include "../impl/exception/exception.h"
+#include "../impl/debug/assertion.h"
 #include "../impl/rasterizer/rasterizer_dx9_shader_compiler.h"
 #include "../impl/rasterizer/rasterizer_shaders_blob.h"
 #include "../impl/memory/dynamic_buffer.h"

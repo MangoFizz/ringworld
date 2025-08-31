@@ -104,7 +104,7 @@ local commonTypes = {
     index = { alias = "uint16_t", size = 2 },
     color_rgb_float = { alias = "ColorRGB", size = 4*3 },
     color_argb_float = { alias = "ColorARGB", size = 4*4 },
-    color_argb_int = { alias = "ColorARGBInt", size = 4 },
+    pixel_32 = { alias = "Pixel32", size = 4 },
     matrix_3x_3 = { alias = "Matrix", size = 4*3*3 },
     rectangle = { alias = "Rectangle2D", size = 2*4 },
     tag_reference = { alias = "TagReference", size = 4*4 },

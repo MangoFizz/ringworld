@@ -10,13 +10,13 @@ extern "C" {
 #include "rasterizer_dx9_vertex.h"
 
 typedef struct RasterizerMeterParams {
-    ColorARGBInt gradient_min_color;
-    ColorARGBInt gradient_max_color;
-    ColorARGBInt background_color;
-    ColorARGBInt flash_color;
+    Pixel32 gradient_min_color;
+    Pixel32 gradient_max_color;
+    Pixel32 background_color;
+    Pixel32 flash_color;
     uint8_t flash_color_is_negative;
     uint8_t tint_mode_2;
-    ColorARGBInt tint_color;
+    Pixel32 tint_color;
     float gradient;
 } RasterizerMeterParams;
 
@@ -52,7 +52,7 @@ void rasterizer_screen_geometry_draw(RasterizerDynamicScreenGeometryParams *para
  * @param rect Pointer to the rectangle structure that defines the screen quad.
  * @param color The color of the quad.
  */
-void rasterizer_screen_geometry_draw_quad(Rectangle2D *rect, ColorARGBInt color);
+void rasterizer_screen_geometry_draw_quad(Rectangle2D *rect, Pixel32 color);
 
 #ifdef __cplusplus
 }

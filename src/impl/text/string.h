@@ -30,7 +30,7 @@ typedef struct StringParseState {
     TextJustification justification;
     wchar_t character;
     StringParseResult result;
-    ColorARGBInt color; // I'm not sure if this is actually a color but what else could it be?
+    Pixel32 color; // I'm not sure if this is actually a color but what else could it be?
 } StringParseState;
 _Static_assert(sizeof(StringParseState) == 28);
 

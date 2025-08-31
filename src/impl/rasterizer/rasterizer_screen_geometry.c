@@ -282,7 +282,7 @@ void rasterizer_screen_geometry_draw(RasterizerDynamicScreenGeometryParams *para
             texture_factor_real.g = map_tint_0->g;
             texture_factor_real.b = map_tint_0->b;
             
-            ColorARGBInt texture_factor = color_encode_a8r8g8b8(&texture_factor_real);
+            Pixel32 texture_factor = color_encode_a8r8g8b8(&texture_factor_real);
             rasterizer_dx9_set_render_state(D3DRS_TEXTUREFACTOR, texture_factor);
 
             rasterizer_dx9_texture_set_bitmap_data_directly(0, params->map[0]);
@@ -453,7 +453,7 @@ void rasterizer_screen_geometry_draw(RasterizerDynamicScreenGeometryParams *para
         texture_factor_real.r = psh_constants.map_tint_0.r;
         texture_factor_real.g = psh_constants.map_tint_0.g;
         texture_factor_real.b = psh_constants.map_tint_0.b;
-        ColorARGBInt texture_factor = color_encode_a8r8g8b8(&texture_factor_real);
+        Pixel32 texture_factor = color_encode_a8r8g8b8(&texture_factor_real);
         rasterizer_dx9_set_render_state(D3DRS_TEXTUREFACTOR, texture_factor);
         rasterizer_dx9_draw_primitive_up(D3DPT_TRIANGLEFAN, 2, vertices, sizeof(RasterizerDynamicVertex));
     }
@@ -461,7 +461,7 @@ void rasterizer_screen_geometry_draw(RasterizerDynamicScreenGeometryParams *para
     IDirect3DDevice9_SetSoftwareVertexProcessing(device, rasterizer_globals->using_software_vertex_processing);
 }
 
-void rasterizer_screen_geometry_draw_quad(Rectangle2D *rect, ColorARGBInt color) {
+void rasterizer_screen_geometry_draw_quad(Rectangle2D *rect, Pixel32 color) {
     Globals *game_globals = game_globals_get();
     RasterizerGlobals *rasterizer_globals = rasterizer_get_globals();
 

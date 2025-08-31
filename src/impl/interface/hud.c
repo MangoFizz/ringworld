@@ -144,7 +144,7 @@ void hud_calculate_bitmap_bounds(HUDInterfaceAnchor absolute_placement, BitmapDa
 }
 
 void hud_draw_bitmap_internal(RasterizerMeterParams *meter_params, BitmapData *bitmap, Bounds2D *texture_bounds, 
-                            Bounds2D *screen_coords, float rotation, ColorARGBInt color, VectorXY *scale, VectorXYInt *offset) {
+                            Bounds2D *screen_coords, float rotation, Pixel32 color, VectorXY *scale, VectorXYInt *offset) {
     
     float sin_rotation = sin(rotation);
     float cos_rotation = cos(rotation);
@@ -193,7 +193,7 @@ void hud_draw_bitmap_internal(RasterizerMeterParams *meter_params, BitmapData *b
 }
 
 void hud_draw_bitmap_with_meter(RasterizerMeterParams *meter_params, BitmapData *bitmap_data, HUDInterfaceAnchor *meter_anchor,
-                                float scale, float rotation, ColorARGBInt color_mask, bool scale_meter_offset, 
+                                float scale, float rotation, Pixel32 color_mask, bool scale_meter_offset, 
                                 HUDMeterDefinition *meter_definition, Bounds2D *sprite_texture_bounds, bool is_interface_bitmap) {
 
     Bounds2D default_bounds;

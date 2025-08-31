@@ -94,7 +94,7 @@
     "hud_messaging_parameters": {"type": "HUDGlobalsMessagingParameters *", "address": "0x80f120"},
     "current_scenario": {"type": "Scenario *", "address": "0x6e224c"},
     "cinematic_globals": {"type": "CinematicGlobals *", "address": "0x68c83c"},
-    "text_shadow_color": {"type": "ColorARGBInt", "address": "0x6b83dc"},
+    "text_shadow_color": {"type": "Pixel32", "address": "0x6b83dc"},
     "current_game_engine_interface": {"type": "GameEngineInterface *", "address": "0x68cd24"},
     "network_game_globals_client": {"type": "NetworkGame", "address": "0x80EC94"},
     "network_game_globals_host": {"type": "NetworkGame", "address": "0x7fc6a8"},

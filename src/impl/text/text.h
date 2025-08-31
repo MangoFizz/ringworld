@@ -70,13 +70,13 @@ void text_reset_tab_stops(void);
  * This function retrieves the shadow color for text.
  * @return The shadow color in ARGB format.
  */
-ColorARGBInt text_get_shadow_color(void);
+Pixel32 text_get_shadow_color(void);
 
 /**
  * This function sets the shadow color for text.
  * @param color The color of the shadow in ARGB format.
  */
-void text_set_shadow_color(ColorARGBInt color);
+void text_set_shadow_color(Pixel32 color);
 
 /**
  * Draw a Unicode string within the specified bounds and text rectangle.

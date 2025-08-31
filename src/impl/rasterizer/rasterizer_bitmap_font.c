@@ -300,7 +300,7 @@ void rasterizer_bitmap_font_cache_font_character(Font *font, FontCharacter *char
     uint8_t *character_pixels = font->pixels.pointer + character->pixels_offset;
     size_t pixels_count = 0;
     for(size_t offset_y = 0; offset_y < bitmap_height; offset_y++) {
-        ColorARGBInt *pixel = bitmap_address_for_pixel(font_cache->position.x, font_cache->position.y + offset_y, 0, font_cache->bitmap);
+        Pixel32 *pixel = bitmap_address_for_pixel(font_cache->position.x, font_cache->position.y + offset_y, 0, font_cache->bitmap);
         for(size_t offset_x = 0; offset_x < bitmap_width; offset_x++) {
             if(offset_y <= 0 || offset_y > character->bitmap_height || offset_x <= 0 || offset_x > character->bitmap_width) {
                 *pixel = 0x00000000;

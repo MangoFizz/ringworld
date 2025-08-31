@@ -182,7 +182,7 @@ void rasterizer_hud_motion_sensor_blip_end(float sweep_progress, VectorXY *offse
 
         VertexShaderScreenprojConstants screenproj;
         RasterizerDynamicVertex vertices[4];
-        ColorARGBInt color;
+        Pixel32 color;
 
         Rectangle2D *window_bounds = &window_parameters->camera.window_bounds;
         float window_width_inverse = 1.0f / (window_bounds->right - window_bounds->left);

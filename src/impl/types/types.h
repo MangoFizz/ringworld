@@ -10,7 +10,7 @@ extern "C" {
 typedef uint32_t FourCC;
 typedef uint32_t TickCount32;
 typedef uint16_t TickCount16;
-typedef uint32_t ColorARGBInt;
+typedef uint32_t Pixel32;
 typedef float Angle;
 
 typedef union ScenarioScriptNodeValue {

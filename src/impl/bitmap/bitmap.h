@@ -105,7 +105,7 @@ void *bitmap_address_for_pixel(uint16_t x, uint16_t y, uint8_t mipmap_level, Bit
  * @param color_mask The color mask to apply to the bitmap.
  * @todo Verify the parameters.
  */
-void bitmap_draw_in_rect(BitmapData *bitmap, const Rectangle2D *rect, ColorARGBInt color_mask, const Rectangle2D *screen_rect, const Rectangle2D *texture_rect);
+void bitmap_draw_in_rect(BitmapData *bitmap, const Rectangle2D *rect, Pixel32 color_mask, const Rectangle2D *screen_rect, const Rectangle2D *texture_rect);
 
 /**
  * Draw a bitmap with specified parameters.

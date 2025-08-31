@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: GPL-3.0-only
 
-set(TAG_DEFINITIONS_PATH "${CMAKE_CURRENT_SOURCE_DIR}/ringhopper/src/ringhopper-definitions/json/tag")
+set(TAG_DEFINITIONS_PATH "${CMAKE_CURRENT_SOURCE_DIR}/ringhopper-definitions/json/tag")
 file(GLOB TAG_DEFINITION_FILES ${TAG_DEFINITIONS_PATH}/*.json)
 
 set(SOURCE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/src")

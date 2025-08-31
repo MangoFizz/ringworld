@@ -123,7 +123,7 @@ _Static_assert(sizeof(VertexDeclaration) == 0xC);
 
 typedef struct RasterizerDynamicVertex {
     VectorXYZ position;
-    ColorARGBInt color;
+    Pixel32 color;
     VectorXY texture_pos;
 } RasterizerDynamicVertex;
 _Static_assert(sizeof(RasterizerDynamicVertex) == 0x18);

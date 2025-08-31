@@ -20,7 +20,7 @@
 extern VirtualKeyboardGlobals *virtual_keyboard_globals;
 extern wchar_t **virtual_keyboard_labels;
 
-const ColorARGBInt TEXT_SELECTION_COLOR = 0x7F7F7F7F;
+const Pixel32 TEXT_SELECTION_COLOR = 0x7F7F7F7F;
 
 VirtualKeyboardGlobals *ui_virtual_keyboard_get_globals(void) {
     return virtual_keyboard_globals;
@@ -106,7 +106,7 @@ void ui_virtual_keyboard_render(void) {
         texture_rect.top = 0;
         texture_rect.right = RASTERIZER_SCREEN_BASE_WIDTH;
         texture_rect.bottom = RASTERIZER_SCREEN_BASE_HEIGHT;
-        ColorARGBInt color = color_encode_a8r8g8b8(&color_argb_white);
+        Pixel32 color = color_encode_a8r8g8b8(&color_argb_white);
         BitmapData *background_bitmap = bitmap_group_sequence_get_bitmap_for_frame(background_bitmap_handle, 0, 0);
         bitmap_draw_in_rect(background_bitmap, NULL, color, &screen_rect, &texture_rect);
     }

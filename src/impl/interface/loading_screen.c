@@ -42,7 +42,7 @@ void loading_screen_draw_background(float alpha) {
     if(background_bitmap) {
         Rectangle2D texture_rect = rect;
         texture_rect.right = RASTERIZER_SCREEN_BASE_WIDTH;
-        ColorARGBInt color_int = color_encode_a8r8g8b8(&color_mask);
+        Pixel32 color_int = color_encode_a8r8g8b8(&color_mask);
         bitmap_draw_in_rect(background_bitmap, NULL, color_int, &rect, &texture_rect);
     }
 }

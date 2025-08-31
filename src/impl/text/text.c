@@ -5,7 +5,7 @@
 #include "text.h"
 
 extern TextDrawGlobals *text_drawing_globals;
-extern ColorARGBInt *text_shadow_color;
+extern Pixel32 *text_shadow_color;
 
 /**
  * @todo Make the return type const.
@@ -36,11 +36,11 @@ void text_reset_tab_stops(void) {
     globals->tabs_count = 0;
 }
 
-ColorARGBInt text_get_shadow_color(void) {
+Pixel32 text_get_shadow_color(void) {
     return *text_shadow_color;
 }
 
-void text_set_shadow_color(ColorARGBInt color) {
+void text_set_shadow_color(Pixel32 color) {
     *text_shadow_color = color;
 }
 

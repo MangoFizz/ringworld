@@ -4,8 +4,8 @@
 #include "../debug/assertion.h"
 #include "../font/font.h"
 #include "../main/main_globals.h"
+#include "../terminal/terminal.h"
 #include "../time/time.h"
-#include "../console/console.h"
 #include "../network/network_game.h"
 #include "../math/math.h"
 #include "../math/color.h"
@@ -94,7 +94,7 @@ void loading_screen_render(void) {
                 case LOADING_SCREEN_STATE_CONNECTED:
                 case LOADING_SCREEN_STATE_WAITING_FOR_NEW_GAME: {
                     if(*devmode_enabled == false) {
-                        console_printf(&color_argb_white, "%s", "Connect functions unavailable in -devmode.");
+                        terminal_printf(&COLOR_ARGB_WHITE, "%s", "Connect functions unavailable in -devmode.");
                     }
                     main_globals->connect_address[0] = '\0';
                     main_globals->connect_password[0] = '\0';
@@ -106,7 +106,7 @@ void loading_screen_render(void) {
 
                 case LOADING_SCREEN_STATE_RESOLVING: {
                     if(*devmode_enabled == false) {
-                        console_printf(&color_argb_white, "%s", "Connect functions unavailable in -devmode.");
+                        terminal_printf(&COLOR_ARGB_WHITE, "%s", "Connect functions unavailable in -devmode.");
                     }
                     main_globals->map.switch_to_structure_bsp = -1;
                     main_globals->connect_address[0] = '\0';

@@ -1,10 +1,10 @@
 #include <math.h>
 #include <stdio.h>
 
-#include "../console/console.h"
 #include "../debug/assertion.h"
 #include "../shader/shader.h"
 #include "../tag/definitions/shader_transparent_generic.h"
+#include "../terminal/terminal.h"
 #include "../interface/numeric_countdown.h"
 #include "../math/math.h"
 #include "../math/wave_functions.h"

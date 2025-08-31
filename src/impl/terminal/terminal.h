@@ -47,6 +47,22 @@ _Static_assert(sizeof(TerminalGlobals) == 0x24);
  */
 void terminal_initialize(void);
 
+/**
+ * Print a formatted line of text to the console.
+ *
+ * @param color (optional)
+ * @param fmt   format
+ */
+void terminal_printf(const struct ColorARGB *color, const char *fmt, ...);
+
+/**
+ * Print a red formatted line of text to the console.
+ *
+ * @param fmt   format
+ * @param ...   arguments
+ */
+void terminal_error_printf(const char *fmt, ...);
+
 #ifdef __cplusplus
 }
 #endif

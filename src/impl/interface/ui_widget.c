@@ -3,7 +3,7 @@
 #include <windows.h>
 #include "../../event/event.h"
 #include "../bitmap/bitmap.h"
-#include "../console/console.h"
+#include "../terminal/terminal.h"
 #include "../debug/assertion.h"
 #include "../exception/exception.h"
 #include "../font/font.h"

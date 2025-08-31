@@ -28,7 +28,7 @@
     
     "player_ui_set_active_player_profile": {"address": null, "replace": false, "arguments": ["0", "eax", "edx"]},
 
-    "console_printf_in": {"address": "0x48eb40", "replace": false, "arguments": ["eax", "4", "8"], "comment": "takes variable args but the bridge doesn't support varargs so two are passed for now plus color"},
+    "terminal_printf_in": {"address": "0x48eb40", "replace": false, "arguments": ["eax", "4", "8"], "comment": "takes variable args but the bridge doesn't support varargs so two are passed for now plus color"},
     
     "bitmap_load": {"address": null, "replace": false, "use_return_value": true, "arguments": ["eax", "0", "4"]},
     

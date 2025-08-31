@@ -52,7 +52,7 @@ void text_draw_initialize_for_new_map(void);
  * @param font_tag The tag handle of the font to be used.
  * @param color The color of the text in ARGB format.
  */
-void text_set_drawing_parameters(int16_t style, int16_t justification, uint32_t flags, TagHandle font_tag, ColorARGB *color);
+void text_set_drawing_parameters(int16_t style, int16_t justification, uint32_t flags, TagHandle font_tag, const ColorARGB *color);
 
 /**
  * This function sets the tab stops for text.

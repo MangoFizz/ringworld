@@ -1,8 +1,8 @@
 #include <string.h>
 
-#include "../console/console.h"
 #include "../debug/assertion.h"
 #include "../exception/exception.h"
+#include "../terminal/terminal.h"
 #include "tag.h"
 
 extern bool *map_is_loaded;

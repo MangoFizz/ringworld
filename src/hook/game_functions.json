@@ -68,7 +68,7 @@
 
     "player_ui_set_active_player_profile": {"address": "0x4988d0", "replace": false, "arguments": ["0", "eax", "edx"]},
 
-    "console_printf_in": {"address": "0x499ab0", "replace": false, "arguments": ["eax", "4", "8"], "comment": "takes variable args but the bridge doesn't support varargs so two are passed for now plus color"},
+    "terminal_printf_in": {"address": "0x499ab0", "replace": false, "arguments": ["eax", "4", "8"], "comment": "takes variable args but the bridge doesn't support varargs so two are passed for now plus color"},
 
     "bitmap_load": {"address": "0x444eb0", "replace": false, "use_return_value": true, "arguments": ["0", "4", "eax"]},
     "bitmap_group_sequence_get_bitmap_for_frame": {"address": "0x43f290", "replace": true, "use_return_value": true, "arguments": ["eax", "0", "edi"]},

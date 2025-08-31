@@ -14,7 +14,7 @@ TextDrawGlobals *text_get_drawing_globals(void) {
     return text_drawing_globals;
 }
 
-void text_set_drawing_parameters(int16_t style, int16_t justification, uint32_t flags, TagHandle font_tag, ColorARGB *color) {
+void text_set_drawing_parameters(int16_t style, int16_t justification, uint32_t flags, TagHandle font_tag, const ColorARGB *color) {
     TextDrawGlobals *globals = text_get_drawing_globals();
     globals->style = style;
     globals->justification = justification;

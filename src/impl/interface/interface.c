@@ -4,7 +4,7 @@
 #include "../math/color.h"
 #include "../text/text.h"
 #include "../render/render.h"
-#include "../terminal/termina.h"
+#include "../terminal/terminal.h"
 #include "first_person_weapon.h"
 #include "hud.h"
 #include "interface.h"
@@ -27,6 +27,6 @@ void interface_initialize_for_new_map(void) {
         GlobalsInterfaceBitmaps *interface_bitmaps = TAG_BLOCK_GET_ELEMENT(game_globals->interface_bitmaps, 0);
         font_tag = interface_bitmaps->font_terminal.tag_handle;
     }
-    text_set_drawing_parameters(-1, 0, 0, font_tag, &color_argb_white);
+    text_set_drawing_parameters(-1, 0, 0, font_tag, &COLOR_ARGB_WHITE);
     navpoints_update_screen_dimentions_hack();
 }

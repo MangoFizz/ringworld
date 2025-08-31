@@ -5,7 +5,6 @@
 #include "../game/game_globals.h"
 #include "../main/main_globals.h"
 #include "../time/time.h"
-#include "../console/console.h"
 #include "../interface/hud.h"
 #include "../network/network_game.h"
 #include "../math/math.h"

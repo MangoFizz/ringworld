@@ -177,7 +177,7 @@ else()
     target_compile_definitions(ringworld PRIVATE -D_WIN32_WINNT=0x0601)
 endif()
 
-target_link_libraries(ringworld d3dcompiler d3d9 d3dx9 dbghelp)
+target_link_libraries(ringworld d3dcompiler d3d9 d3dx9 dbghelp dwmapi)
 
 if(Backtrace_FOUND)
     target_link_libraries(ringworld backtrace)

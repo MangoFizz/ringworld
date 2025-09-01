@@ -52,6 +52,13 @@ void shell_message_box(const char *fmt, ...);
  */
 void shell_error_box(const char *fmt, ...);
 
+/**
+ * Create a window with the given dimensions.
+ * @param width The width of the window.
+ * @param height The height of the window.
+ * @return True if the window was created successfully, false otherwise.
+ */
+bool shell_create_window(int32_t width, int32_t height);
 
 #ifdef __cplusplus
 }

@@ -30,12 +30,12 @@ void color_decode_a8r8g8b8(uint32_t argb, ColorARGB *output);
 /**
  * Encode a ColorRGB structure into a 24-bit RGB color.
  */
-uint32_t color_encode_r8g8b8(ColorRGB *rgb);
+uint32_t color_encode_r8g8b8(const ColorRGB *rgb);
 
 /**
  * Encode a ColorARGB structure into a 32-bit ARGB color.
  */
-uint32_t color_encode_a8r8g8b8(ColorARGB *argb);
+uint32_t color_encode_a8r8g8b8(const ColorARGB *argb);
 
 /**
  * Interpolate between two colors.
@@ -46,7 +46,7 @@ uint32_t color_encode_a8r8g8b8(ColorARGB *argb);
  * @param t Interpolation value.
  * @return The pointer to the output color.
  */
-ColorRGB *color_interpolate(ColorRGB *a, ColorRGB *b, ColorRGB *output, uint32_t flags, float t);
+ColorRGB *color_interpolate(const ColorRGB *a, const ColorRGB *b, ColorRGB *output, uint32_t flags, float t);
 
 #ifdef __cplusplus
 }

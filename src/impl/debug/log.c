@@ -1,7 +1,9 @@
 #include <stdio.h>
+#include <stdbool.h>
 #include <stdarg.h>
 #include <time.h>
 #include <windows.h>
+#include "error/error_code.h"
 #include "shell/shell.h"
 #include "version.h"
 #include "log.h"
@@ -32,18 +34,21 @@ static void log_get_timestamp(char* buffer, size_t size) {
 
 int log_init() {
     if(log_initialized) {
-        return 1;
+        return ERROR_CODE_SUCCESS;
     }
 
-    char data_directory[MAX_PATH];
-    shell_get_data_directory_path(data_directory);
+    char data_directory[MAX_PATH_LENGTH];
+    int res = shell_get_data_directory_path(data_directory, MAX_PATH_LENGTH);
+    if(res != ERROR_CODE_SUCCESS) {
+        return ERROR_CODE_FAILURE;
+    }
     
     char filename[MAX_PATH];
     snprintf(filename, sizeof(filename), "%s\\debug.txt", data_directory);
     log_file = fopen(filename, "a");
     if(!log_file) {
         perror("Failed to open log file");
-        return 0;
+        return ERROR_CODE_FAILURE;
     }
 
     char time_str[32];
@@ -51,8 +56,8 @@ int log_init() {
     fprintf(log_file, "%s ringworld %s -----------------------------------------------------------\n", time_str, RINGWORLD_VERSION_STRING);
 
     log_initialized = 1;
-    atexit(log_close_internal); 
-    return 1;
+    atexit(log_close_internal);
+    return ERROR_CODE_SUCCESS;
 }
 
 void log_close() {

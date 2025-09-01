@@ -12,8 +12,11 @@
 #include "debug/stacktrace.h"
 #include "exception.h"
 
+typedef enum ExceptionCode {
+    EXCEPTION_RINGWORLD = 0xE000DEAD,
+} ExceptionCode;
+
 enum {
-    RINGWORLD_EXCEPTION_CODE = 0xE000DEAD,
     MAX_STACKTRACE_STACK_FRAMES = 32
 };
 
@@ -83,7 +86,7 @@ EXCEPTION_DISPOSITION seh_exception_handler(EXCEPTION_RECORD *record, void *, CO
         case EXCEPTION_ACCESS_VIOLATION:
             log_error("Access violation at address 0x%p", record->ExceptionAddress);
             break;
-        case RINGWORLD_EXCEPTION_CODE:
+        case EXCEPTION_RINGWORLD:
             if(record->NumberParameters > 0 && record->ExceptionInformation[0] != 0) {
                 log_error("ringworld exception: %s", (const char *)record->ExceptionInformation[0]);
             }
@@ -120,7 +123,7 @@ void exception_throw_runtime_error(const char* fmt, ...) {
 
     ULONG_PTR arguments[1];
     arguments[0] = (ULONG_PTR)message;
-    RaiseException(RINGWORLD_EXCEPTION_CODE, EXCEPTION_NONCONTINUABLE, 1, arguments);
+    RaiseException(EXCEPTION_RINGWORLD, EXCEPTION_NONCONTINUABLE, 1, arguments);
 }
 
 void exception_throw_forbidden_function_called(const char *function_name, void *from) {

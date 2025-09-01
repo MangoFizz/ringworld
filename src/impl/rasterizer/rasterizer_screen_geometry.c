@@ -258,7 +258,7 @@ void rasterizer_screen_geometry_draw(RasterizerDynamicScreenGeometryParams *para
     PixelShaderScreenGeometryConstants psh_constants = {0};
 
     if(params->map[0] != NULL) {
-        ColorRGB *map_tint_0 = params->map_tint[0];
+        const ColorRGB *map_tint_0 = params->map_tint[0];
         if(map_tint_0 == NULL) {
             map_tint_0 = &COLOR_RGB_WHITE;
         }
@@ -312,7 +312,7 @@ void rasterizer_screen_geometry_draw(RasterizerDynamicScreenGeometryParams *para
             return;
         }
 
-        ColorRGB *map_tint_1 = params->map_tint[1];
+        const ColorRGB *map_tint_1 = params->map_tint[1];
         if(map_tint_1 == NULL) {
             map_tint_1 = &COLOR_RGB_WHITE;
         }
@@ -325,7 +325,7 @@ void rasterizer_screen_geometry_draw(RasterizerDynamicScreenGeometryParams *para
             map_fade_1 = 1.0f;
         }
 
-        ColorRGB *map_tint_2 = params->map_tint[2];
+        const ColorRGB *map_tint_2 = params->map_tint[2];
         if(map_tint_2 == NULL) {
             map_tint_2 = &COLOR_RGB_WHITE;
         }

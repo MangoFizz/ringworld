@@ -1,8 +1,10 @@
+#include <stdio.h>
+#include <ctype.h>
 #include <string.h>
-#include <windows.h>
 #ifndef RINGWORLD_NO_BACKTRACE
 #include <backtrace.h>
 #endif
+#include "../error/error_code.h"
 #include "../shell/shell.h"
 #include "log.h"
 #include "debug_symbols.h"
@@ -41,10 +43,10 @@ void debug_symbols_initialize(void) {
         log_debug("Backtrace state is already initialized");
         return;
     }
-    HMODULE module = (HMODULE)shell_get_current_module_handle();
-    char module_path[MAX_PATH];
-    if(GetModuleFileNameA(module, module_path, sizeof(module_path)) == 0) {
-        log_error("Failed to get module file name");
+    char module_path[MAX_PATH_LENGTH];
+    int res = shell_get_ringworld_module_path(module_path, sizeof(module_path));
+    if(res != ERROR_CODE_SUCCESS) {
+        log_error("Failed to get ringworld module path");
         return;
     }
     // If we don't lowercase the drive letter, backtrace will not find the file for some reason X_x

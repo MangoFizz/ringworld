@@ -126,9 +126,17 @@ typedef enum PACKED_ENUM BufferedKeyCode {
 } BufferedKeyCode;
 _Static_assert(sizeof(BufferedKeyCode) == 2);
 
+typedef struct BufferedKeyModifierFlags {
+    uint8_t shift : 1;
+    uint8_t ctrl : 1;
+    uint8_t alt : 1;
+    uint8_t reserved : 5;
+} BufferedKeyModifierFlags;
+_Static_assert(sizeof(BufferedKeyModifierFlags) == 0x1);
+
 typedef struct BufferedKey {
-    uint8_t flags;
-    uint8_t state;	
+    BufferedKeyModifierFlags flags;
+    int8_t character;
     BufferedKeyCode key_code;
 } BufferedKey;
 _Static_assert(sizeof(BufferedKey) == 4);

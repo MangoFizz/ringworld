@@ -24,6 +24,8 @@ extern HWND *window_handle;
 extern DWORD *window_style;
 extern HBITMAP *window_background_bitmap;
 extern HDC *window_memory_dc;
+extern size_t *process_argc;
+extern const char ***process_argv;
 
 const size_t MAX_PATH_LENGTH = MAX_PATH;
 const char *window_title = "Halo";
@@ -184,4 +186,12 @@ bool shell_create_window(int32_t width, int32_t height) {
     ShowWindow(window_handle, SW_SHOW);
 
     return true;
+}
+
+size_t shell_get_process_argc(void) {
+    return *process_argc;
+}
+
+const char **shell_get_process_argv(void) {
+    return *process_argv;
 }

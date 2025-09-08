@@ -69,6 +69,8 @@
     "player_ui_set_active_player_profile": {"address": "0x4988d0", "replace": false, "arguments": ["0", "eax", "edx"]},
 
     "terminal_printf_in": {"address": "0x499ab0", "replace": false, "arguments": ["eax", "4", "8"], "comment": "takes variable args but the bridge doesn't support varargs so two are passed for now plus color"},
+    "console_initialize": {"address": "0x4c96d0", "replace": true},
+    "console_process_command": {"address": "0x4c9dc0", "replace": true, "use_return_value": true, "arguments": ["0", "edi"]},
 
     "bitmap_load": {"address": "0x444eb0", "replace": false, "use_return_value": true, "arguments": ["0", "4", "eax"]},
     "bitmap_group_sequence_get_bitmap_for_frame": {"address": "0x43f290", "replace": true, "use_return_value": true, "arguments": ["eax", "0", "edi"]},
@@ -192,5 +194,8 @@
     "interface_initialize_for_new_map": {"address": "0x497150", "replace": true},
 
     "seh_exception_handler": {"address": "0x5cd84c", "replace": true, "use_return_value": true, "arguments": ["0", "4", "8", "12"]},
-    "shell_create_window": {"address": "0x5191d0", "replace": true, "use_return_value": true, "arguments": ["ebx", "eax"]}
+    "shell_create_window": {"address": "0x5191d0", "replace": true, "use_return_value": true, "arguments": ["ebx", "eax"]},
+
+    "hsc_find_functions": {"address": "0x4868c0", "replace": false, "use_return_value": true, "arguments": ["0", "4", "ecx", "eax", "edx"] },
+    "hsc_execute_script": {"address": "0x487030", "replace": false, "use_return_value": true, "arguments": ["0"] }
 }

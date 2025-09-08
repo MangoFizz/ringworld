@@ -79,7 +79,7 @@
     "motion_sensor_blip_being_rendered": {"type": "bool", "address": "0x6b849d"},
     "ui_widget_game_data_input_functions": {"type": "void (*)(Widget *)", "address": "0x62e108"},
     "text_drawing_globals": {"type": "TextDrawGlobals", "address": "0x67f6ec"},
-    "main_globals": {"type": "MainGlobals", "address": "0x6B4798"},
+    "main_globals": {"type": "MainGlobals", "address": "0x6b4770"},
     "loading_screen_state": {"type": "UILoadingScreenState", "address": "0x6b4014"},
     "loading_screen_time_counter_ms_0": {"type": "int32_t", "address": "0x629c70"},
     "loading_screen_time_counter_ms_1": {"type": "int32_t", "address": "0x629c74"},
@@ -121,5 +121,9 @@
     "window_style": {"type": "DWORD", "address": "0x637d5c"},
     "window_background_bitmap": {"type": "HBITMAP", "address": "0x6b8420"},
     "window_memory_dc": {"type": "HDC", "address": "0x6b841c"},
-    "strings_module": {"type": "HMODULE", "address": "0x6bde88"}
+    "strings_module": {"type": "HMODULE", "address": "0x6bde88"},
+    "console_globals": {"type": "ConsoleGlobals", "address": "0x651f50"},
+    "process_argc": {"type": "size_t", "address": "0x6bd164"},
+    "process_argv": {"type": "const char **", "address": "0x6bd168"},
+    "console_command_is_being_processed": {"type": "bool", "address": "0x6ab2fd"}
 }

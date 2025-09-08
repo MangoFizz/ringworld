@@ -74,6 +74,7 @@ endif()
 
 set(RINGWORLD_SOURCES
     src/impl/bitmap/bitmap.c
+    src/impl/console/console.c
     src/impl/crypto/md5.c
     src/impl/crypto/xtea.c
     src/impl/cutscene/cutscene.c

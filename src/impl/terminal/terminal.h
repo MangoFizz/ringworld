@@ -48,7 +48,7 @@ _Static_assert(sizeof(TerminalGlobals) == 0x24);
 void terminal_initialize(void);
 
 /**
- * Print a formatted line of text to the console.
+ * Print a formatted line of text to the terminal.
  *
  * @param color (optional)
  * @param fmt   format
@@ -56,7 +56,23 @@ void terminal_initialize(void);
 void terminal_printf(const struct ColorARGB *color, const char *fmt, ...);
 
 /**
- * Print a red formatted line of text to the console.
+ * Print a gray formatted line of text to the terminal.
+ *
+ * @param fmt   format
+ * @param ...   arguments
+ */
+void terminal_info_printf(const char *fmt, ...);
+
+/**
+ * Print an orange formatted line of text to the terminal.
+ *
+ * @param fmt   format
+ * @param ...   arguments
+ */
+void terminal_warning_printf(const char *fmt, ...);
+
+/**
+ * Print a red formatted line of text to the terminal.
  *
  * @param fmt   format
  * @param ...   arguments

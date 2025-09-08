@@ -13,13 +13,15 @@ extern "C" void ringworld_event_subscribe(RingworldEventID event, RingworldEvent
     event_callbacks[event].push_back(callback);
 }
 
-extern "C" void ringworld_event_dispatch(RingworldEventID event, void *data) {
+extern "C" bool ringworld_event_dispatch(RingworldEventID event, void *data) {
     if(event_callbacks.find(event) == event_callbacks.end()) {
-        return;
+        return false;
     }
+    bool result = false;
     for(auto callback : event_callbacks[event]) {
-        reinterpret_cast<void(*)(void *)>(callback)(data);
+        result = result || callback(data);
     }
+    return result;
 }
 
 #endif

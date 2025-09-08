@@ -7,14 +7,16 @@ extern "C" {
 
 #ifdef RINGWORLD_ENABLE_EVENTS_BUS
 
+#include <stdbool.h>
 #include "../ringworld.h"
 
 #define RINGWORLD_EVENT_DISPATCH(event, data) ringworld_event_dispatch(event, data)
 
-typedef void (*RingworldEventCallback)(void *);
+typedef bool (*RingworldEventCallback)(void *);
 
 typedef enum RingworldEventID {
-    RW_EVENT_WIDGET_LOADED
+    RW_EVENT_WIDGET_LOADED,
+    RW_EVENT_CONSOLE_COMMAND
 } RingworldEventID;
 
 /**
@@ -29,11 +31,11 @@ void ringworld_event_subscribe(RingworldEventID event, RingworldEventCallback ca
  * @param event_id The event id to trigger
  * @param data The data to pass to the event
  */
-void ringworld_event_dispatch(enum RingworldEventID event, void *data);
+bool ringworld_event_dispatch(enum RingworldEventID event, void *data);
 
 #else
 
-#define RINGWORLD_EVENT_DISPATCH(event, data) 
+#define RINGWORLD_EVENT_DISPATCH(event, data) true
 
 #endif
 

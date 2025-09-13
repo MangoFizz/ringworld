@@ -35,6 +35,12 @@ typedef struct ConsoleGlobals {
 } ConsoleGlobals;
 
 /**
+ * Get the console globals.
+ * @return pointer to the console globals
+ */
+ConsoleGlobals *console_get_globals(void);
+
+/**
  * Initialize the console.
  */
 void console_initialize(void);

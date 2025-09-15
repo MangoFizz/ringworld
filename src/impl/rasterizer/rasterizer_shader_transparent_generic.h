@@ -25,9 +25,8 @@ typedef struct ShaderTransparentGenericInstance {
     char hash[32];
     void *compiled_shader;
     IDirect3DPixelShader9 *shader;
-    Bool invalid;
 } ShaderTransparentGenericInstance;
-_Static_assert(sizeof(ShaderTransparentGenericInstance) == 52);
+_Static_assert(sizeof(ShaderTransparentGenericInstance) == 48);
 
 MAKE_TABLE_STRUCT(ShaderTransparentGenericInstances, ShaderTransparentGenericInstance);
 

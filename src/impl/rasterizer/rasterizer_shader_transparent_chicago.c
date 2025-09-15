@@ -20,6 +20,7 @@
 #include "rasterizer_shader_transparent_chicago.h"
 
 extern float *shader_transparent_generic_vertex_constants;
+extern bool *af_is_enabled;
 
 void rasterizer_shader_transparent_chicago_draw(TransparentGeometryGroup *group, uint32_t *param_2) {
     RasterizerWindowRenderParameters *window_parameters = rasterizer_get_window_parameters();
@@ -125,11 +126,19 @@ void rasterizer_shader_transparent_chicago_draw(TransparentGeometryGroup *group,
                 #undef SELECT_TEXTURE_MODE_IF_CLAMPED
                 #undef SELECT_TEXTURE_MODE_IF_FIRST_MAP
 
+                uint32_t filter_type = D3DTEXF_LINEAR;
+#ifdef RINGWORLD_ENABLE_ENHANCEMENTS
+                D3DCAPS9 *d3d9_device_caps = rasterizer_dx9_device_caps();
+                if(*af_is_enabled && (d3d9_device_caps->RasterCaps & D3DPRASTERCAPS_ANISOTROPY) != 0 && 1 < d3d9_device_caps->MaxAnisotropy) {
+                    rasterizer_dx9_set_sampler_state(map_index, D3DSAMP_MAXANISOTROPY, d3d9_device_caps->MaxAnisotropy < 16 ? d3d9_device_caps->MaxAnisotropy : 16);
+                    filter_type = D3DTEXF_ANISOTROPIC;
+                }
+#endif
                 rasterizer_dx9_set_sampler_state(map_index, D3DSAMP_ADDRESSU, u_texture_mode);
                 rasterizer_dx9_set_sampler_state(map_index, D3DSAMP_ADDRESSV, v_texture_mode);
                 rasterizer_dx9_set_sampler_state(map_index, D3DSAMP_ADDRESSW, w_texture_mode);
-                rasterizer_dx9_set_sampler_state(map_index, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
-                rasterizer_dx9_set_sampler_state(map_index, D3DSAMP_MINFILTER, map->flags.unfiltered ? D3DTEXF_POINT : D3DTEXF_LINEAR);
+                rasterizer_dx9_set_sampler_state(map_index, D3DSAMP_MAGFILTER, filter_type);
+                rasterizer_dx9_set_sampler_state(map_index, D3DSAMP_MINFILTER, map->flags.unfiltered ? D3DTEXF_POINT : filter_type);
                 rasterizer_dx9_set_sampler_state(map_index, D3DSAMP_MIPFILTER, map->flags.unfiltered ? D3DTEXF_POINT : D3DTEXF_LINEAR);
 
                 uint32_t maps_count = shader_data->maps.count;

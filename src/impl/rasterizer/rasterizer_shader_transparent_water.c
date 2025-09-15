@@ -278,7 +278,7 @@ void rasterizer_shader_transparent_water_draw(TransparentGeometryGroup *group) {
         if(water_opacity_effect != NULL) {
             float view_perpendicular_brightness = shader->properties.reflection_map_properties.perpendicular_brightness;
             float view_parallel_brightness = shader->properties.reflection_map_properties.parallel_brightness;
-            float ps_constants[8] = {0};
+            float ps_constants[12] = {0};
             ps_constants[0] = view_perpendicular_brightness;
             ps_constants[1] = ps_constants[0];
             ps_constants[2] = ps_constants[0];
@@ -343,6 +343,16 @@ void rasterizer_shader_transparent_water_draw(TransparentGeometryGroup *group) {
                 rasterizer_dx9_set_render_state(D3DRS_ZENABLE, D3DZB_TRUE);
                 rasterizer_dx9_set_render_state(D3DRS_ZFUNC, D3DCMP_LESSEQUAL);
                 rasterizer_dx9_set_render_state(D3DRS_ZWRITEENABLE, z_write_enable);
+#ifdef RINGWORLD_ENABLE_ENHANCEMENTS
+                rasterizer_dx9_set_render_state(D3DRS_FOGENABLE, FALSE);
+                ps_constants[8] = shader->properties.water_flags.atmospheric_fog ? 1.0f : 0.0f;
+
+                rasterizer_dx9_set_pixel_shader(water_opacity_effect->pixel_shaders[1].pixel_shader);
+                rasterizer_dx9_set_texture_stage_state(0, D3DTSS_COLOROP, D3DTOP_DISABLE);
+                rasterizer_dx9_set_texture_stage_state(0, D3DTSS_ALPHAOP, D3DTOP_DISABLE);
+                rasterizer_dx9_set_pixel_shader_constant_f(0, ps_constants, 3);
+                rasterizer_transparent_geometry_group_draw_vertices(false, group);
+#else
                 rasterizer_dx9_set_render_state(D3DRS_FOGENABLE, shader->properties.water_flags.atmospheric_fog != 0);
 
                 rasterizer_dx9_set_pixel_shader(water_opacity_effect->pixel_shaders[1].pixel_shader);
@@ -350,6 +360,7 @@ void rasterizer_shader_transparent_water_draw(TransparentGeometryGroup *group) {
                 rasterizer_dx9_set_texture_stage_state(0, D3DTSS_ALPHAOP, D3DTOP_DISABLE);
                 rasterizer_dx9_set_pixel_shader_constant_f(0, ps_constants, 2);
                 rasterizer_transparent_geometry_group_draw_vertices(false, group);
+#endif
             }
         }
 
@@ -386,7 +397,11 @@ void rasterizer_shader_transparent_water_draw(TransparentGeometryGroup *group) {
             rasterizer_dx9_set_render_state(D3DRS_ZENABLE, D3DZB_TRUE);
             rasterizer_dx9_set_render_state(D3DRS_ZFUNC, D3DCMP_LESSEQUAL);
             rasterizer_dx9_set_render_state(D3DRS_ZWRITEENABLE, z_write_enable);
+#ifdef RINGWORLD_ENABLE_ENHANCEMENTS
+            rasterizer_dx9_set_render_state(D3DRS_FOGENABLE, FALSE);
+#else
             rasterizer_dx9_set_render_state(D3DRS_FOGENABLE, shader->properties.water_flags.atmospheric_fog);
+#endif
 
             D3DCAPS9 *caps = rasterizer_dx9_device_caps();
             if(caps->PixelShaderVersion < D3DPS_VERSION(1, 1)) {
@@ -416,7 +431,7 @@ void rasterizer_shader_transparent_water_draw(TransparentGeometryGroup *group) {
             rasterizer_dx9_set_sampler_state(3, D3DSAMP_MINFILTER, D3DTEXF_LINEAR);
             rasterizer_dx9_set_sampler_state(3, D3DSAMP_MIPFILTER, D3DTEXF_LINEAR);
 
-            float ps_constants[4] = {0};
+            float ps_constants[8] = {0};
             RasterizerWindowRenderParameters *window_parameters = rasterizer_get_window_parameters();
             Plane3D *plane = &group->plane;
             double length = math_vector_length((VectorIJK *)plane);
@@ -448,7 +463,12 @@ void rasterizer_shader_transparent_water_draw(TransparentGeometryGroup *group) {
 
             RasterizerDx9ShaderEffect *water_reflection_effect = rasterizer_dx9_shader_effect_get(SHADER_EFFECT_TRANSPARENT_WATER_REFLECTION);
             rasterizer_dx9_set_pixel_shader(water_reflection_effect->pixel_shaders[0].pixel_shader);
+#ifdef RINGWORLD_ENABLE_ENHANCEMENTS
+            ps_constants[4] = shader->properties.water_flags.atmospheric_fog ? 1.0f : 0.0f;
+            rasterizer_dx9_set_pixel_shader_constant_f(0, ps_constants, 2);
+#else
             rasterizer_dx9_set_pixel_shader_constant_f(0, ps_constants, 1);
+#endif
             rasterizer_dx9_set_texture_stage_state(0, D3DTSS_COLOROP, D3DTOP_DISABLE);
             rasterizer_dx9_set_texture_stage_state(0, D3DTSS_ALPHAOP, D3DTOP_DISABLE);
             rasterizer_transparent_geometry_group_draw_vertices(false, group);

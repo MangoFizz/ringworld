@@ -81,10 +81,11 @@ static inline int32_t clamp_u8(uint8_t x, uint8_t min, uint8_t max) {
 
 /**
  * Clamp a value between a minimum and maximum.
+ * If x is NaN, returns min.
  * @return min if x < min, max if x > max, or x otherwise.
  */
 static inline float clamp_f32(float x, float min, float max) {
-    return x < min ? min : (x > max ? max : x);
+    return nan_f32(x) ? min : (x < min ? min : (x > max ? max : x));
 }
 
 /**
@@ -116,21 +117,29 @@ int32_t math_float_to_long(float f);
  * @param b The second vector 
  * @return a.i * b.i + a.j * b.j + a.k * b.k.
  */
-double math_vector_dot_product(VectorIJK *a, VectorIJK *b);
+double math_vector_dot_product(const void *a, const void *b);
 
 /**
  * Calculate the squared magnitude of a vector 
  * @param v The vector
  * @return vector.i^2 + vector.j^2 + vector.k^2.
  */
-double math_vector_squared_magnitude(VectorIJK *v);
+double math_vector_squared_magnitude(const void *v);
 
 /**
  * Calculate the length of a vector 
  * @param v The vector
  * @return sqrt(vector.i^2 + vector.j^2 + vector.k^2).
  */
-double math_vector_normalize(VectorIJK *v);
+double math_vector_length(const void *v);
+
+/**
+ * Calculate the distance between two 3D points.
+ * @param a The first point.
+ * @param b The second point.
+ * @return The distance between the two points.
+ */
+double math_vector_distance(const void *a, const void *b);
 
 /**
  * Scale a 2D vector by a scalar

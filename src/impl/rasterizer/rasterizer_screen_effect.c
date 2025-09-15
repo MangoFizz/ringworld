@@ -176,8 +176,9 @@ void rasterizer_screen_effect_set_texture_transforms(RasterizerScreenEffectParam
         constants.tex3_transform_y.w = screen_offset * 0.5 * constants.tex3_transform_y.j + constants.tex3_transform_y.w;
     }
     else if(base_conv_passes == 1 && effect_params->video_on) {
-        constants.tex2_transform_x.w = rng_random_seed_float() * inv_noise_map_width * noise_map->width + constants.tex2_transform_x.w;
-        constants.tex2_transform_y.w = rng_random_seed_float() * inv_noise_map_height * noise_map->height + constants.tex2_transform_y.w;
+        uint32_t *global_random_seed = rng_get_global_seed();
+        constants.tex2_transform_x.w = rng_random_seed_float(global_random_seed) * inv_noise_map_width * noise_map->width + constants.tex2_transform_x.w;
+        constants.tex2_transform_y.w = rng_random_seed_float(global_random_seed) * inv_noise_map_height * noise_map->height + constants.tex2_transform_y.w;
     }
 
     if(override_transforms) {

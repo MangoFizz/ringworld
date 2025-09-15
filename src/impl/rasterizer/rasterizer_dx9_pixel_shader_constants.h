@@ -12,7 +12,9 @@ extern "C" {
 
 enum PixelShaderConstants {
     PSH_CONSTANTS_SCREEN_OFFSET = 0,
-    PSH_CONSTANTS_SCREEN_COUNT = 6
+    PSH_CONSTANTS_SCREEN_COUNT = 6,
+    PSH_CONSTANTS_MODEL_OFFSET = 0,
+    PSH_CONSTANTS_MODEL_COUNT = 5
 };
 
 typedef struct FLOAT4_ALIGNED PixelShaderScreenGeometryConstants {
@@ -43,6 +45,15 @@ typedef struct FLOAT4_ALIGNED PixelShaderHUDMeterConstants {
     float fade;
 } PixelShaderHUDMeterConstants;
 _Static_assert(sizeof(PixelShaderHUDMeterConstants) == 5 * FLOAT4_SIZE);
+
+typedef struct FLOAT4_ALIGNED PixelShaderModelConstants {
+   ColorRGBA primary_color;
+   ColorRGBA fog_blend_base;
+   ColorRGBA fog_blend_extinction;
+   ColorRGBA fog_blend_additive;
+   ColorRGBA self_illumination_color;
+} PixelShaderModelConstants;
+_Static_assert(sizeof(PixelShaderModelConstants) == 5 * FLOAT4_SIZE);
 
 #ifdef __cplusplus
 }

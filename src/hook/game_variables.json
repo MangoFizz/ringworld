@@ -104,7 +104,7 @@
     "game_engine_globals": {"type": "GameEngineGlobals", "address": "0x815ea0"},
     "string_draw_count": {"type": "uint16_t", "address": "0x637d4c"},
     "linear_texture_addressing_sun": {"type": "uint32_t", "address": "0x6bddfc"},
-    "rng_state": {"type": "uint32_t", "address": "0x6b4d64"},
+    "rng_global_seed": {"type": "uint32_t", "address": "0x6b4d64"},
     "pgcr_footer_fade": {"type": "float", "address": "0x815eac"},
     "rasterizer_window_is_being_rendered": {"type": "bool", "address": "0x6249c6"},
     "saved_game_state_buffer": {"type": "void *", "address": "0x67dda4"},
@@ -125,5 +125,16 @@
     "console_globals": {"type": "ConsoleGlobals", "address": "0x651f50"},
     "process_argc": {"type": "size_t", "address": "0x6bd164"},
     "process_argv": {"type": "const char **", "address": "0x6bd168"},
-    "console_command_is_being_processed": {"type": "bool", "address": "0x6ab2fd"}
+    "console_command_is_being_processed": {"type": "bool", "address": "0x6ab2fd"},
+    "rasterizer_model_depth_bias": {"type": "float", "address": "0x6bde50"},
+    "rasterizer_model_slope_scale_depth_bias": {"type": "float", "address": "0x6bde58"},
+    "rasterizer_model_render_parameters": {"type": "RasterizerModelRenderParameters *", "address": "0x006b8488"},
+    "rasterizer_model_zbuffer_disabled": {"type": "bool", "address": "0x6b8496"},
+    "rasterizer_model_fog_enabled": {"type": "bool", "address": "0x637d60"},
+    "rasterizer_model_pixel_shader_constants": {"type": "PixelShaderModelConstants", "address": "0x67c6e8"},
+    "rasterizer_model_should_use_planar_fog": {"type": "bool", "address": "0x6b8493"},
+    "rasterizer_model_illumination_intensity": {"type": "float", "address": "0x75b734"},
+    "rasterizer_model_effect_opacity": {"type": "float", "address": "0x6b8498"},
+    "rasterizer_model_reflection_tint_color": {"type": "ColorARGB *", "address": "0x6b8258"}
+
 }

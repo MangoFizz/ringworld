@@ -419,8 +419,8 @@ void rasterizer_shader_transparent_water_draw(TransparentGeometryGroup *group) {
             float ps_constants[4] = {0};
             RasterizerWindowRenderParameters *window_parameters = rasterizer_get_window_parameters();
             Plane3D *plane = &group->plane;
-            double norm = math_vector_normalize((VectorIJK *)plane);
-            if(norm > 0.0) {
+            double length = math_vector_length((VectorIJK *)plane);
+            if(length > 0.0) {
                 double dot_product = math_vector_dot_product((VectorIJK *)plane, (VectorIJK *)&window_parameters->camera.forward);
                 if(dot_product >= 0.0) {
                     if((dot_product * -1.0) <= 1.0) {

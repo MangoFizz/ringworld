@@ -139,6 +139,13 @@ void rasterizer_dx9_clear(uint32_t count, const D3DRECT *rects, DWORD flags, D3D
  */
 void rasterizer_dx9_set_software_vertex_processing(bool software_vertex_processing);
 
+/**
+ * Enable depth biasing if supported by the device
+ * @param depth_bias The depth bias to set.
+ * @param slope_scale_depth_bias The slope scale depth bias to set.
+ */
+void rasterizer_dx9_set_depth_bias(float depth_bias, float slope_scale_depth_bias);
+
 #ifdef __cplusplus
 }
 #endif

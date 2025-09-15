@@ -109,6 +109,12 @@
 
     "rasterizer_screen_geometry_draw": {"address": "0x5200a0", "replace": true, "arguments": ["eax", "0"]},
     "rasterizer_screen_geometry_draw_quad": {"address": "0x44a0f0", "replace": true, "arguments": ["ecx", "eax"]},
+    
+    "rasterizer_model_enable_depth_bias": {"address": "0x51cbe0", "replace": true},
+    "rasterizer_model_disable_depth_bias": {"address": "0x51cc80", "replace": true},
+    "rasterizer_model_get_pixel_shader": {"address": "0x52a890", "replace": false, "use_return_value": true, "arguments": ["ecx"]},
+    "rasterizer_model_draw_triangles": {"address": "0x51fe30", "replace": false, "arguments": ["0", "4", "8", "eax", "ebx", "ecx"]},
+    "rasterizer_model_draw": {"address": "0x52d060", "replace": true, "arguments": ["0", "4", "8", "12", "16", "20", "24"]},
 
     "rasterizer_shader_transparent_water_draw": {"address": "0x539310", "replace": true, "arguments": ["0"]},
     "rasterizer_shader_transparent_water_render_bumpmap": {"address": "0x538380", "replace": true, "arguments": ["0"]},

@@ -11,6 +11,7 @@ static const ColorARGB COLOR_ARGB_WHITE = {1.0f, 1.0f, 1.0f, 1.0f};
 static const ColorARGB COLOR_ARGB_RED = { 1.0f, 1.0f, 0.1f, 0.1f };
 static const ColorARGB COLOR_ARGB_YELLOW = {1.0f, 1.0f, 1.0f, 0.125f};
 static const ColorARGB COLOR_ARGB_GRAY = {1.0f, 0.7f, 0.7f, 0.7f};
+static const ColorARGB COLOR_ARGB_BLACK = {0.0f, 0.0f, 0.0f, 0.0f};
 static const ColorRGB COLOR_RGB_WHITE = {1.0f, 1.0f, 1.0f};
 static const ColorRGB COLOR_RGB_BLACK = {0.0f, 0.0f, 0.0f};
 

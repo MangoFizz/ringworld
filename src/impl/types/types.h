@@ -31,6 +31,15 @@ typedef struct ColorARGB {
 } ColorARGB;
 _Static_assert(sizeof(ColorARGB) == 0x10);
 
+/** Mostly used for shader constants */
+typedef struct ColorRGBA {
+    float r;
+    float g;
+    float b;
+    float a;
+} ColorRGBA;
+_Static_assert(sizeof(ColorRGBA) == 0x10);
+
 typedef struct ColorRGB {
     float r;
     float g;

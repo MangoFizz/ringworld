@@ -161,3 +161,13 @@ void rasterizer_dx9_set_software_vertex_processing(bool software_vertex_processi
     ASSERT(*d3d9_device != NULL);
     IDirect3DDevice9_SetSoftwareVertexProcessing(*d3d9_device, software_vertex_processing);
 }
+
+void rasterizer_dx9_set_depth_bias(float depth_bias, float slope_scale_depth_bias) {
+    D3DCAPS9 *d3d_caps = rasterizer_dx9_device_caps();
+    if((d3d_caps->RasterCaps & D3DPRASTERCAPS_DEPTHBIAS) != 0) {
+        rasterizer_dx9_set_render_state(D3DRS_DEPTHBIAS, *(DWORD *)&depth_bias);
+    }
+    if((d3d_caps->RasterCaps & D3DPRASTERCAPS_SLOPESCALEDEPTHBIAS) != 0) {
+        rasterizer_dx9_set_render_state(D3DRS_SLOPESCALEDEPTHBIAS, *(DWORD *)&slope_scale_depth_bias);
+    }
+}

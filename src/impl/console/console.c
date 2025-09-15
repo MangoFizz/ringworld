@@ -37,7 +37,7 @@ void console_initialize(void) {
     console_globals->console_is_enabled = false;
 
     const char **argv = shell_get_process_argv();
-    for(int i = 0; i < shell_get_process_argc(); i++) {
+    for(int i = 1; i < shell_get_process_argc(); i++) {
         if(stricmp(argv[i], "-console") == 0) {
             console_globals->console_is_enabled = true;
             break;

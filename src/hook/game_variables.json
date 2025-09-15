@@ -78,7 +78,7 @@
     "players_data": {"type": "PlayersTable *", "address": "0x815920"},
     "players_globals": {"type": "PlayersGlobals *", "address": "0x815918"},
     "process_argc": {"type": "size_t", "address": "0x6bd164"},
-    "process_argv": {"type": "const char **", "address": "0x6bd168"},
+    "process_argv": {"type": "const char **", "address": "0x6bd160"},
     "rasterizer_bitmap_font_vertex_shader_constants": {"type": "VertexShaderScreenprojConstants", "address": "0x67ccc8"},
     "rasterizer_enable_user_interface_render": {"type": "bool", "address": "0x6249e2"},
     "rasterizer_font_character_cache": {"type": "BitmapFontCache", "address": "0x673758"},
@@ -134,7 +134,6 @@
     "window_background_bitmap": {"type": "HBITMAP", "address": "0x6b8420"},
     "window_handle": {"type": "HWND", "address": "0x6e1484"},
     "window_memory_dc": {"type": "HDC", "address": "0x6b841c"},
-    "strings_module": {"type": "HMODULE", "address": "0x6bde88"},
     "window_parameters": {"type": "RasterizerWindowRenderParameters", "address": "0x75C580"},
     "window_proc": {"type": "WNDPROC", "address": "0x6e1490"},
     "window_style": {"type": "DWORD", "address": "0x637d5c"}

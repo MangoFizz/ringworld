@@ -89,6 +89,41 @@ typedef struct FLOAT4_ALIGNED VertexShaderTexanimConstants {
 } VertexShaderTexanimConstants;
 _Static_assert(sizeof(VertexShaderTexanimConstants) == VSH_CONSTANTS_TEXANIM_COUNT * FLOAT4_SIZE);
 
+typedef struct FLOAT4_ALIGNED VertexShaderTexscaleConstants {
+    union {
+        struct {
+            float active_camo_refraction;
+            float active_camo_falloff;
+            float self_illumination_scale;
+            float normal_scale;
+        };
+        struct {
+            VectorIJ bump_scale;
+            VectorIJ mirror_scale;
+        };
+        struct {
+            VectorIJ primary_detail_scale;
+            VectorIJ secondary_detail_scale;
+        };
+    };
+    Plane3D base_map_transform_x;
+    union {
+        Plane3D base_map_transform_y;
+        struct {
+            float glass_0;
+            float glass_1;
+            float translucency;
+        };
+    };
+} VertexShaderTexscaleConstants;
+_Static_assert(sizeof(VertexShaderTexscaleConstants) == VSH_CONSTANTS_TEXSCALE_COUNT * FLOAT4_SIZE);
+
+typedef struct FLOAT4_ALIGNED VertexShaderEffectConstants {
+    ColorRGBA perpendicular_tint_color;
+    ColorRGBA parallel_tint_color;
+} VertexShaderEffectConstants;
+_Static_assert(sizeof(VertexShaderEffectConstants) == VSH_CONSTANTS_EFFECT_COUNT * FLOAT4_SIZE);
+
 #ifdef __cplusplus
 }
 #endif

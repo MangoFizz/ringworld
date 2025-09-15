@@ -478,7 +478,7 @@ void ui_virtual_keyboard_process(void) {
                 break;
             }
             default: {
-                uint8_t character = key_event.state;
+                uint8_t character = key_event.character;
                 if(character >= 0x20 && character != 0xFF) {
                     bool success = ui_virtual_keyboard_insert(character);
                     if(success) {

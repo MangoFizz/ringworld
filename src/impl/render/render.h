@@ -74,8 +74,15 @@ typedef struct FogScreen {
 } FogScreen;
 _Static_assert(sizeof(FogScreen) == 0x70);
 
+typedef struct RenderFogFlags {
+    bool pad0: 1;
+    bool atmosphere_fog: 1;
+    bool pad1;
+} RenderFogFlags;
+_Static_assert(sizeof(RenderFogFlags) == 0x2);
+
 typedef struct RenderFog {
-    uint16_t fog_definition_flags;
+    RenderFogFlags fog_definition_flags;
     uint16_t runtime_flags;
     ColorRGB atmospheric_color;
     float atmospheric_maximum_density;

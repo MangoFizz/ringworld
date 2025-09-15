@@ -27,6 +27,11 @@ const HUDGlobalsMessagingParameters *hud_get_messaging_parameters(void) {
     return *hud_messaging_parameters;
 }
 
+void hud_set_safe_zones(int16_t horizontal, int16_t vertical) {
+    hud_interface_safe_zones.x = horizontal;
+    hud_interface_safe_zones.y = vertical;
+}
+
 void hud_calculate_point(HUDInterfaceAnchor *absolute_placement, HUDMeterDefinition *meter_definition,
                          Bounds2D *anchor_adjustments, bool override_scale, float custom_scale, VectorXYInt *out_position) {
     

@@ -58,6 +58,13 @@ const HUDGlobals *hud_get_globals(void);
 const HUDGlobalsMessagingParameters *hud_get_messaging_parameters(void);
 
 /**
+ * Set the HUD safe zones.
+ * @param horizontal The horizontal safe zone in pixels.
+ * @param vertical The vertical safe zone in pixels.
+ */
+void hud_set_safe_zones(int16_t horizontal, int16_t vertical);
+
+/**
  * Initialize the HUD resources.
  */
 void hud_initialize(void);

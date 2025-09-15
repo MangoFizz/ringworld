@@ -8,6 +8,7 @@ extern "C" {
 #include <stdint.h>
 #include <stdbool.h>
 #include <windows.h>
+#include "../bitmap/bitmap.h"
 #include "../memory/memory.h"
 #include "../types/types.h"
 
@@ -45,18 +46,21 @@ typedef struct MainGlobalsMap {
 } MainGlobalsMap;
 
 typedef struct MainGlobals {
-    uint64_t unk1; // this must be the field that aligns the struct to 8 bytes
-    LARGE_INTEGER performance_counter; 
-    bool unk2; 
-    bool is_taking_screenshot; 
-    uint16_t pad1; 
-    float delta_time; 
-    GameConnectionType game_connection; 
+    int64_t unk_timestamp_1;
+    uint32_t unk_timestamp_2_in_secs;
+    int64_t unk_timestamp_3;
+    int64_t unk_timestamp_4;
+    int64_t unk_timestamp_5;
+    int64_t unk_timestamp_6;
+    int64_t unk_timestamp_7;
+    uint8_t unk_bool_1;
+    float delta_time;
+    GameConnectionType game_connection;
     int16_t screenshot_count;
-    void *movie; // screenshot bitmap
+    BitmapData *screenshot_bitmap;
     uint32_t pad2;
     uint32_t pad3;
-    int32_t movie_frame_index;
+    int32_t screenshot_frame_index;
     float screenshot_delta_time;
     MainGlobalsMap map;
     bool unk3;
@@ -89,7 +93,7 @@ typedef struct MainGlobals {
     bool pad8;
     uint32_t pad9;
 } MainGlobals; 
-_Static_assert(sizeof(MainGlobals) == 0x3A0);
+_Static_assert(sizeof(MainGlobals) == 0x3C8);
 
 /**
  * Get the main globals.

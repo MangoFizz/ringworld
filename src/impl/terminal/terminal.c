@@ -5,6 +5,8 @@
 
 extern TerminalGlobals *terminal_globals;
 
+static bool mute_output = false;
+
 void terminal_printf_in(const ColorARGB *color, const char *fmt, const char *str);
 
 void terminal_initialize(void) {
@@ -19,6 +21,9 @@ void terminal_initialize(void) {
 }
 
 void terminal_printf(const ColorARGB *color, const char *fmt, ...) {
+    if(mute_output) {
+        return;
+    }
     char passed_text[256];
     va_list args;
     va_start(args, fmt);
@@ -27,11 +32,42 @@ void terminal_printf(const ColorARGB *color, const char *fmt, ...) {
     terminal_printf_in(color, "%s", passed_text);
 }
 
-void terminal_error_printf(const char *fmt, ...) {
+void terminal_info_printf(const char *fmt, ...) {
+    if(mute_output) {
+        return;
+    }
     char passed_text[256];
     va_list args;
     va_start(args, fmt);
     vsnprintf(passed_text, sizeof(passed_text), fmt, args);
     va_end(args);
-    terminal_printf_in(&COLOR_ARGB_RED_ERROR, "%s", passed_text);
+    terminal_printf_in(&COLOR_ARGB_GRAY, "%s", passed_text);
+}
+
+void terminal_warning_printf(const char *fmt, ...) {
+    if(mute_output) {
+        return;
+    }
+    char passed_text[256];
+    va_list args;
+    va_start(args, fmt);
+    vsnprintf(passed_text, sizeof(passed_text), fmt, args);
+    va_end(args);
+    terminal_printf_in(&COLOR_ARGB_YELLOW, "%s", passed_text);
+}
+
+void terminal_error_printf(const char *fmt, ...) {
+    if(mute_output) {
+        return;
+    }
+    char passed_text[256];
+    va_list args;
+    va_start(args, fmt);
+    vsnprintf(passed_text, sizeof(passed_text), fmt, args);
+    va_end(args);
+    terminal_printf_in(&COLOR_ARGB_RED, "%s", passed_text);
+}
+
+void terminal_mute_output(bool mute) {
+    mute_output = mute;
 }

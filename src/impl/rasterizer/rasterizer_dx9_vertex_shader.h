@@ -16,7 +16,7 @@ typedef struct VertexShader {
 } VertexShader;
 _Static_assert(sizeof(VertexShader) == 0x8);
 
-enum VertexShaderIndex {
+typedef enum VertexShaderIndex {
     VSH_CONVOLUTION = 0,
     VSH_DEBUG,
     VSH_DECAL,
@@ -82,7 +82,7 @@ enum VertexShaderIndex {
     VSH_TRANSPARENT_WATER_REFLECTION,
     VSH_TRANSPARENT_WATER_REFLECTION_M,
     NUM_OF_VERTEX_SHADERS
-};
+} VertexShaderIndex;
 
 /**
  * Get the vertex shader for the given index.

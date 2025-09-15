@@ -60,6 +60,18 @@ void shell_error_box(const char *fmt, ...);
  */
 bool shell_create_window(int32_t width, int32_t height);
 
+/**
+ * Get the number of command line arguments passed to the process.
+ * @return The number of command line arguments.
+ */
+size_t shell_get_process_argc(void);
+
+/**
+ * Get the command line arguments passed to the process.
+ * @return An array of strings representing the command line arguments.
+ */
+const char **shell_get_process_argv(void);
+
 #ifdef __cplusplus
 }
 #endif

@@ -9,15 +9,17 @@ int32_t math_float_to_long(float f) {
     return lrintf(f);
 }
 
-double math_vector_dot_product(VectorIJK *a, VectorIJK *b) {
-    return a->i * b->i + a->j * b->j + a->k * b->k;
+double math_vector_dot_product(const void *a, const void *b) {
+    const VectorIJK *vec_a = a;
+    const VectorIJK *vec_b = b;
+    return vec_a->i * vec_b->i + vec_a->j * vec_b->j + vec_a->k * vec_b->k;
 }
 
-double math_vector_squared_magnitude(VectorIJK *v) {
-    return pow(v->i, 2) + pow(v->j, 2) + pow(v->k, 2);
+double math_vector_squared_magnitude(const void *v) {
+    return math_vector_dot_product(v, v);
 }
 
-double math_vector_normalize(VectorIJK *v) {
+double math_vector_length(const void *v) {
     return sqrt(math_vector_squared_magnitude(v));
 }
 
@@ -34,6 +36,15 @@ void math_vector_3d_scale(const void *v, float scale, void *result) {
     result_vector->x = vector->x * scale;
     result_vector->y = vector->y * scale;
     result_vector->z = vector->z * scale;
+}
+
+double math_vector_distance(const void *a, const void *b) {
+    const VectorXYZ *vec_a = a;
+    const VectorXYZ *vec_b = b;
+    double dx = vec_a->x - vec_b->x;
+    double dy = vec_a->y - vec_b->y;
+    double dz = vec_a->z - vec_b->z;
+    return sqrt(dx * dx + dy * dy + dz * dz);
 }
 
 Rectangle2D *math_rectangle_2d_translate(Rectangle2D *rect, int16_t offset_x, int16_t offset_y) {

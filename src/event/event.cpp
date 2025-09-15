@@ -19,7 +19,7 @@ extern "C" bool ringworld_event_dispatch(RingworldEventID event, void *data) {
     }
     bool result = false;
     for(auto callback : event_callbacks[event]) {
-        result = result || callback(data);
+        result = callback(data) || result;
     }
     return result;
 }

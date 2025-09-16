@@ -193,19 +193,7 @@ if(RINGWORLD_BUILD_TOOL)
         add_definitions(-DRINGWORLD_TOOL_ENABLE_DEBUG_SHADERS)
     endif()
     add_executable(ringworld-tool
-        src/impl/debug/log.c
-        src/impl/debug/assertion.c
-        src/impl/debug/debug_symbols.c
-        src/impl/debug/debug_symbols.cpp
-        src/impl/debug/stacktrace.c
-        src/impl/exception/exception.c
-        src/impl/crypto/md5.c
-        src/impl/crypto/xtea.c
-        src/impl/memory/dynamic_buffer.c
-        src/impl/memory/table.c
-        src/impl/rasterizer/rasterizer_dx9_shader_compiler.c
-        src/impl/rasterizer/rasterizer_shaders_blob.c
-        src/impl/shell/shell.c
+        $<TARGET_OBJECTS:ringworld>
         src/tool/d3d_shader.c
         src/tool/effect_collection_file.c
         src/tool/file.c
@@ -214,7 +202,7 @@ if(RINGWORLD_BUILD_TOOL)
         src/tool/resources.rc
     )
     set_target_properties(ringworld-tool PROPERTIES LINK_FLAGS "-static -static-libgcc -static-libstdc++")
-    target_link_libraries(ringworld-tool d3d9 d3dx9 d3dcompiler shlwapi dbghelp)
+    target_link_libraries(ringworld-tool d3d9 d3dx9 d3dcompiler shlwapi dbghelp dwmapi)
     target_compile_definitions(ringworld-tool PRIVATE -D_WIN32_WINNT=0x0601)
     
     if(Backtrace_FOUND)

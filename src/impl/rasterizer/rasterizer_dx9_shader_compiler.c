@@ -11,15 +11,15 @@ bool rasterizer_dx9_shader_compiler_compile_shader_from_blob(const char *source,
             fprintf(stderr, "Error compiling pixel shader: %s\n", (char *)ID3D10Blob_GetBufferPointer(error_messages));
             ID3D10Blob_Release(error_messages);
         }
+        else {
+            fprintf(stderr, "Error compiling pixel shader: unknown error\n");
+        }
         return false;
     }
     return true;
 }
 
 bool rasterizer_dx9_shader_compiler_compile_shader_from_file(const char *filename, const char *entry, const char *profile, D3D_SHADER_MACRO *defines, ID3DBlob **compiled_shader) {
-    void *buffer = NULL;
-    int bytes_read = 0;
-
     HANDLE file = CreateFileA(filename, GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_SUPPORTS_EXTENDED_ATTRIBUTES, NULL);
     if(file == INVALID_HANDLE_VALUE) {
         return false;
@@ -32,15 +32,19 @@ bool rasterizer_dx9_shader_compiler_compile_shader_from_file(const char *filenam
     }
 
     HGLOBAL buffer_handle = GlobalAlloc(GMEM_FIXED, file_size);
+    int bytes_read = 0;
     if(buffer_handle != NULL) {
         bool success = ReadFile(file, buffer_handle, file_size, (LPDWORD)&bytes_read, NULL);
         if(success) {
             CloseHandle(file);
-            rasterizer_dx9_shader_compiler_compile_shader_from_blob(buffer, entry, profile, defines, compiled_shader);
+            char buffer[file_size + 1];
+            memcpy(buffer, buffer_handle, file_size);
+            buffer[file_size] = '\0';
+            GlobalFree(buffer_handle);
+            return rasterizer_dx9_shader_compiler_compile_shader_from_blob(buffer, entry, profile, defines, compiled_shader);
         }
         GlobalFree(buffer_handle);
     }
-
     CloseHandle(file);
     return false;
 }

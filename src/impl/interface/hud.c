@@ -27,6 +27,10 @@ const HUDGlobalsMessagingParameters *hud_get_messaging_parameters(void) {
     return *hud_messaging_parameters;
 }
 
+VectorXYInt hud_get_safe_zones(void) {
+    return hud_interface_safe_zones;
+}
+
 void hud_set_safe_zones(int16_t horizontal, int16_t vertical) {
     hud_interface_safe_zones.x = horizontal;
     hud_interface_safe_zones.y = vertical;

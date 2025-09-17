@@ -18,6 +18,10 @@ endif()
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake")
 
+# Prefer static libraries
+set(CMAKE_FIND_LIBRARY_SUFFIXES .a)
+
+# Find dependencies
 find_package(LuaRuntime REQUIRED)
 find_package(Python3 COMPONENTS Interpreter REQUIRED)
 find_package(Git REQUIRED)

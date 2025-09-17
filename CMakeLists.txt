@@ -18,6 +18,11 @@ endif()
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake")
 
+if(CMAKE_BUILD_TYPE MATCHES Debug OR CMAKE_BUILD_TYPE MATCHES RelWithDebInfo)
+    add_definitions(-DDEBUG)
+    message(CONFIGURE_LOG "Build type is set to Debug; debug information will be included")
+endif()
+
 # Prefer static libraries
 set(CMAKE_FIND_LIBRARY_SUFFIXES .a)
 

@@ -16,7 +16,8 @@ typedef bool (*RingworldEventCallback)(void *);
 
 typedef enum RingworldEventID {
     RW_EVENT_WIDGET_LOADED,
-    RW_EVENT_CONSOLE_COMMAND
+    RW_EVENT_CONSOLE_COMMAND_NOT_FOUND,
+    RW_EVENT_HSC_FUNCTION_HELP_NOT_FOUND
 } RingworldEventID;
 
 /**

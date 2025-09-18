@@ -102,7 +102,7 @@ bool console_process_command(uint32_t flags, const char *command) {
     if(!command_found) {
         char command_input[252];
         strncpy(command_input, command, sizeof(command_input));
-        bool event_handled = RINGWORLD_EVENT_DISPATCH(RW_EVENT_CONSOLE_COMMAND, command_input);
+        bool event_handled = RINGWORLD_EVENT_DISPATCH(RW_EVENT_CONSOLE_COMMAND_NOT_FOUND, command_input);
         if(event_handled) {
             return true;
         }

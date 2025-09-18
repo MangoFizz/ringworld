@@ -33,6 +33,7 @@
     "game_state_globals": {"type": "GameStateGlobals", "address": "0x67dd88"},
     "game_time_globals": {"type": "GameTimeGlobals *", "address": "0x68cd70"},
     "globals_rasterizer_data": {"type": "GlobalsRasterizerData *", "address": "0x6b83fc"},
+    "hsc_functions": {"type": "HscFunction *", "address": "0x624118"},
     "hud_globals": {"type": "HUDGlobals *", "address": "0x6b44a4"},
     "hud_messaging_parameters": {"type": "HUDGlobalsMessagingParameters *", "address": "0x80f120"},
     "input_events_globals": {"type": "InputEventsGlobals", "address": "0x6add08"},

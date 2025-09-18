@@ -134,7 +134,9 @@ void loading_screen_render(void) {
 
     TagHandle font_tag = font_get_default_large();
     TagHandle strings = tag_lookup("ui\\shell\\strings\\loading", TAG_GROUP_UNICODE_STRING_LIST);
-    ASSERT_OR_RETURN(!HANDLE_IS_NULL(font_tag) && !HANDLE_IS_NULL(strings));
+    if(HANDLE_IS_NULL(font_tag) || HANDLE_IS_NULL(strings)) {
+        return;
+    }
 
     ColorARGB text_color = {alpha, 1.0f, 1.0f, 1.0f};
     text_set_drawing_parameters(-1, 2, 0, font_tag, &text_color);

@@ -68,7 +68,7 @@ bool console_process_command(uint32_t flags, const char *command) {
 
     // Copy command to history
     console_globals->last_history_command_index = (console_globals->last_history_command_index + 1) % 8;
-    char *history_command = console_globals->history_commands[console_globals->history_commands_count];
+    char *history_command = console_globals->history_commands[console_globals->last_history_command_index];
     strncpy(history_command, command, sizeof(console_globals->history_commands[0]) - 1);
     history_command[sizeof(console_globals->history_commands[0]) - 1] = '\0';
 

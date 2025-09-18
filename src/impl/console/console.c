@@ -50,6 +50,10 @@ bool console_process_command(uint32_t flags, const char *command) {
         return false;
     }
 
+    if(stricmp(command, "clear") == 0) {
+        command = "cls";
+    }
+
     // Get the command name
     char command_name[252];
     strncpy(command_name, command, sizeof(command_name));

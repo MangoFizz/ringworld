@@ -6,7 +6,7 @@
 #include "memory.h"
 #include "table.h"
 
-extern const bool ringworld_server_mode;
+extern const bool ringworld_headless_mode;
 
 extern void **texture_cache;
 extern void **sound_cache;
@@ -21,7 +21,7 @@ void memory_map_initialize(void) {
     *sound_cache = NULL;
     *texture_cache = NULL;
 
-    if(!ringworld_server_mode) {
+    if(!ringworld_headless_mode) {
         *sound_cache_mib = 64;
         *sound_cache = VirtualAlloc(0, *sound_cache_mib * 1024 * 1024, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
         *texture_cache = VirtualAlloc(0, TEXTURE_CACHE_SIZE, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);

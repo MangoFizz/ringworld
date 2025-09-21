@@ -15,7 +15,7 @@ using namespace Ringworld;
 static std::byte *hook_heap;
 static const std::size_t hook_heap_size = 512 * 1024;
 static std::size_t hook_heap_usage;
-bool ringworld_server_mode = false;
+bool ringworld_headless_mode = false;
 
 extern "C" wchar_t *build_number;
 extern "C" void exception_throw_forbidden_function_called(const char *function_name, void *from);
@@ -42,7 +42,7 @@ extern "C" void set_up_ringworld_hooks(Platform platform) {
     try {
         switch(platform) {
             case RW_PLATFORM_GAME: 
-                ringworld_server_mode = false;
+                ringworld_headless_mode = false;
                 set_up_game_variables();
                 set_up_game_function_mappings();
                 set_up_transparent_generic_hooks();
@@ -50,7 +50,7 @@ extern "C" void set_up_ringworld_hooks(Platform platform) {
                 set_up_hud_hooks();
                 break;
             case RW_PLATFORM_DEDICATED_SERVER:
-                ringworld_server_mode = true;
+                ringworld_headless_mode = true;
                 set_up_server_variables();
                 set_up_server_function_mappings();
                 break;

@@ -34,14 +34,19 @@ void console_initialize(void) {
     console_globals->selected_history_command_index = -1;
     console_globals->input_state.command_result[0] = '\0';
     console_globals->history_commands_count = 0;
-    console_globals->console_is_enabled = false;
 
-    const char **argv = shell_get_process_argv();
-    for(int i = 1; i < shell_get_process_argc(); i++) {
-        if(stricmp(argv[i], "-console") == 0) {
-            console_globals->console_is_enabled = true;
-            break;
+    if(!shell_is_headless_mode()) {
+        console_globals->console_is_enabled = false;
+        const char **argv = shell_get_process_argv();
+        for(int i = 1; i < shell_get_process_argc(); i++) {
+            if(stricmp(argv[i], "-console") == 0) {
+                console_globals->console_is_enabled = true;
+                break;
+            }
         }
+    }
+    else {
+        console_globals->console_is_enabled = true;
     }
 }
 
@@ -63,7 +68,6 @@ bool console_process_command(uint32_t flags, const char *command) {
     }
 
     ConsoleGlobals *console_globals = console_get_globals();
-    MainGlobals *main_globals = main_get_globals();
     GameEngineInterface *game_engine = game_engine_get_current_interface();
 
     // Copy command to history
@@ -80,16 +84,22 @@ bool console_process_command(uint32_t flags, const char *command) {
     
     uint16_t game_flags = 0;
     if(game_engine != NULL) {
-        switch(main_globals->game_connection) {
-            case GAME_CONNECTION_NETWORK_CLIENT:
-                game_flags = 0x11;
-                break;
-            case GAME_CONNECTION_NETWORK_SERVER:
-                game_flags = 0x12;
-                break;
-            default:
-                game_flags = 0x10;
-                break;
+        if(!shell_is_headless_mode()) {
+            MainGlobals *main_globals = main_get_globals();
+            switch(main_globals->game_connection) {
+                case GAME_CONNECTION_NETWORK_CLIENT:
+                    game_flags = 0x11;
+                    break;
+                case GAME_CONNECTION_NETWORK_SERVER:
+                    game_flags = 0x12;
+                    break;
+                default:
+                    game_flags = 0x10;
+                    break;
+            }
+        }
+        else {
+            game_flags = 0x10;
         }
     }
 

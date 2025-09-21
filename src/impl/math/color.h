@@ -49,7 +49,7 @@ uint32_t color_encode_a8r8g8b8(const ColorARGB *argb);
  * @param t Interpolation value.
  * @return The pointer to the output color.
  */
-ColorRGB *color_interpolate(const ColorRGB *a, const ColorRGB *b, ColorRGB *output, uint32_t flags, float t);
+ColorRGB *color_rgb_interpolate(const ColorRGB *a, const ColorRGB *b, ColorRGB *output, uint32_t flags, float t);
 
 #ifdef __cplusplus
 }

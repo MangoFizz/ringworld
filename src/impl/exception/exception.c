@@ -131,5 +131,6 @@ void exception_throw_forbidden_function_called(const char *function_name, void *
 }
 
 void unavailable_function_called() {
+    fprintf(stderr, "Unavailable function called! This should never happen.\n");
     exception_throw_runtime_error("Unexisting function called!");
 }

@@ -22,31 +22,32 @@ for function in mappings:
     if function_info.get("disabled", False):
         continue
 
-    if not game_function_details.get("address"):
-        print("Tried to hook function without address in game: ", function)
-        sys.exit(1)
-
     ##########################################################
     ## Build hooks for game and server functions
     ##########################################################
 
     function_definitions += f"    void *{function}_function_address = nullptr;\n"
     function_definitions += f"    void *{function}_wrapper_function = nullptr;\n"
-    game_function_hooks += f"        {function}_function_address = reinterpret_cast<void *>({game_function_details['address']});\n"
 
-    match replace_mode:
-        case "forbid":
-            game_function_hooks += f"        Hook(\"{function}\", {game_function_details['address']}).forbid()\n"
-        case "stub":
-            game_function_hooks += f"        Hook(\"{function}\", {game_function_details['address']}).stub()\n"
-        case True:
-            function_definitions += f"    extern int {function};\n"
-            game_function_hooks += f"        Hook(\"{function}\", {game_function_details['address']}, reinterpret_cast<std::uintptr_t>(&{function}))\n"
-        case False:
-            game_function_hooks += f"        {function}_wrapper_function = Hook(\"{function}\", {game_function_details['address']})\n"
-        case _:
-            print("Unknown replace mode: ", replace_mode)
-            sys.exit(1)
+    game_addr = game_function_details.get("address")
+    if game_addr is not None:
+        game_function_hooks += f"        {function}_function_address = reinterpret_cast<void *>({game_addr});\n"
+        match replace_mode:
+            case "forbid":
+                game_function_hooks += f"        Hook(\"{function}\", {game_addr}).forbid()\n"
+            case "stub":
+                game_function_hooks += f"        Hook(\"{function}\", {game_addr}).stub()\n"
+            case True:
+                function_definitions += f"    extern int {function};\n"
+                game_function_hooks += f"        Hook(\"{function}\", {game_addr}, reinterpret_cast<std::uintptr_t>(&{function}))\n"
+            case False:
+                game_function_hooks += f"        {function}_wrapper_function = Hook(\"{function}\", {game_addr})\n"
+            case _:
+                print("Unknown replace mode: ", replace_mode)
+                sys.exit(1)
+    else:
+        game_function_hooks += f"        {function}_function_address = nullptr;\n"
+        game_function_hooks += f"        {function}_wrapper_function = Hook(\"{function}\", reinterpret_cast<std::uintptr_t>(unavailable_function_called))\n"
 
     server_addr = server_function_details.get("address")
     if server_addr is not None:
@@ -57,6 +58,8 @@ for function in mappings:
             case "stub":
                 server_functions_hooks += f"        Hook(\"{function}\", {server_addr}).stub()\n"
             case True:
+                if game_addr is None:
+                    function_definitions += f"    extern int {function};\n"
                 server_functions_hooks += f"        Hook(\"{function}\", {server_addr}, reinterpret_cast<std::uintptr_t>(&{function}))\n"
             case False | None:
                 server_functions_hooks += f"        {function}_wrapper_function = Hook(\"{function}\", {server_addr})\n"

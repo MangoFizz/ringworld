@@ -6,6 +6,7 @@
 #include "../crypto/crc32.h"
 #include "../exception/exception.h"
 #include "../saved_games/player_profile.h"
+#include "../shell/shell.h"
 #include "game_state.h"
 
 extern SaveGameGlobals *saved_game_state_globals;
@@ -117,5 +118,7 @@ void game_state_initialize(void) {
     game_state_globals->allocation_size_checksum = -1;
     game_state_globals->base_address = game_state_initialize_savegame(GAME_STATE_SIZE, 0x40000);
     game_state_globals->header = game_state_allocate_heap(sizeof(GameStateHeader));
-    game_state_create_savegame_file();
+    if(!shell_is_headless_mode()) {
+        game_state_create_savegame_file();
+    }
 }

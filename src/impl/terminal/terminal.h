@@ -7,6 +7,7 @@ extern "C" {
 
 #include <stdint.h>
 #include <stdbool.h>
+#include "../console/console.h"
 #include "../memory/table.h"
 #include "../types/types.h"
 
@@ -34,13 +35,28 @@ typedef struct TerminalGlobals {
     TerminalOutputTable *output_data;
     TableOutputEntryHandle first_line;
     TableOutputEntryHandle last_line;
-    void *current_state;
+    ConsoleInputState *current_state;
     bool receiving_input;
     uint32_t receiving_input_start_tick;
     bool is_active;
     int32_t rcon_machine_index;
 } TerminalGlobals;
 _Static_assert(sizeof(TerminalGlobals) == 0x24);
+
+typedef struct TerminalScreen {
+    char prompt[32];
+    char text[256];
+    // this should be uint32_t to set the alignment correctly and match the size of the struct
+    uint32_t cursor_position; 
+} TerminalScreen;
+_Static_assert(sizeof(TerminalScreen) == 0x124);
+
+typedef struct TerminalInput {
+    void *stdin_handle;
+    void *stdout_handle;
+    uint32_t pad0;
+} TerminalInput;
+_Static_assert(sizeof(TerminalInput) == 0xC);
 
 /**
  * Initialize the terminal.
@@ -80,6 +96,12 @@ void terminal_error_printf(const char *fmt, ...);
  * @param mute  true to mute, false to unmute
  */
 void terminal_mute_output(bool mute);
+
+/**
+ * Handler routine for console control events.
+ * @param ctrl_type The type of control event.
+ */
+void terminal_handler_routine(uint32_t ctrl_type);
 
 #ifdef __cplusplus
 }

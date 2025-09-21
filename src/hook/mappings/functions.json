@@ -5,7 +5,7 @@
             "arguments": ["0", "4", "eax", "edi"]
         },
         "server": {
-            "address": null,
+            "address": "0x43f430",
             "arguments": ["0", "4", "eax", "edi"]
         },
         "use_return_value": true,
@@ -73,7 +73,7 @@
             "arguments": ["eax"]
         },
         "server": {
-            "address": null,
+            "address": "0x43f4e0",
             "arguments": ["eax"]
         },
         "use_return_value": true,
@@ -87,7 +87,7 @@
             "arguments": ["eax", "0", "edi"]
         },
         "server": {
-            "address": null,
+            "address": "0x43ef80",
             "arguments": ["eax", "0", "edi"]
         },
         "use_return_value": true,
@@ -111,7 +111,7 @@
             "arguments": ["ecx", "esi"]
         },
         "server": {
-            "address": null,
+            "address": "0x43f520",
             "arguments": ["ecx", "esi"]
         },
         "use_return_value": true,
@@ -124,19 +124,19 @@
             "arguments": ["0", "4", "8", "12", "16", "esi"]
         },
         "server": {
-            "address": null,
+            "address": "0x443f20",
             "arguments": ["0", "4", "8", "12", "16", "esi"]
         },
         "use_return_value": true,
         "replace": false
     },
-    "color_interpolate": {
+    "color_rgb_interpolate": {
         "game": {
             "address": "0x43f6a0",
             "arguments": ["ecx", "eax", "0", "4", "8"]
         },
         "server": {
-            "address": null,
+            "address": "0x43f300",
             "arguments": ["ecx", "eax", "0", "4", "8"]
         },
         "replace": false
@@ -146,7 +146,7 @@
             "address": "0x4c96d0"
         },
         "server": {
-            "address": null
+            "address": "0x4b30f0"
         },
         "replace": true
     },
@@ -156,7 +156,7 @@
             "arguments": ["0", "edi"]
         },
         "server": {
-            "address": null,
+            "address": "0x4b3720",
             "arguments": ["0", "edi"]
         },
         "use_return_value": true,
@@ -195,12 +195,21 @@
         "replace": true,
         "disabled": true
     },
+    "game_state_create_savegame_file": {
+        "game": {
+            "address": "0x53b9e0"
+        },
+        "server": {
+            "address": null
+        },
+        "replace": true
+    },
     "game_state_initialize": {
         "game": {
             "address": "0x53b270"
         },
         "server": {
-            "address": null
+            "address": "0x4f6810"
         },
         "replace": true
     },
@@ -210,8 +219,8 @@
             "arguments": ["0", "ecx"]
         },
         "server": {
-            "address": null,
-            "arguments": ["0", "ecx"]
+            "address": "0x4f6ed0",
+            "arguments": ["ecx", "0"]
         },
         "use_return_value": true,
         "replace": true
@@ -222,7 +231,7 @@
             "arguments": ["0", "ebx"]
         },
         "server": {
-            "address": null,
+            "address": "0x4f69c0",
             "arguments": ["0", "ebx"]
         },
         "use_return_value": true,
@@ -234,7 +243,7 @@
             "arguments": ["0"]
         },
         "server": {
-            "address": null,
+            "address": "0x4f8150",
             "arguments": ["0"]
         },
         "use_return_value": true,
@@ -245,7 +254,7 @@
             "address": "0x53bcd0"
         },
         "server": {
-            "address": null
+            "address": "0x4f71f0"
         },
         "replace": false
     },
@@ -267,7 +276,7 @@
             "arguments": ["edi"]
         },
         "server": {
-            "address": null,
+            "address": "0x49e4e0",
             "arguments": ["edi"]
         },
         "use_return_value": true,
@@ -290,7 +299,7 @@
             "arguments": ["0"]
         },
         "server": {
-            "address": null,
+            "address": "0x47e8d0",
             "arguments": ["0"]
         },
         "use_return_value": true,
@@ -302,7 +311,7 @@
             "arguments": ["0", "4", "ecx", "eax", "edx"]
         },
         "server": {
-            "address": null,
+            "address": "0x47e160",
             "arguments": ["0", "4", "ecx", "eax", "edx"]
         },
         "use_return_value": true,
@@ -314,7 +323,7 @@
             "arguments": ["edx"]
         },
         "server": {
-            "address": null,
+            "address": "0x47da40",
             "arguments": ["edx"]
         },
         "use_return_value": true,
@@ -326,7 +335,7 @@
             "arguments": ["ecx", "eax"]
         },
         "server": {
-            "address": null,
+            "address": "0x47e7d0",
             "arguments": ["ecx", "eax"]
         },
         "replace": false
@@ -337,7 +346,7 @@
             "arguments": ["edx"]
         },
         "server": {
-            "address": null,
+            "address": "0x47e680",
             "arguments": ["edx"]
         },
         "replace": true
@@ -413,7 +422,7 @@
             "address": "0x4ac790"
         },
         "server": {
-            "address": null
+            "address": "0x49ecf0"
         },
         "replace": false
     },
@@ -422,7 +431,7 @@
             "address": "0x4ac8e0"
         },
         "server": {
-            "address": null
+            "address": "0x49ee40"
         },
         "replace": false
     },
@@ -431,7 +440,7 @@
             "address": "0x497100"
         },
         "server": {
-            "address": null
+            "address": "0x48d5a0"
         },
         "replace": true
     },
@@ -440,7 +449,7 @@
             "address": "0x497150"
         },
         "server": {
-            "address": null
+            "address": "0x48d5f0"
         },
         "replace": true
     },
@@ -449,7 +458,7 @@
             "address": "0x4f4330"
         },
         "server": {
-            "address": null
+            "address": "0x4dd170"
         },
         "replace": false
     },
@@ -458,16 +467,18 @@
             "address": "0x4f43b0"
         },
         "server": {
-            "address": null
+            "address": "0x4dd1f0"
         },
         "replace": false
     },
     "loading_screen_abort_connection": {
         "game": {
-            "address": "0x4adb40"
+            "address": "0x4adb40",
+            "arguments": ["ecx"]
         },
         "server": {
-            "address": null
+            "address": "0x49f270",
+            "arguments": ["ecx"]
         },
         "replace": false
     },
@@ -486,7 +497,7 @@
             "arguments": ["0"]
         },
         "server": {
-            "address": null,
+            "address": "0x52b9e0",
             "arguments": ["0"]
         },
         "replace": false
@@ -497,7 +508,7 @@
             "arguments": ["0", "edx", "eax"]
         },
         "server": {
-            "address": null,
+            "address": "0x4b8160",
             "arguments": ["0", "edx", "eax"]
         },
         "replace": true
@@ -528,7 +539,7 @@
             "arguments": ["0", "esi", "eax"]
         },
         "server": {
-            "address": null,
+            "address": "0x4bdbf0",
             "arguments": ["0", "esi", "eax"]
         },
         "use_return_value": true,
@@ -563,7 +574,7 @@
             "arguments": ["ecx", "0"]
         },
         "server": {
-            "address": null,
+            "address": "0x4e1650",
             "arguments": ["ecx", "0"]
         },
         "use_return_value": true,
@@ -575,7 +586,7 @@
             "arguments": ["esi", "edi"]
         },
         "server": {
-            "address": null,
+            "address": "0x507050",
             "arguments": ["esi", "edi"]
         },
         "use_return_value": true,
@@ -587,7 +598,7 @@
             "arguments": ["eax", "0", "4"]
         },
         "server": {
-            "address": null,
+            "address": "0x4dfbd0",
             "arguments": ["eax", "0", "4"]
         },
         "use_return_value": true,
@@ -598,7 +609,7 @@
             "address": "0x4f76c0"
         },
         "server": {
-            "address": null
+            "address": "0x4de650"
         },
         "replace": false
     },
@@ -607,7 +618,7 @@
             "address": "0x4f83e0"
         },
         "server": {
-            "address": null
+            "address": "0x4df300"
         },
         "replace": true
     },
@@ -616,7 +627,7 @@
             "address": "0x4f84c0"
         },
         "server": {
-            "address": null
+            "address": "0x4df3e0"
         },
         "replace": true
     },
@@ -1076,7 +1087,7 @@
             "arguments": ["eax", "esi"]
         },
         "server": {
-            "address": null,
+            "address": "0x4fb710",
             "arguments": ["eax", "esi"]
         },
         "use_return_value": true,
@@ -1088,7 +1099,7 @@
             "arguments": ["eax"]
         },
         "server": {
-            "address": null,
+            "address": "0x4fb870",
             "arguments": ["eax"]
         },
         "use_return_value": true,
@@ -1100,7 +1111,7 @@
             "arguments": ["0"]
         },
         "server": {
-            "address": null,
+            "address": "0x48e1a0",
             "arguments": ["0"]
         },
         "use_return_value": true,
@@ -1157,7 +1168,7 @@
             "arguments": ["0", "4", "8", "12"]
         },
         "server": {
-            "address": null,
+            "address": "0x53f0b4",
             "arguments": ["0", "4", "8", "12"]
         },
         "use_return_value": true,
@@ -1216,7 +1227,7 @@
             "arguments": ["ecx", "0"]
         },
         "server": {
-            "address": null,
+            "address": "0x5095b0",
             "arguments": ["ecx", "0"]
         },
         "use_return_value": true,
@@ -1228,7 +1239,7 @@
             "arguments": ["eax"]
         },
         "server": {
-            "address": null,
+            "address": "0x49e4a0",
             "arguments": ["eax"]
         },
         "use_return_value": true,
@@ -1240,7 +1251,7 @@
             "arguments": ["0", "4", "ecx", "edx", "ebx", "esi"]
         },
         "server": {
-            "address": null,
+            "address": "0x509160",
             "arguments": ["0", "4", "ecx", "edx", "ebx", "esi"]
         },
         "replace": true
@@ -1251,7 +1262,7 @@
             "arguments": ["eax"]
         },
         "server": {
-            "address": null,
+            "address": "0x509210",
             "arguments": ["eax"]
         },
         "use_return_value": true,
@@ -1286,8 +1297,29 @@
             "arguments": ["eax", "edx"]
         },
         "server": {
-            "address": null,
+            "address": "0x4bc790",
             "arguments": ["eax", "edx"]
+        },
+        "replace": false
+    },
+    "tag_lookup": {
+        "game": {
+            "address": "0x442990",
+            "arguments": ["0", "edi"]
+        },
+        "server": {
+            "address": "0x443520",
+            "arguments": ["0", "edi"]
+        },
+        "use_return_value": true,
+        "replace": true
+    },
+    "terminal_handler_routine": {
+        "game": {
+            "address": "0x4a4c50"
+        },
+        "server": {
+            "address": "0x497910"
         },
         "replace": false
     },
@@ -1296,7 +1328,7 @@
             "address": "0x499330"
         },
         "server": {
-            "address": null
+            "address": "0x48e700"
         },
         "replace": true
     },
@@ -1328,7 +1360,7 @@
             "address": "0x5595f0"
         },
         "server": {
-            "address": null
+            "address": "0x508d30"
         },
         "replace": false
     },
@@ -1370,7 +1402,7 @@
             "address": "0x449b80"
         },
         "server": {
-            "address": null
+            "address": "0x4497b0"
         },
         "use_return_value": true,
         "replace": false
@@ -1414,7 +1446,7 @@
             "arguments": ["0", "4", "8", "12"]
         },
         "server": {
-            "address": null,
+            "address": "0x4903a0",
             "arguments": ["0", "4", "8", "12"]
         },
         "replace": false
@@ -1424,7 +1456,7 @@
             "address": "0x4ac700"
         },
         "server": {
-            "address": null
+            "address": "0x49ec90"
         },
         "replace": true
     },
@@ -1433,7 +1465,7 @@
             "address": "0x4ac260"
         },
         "server": {
-            "address": null
+            "address": "0x49ebe0"
         },
         "use_return_value": true,
         "replace": true
@@ -1443,7 +1475,7 @@
             "address": "0x4ab900"
         },
         "server": {
-            "address": null
+            "address": "0x49e280"
         },
         "use_return_value": true,
         "replace": true
@@ -1454,7 +1486,7 @@
             "arguments": ["0", "4", "esi"]
         },
         "server": {
-            "address": null,
+            "address": "0x49e330",
             "arguments": ["0", "4", "esi"]
         },
         "use_return_value": true,
@@ -1465,7 +1497,7 @@
             "address": "0x4abbf0"
         },
         "server": {
-            "address": null
+            "address": "0x49e570"
         },
         "replace": true
     },
@@ -1495,7 +1527,7 @@
             "arguments": ["ecx", "eax"]
         },
         "server": {
-            "address": null,
+            "address": "0x49e510",
             "arguments": ["ecx", "eax"]
         },
         "use_return_value": true,
@@ -1507,17 +1539,17 @@
             "arguments": ["eax", "ecx"]
         },
         "server": {
-            "address": null,
+            "address": "0x490e10",
             "arguments": ["eax", "ecx"]
         },
         "replace": true
     },
     "ui_widget_close": {
         "game": {
-            "address": "0x0049f370"
+            "address": "0x49f370"
         },
         "server": {
-            "address": null
+            "address": "0x492360"
         },
         "replace": false
     },
@@ -1549,7 +1581,7 @@
             "arguments": ["0", "4", "8", "12"]
         },
         "server": {
-            "address": null,
+            "address": "0x490f50",
             "arguments": ["0", "4", "8", "12"]
         },
         "use_return_value": true,
@@ -1583,7 +1615,7 @@
             "arguments": ["eax"]
         },
         "server": {
-            "address": null,
+            "address": "0x490e70",
             "arguments": ["eax"]
         },
         "use_return_value": true,
@@ -1595,7 +1627,7 @@
             "arguments": ["0", "4"]
         },
         "server": {
-            "address": null,
+            "address": "0x492440",
             "arguments": ["0", "4"]
         },
         "use_return_value": true,
@@ -1653,7 +1685,7 @@
             "arguments": ["eax"]
         },
         "server": {
-            "address": null,
+            "address": "0x490310",
             "arguments": ["eax"]
         },
         "replace": false
@@ -1731,7 +1763,7 @@
             "arguments": ["0", "ebx"]
         },
         "server": {
-            "address": null,
+            "address": "0x492600",
             "arguments": ["0", "ebx"]
         },
         "replace": true
@@ -1751,7 +1783,7 @@
             "arguments": ["ecx", "edx"]
         },
         "server": {
-            "address": null,
+            "address": "0x5098f0",
             "arguments": ["ecx", "edx"]
         },
         "use_return_value": true,
@@ -1785,7 +1817,7 @@
             "arguments": ["ecx", "eax"]
         },
         "server": {
-            "address": null,
+            "address": "0x51af10",
             "arguments": ["ecx", "eax"]
         },
         "replace": false
@@ -1809,7 +1841,7 @@
             "arguments": ["eax", "0"]
         },
         "server": {
-            "address": null,
+            "address": "0x4af7c0",
             "arguments": ["eax", "0"]
         },
         "replace": false
@@ -1819,7 +1851,7 @@
             "address": "0x5032e0"
         },
         "server": {
-            "address": null
+            "address": "0x4e93c0"
         },
         "replace": false
     },
@@ -1828,7 +1860,7 @@
             "address": "0x503320"
         },
         "server": {
-            "address": null
+            "address": "0x4e9400"
         },
         "replace": false
     }

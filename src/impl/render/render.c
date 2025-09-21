@@ -2,6 +2,7 @@
 #include <math.h>
 #include "../types/types.h"
 #include "../debug/assertion.h"
+#include "../shell/shell.h"
 #include "../rasterizer/rasterizer_dx9_render_target.h"
 #include "render.h"
 
@@ -19,21 +20,25 @@ bool render_get_fog_enabled(void) {
 }
 
 uint16_t render_get_screen_width(void) {
-    RasterizerDx9RenderTarget *render_target = rasterizer_dx9_render_target_get(RENDER_TARGET_BACK_BUFFER);
-    if(rasterizer_enable_widescreen_support && render_target->width > render_target->height) {
-        float aspect_ratio = (float)render_target->width / (float)render_target->height;
-        float width = math_float_to_long(RASTERIZER_SCREEN_BASE_HEIGHT * aspect_ratio);
-        return (uint16_t)width;
+    if(!shell_is_headless_mode()) {
+        RasterizerDx9RenderTarget *render_target = rasterizer_dx9_render_target_get(RENDER_TARGET_BACK_BUFFER);
+        if(rasterizer_enable_widescreen_support && render_target->width > render_target->height) {
+            float aspect_ratio = (float)render_target->width / (float)render_target->height;
+            float width = math_float_to_long(RASTERIZER_SCREEN_BASE_HEIGHT * aspect_ratio);
+            return (uint16_t)width;
+        }
     }
     return RASTERIZER_SCREEN_BASE_WIDTH;
 }
 
 uint16_t render_get_screen_height(void) {
-    RasterizerDx9RenderTarget *render_target = rasterizer_dx9_render_target_get(RENDER_TARGET_BACK_BUFFER);
-    if(rasterizer_enable_widescreen_support && render_target->height > render_target->width) {
-        float aspect_ratio = (float)render_target->height / (float)render_target->width;
-        float height = math_float_to_long(RASTERIZER_SCREEN_BASE_WIDTH * aspect_ratio);
-        return (uint16_t)height;
+    if(!shell_is_headless_mode()) {
+        RasterizerDx9RenderTarget *render_target = rasterizer_dx9_render_target_get(RENDER_TARGET_BACK_BUFFER);
+        if(rasterizer_enable_widescreen_support && render_target->height > render_target->width) {
+            float aspect_ratio = (float)render_target->height / (float)render_target->width;
+            float height = math_float_to_long(RASTERIZER_SCREEN_BASE_WIDTH * aspect_ratio);
+            return (uint16_t)height;
+        }
     }
     return RASTERIZER_SCREEN_BASE_HEIGHT;
 }

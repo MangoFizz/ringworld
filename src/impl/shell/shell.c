@@ -9,6 +9,8 @@
 #include "exception/exception.h"
 #include "shell.h"
 
+extern bool ringworld_headless_mode;
+
 typedef enum StringResourceID {
     STRING_RESOURCE_ID_SPLASH_BMP = 0x86
 } StringResourceID;
@@ -194,4 +196,8 @@ size_t shell_get_process_argc(void) {
 
 const char **shell_get_process_argv(void) {
     return *process_argv;
+}
+
+bool shell_is_headless_mode(void) {
+    return ringworld_headless_mode;
 }

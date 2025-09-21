@@ -72,6 +72,12 @@ size_t shell_get_process_argc(void);
  */
 const char **shell_get_process_argv(void);
 
+/**
+ * Get whether the game is running in headless mode.
+ * @return True if the process is running in headless mode, false otherwise.
+ */
+bool shell_is_headless_mode(void);
+
 #ifdef __cplusplus
 }
 #endif

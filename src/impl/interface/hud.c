@@ -317,7 +317,7 @@ void hud_draw_meter(HUDInterfaceAnchor *anchor, uint8_t min_alpha, uint8_t max_a
                         }
                     }
                     ColorRGB interpolated_color;
-                    color_interpolate(&min_color, &max_color, &interpolated_color, 0, progress);
+                    color_rgb_interpolate(&min_color, &max_color, &interpolated_color, 0, progress);
                     uint32_t interpolated_color_int = color_encode_r8g8b8(&interpolated_color);
                     meter_params.gradient_min_color = interpolated_color_int | meter_min_alpha << 24;
                     meter_params.gradient_max_color = interpolated_color_int;

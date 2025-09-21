@@ -15,12 +15,11 @@ server_variables_init = ""
 for variable in mappings:
     variable_info = mappings[variable]
 
-    if not variable_info["address"]:
-        print("Tried to hook variable without address in game: ", variable)
-        sys.exit(1)
-
     variables_definitions += "    void *{} = nullptr;\n".format(variable)
-    game_variables_init += "        {} = reinterpret_cast<void *>({});\n".format(variable, variable_info["address"])
+
+    if "address" in variable_info and variable_info["address"] != None:
+        game_variables_init += "        {} = reinterpret_cast<void *>({});\n".format(variable, variable_info["address"])
+
     if "server-address" in variable_info and variable_info["server-address"] != None:
         server_variables_init += "        {} = reinterpret_cast<void *>({});\n".format(variable, variable_info["server-address"])
 

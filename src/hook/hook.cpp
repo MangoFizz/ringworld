@@ -26,7 +26,9 @@ void set_up_hud_hooks();
 
 static void set_up_build_number() {
     const wchar_t *ringworld_version = L"" RINGWORLD_VERSION_STRING;
-    std::wcscpy(build_number, ringworld_version);
+    if(build_number != nullptr) {
+        std::wcscpy(build_number, ringworld_version);
+    }
 }
 
 extern "C" void set_up_ringworld_hooks(Platform platform) {

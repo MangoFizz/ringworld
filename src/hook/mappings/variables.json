@@ -1,712 +1,712 @@
 {
     "af_is_enabled": {
         "type": "bool",
-        "address": "0x6bde38",
+        "game-address": "0x6bde38",
         "server-address": null
     },
     "build_number": {
         "type": "wchar_t",
-        "address": "0x6b4300",
+        "game-address": "0x6b4300",
         "server-address": null
     },
     "cinematic_globals": {
         "type": "CinematicGlobals *",
-        "address": "0x68c83c",
+        "game-address": "0x68c83c",
         "server-address": null
     },
     "close_server_connection_flag": {
         "type": "bool",
-        "address": "0x6b736e",
+        "game-address": "0x6b736e",
         "server-address": null
     },
     "collideable_object": {
         "type": "void *",
-        "address": "0x7fb730",
+        "game-address": "0x7fb730",
         "server-address": "0x6c69f0"
     },
     "console_command_is_being_processed": {
         "type": "bool",
-        "address": "0x6ab2fd",
+        "game-address": "0x6ab2fd",
         "server-address": "0x613b2d"
     },
     "console_globals": {
         "type": "ConsoleGlobals",
-        "address": "0x651f50",
+        "game-address": "0x651f50",
         "server-address": "0x5c3d10"
     },
     "current_game_engine_interface": {
         "type": "GameEngineInterface *",
-        "address": "0x68cd24",
+        "game-address": "0x68cd24",
         "server-address": "0x5f5554"
     },
     "current_multiplayer_mode": {
         "type": "MultiplayerMode",
-        "address": "0x6b47b0",
+        "game-address": "0x6b47b0",
         "server-address": "0x61cfd8"
     },
     "current_render_target_index": {
         "type": "uint16_t",
-        "address": "0x638a08",
+        "game-address": "0x638a08",
         "server-address": null
     },
     "current_scenario": {
         "type": "Scenario *",
-        "address": "0x6e224c",
+        "game-address": "0x6e224c",
         "server-address": null
     },
     "cursor_should_activate_widgets": {
         "type": "uint8_t",
-        "address": "0x6b400a",
+        "game-address": "0x6b400a",
         "server-address": "0x61c83a"
     },
     "d3d9_device": {
         "type": "IDirect3DDevice9 *",
-        "address": "0x6b840c",
+        "game-address": "0x6b840c",
         "server-address": null
     },
     "d3d9_device_caps": {
         "type": "D3DCAPS9",
-        "address": "0x75c420",
+        "game-address": "0x75c420",
         "server-address": null
     },
     "d3d9_device_supports_software_vertex_processing": {
         "type": "bool",
-        "address": "0x637d38",
+        "game-address": "0x637d38",
         "server-address": null
     },
     "d3d9_render_target_index_buffer": {
         "type": "IDirect3DIndexBuffer9 *",
-        "address": "0x6b84a0",
+        "game-address": "0x6b84a0",
         "server-address": null
     },
     "d3d9_render_target_unk_flag": {
         "type": "bool",
-        "address": "0x637d42",
+        "game-address": "0x637d42",
         "server-address": null
     },
     "d3d9_render_target_vertex_buffer": {
         "type": "IDirect3DVertexBuffer9 *",
-        "address": "0x6b84a4",
+        "game-address": "0x6b84a4",
         "server-address": null
     },
     "d3d9_stencil_mode": {
         "type": "uint16_t",
-        "address": "0x637d64",
+        "game-address": "0x637d64",
         "server-address": null
     },
     "d3d9_stencil_mode_unk1": {
         "type": "uint32_t",
-        "address": "0x6249cf",
+        "game-address": "0x6249cf",
         "server-address": null
     },
     "devmode_enabled": {
         "type": "bool",
-        "address": "0x6bd15e",
+        "game-address": "0x6bd15e",
         "server-address": null
     },
     "dynamic_triangles": {
         "type": "DynamicTriangles",
-        "address": "0x674908",
+        "game-address": "0x674908",
         "server-address": null
     },
     "dynamic_vertices": {
         "type": "DynamicVertices",
-        "address": "0x674824",
+        "game-address": "0x674824",
         "server-address": null
     },
     "effect_collection_buffer": {
         "type": "RasterizerDx9ShaderEffect *",
-        "address": "0x75b724",
+        "game-address": "0x75b724",
         "server-address": null
     },
     "effect_collection_effect_count": {
         "type": "uint32_t",
-        "address": "0x75b720",
+        "game-address": "0x75b720",
         "server-address": null
     },
     "executable_module": {
         "type": "HMODULE",
-        "address": "0x6e1480",
+        "game-address": "0x6e1480",
         "server-address": null
     },
     "first_person_weapons": {
         "type": "FirstPersonWeapons *",
-        "address": "0x64dcc8",
+        "game-address": "0x64dcc8",
         "server-address": "0x5bfaa8"
     },
     "fog_enable": {
         "type": "bool",
-        "address": "0x6249dc",
+        "game-address": "0x6249dc",
         "server-address": null
     },
     "frame_parameters": {
         "type": "RasterizerFrameParameters",
-        "address": "0x75C570",
+        "game-address": "0x75C570",
         "server-address": null
     },
     "game_engine_globals": {
         "type": "GameEngineGlobals",
-        "address": "0x815ea0",
+        "game-address": "0x815ea0",
         "server-address": null
     },
     "game_globals": {
         "type": "Globals *",
-        "address": "0x6e2260",
+        "game-address": "0x6e2260",
         "server-address": "0x629440"
     },
     "game_state_globals": {
         "type": "GameStateGlobals",
-        "address": "0x67dd88",
+        "game-address": "0x67dd88",
         "server-address": "0x5e6684"
     },
     "game_time_globals": {
         "type": "GameTimeGlobals *",
-        "address": "0x68cd70",
+        "game-address": "0x68cd70",
         "server-address": "0x5f559c"
     },
     "globals_rasterizer_data": {
         "type": "GlobalsRasterizerData *",
-        "address": "0x6b83fc",
+        "game-address": "0x6b83fc",
         "server-address": null
     },
     "hsc_functions": {
         "type": "HscFunction *",
-        "address": "0x624118",
+        "game-address": "0x624118",
         "server-address": "0x599ad8"
     },
     "hud_globals": {
         "type": "HUDGlobals *",
-        "address": "0x6b44a4",
+        "game-address": "0x6b44a4",
         "server-address": null
     },
     "hud_messaging_parameters": {
         "type": "HUDGlobalsMessagingParameters *",
-        "address": "0x80f120",
+        "game-address": "0x80f120",
         "server-address": null
     },
     "input_events_globals": {
         "type": "InputEventsGlobals",
-        "address": "0x6add08",
+        "game-address": "0x6add08",
         "server-address": null
     },
     "input_flags": {
         "type": "uint8_t",
-        "address": "0x6ad572",
+        "game-address": "0x6ad572",
         "server-address": null
     },
     "input_globals": {
         "type": "InputGlobals",
-        "address": "0x64c528",
+        "game-address": "0x64c528",
         "server-address": null
     },
     "is_main_menu": {
         "type": "bool",
-        "address": "0x6b4051",
+        "game-address": "0x6b4051",
         "server-address": "0x61c881"
     },
     "linear_texture_addressing_sun": {
         "type": "uint32_t",
-        "address": "0x6bddfc",
+        "game-address": "0x6bddfc",
         "server-address": null
     },
     "loading_screen_map_name": {
         "type": "wchar[]",
-        "address": "0x64de98",
+        "game-address": "0x64de98",
         "server-address": null
     },
     "loading_screen_server_address": {
         "type": "wchar[]",
-        "address": "0x64de58",
+        "game-address": "0x64de58",
         "server-address": null
     },
     "loading_screen_state": {
         "type": "UILoadingScreenState",
-        "address": "0x6b4014",
+        "game-address": "0x6b4014",
         "server-address": null
     },
     "loading_screen_time_counter_ms_0": {
         "type": "int32_t",
-        "address": "0x629c70",
+        "game-address": "0x629c70",
         "server-address": null
     },
     "loading_screen_time_counter_ms_1": {
         "type": "int32_t",
-        "address": "0x629c74",
+        "game-address": "0x629c74",
         "server-address": null
     },
     "loading_screen_time_counter_ms_2": {
         "type": "int32_t",
-        "address": "0x629c78",
+        "game-address": "0x629c78",
         "server-address": null
     },
     "loading_screen_unk_flag": {
         "type": "bool",
-        "address": "0x6ad4a1",
+        "game-address": "0x6ad4a1",
         "server-address": null
     },
     "local_player_index_for_draw_string_and_hack_in_icons": {
         "type": "bool",
-        "address": "0x8153f0",
+        "game-address": "0x8153f0",
         "server-address": null
     },
     "main_globals": {
         "type": "MainGlobals",
-        "address": "0x6b4770",
+        "game-address": "0x6b4770",
         "server-address": "0x61cf98"
     },
     "managed_heap_map": {
         "type": "ManagedHeapMap",
-        "address": "0x647478",
+        "game-address": "0x647478",
         "server-address": "0x5b9258"
     },
     "map_is_loaded": {
         "type": "bool",
-        "address": "0x643040",
+        "game-address": "0x643040",
         "server-address": "0x5b4e30"
     },
     "menu_cursor_x": {
         "type": "int32_t",
-        "address": "0x6b400c",
+        "game-address": "0x6b400c",
         "server-address": "0x61c83c"
     },
     "menu_cursor_y": {
         "type": "int32_t",
-        "address": "0x6b4010",
+        "game-address": "0x6b4010",
         "server-address": "0x61c840"
     },
     "motion_sensor_blip_being_rendered": {
         "type": "bool",
-        "address": "0x6b849d",
+        "game-address": "0x6b849d",
         "server-address": null
     },
     "motion_sensor_blip_render_enabled": {
         "type": "bool",
-        "address": "0x6249e3",
+        "game-address": "0x6249e3",
         "server-address": null
     },
     "mouse_x_delta": {
         "type": "int32_t",
-        "address": "0x64c73c",
+        "game-address": "0x64c73c",
         "server-address": "0x5be51c"
     },
     "mouse_y_delta": {
         "type": "int32_t",
-        "address": "0x64c740",
+        "game-address": "0x64c740",
         "server-address": "0x5be520"
     },
     "network_game_client": {
         "type": "NetworkGameClient *",
-        "address": "0x6b7368",
+        "game-address": "0x6b7368",
         "server-address": null
     },
     "network_game_globals_client": {
         "type": "NetworkGame",
-        "address": "0x80EC94",
+        "game-address": "0x80EC94",
         "server-address": null
     },
     "network_game_globals_host": {
         "type": "NetworkGame",
-        "address": "0x7fc6a8",
+        "game-address": "0x7fc6a8",
         "server-address": null
     },
     "network_game_server_address_host": {
         "type": "uint32_t",
-        "address": "0x621f74",
+        "game-address": "0x621f74",
         "server-address": null
     },
     "network_game_server_port_host": {
         "type": "uint16_t",
-        "address": "0x6337f8",
+        "game-address": "0x6337f8",
         "server-address": null
     },
     "noncollideable_object": {
         "type": "void *",
-        "address": "0x7fb720",
+        "game-address": "0x7fb720",
         "server-address": "0x6c69e0"
     },
     "object_globals": {
         "type": "ObjectGlobals *",
-        "address": "0x653bec",
+        "game-address": "0x653bec",
         "server-address": "0x5c5ad4"
     },
     "object_memory_pool": {
         "type": "MemoryPool *",
-        "address": "0x653be4",
+        "game-address": "0x653be4",
         "server-address": "0x5c5acc"
     },
     "object_name_list": {
         "type": "void *",
-        "address": "0x653be8",
+        "game-address": "0x653be8",
         "server-address": "0x5c5ad0"
     },
     "object_table": {
         "type": "ObjectTable *",
-        "address": "0x7fb710",
+        "game-address": "0x7fb710",
         "server-address": "0x6c69d0"
     },
     "object_type_interface_list": {
         "type": "uint32_t",
-        "address": "0x7fb73c",
+        "game-address": "0x7fb73c",
         "server-address": "0x6c69fc"
     },
     "object_unk1": {
         "type": "uint32_t",
-        "address": "0x653930",
+        "game-address": "0x653930",
         "server-address": "0x5c5818"
     },
     "object_unk2": {
         "type": "uint16_t",
-        "address": "0x653be0",
+        "game-address": "0x653be0",
         "server-address": "0x5c5ac8"
     },
     "object_unk3": {
         "type": "uint32_t",
-        "address": "0x7fb72c",
+        "game-address": "0x7fb72c",
         "server-address": "0x6c69ec"
     },
     "object_unk_handle_1": {
         "type": "ObjectHandle",
-        "address": "0x653b90",
+        "game-address": "0x653b90",
         "server-address": "0x5c5a78"
     },
     "pgcr_footer_fade": {
         "type": "float",
-        "address": "0x815eac",
+        "game-address": "0x815eac",
         "server-address": null
     },
     "player_control_globals": {
         "type": "PlayerControlGlobals *",
-        "address": "0x64c38c",
+        "game-address": "0x64c38c",
         "server-address": "0x5be16c"
     },
     "player_profile_directory": {
         "type": "char[]",
-        "address": "0x647830",
+        "game-address": "0x647830",
         "server-address": null
     },
     "players_data": {
         "type": "PlayersTable *",
-        "address": "0x815920",
+        "game-address": "0x815920",
         "server-address": "0x6e1460"
     },
     "players_globals": {
         "type": "PlayersGlobals *",
-        "address": "0x815918",
+        "game-address": "0x815918",
         "server-address": "0x6e1458"
     },
     "process_argc": {
         "type": "size_t",
-        "address": "0x6bd164",
+        "game-address": "0x6bd164",
         "server-address": null
     },
     "process_argv": {
         "type": "const char **",
-        "address": "0x6bd160",
+        "game-address": "0x6bd160",
         "server-address": null
     },
     "rasterizer_bitmap_font_vertex_shader_constants": {
         "type": "VertexShaderScreenprojConstants",
-        "address": "0x67ccc8",
+        "game-address": "0x67ccc8",
         "server-address": null
     },
     "rasterizer_enable_user_interface_render": {
         "type": "bool",
-        "address": "0x6249e2",
+        "game-address": "0x6249e2",
         "server-address": null
     },
     "rasterizer_font_character_cache": {
         "type": "BitmapFontCache",
-        "address": "0x673758",
+        "game-address": "0x673758",
         "server-address": null
     },
     "rasterizer_globals": {
         "type": "RasterizerGlobals",
-        "address": "0x637ce8",
+        "game-address": "0x637ce8",
         "server-address": null
     },
     "rasterizer_model_depth_bias": {
         "type": "float",
-        "address": "0x6bde50",
+        "game-address": "0x6bde50",
         "server-address": null
     },
     "rasterizer_model_effect_opacity": {
         "type": "float",
-        "address": "0x6b8498",
+        "game-address": "0x6b8498",
         "server-address": null
     },
     "rasterizer_model_fog_enabled": {
         "type": "bool",
-        "address": "0x637d60",
+        "game-address": "0x637d60",
         "server-address": null
     },
     "rasterizer_model_illumination_intensity": {
         "type": "float",
-        "address": "0x75b734",
+        "game-address": "0x75b734",
         "server-address": null
     },
     "rasterizer_model_pixel_shader_constants": {
         "type": "PixelShaderModelConstants",
-        "address": "0x67c6e8",
+        "game-address": "0x67c6e8",
         "server-address": null
     },
     "rasterizer_model_reflection_tint_color": {
         "type": "ColorARGB *",
-        "address": "0x6b8258",
+        "game-address": "0x6b8258",
         "server-address": null
     },
     "rasterizer_model_render_parameters": {
         "type": "RasterizerModelRenderParameters *",
-        "address": "0x006b8488",
+        "game-address": "0x006b8488",
         "server-address": null
     },
     "rasterizer_model_should_use_planar_fog": {
         "type": "bool",
-        "address": "0x6b8493",
+        "game-address": "0x6b8493",
         "server-address": null
     },
     "rasterizer_model_slope_scale_depth_bias": {
         "type": "float",
-        "address": "0x6bde58",
+        "game-address": "0x6bde58",
         "server-address": null
     },
     "rasterizer_model_zbuffer_disabled": {
         "type": "bool",
-        "address": "0x6b8496",
+        "game-address": "0x6b8496",
         "server-address": null
     },
     "rasterizer_render_targets_disabled": {
         "type": "bool",
-        "address": "0x637d41",
+        "game-address": "0x637d41",
         "server-address": null
     },
     "rasterizer_window_is_being_rendered": {
         "type": "bool",
-        "address": "0x6249c6",
+        "game-address": "0x6249c6",
         "server-address": null
     },
     "render_globals": {
         "type": "RenderGlobals",
-        "address": "0x75E460",
+        "game-address": "0x75E460",
         "server-address": null
     },
     "render_targets": {
         "type": "RasterizerRenderTarget[9]",
-        "address": "0x638a10",
+        "game-address": "0x638a10",
         "server-address": null
     },
     "rng_global_seed": {
         "type": "uint32_t",
-        "address": "0x6b4d64",
+        "game-address": "0x6b4d64",
         "server-address": null
     },
     "saved_game_state_buffer": {
         "type": "void *",
-        "address": "0x67dda4",
+        "game-address": "0x67dda4",
         "server-address": "0x5e66a0"
     },
     "saved_game_state_globals": {
         "type": "SaveGameGlobals",
-        "address": "0x67dda8",
+        "game-address": "0x67dda8",
         "server-address": "0x5e66a8"
     },
     "saved_game_state_is_being_written": {
         "type": "bool",
-        "address": "0x67dfc0",
+        "game-address": "0x67dfc0",
         "server-address": "0x5e68c0"
     },
     "saved_games_current_profile_id": {
         "type": "uint32_t",
-        "address": "0x6afe1c",
+        "game-address": "0x6afe1c",
         "server-address": "0x61864c"
     },
     "saved_games_player_profiles": {
         "type": "PlayerProfile *",
-        "address": "0x6ade20",
+        "game-address": "0x6ade20",
         "server-address": "0x616650"
     },
     "savegame_file_read_event_handle": {
         "type": "HANDLE",
-        "address": "0x67dfbc",
+        "game-address": "0x67dfbc",
         "server-address": "0x5e68bc"
     },
     "server_connection_attempts": {
         "type": "uint32_t",
-        "address": "0x6b4018",
+        "game-address": "0x6b4018",
         "server-address": null
     },
     "shader_effects": {
         "type": "RasterizerDx9ShaderEffectEntry",
-        "address": "0x638ac8",
+        "game-address": "0x638ac8",
         "server-address": null
     },
     "shader_transparent_water_should_update_bumpmap": {
         "type": "bool",
-        "address": "0x6b8505",
+        "game-address": "0x6b8505",
         "server-address": null
     },
     "sound_cache": {
         "type": "void *",
-        "address": "0x647484",
+        "game-address": "0x647484",
         "server-address": "0x5b9264"
     },
     "sound_cache_mib": {
         "type": "uint16_t *",
-        "address": "0x621f84",
+        "game-address": "0x621f84",
         "server-address": null
     },
     "string_draw_count": {
         "type": "uint16_t",
-        "address": "0x637d4c",
+        "game-address": "0x637d4c",
         "server-address": null
     },
     "strings_module": {
         "type": "HMODULE",
-        "address": "0x6bde88",
+        "game-address": "0x6bde88",
         "server-address": null
     },
     "structure_bsp_index": {
         "type": "uint16_t",
-        "address": "0x6397d0",
+        "game-address": "0x6397d0",
         "server-address": "0x5ad850"
     },
     "tag_data_header_loaded": {
         "type": "TagDataHeader *",
-        "address": "0x643844",
+        "game-address": "0x643844",
         "server-address": "0x5b5634"
     },
     "teams_data": {
         "type": "TeamsTable *",
-        "address": "0x81591c",
+        "game-address": "0x81591c",
         "server-address": "0x6e145c"
     },
     "terminal_count": {
         "type": "int32_t",
-        "address": null,
+        "game-address": null,
         "server-address": "0x625860"
     },
     "terminal_globals": {
         "type": "TerminalGlobals",
-        "address": "0x64de2c",
+        "game-address": "0x64de2c",
         "server-address": "0x5bfc0c"
     },
     "terminal_input": {
         "type": "TerminalInput",
-        "address": null,
+        "game-address": null,
         "server-address": "0x5bfadc"
     },
     "terminal_screen": {
         "type": "TerminalScreen",
-        "address": null,
+        "game-address": null,
         "server-address": "0x5bfae8"
     },
     "text_draw_bounds": {
         "type": "Rectangle2D",
-        "address": "0x67f6d4",
+        "game-address": "0x67f6d4",
         "server-address": null
     },
     "text_draw_font": {
         "type": "Font *",
-        "address": "0x67f6dc",
+        "game-address": "0x67f6dc",
         "server-address": null
     },
     "text_drawing_globals": {
         "type": "TextDrawGlobals",
-        "address": "0x67f6ec",
+        "game-address": "0x67f6ec",
         "server-address": "0x5e7ee4"
     },
     "text_shadow_color": {
         "type": "Pixel32",
-        "address": "0x6b83dc",
+        "game-address": "0x6b83dc",
         "server-address": null
     },
     "texture_cache": {
         "type": "void *",
-        "address": "0x647480",
+        "game-address": "0x647480",
         "server-address": "0x5b9260"
     },
     "ui_widget_game_data_input_functions": {
         "type": "void (*)(Widget *)",
-        "address": "0x62e108",
+        "game-address": "0x62e108",
         "server-address": null
     },
     "ui_widget_memory_pool": {
         "type": "StackMemoryPool *",
-        "address": "0x62dcb4",
+        "game-address": "0x62dcb4",
         "server-address": "0x5a3654"
     },
     "ui_widgets_unknown_1": {
         "type": "bool",
-        "address": "0x6b4050",
+        "game-address": "0x6b4050",
         "server-address": "0x61c880"
     },
     "vertex_declarations": {
         "type": "VertexDeclaration",
-        "address": "0x67ca50",
+        "game-address": "0x67ca50",
         "server-address": null
     },
     "vertex_shader_permutations": {
         "type": "short",
-        "address": "0x639450",
+        "game-address": "0x639450",
         "server-address": null
     },
     "vertex_shaders": {
         "type": "VertexShader",
-        "address": "0x639248",
+        "game-address": "0x639248",
         "server-address": null
     },
     "virtual_keyboard_globals": {
         "type": "VirtualKeyboardGlobals",
-        "address": "0x6b4430",
+        "game-address": "0x6b4430",
         "server-address": "0x61cc60"
     },
     "virtual_keyboard_labels": {
         "type": "wchar_t **",
-        "address": "0x611674",
+        "game-address": "0x611674",
         "server-address": null
     },
     "wave_functions": {
         "type": "uint8_t *[12]",
-        "address": "0xd85a4c",
+        "game-address": "0xd85a4c",
         "server-address": null
     },
     "wave_functions_initialized": {
         "type": "bool",
-        "address": "0xd85a94",
+        "game-address": "0xd85a94",
         "server-address": null
     },
     "widget_globals": {
         "type": "WidgetGlobals",
-        "address": "0x6b401c",
+        "game-address": "0x6b401c",
         "server-address": "0x61c84c"
     },
     "window_background_bitmap": {
         "type": "HBITMAP",
-        "address": "0x6b8420",
+        "game-address": "0x6b8420",
         "server-address": null
     },
     "window_handle": {
         "type": "HWND",
-        "address": "0x6e1484",
+        "game-address": "0x6e1484",
         "server-address": null
     },
     "window_memory_dc": {
         "type": "HDC",
-        "address": "0x6b841c",
+        "game-address": "0x6b841c",
         "server-address": null
     },
     "window_parameters": {
         "type": "RasterizerWindowRenderParameters",
-        "address": "0x75C580",
+        "game-address": "0x75C580",
         "server-address": null
     },
     "window_proc": {
         "type": "WNDPROC",
-        "address": "0x6e1490",
+        "game-address": "0x6e1490",
         "server-address": null
     },
     "window_style": {
         "type": "DWORD",
-        "address": "0x637d5c",
+        "game-address": "0x637d5c",
         "server-address": null
     }
 }

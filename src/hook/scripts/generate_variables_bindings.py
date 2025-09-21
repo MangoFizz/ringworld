@@ -17,8 +17,8 @@ for variable in mappings:
 
     variables_definitions += "    void *{} = nullptr;\n".format(variable)
 
-    if "address" in variable_info and variable_info["address"] != None:
-        game_variables_init += "        {} = reinterpret_cast<void *>({});\n".format(variable, variable_info["address"])
+    if "game-address" in variable_info and variable_info["game-address"] != None:
+        game_variables_init += "        {} = reinterpret_cast<void *>({});\n".format(variable, variable_info["game-address"])
 
     if "server-address" in variable_info and variable_info["server-address"] != None:
         server_variables_init += "        {} = reinterpret_cast<void *>({});\n".format(variable, variable_info["server-address"])

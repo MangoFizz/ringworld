@@ -9,7 +9,7 @@
       "description": "Entry describing a single global variable",
       "properties": {
         "type": { "type": "string", "description": "C type or descriptor" },
-        "address": { 
+        "game-address": { 
           "description": "Hex address string",
           "anyOf": [
             { "type": "string", "pattern": "^0x[0-9a-fA-F]+$" },
@@ -25,7 +25,7 @@
         },
         "notes": { "type": "string" }
       },
-      "required": ["type", "address"],
+      "required": ["type", "game-address", "server-address"],
       "additionalProperties": true
     }
   },

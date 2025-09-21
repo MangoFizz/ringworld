@@ -12,7 +12,7 @@
                     "type": "object",
                     "properties": {
                         "address": {
-                            "description": "Hexadecimal address string (required)",
+                            "description": "Hexadecimal address string",
                             "anyOf": [
                                 {"type": "string", "pattern": "^0x[0-9a-fA-F]+$"},
                                 {"type": "null"}

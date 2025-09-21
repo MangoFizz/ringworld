@@ -15,11 +15,14 @@ function_wrappers = ""
 
 for function in mappings:
     function_info = mappings[function]
-    
-    if "disabled" in function_info and function_info["disabled"]:
+    game_function_details = function_info.get("game", {})
+    server_function_details = function_info.get("server", {})
+    replace_mode = function_info.get("replace")
+
+    if function_info.get("disabled", False):
         continue
 
-    if not function_info["address"]:
+    if not game_function_details.get("address"):
         print("Tried to hook function without address in game: ", function)
         sys.exit(1)
 
@@ -27,67 +30,75 @@ for function in mappings:
     ## Build hooks for game and server functions
     ##########################################################
 
-    function_definitions += "    void *{}_function_address = nullptr;\n".format(function)
-    function_definitions += "    void *{}_wrapper_function = nullptr;\n".format(function)
-    game_function_hooks += "        {hook}_function_address = reinterpret_cast<void *>({address});\n".format(hook=function, address=function_info["address"])
+    function_definitions += f"    void *{function}_function_address = nullptr;\n"
+    function_definitions += f"    void *{function}_wrapper_function = nullptr;\n"
+    game_function_hooks += f"        {function}_function_address = reinterpret_cast<void *>({game_function_details['address']});\n"
 
-    match function_info["replace"]:
+    match replace_mode:
         case "forbid":
-            game_function_hooks += "        Hook(\"{hook}\", {address}).forbid()".format(hook=function, address=function_info["address"])
+            game_function_hooks += f"        Hook(\"{function}\", {game_function_details['address']}).forbid()\n"
         case "stub":
-            game_function_hooks += "        Hook(\"{hook}\", {address}).stub()".format(hook=function, address=function_info["address"])
+            game_function_hooks += f"        Hook(\"{function}\", {game_function_details['address']}).stub()\n"
         case True:
-            function_definitions += "    extern int {};\n".format(function)
-            game_function_hooks += "        Hook(\"{hook}\", {address}, reinterpret_cast<std::uintptr_t>(&{output}))".format(hook=function, address=function_info["address"], output=function)
+            function_definitions += f"    extern int {function};\n"
+            game_function_hooks += f"        Hook(\"{function}\", {game_function_details['address']}, reinterpret_cast<std::uintptr_t>(&{function}))\n"
         case False:
-            game_function_hooks += "        {hook}_wrapper_function = Hook(\"{hook}\", {address})".format(hook=function, address=function_info["address"])
+            game_function_hooks += f"        {function}_wrapper_function = Hook(\"{function}\", {game_function_details['address']})\n"
         case _:
-            print("Unknown replace mode: ", function_info["replace"])
+            print("Unknown replace mode: ", replace_mode)
             sys.exit(1)
 
-    if function_info["server-address"] != None:
-        server_functions_hooks += "        {hook}_function_address = reinterpret_cast<void *>({address});\n".format(hook=function, address=function_info["server-address"])
-        match function_info["replace"]:
+    server_addr = server_function_details.get("address")
+    if server_addr is not None:
+        server_functions_hooks += f"        {function}_function_address = reinterpret_cast<void *>({server_addr});\n"
+        match replace_mode:
             case "forbid":
-                server_functions_hooks += "        Hook(\"{hook}\", {address}).forbid()".format(hook=function, address=function_info["server-address"])
+                server_functions_hooks += f"        Hook(\"{function}\", {server_addr}).forbid()\n"
             case "stub":
-                server_functions_hooks += "        Hook(\"{hook}\", {address}).stub()".format(hook=function, address=function_info["server-address"])
+                server_functions_hooks += f"        Hook(\"{function}\", {server_addr}).stub()\n"
             case True:
-                server_functions_hooks += "        Hook(\"{hook}\", {address}, reinterpret_cast<std::uintptr_t>(&{output}))".format(hook=function, address=function_info["server-address"], output=function)
+                server_functions_hooks += f"        Hook(\"{function}\", {server_addr}, reinterpret_cast<std::uintptr_t>(&{function}))\n"
             case False | None:
-                server_functions_hooks += "        {hook}_wrapper_function = Hook(\"{hook}\", {address})".format(hook=function, address=function_info["server-address"])
+                server_functions_hooks += f"        {function}_wrapper_function = Hook(\"{function}\", {server_addr})\n"
     else:
-        server_functions_hooks += "        {hook}_function_address = nullptr;\n".format(hook=function)
-        server_functions_hooks += "        {hook}_wrapper_function = Hook(\"{hook}\", reinterpret_cast<std::uintptr_t>(unavailable_function_called))".format(hook=function)
+        server_functions_hooks += f"        {function}_function_address = nullptr;\n"
+        server_functions_hooks += f"        {function}_wrapper_function = Hook(\"{function}\", reinterpret_cast<std::uintptr_t>(unavailable_function_called))\n"
 
-    if "arguments" in function_info:
-        for arg in function_info["arguments"]:
+    game_args = game_function_details.get("arguments")
+    if game_args:
+        for arg in game_args:
             if arg.isnumeric():
-                game_function_hooks     += "\n            .push_parameter(Stack, {index})".format(index=arg)
-                server_functions_hooks  += "\n            .push_parameter(Stack, {index})".format(index=arg)
+                game_function_hooks += f"            .push_parameter(Stack, {arg})\n"
             else:
-                game_function_hooks     += "\n            .push_parameter(Register, {index})".format(index=arg.upper())
-                server_functions_hooks  += "\n            .push_parameter(Register, {index})".format(index=arg.upper())
+                game_function_hooks += f"            .push_parameter(Register, {arg.upper()})\n"
 
-    if "use_return_value" in function_info and function_info["use_return_value"]:
-        game_function_hooks     += "\n            .has_return_value()"
-        server_functions_hooks  += "\n            .has_return_value()"
+    server_args = server_function_details.get("arguments")
+    if server_args:
+        for arg in server_args:
+            if arg.isnumeric():
+                server_functions_hooks += f"            .push_parameter(Stack, {arg})\n"
+            else:
+                server_functions_hooks += f"            .push_parameter(Register, {arg.upper()})\n"
 
-    if "return_64_bit_value" in function_info and function_info["return_64_bit_value"]:
-        game_function_hooks     += "\n            .return_64_bit_value()"
-        server_functions_hooks  += "\n            .return_64_bit_value()"
+    if function_info.get("use_return_value"):
+        game_function_hooks     += "            .has_return_value()\n"
+        server_functions_hooks  += "            .has_return_value()\n"
 
-    game_function_hooks     += "\n            .write_hook();\n"
-    server_functions_hooks  += "\n            .write_hook();\n"
+    if function_info.get("return_64_bit_value"):
+        game_function_hooks     += "            .return_64_bit_value()\n"
+        server_functions_hooks  += "            .return_64_bit_value()\n"
+
+    game_function_hooks     += "            .write_hook();\n"
+    server_functions_hooks  += "            .write_hook();\n"
 
     ##########################################################
     ## Build wrappers for functions that are not replaced
     ##########################################################
 
-    if function_info["replace"] == False:
-        function_wrappers += ".globl _{hook}\n".format(hook=function)
-        function_wrappers += "_{hook}:\n".format(hook=function)
-        function_wrappers += "    jmp dword ptr [_{hook}_wrapper_function]\n".format(hook=function)
+    if replace_mode == False:
+        function_wrappers += f".globl _{function}\n"
+        function_wrappers += f"_{function}:\n"
+        function_wrappers += f"    jmp dword ptr [_{function}_wrapper_function]\n"
 
 
 ##########################################################

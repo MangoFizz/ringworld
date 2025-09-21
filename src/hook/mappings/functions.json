@@ -1,1035 +1,1835 @@
 {
     "bitmap_address_for_pixel": {
-        "address": "0x43f8e0",
-        "server-address": null,
-        "arguments": ["0", "4", "eax", "edi"],
+        "game": {
+            "address": "0x43f8e0",
+            "arguments": ["0", "4", "eax", "edi"]
+        },
+        "server": {
+            "address": null,
+            "arguments": ["0", "4", "eax", "edi"]
+        },
         "use_return_value": true,
         "replace": false
     },
     "bitmap_draw": {
-        "address": "0x497b20",
-        "server-address": null,
-        "arguments": ["0", "4", "8", "12", "16", "eax"],
+        "game": {
+            "address": "0x497b20",
+            "arguments": ["0", "4", "8", "12", "16", "eax"]
+        },
+        "server": {
+            "address": null,
+            "arguments": ["0", "4", "8", "12", "16", "eax"]
+        },
         "replace": true
     },
     "bitmap_draw_in_rect": {
-        "address": "0x49bab0",
-        "server-address": null,
-        "arguments": ["0", "4", "8", "ecx", "eax"],
+        "game": {
+            "address": "0x49bab0",
+            "arguments": ["0", "4", "8", "ecx", "eax"]
+        },
+        "server": {
+            "address": null,
+            "arguments": ["0", "4", "8", "ecx", "eax"]
+        },
         "replace": false
     },
     "bitmap_font_calculate_draw_bounds": {
-        "address": "0x5596a0",
-        "server-address": null,
-        "arguments": ["0", "4", "8", "12", "16", "20", "24", "28", "32", "36"],
+        "game": {
+            "address": "0x5596a0",
+            "arguments": ["0", "4", "8", "12", "16", "20", "24", "28", "32", "36"]
+        },
+        "server": {
+            "address": null,
+            "arguments": ["0", "4", "8", "12", "16", "20", "24", "28", "32", "36"]
+        },
         "replace": false
     },
     "bitmap_font_draw_string": {
-        "address": "0x559870",
-        "server-address": null,
-        "arguments": ["0", "4", "8", "12", "16", "20"],
+        "game": {
+            "address": "0x559870",
+            "arguments": ["0", "4", "8", "12", "16", "20"]
+        },
+        "server": {
+            "address": null,
+            "arguments": ["0", "4", "8", "12", "16", "20"]
+        },
         "use_return_value": true,
         "replace": false
     },
     "bitmap_font_draw_unicode_string": {
-        "address": "0x559bf0",
-        "server-address": null,
-        "arguments": ["0", "4", "8", "12", "16", "20"],
+        "game": {
+            "address": "0x559bf0",
+            "arguments": ["0", "4", "8", "12", "16", "20"]
+        },
+        "server": {
+            "address": null,
+            "arguments": ["0", "4", "8", "12", "16", "20"]
+        },
         "replace": false
     },
     "bitmap_get_pixel_data_size": {
-        "address": "0x43fb70",
-        "server-address": null,
-        "arguments": ["eax"],
+        "game": {
+            "address": "0x43fb70",
+            "arguments": ["eax"]
+        },
+        "server": {
+            "address": null,
+            "arguments": ["eax"]
+        },
         "use_return_value": true,
         "replace": true,
         "disabled": true,
         "comment": "for some reason crashes the game when enabled"
     },
     "bitmap_group_sequence_get_bitmap_for_frame": {
-        "address": "0x43f290",
-        "server-address": null,
-        "arguments": ["eax", "0", "edi"],
+        "game": {
+            "address": "0x43f290",
+            "arguments": ["eax", "0", "edi"]
+        },
+        "server": {
+            "address": null,
+            "arguments": ["eax", "0", "edi"]
+        },
         "use_return_value": true,
         "replace": true
     },
     "bitmap_load": {
-        "address": "0x444eb0",
-        "server-address": null,
-        "arguments": ["0", "4", "eax"],
+        "game": {
+            "address": "0x444eb0",
+            "arguments": ["0", "4", "eax"]
+        },
+        "server": {
+            "address": null,
+            "arguments": ["0", "4", "eax"]
+        },
         "use_return_value": true,
         "replace": false
     },
     "bitmap_mipmap_get_pixel_count": {
-        "address": "0x43fc10",
-        "server-address": null,
-        "arguments": ["ecx", "esi"],
+        "game": {
+            "address": "0x43fc10",
+            "arguments": ["ecx", "esi"]
+        },
+        "server": {
+            "address": null,
+            "arguments": ["ecx", "esi"]
+        },
         "use_return_value": true,
         "replace": true,
         "disabled": true
     },
     "cache_file_read_request": {
-        "address": "0x443410",
-        "server-address": null,
-        "arguments": ["0", "4", "8", "12", "16", "esi"],
+        "game": {
+            "address": "0x443410",
+            "arguments": ["0", "4", "8", "12", "16", "esi"]
+        },
+        "server": {
+            "address": null,
+            "arguments": ["0", "4", "8", "12", "16", "esi"]
+        },
         "use_return_value": true,
         "replace": false
     },
     "color_interpolate": {
-        "address": "0x43f6a0",
-        "server-address": null,
-        "arguments": ["ecx", "eax", "0", "4", "8"],
+        "game": {
+            "address": "0x43f6a0",
+            "arguments": ["ecx", "eax", "0", "4", "8"]
+        },
+        "server": {
+            "address": null,
+            "arguments": ["ecx", "eax", "0", "4", "8"]
+        },
         "replace": false
     },
     "console_initialize": {
-        "address": "0x4c96d0",
-        "server-address": null,
+        "game": {
+            "address": "0x4c96d0"
+        },
+        "server": {
+            "address": null
+        },
         "replace": true
     },
     "console_process_command": {
-        "address": "0x4c9dc0",
-        "server-address": null,
-        "arguments": ["0", "edi"],
+        "game": {
+            "address": "0x4c9dc0",
+            "arguments": ["0", "edi"]
+        },
+        "server": {
+            "address": null,
+            "arguments": ["0", "edi"]
+        },
         "use_return_value": true,
         "replace": true
     },
     "crc32_calculate": {
-        "address": "0x4d36d0",
-        "server-address": "0x4bc550",
-        "arguments": ["0", "4", "8"],
+        "game": {
+            "address": "0x4d36d0",
+            "arguments": ["0", "4", "8"]
+        },
+        "server": {
+            "address": "0x4bc550",
+            "arguments": ["0", "4", "8"]
+        },
         "replace": false
     },
     "cutscene_cinematic_render": {
-        "address": "0x44a330",
-        "server-address": null,
+        "game": {
+            "address": "0x44a330"
+        },
+        "server": {
+            "address": null
+        },
         "replace": true
     },
     "d3d_get_fvf_vertex_size": {
-        "address": "0x586e9e",
-        "server-address": null,
-        "arguments": ["0"],
+        "game": {
+            "address": "0x586e9e",
+            "arguments": ["0"]
+        },
+        "server": {
+            "address": null,
+            "arguments": ["0"]
+        },
         "use_return_value": true,
         "replace": true,
         "disabled": true
     },
     "game_state_initialize": {
-        "address": "0x53b270",
-        "server-address": null,
+        "game": {
+            "address": "0x53b270"
+        },
+        "server": {
+            "address": null
+        },
         "replace": true
     },
     "game_state_initialize_savegame": {
-        "address": "0x53b940",
-        "server-address": null,
-        "arguments": ["0", "ecx"],
+        "game": {
+            "address": "0x53b940",
+            "arguments": ["0", "ecx"]
+        },
+        "server": {
+            "address": null,
+            "arguments": ["0", "ecx"]
+        },
         "use_return_value": true,
         "replace": true
     },
     "game_state_memory_pool_new": {
-        "address": "0x53b430",
-        "server-address": null,
-        "arguments": ["0", "ebx"],
+        "game": {
+            "address": "0x53b430",
+            "arguments": ["0", "ebx"]
+        },
+        "server": {
+            "address": null,
+            "arguments": ["0", "ebx"]
+        },
         "use_return_value": true,
         "replace": false
     },
     "game_state_open_savegame": {
-        "address": "0x53cc30",
-        "server-address": null,
-        "arguments": ["0"],
+        "game": {
+            "address": "0x53cc30",
+            "arguments": ["0"]
+        },
+        "server": {
+            "address": null,
+            "arguments": ["0"]
+        },
         "use_return_value": true,
         "replace": true
     },
     "game_state_savegame_write_thread": {
-        "address": "0x53bcd0",
-        "server-address": null,
+        "game": {
+            "address": "0x53bcd0"
+        },
+        "server": {
+            "address": null
+        },
         "replace": false
     },
     "game_state_table_new": {
-        "address": "0x53b3b0",
-        "server-address": "0x4f6940",
-        "arguments": ["0", "4", "ebx"],
+        "game": {
+            "address": "0x53b3b0",
+            "arguments": ["0", "4", "ebx"]
+        },
+        "server": {
+            "address": "0x4f6940",
+            "arguments": ["0", "4", "ebx"]
+        },
         "use_return_value": true,
         "replace": true
     },
     "game_variant_is_not_stock": {
-        "address": "0x4abb60",
-        "server-address": null,
-        "arguments": ["edi"],
+        "game": {
+            "address": "0x4abb60",
+            "arguments": ["edi"]
+        },
+        "server": {
+            "address": null,
+            "arguments": ["edi"]
+        },
         "use_return_value": true,
         "replace": false
     },
     "hs_return": {
-        "address": "0x48d270",
-        "server-address": "0x484b10",
-        "arguments": ["eax", "ecx"],
+        "game": {
+            "address": "0x48d270",
+            "arguments": ["eax", "ecx"]
+        },
+        "server": {
+            "address": "0x484b10",
+            "arguments": ["eax", "ecx"]
+        },
         "replace": false
     },
     "hsc_execute_script": {
-        "address": "0x487030",
-        "server-address": null,
-        "arguments": ["0"],
+        "game": {
+            "address": "0x487030",
+            "arguments": ["0"]
+        },
+        "server": {
+            "address": null,
+            "arguments": ["0"]
+        },
         "use_return_value": true,
         "replace": false
     },
     "hsc_find_functions": {
-        "address": "0x4868c0",
-        "server-address": null,
-        "arguments": ["0", "4", "ecx", "eax", "edx"],
+        "game": {
+            "address": "0x4868c0",
+            "arguments": ["0", "4", "ecx", "eax", "edx"]
+        },
+        "server": {
+            "address": null,
+            "arguments": ["0", "4", "ecx", "eax", "edx"]
+        },
         "use_return_value": true,
         "replace": false
     },
     "hsc_get_function_by_name": {
-        "address": "0x486170",
-        "server-address": null,
-        "arguments": ["edx"],
+        "game": {
+            "address": "0x486170",
+            "arguments": ["edx"]
+        },
+        "server": {
+            "address": null,
+            "arguments": ["edx"]
+        },
         "use_return_value": true,
         "replace": true
     },
     "hsc_get_function_parameters_string": {
-        "address": "0x486f30",
-        "server-address": null,
-        "arguments": ["ecx", "eax"],
+        "game": {
+            "address": "0x486f30",
+            "arguments": ["ecx", "eax"]
+        },
+        "server": {
+            "address": null,
+            "arguments": ["ecx", "eax"]
+        },
         "replace": false
     },
     "hsc_help_command": {
-        "address": "0x486de0",
-        "server-address": null,
-        "arguments": ["edx"],
+        "game": {
+            "address": "0x486de0",
+            "arguments": ["edx"]
+        },
+        "server": {
+            "address": null,
+            "arguments": ["edx"]
+        },
         "replace": true
     },
     "hud_calculate_bitmap_bounds": {
-        "address": "0x4b0040",
-        "server-address": null,
-        "arguments": ["0", "esi", "edx", "eax", "ecx"],
+        "game": {
+            "address": "0x4b0040",
+            "arguments": ["0", "esi", "edx", "eax", "ecx"]
+        },
+        "server": {
+            "address": null,
+            "arguments": ["0", "esi", "edx", "eax", "ecx"]
+        },
         "replace": true
     },
     "hud_calculate_point": {
-        "address": "0x4aea80",
-        "server-address": null,
-        "arguments": ["0", "edx", "ecx", "eax", "4", "8"],
+        "game": {
+            "address": "0x4aea80",
+            "arguments": ["0", "edx", "ecx", "eax", "4", "8"]
+        },
+        "server": {
+            "address": null,
+            "arguments": ["0", "edx", "ecx", "eax", "4", "8"]
+        },
         "replace": true
     },
     "hud_draw_bitmap_internal": {
-        "address": "0x4b0140",
-        "server-address": null,
-        "arguments": ["0", "4", "8", "12", "16", "20", "esi", "eax"],
+        "game": {
+            "address": "0x4b0140",
+            "arguments": ["0", "4", "8", "12", "16", "20", "esi", "eax"]
+        },
+        "server": {
+            "address": null,
+            "arguments": ["0", "4", "8", "12", "16", "20", "esi", "eax"]
+        },
         "replace": true
     },
     "hud_draw_bitmap_with_meter": {
-        "address": "0x4afec0",
-        "server-address": null,
-        "arguments": ["0", "4", "8", "12", "16", "20", "ecx", "edx", "eax", "ebx"],
+        "game": {
+            "address": "0x4afec0",
+            "arguments": ["0", "4", "8", "12", "16", "20", "ecx", "edx", "eax", "ebx"]
+        },
+        "server": {
+            "address": null,
+            "arguments": ["0", "4", "8", "12", "16", "20", "ecx", "edx", "eax", "ebx"]
+        },
         "replace": true
     },
     "hud_draw_message": {
-        "address": "0x462a80",
-        "server-address": null,
-        "arguments": ["0", "4"],
+        "game": {
+            "address": "0x462a80",
+            "arguments": ["0", "4"]
+        },
+        "server": {
+            "address": null,
+            "arguments": ["0", "4"]
+        },
         "replace": true
     },
     "hud_draw_meter": {
-        "address": "0x4aefb0",
-        "server-address": null,
-        "arguments": ["0", "4", "8", "12", "16", "20", "esi"],
+        "game": {
+            "address": "0x4aefb0",
+            "arguments": ["0", "4", "8", "12", "16", "20", "esi"]
+        },
+        "server": {
+            "address": null,
+            "arguments": ["0", "4", "8", "12", "16", "20", "esi"]
+        },
         "replace": true
     },
     "hud_initialize": {
-        "address": "0x4ac790",
-        "server-address": null,
+        "game": {
+            "address": "0x4ac790"
+        },
+        "server": {
+            "address": null
+        },
         "replace": false
     },
     "hud_initialize_for_new_map": {
-        "address": "0x4ac8e0",
-        "server-address": null,
+        "game": {
+            "address": "0x4ac8e0"
+        },
+        "server": {
+            "address": null
+        },
         "replace": false
     },
     "interface_initialize": {
-        "address": "0x497100",
-        "server-address": null,
+        "game": {
+            "address": "0x497100"
+        },
+        "server": {
+            "address": null
+        },
         "replace": true
     },
     "interface_initialize_for_new_map": {
-        "address": "0x497150",
-        "server-address": null,
+        "game": {
+            "address": "0x497150"
+        },
+        "server": {
+            "address": null
+        },
         "replace": true
     },
     "lights_initialize": {
-        "address": "0x4f4330",
-        "server-address": null,
+        "game": {
+            "address": "0x4f4330"
+        },
+        "server": {
+            "address": null
+        },
         "replace": false
     },
     "lights_initialize_for_new_map": {
-        "address": "0x4f43b0",
-        "server-address": null,
+        "game": {
+            "address": "0x4f43b0"
+        },
+        "server": {
+            "address": null
+        },
         "replace": false
     },
     "loading_screen_abort_connection": {
-        "address": "0x4adb40",
-        "server-address": null,
+        "game": {
+            "address": "0x4adb40"
+        },
+        "server": {
+            "address": null
+        },
         "replace": false
     },
     "loading_screen_render": {
-        "address": "0x49a370",
-        "server-address": null,
+        "game": {
+            "address": "0x49a370"
+        },
+        "server": {
+            "address": null
+        },
         "replace": true
     },
     "loading_screen_timeout_connection": {
-        "address": "0x5b9d00",
-        "server-address": null,
-        "arguments": ["0"],
+        "game": {
+            "address": "0x5b9d00",
+            "arguments": ["0"]
+        },
+        "server": {
+            "address": null,
+            "arguments": ["0"]
+        },
         "replace": false
     },
     "math_matrix_4x3_transform_point": {
-        "address": "0x4cf1e0",
-        "server-address": null,
-        "arguments": ["0", "edx", "eax"],
+        "game": {
+            "address": "0x4cf1e0",
+            "arguments": ["0", "edx", "eax"]
+        },
+        "server": {
+            "address": null,
+            "arguments": ["0", "edx", "eax"]
+        },
         "replace": true
     },
     "math_pow_float": {
-        "address": "0x5ccf80",
-        "server-address": "0x5499c0",
-        "arguments": ["st1", "st0"],
+        "game": {
+            "address": "0x5ccf80",
+            "arguments": ["st1", "st0"]
+        },
+        "server": {
+            "address": "0x5499c0",
+            "arguments": ["st1", "st0"]
+        },
         "replace": true
     },
     "memory_map_initialize": {
-        "address": "0x445230",
-        "server-address": "0x444ee0",
+        "game": {
+            "address": "0x445230"
+        },
+        "server": {
+            "address": "0x444ee0"
+        },
         "replace": true
     },
     "memory_pool_resize_block_og": {
-        "address": "0x4d5380",
-        "server-address": null,
-        "arguments": ["0", "esi", "eax"],
+        "game": {
+            "address": "0x4d5380",
+            "arguments": ["0", "esi", "eax"]
+        },
+        "server": {
+            "address": null,
+            "arguments": ["0", "esi", "eax"]
+        },
         "use_return_value": true,
         "replace": false
     },
     "numeric_countdown_timer_get": {
-        "address": "0x5434c0",
-        "server-address": "0x4fdd90",
-        "arguments": ["eax"],
+        "game": {
+            "address": "0x5434c0",
+            "arguments": ["eax"]
+        },
+        "server": {
+            "address": "0x4fdd90",
+            "arguments": ["eax"]
+        },
         "use_return_value": true,
         "replace": false
     },
     "object_attach_to_marker": {
-        "address": "0x4f9a90",
-        "server-address": "0x4e0910",
-        "arguments": ["0", "4", "esi", "edi"],
+        "game": {
+            "address": "0x4f9a90",
+            "arguments": ["0", "4", "esi", "edi"]
+        },
+        "server": {
+            "address": "0x4e0910",
+            "arguments": ["0", "4", "esi", "edi"]
+        },
         "replace": false
     },
     "object_get_and_verify_type": {
-        "address": "0x4fa7d0",
-        "server-address": null,
-        "arguments": ["ecx", "0"],
+        "game": {
+            "address": "0x4fa7d0",
+            "arguments": ["ecx", "0"]
+        },
+        "server": {
+            "address": null,
+            "arguments": ["ecx", "0"]
+        },
         "use_return_value": true,
         "replace": true
     },
     "object_new_cluster_partition_globals": {
-        "address": "0x555270",
-        "server-address": null,
-        "arguments": ["esi", "edi"],
+        "game": {
+            "address": "0x555270",
+            "arguments": ["esi", "edi"]
+        },
+        "server": {
+            "address": null,
+            "arguments": ["esi", "edi"]
+        },
         "use_return_value": true,
         "replace": true
     },
     "object_placement_data_new": {
-        "address": "0x4f8cb0",
-        "server-address": null,
-        "arguments": ["eax", "0", "4"],
+        "game": {
+            "address": "0x4f8cb0",
+            "arguments": ["eax", "0", "4"]
+        },
+        "server": {
+            "address": null,
+            "arguments": ["eax", "0", "4"]
+        },
         "use_return_value": true,
         "replace": true
     },
     "object_types_initialize": {
-        "address": "0x4f76c0",
-        "server-address": null,
+        "game": {
+            "address": "0x4f76c0"
+        },
+        "server": {
+            "address": null
+        },
         "replace": false
     },
     "objects_initialize": {
-        "address": "0x4f83e0",
-        "server-address": null,
+        "game": {
+            "address": "0x4f83e0"
+        },
+        "server": {
+            "address": null
+        },
         "replace": true
     },
     "objects_initialize_for_new_map": {
-        "address": "0x4f84c0",
-        "server-address": null,
+        "game": {
+            "address": "0x4f84c0"
+        },
+        "server": {
+            "address": null
+        },
         "replace": true
     },
     "pgcr_draw": {
-        "address": "0x45e090",
-        "server-address": null,
+        "game": {
+            "address": "0x45e090"
+        },
+        "server": {
+            "address": null
+        },
         "replace": true
     },
     "pgcr_draw_row_text": {
-        "address": "0x45e000",
-        "server-address": null,
-        "arguments": ["0", "4", "ecx"],
+        "game": {
+            "address": "0x45e000",
+            "arguments": ["0", "4", "ecx"]
+        },
+        "server": {
+            "address": null,
+            "arguments": ["0", "4", "ecx"]
+        },
         "replace": true
     },
     "player_ui_set_active_player_profile": {
-        "address": "0x4988d0",
-        "server-address": null,
-        "arguments": ["0", "eax", "edx"],
+        "game": {
+            "address": "0x4988d0",
+            "arguments": ["0", "eax", "edx"]
+        },
+        "server": {
+            "address": null,
+            "arguments": ["0", "eax", "edx"]
+        },
         "replace": false
     },
     "players_data_initialize": {
-        "address": "0x476170",
-        "server-address": "0x46dbd0",
+        "game": {
+            "address": "0x476170"
+        },
+        "server": {
+            "address": "0x46dbd0"
+        },
         "replace": true
     },
     "rasterizer_bitmap_font_begin_text_draw": {
-        "address": "0x534ae0",
-        "server-address": null,
-        "arguments": ["edi"],
+        "game": {
+            "address": "0x534ae0",
+            "arguments": ["edi"]
+        },
+        "server": {
+            "address": null,
+            "arguments": ["edi"]
+        },
         "replace": true
     },
     "rasterizer_bitmap_font_cache_font_character": {
-        "address": "0x518770",
-        "server-address": null,
-        "arguments": ["0", "4"],
+        "game": {
+            "address": "0x518770",
+            "arguments": ["0", "4"]
+        },
+        "server": {
+            "address": null,
+            "arguments": ["0", "4"]
+        },
         "replace": true
     },
     "rasterizer_bitmap_font_draw_character_with_shadow": {
-        "address": "0x518580",
-        "server-address": null,
-        "arguments": ["0", "4", "8", "12", "16", "20", "24", "28", "32", "36"],
+        "game": {
+            "address": "0x518580",
+            "arguments": ["0", "4", "8", "12", "16", "20", "24", "28", "32", "36"]
+        },
+        "server": {
+            "address": null,
+            "arguments": ["0", "4", "8", "12", "16", "20", "24", "28", "32", "36"]
+        },
         "replace": false
     },
     "rasterizer_bitmap_font_draw_unicode_string_and_hack_in_icons": {
-        "address": "0x49dd70",
-        "server-address": null,
-        "arguments": ["0", "4", "edx"],
+        "game": {
+            "address": "0x49dd70",
+            "arguments": ["0", "4", "edx"]
+        },
+        "server": {
+            "address": null,
+            "arguments": ["0", "4", "edx"]
+        },
         "replace": false
     },
     "rasterizer_bitmap_font_end_text_draw": {
-        "address": "0x534df0",
-        "server-address": null,
+        "game": {
+            "address": "0x534df0"
+        },
+        "server": {
+            "address": null
+        },
         "replace": true
     },
     "rasterizer_bitmap_font_set_up_vertex_shader_constants": {
-        "address": "0x534a10",
-        "server-address": null,
+        "game": {
+            "address": "0x534a10"
+        },
+        "server": {
+            "address": null
+        },
         "replace": true
     },
     "rasterizer_dx9_render_target_set": {
-        "address": "0x52fda0",
-        "server-address": null,
-        "arguments": ["0", "4", "eax"],
+        "game": {
+            "address": "0x52fda0",
+            "arguments": ["0", "4", "eax"]
+        },
+        "server": {
+            "address": null,
+            "arguments": ["0", "4", "eax"]
+        },
         "replace": false
     },
     "rasterizer_dx9_render_targets_initialize": {
-        "address": "0x52fb00",
-        "server-address": null,
+        "game": {
+            "address": "0x52fb00"
+        },
+        "server": {
+            "address": null
+        },
         "use_return_value": true,
         "replace": true
     },
     "rasterizer_dx9_set_framebuffer_blend_function": {
-        "address": "0x51be80",
-        "server-address": null,
-        "arguments": ["ecx"],
+        "game": {
+            "address": "0x51be80",
+            "arguments": ["ecx"]
+        },
+        "server": {
+            "address": null,
+            "arguments": ["ecx"]
+        },
         "replace": false
     },
     "rasterizer_dx9_set_stencil_mode": {
-        "address": "0x51c900",
-        "server-address": null,
-        "arguments": ["eax"],
+        "game": {
+            "address": "0x51c900",
+            "arguments": ["eax"]
+        },
+        "server": {
+            "address": null,
+            "arguments": ["eax"]
+        },
         "replace": true
     },
     "rasterizer_dx9_shader_effect_load_collection_from_binary": {
-        "address": "0x532c20",
-        "server-address": null,
+        "game": {
+            "address": "0x532c20"
+        },
+        "server": {
+            "address": null
+        },
         "use_return_value": true,
         "replace": true
     },
     "rasterizer_dx9_shader_load_vertex_shaders_from_binary": {
-        "address": "0x5336f0",
-        "server-address": null,
+        "game": {
+            "address": "0x5336f0"
+        },
+        "server": {
+            "address": null
+        },
         "use_return_value": true,
         "replace": true
     },
     "rasterizer_dx9_texture_calculate_mipmaps_levels": {
-        "address": "0x527230",
-        "server-address": null,
-        "arguments": ["0", "eax", "ebx"],
+        "game": {
+            "address": "0x527230",
+            "arguments": ["0", "eax", "ebx"]
+        },
+        "server": {
+            "address": null,
+            "arguments": ["0", "eax", "ebx"]
+        },
         "use_return_value": true,
         "replace": false
     },
     "rasterizer_dx9_texture_create": {
-        "address": "0x5272c0",
-        "server-address": null,
-        "arguments": ["esi"],
+        "game": {
+            "address": "0x5272c0",
+            "arguments": ["esi"]
+        },
+        "server": {
+            "address": null,
+            "arguments": ["esi"]
+        },
         "use_return_value": true,
         "replace": true
     },
     "rasterizer_dx9_texture_set_bitmap_data_texture": {
-        "address": "0x51c060",
-        "server-address": null,
-        "arguments": ["0", "4", "8", "12", "eax"],
+        "game": {
+            "address": "0x51c060",
+            "arguments": ["0", "4", "8", "12", "eax"]
+        },
+        "server": {
+            "address": null,
+            "arguments": ["0", "4", "8", "12", "eax"]
+        },
         "use_return_value": true,
         "replace": false
     },
     "rasterizer_dx9_texture_update_bitmap_2d": {
-        "address": "0x527420",
-        "server-address": null,
-        "arguments": ["0"],
+        "game": {
+            "address": "0x527420",
+            "arguments": ["0"]
+        },
+        "server": {
+            "address": null,
+            "arguments": ["0"]
+        },
         "replace": false
     },
     "rasterizer_font_cache_flush": {
-        "address": "0x518550",
-        "server-address": null,
+        "game": {
+            "address": "0x518550"
+        },
+        "server": {
+            "address": null
+        },
         "replace": true
     },
     "rasterizer_font_initialize": {
-        "address": "0x5180c0",
-        "server-address": null,
+        "game": {
+            "address": "0x5180c0"
+        },
+        "server": {
+            "address": null
+        },
         "use_return_value": true,
         "replace": true
     },
     "rasterizer_hud_motion_sensor_blip_begin": {
-        "address": "0x52e750",
-        "server-address": null,
+        "game": {
+            "address": "0x52e750"
+        },
+        "server": {
+            "address": null
+        },
         "replace": true
     },
     "rasterizer_hud_motion_sensor_blip_draw": {
-        "address": "0x52eb90",
-        "server-address": null,
-        "arguments": ["0", "4", "eax", "edi"],
+        "game": {
+            "address": "0x52eb90",
+            "arguments": ["0", "4", "eax", "edi"]
+        },
+        "server": {
+            "address": null,
+            "arguments": ["0", "4", "eax", "edi"]
+        },
         "replace": true
     },
     "rasterizer_hud_motion_sensor_blip_end": {
-        "address": "0x52ed00",
-        "server-address": null,
-        "arguments": ["0", "ebx"],
+        "game": {
+            "address": "0x52ed00",
+            "arguments": ["0", "ebx"]
+        },
+        "server": {
+            "address": null,
+            "arguments": ["0", "ebx"]
+        },
         "replace": true
     },
     "rasterizer_model_disable_depth_bias": {
-        "address": "0x51cc80",
-        "server-address": null,
+        "game": {
+            "address": "0x51cc80"
+        },
+        "server": {
+            "address": null
+        },
         "replace": true
     },
     "rasterizer_model_draw": {
-        "address": "0x52d060",
-        "server-address": null,
-        "arguments": ["0", "4", "8", "12", "16", "20", "24"],
+        "game": {
+            "address": "0x52d060",
+            "arguments": ["0", "4", "8", "12", "16", "20", "24"]
+        },
+        "server": {
+            "address": null,
+            "arguments": ["0", "4", "8", "12", "16", "20", "24"]
+        },
         "replace": true
     },
     "rasterizer_model_draw_triangles": {
-        "address": "0x51fe30",
-        "server-address": null,
-        "arguments": ["0", "4", "8", "eax", "ebx", "ecx"],
+        "game": {
+            "address": "0x51fe30",
+            "arguments": ["0", "4", "8", "eax", "ebx", "ecx"]
+        },
+        "server": {
+            "address": null,
+            "arguments": ["0", "4", "8", "eax", "ebx", "ecx"]
+        },
         "replace": false
     },
     "rasterizer_model_enable_depth_bias": {
-        "address": "0x51cbe0",
-        "server-address": null,
+        "game": {
+            "address": "0x51cbe0"
+        },
+        "server": {
+            "address": null
+        },
         "replace": true
     },
     "rasterizer_model_get_pixel_shader": {
-        "address": "0x52a890",
-        "server-address": null,
-        "arguments": ["ecx"],
+        "game": {
+            "address": "0x52a890",
+            "arguments": ["ecx"]
+        },
+        "server": {
+            "address": null,
+            "arguments": ["ecx"]
+        },
         "use_return_value": true,
         "replace": false
     },
     "rasterizer_screen_effect_set_texture_transforms": {
-        "address": "0x52fef0",
-        "server-address": null,
-        "arguments": ["0", "4", "8", "12", "ecx", "eax"],
+        "game": {
+            "address": "0x52fef0",
+            "arguments": ["0", "4", "8", "12", "ecx", "eax"]
+        },
+        "server": {
+            "address": null,
+            "arguments": ["0", "4", "8", "12", "ecx", "eax"]
+        },
         "replace": true
     },
     "rasterizer_screen_geometry_draw": {
-        "address": "0x5200a0",
-        "server-address": null,
-        "arguments": ["eax", "0"],
+        "game": {
+            "address": "0x5200a0",
+            "arguments": ["eax", "0"]
+        },
+        "server": {
+            "address": null,
+            "arguments": ["eax", "0"]
+        },
         "replace": true
     },
     "rasterizer_screen_geometry_draw_quad": {
-        "address": "0x44a0f0",
-        "server-address": null,
-        "arguments": ["ecx", "eax"],
+        "game": {
+            "address": "0x44a0f0",
+            "arguments": ["ecx", "eax"]
+        },
+        "server": {
+            "address": null,
+            "arguments": ["ecx", "eax"]
+        },
         "replace": true
     },
     "rasterizer_shader_transparent_chicago_draw": {
-        "address": "0x534e30",
-        "server-address": null,
-        "arguments": ["0", "4"],
+        "game": {
+            "address": "0x534e30",
+            "arguments": ["0", "4"]
+        },
+        "server": {
+            "address": null,
+            "arguments": ["0", "4"]
+        },
         "replace": true
     },
     "rasterizer_shader_transparent_chicago_preprocess": {
-        "address": "0x53ae90",
-        "server-address": null,
-        "arguments": ["ebx"],
+        "game": {
+            "address": "0x53ae90",
+            "arguments": ["ebx"]
+        },
+        "server": {
+            "address": null,
+            "arguments": ["ebx"]
+        },
         "use_return_value": true,
         "replace": false
     },
     "rasterizer_shader_transparent_water_draw": {
-        "address": "0x539310",
-        "server-address": null,
-        "arguments": ["0"],
+        "game": {
+            "address": "0x539310",
+            "arguments": ["0"]
+        },
+        "server": {
+            "address": null,
+            "arguments": ["0"]
+        },
         "replace": true
     },
     "rasterizer_shader_transparent_water_render_bumpmap": {
-        "address": "0x538380",
-        "server-address": null,
-        "arguments": ["0"],
+        "game": {
+            "address": "0x538380",
+            "arguments": ["0"]
+        },
+        "server": {
+            "address": null,
+            "arguments": ["0"]
+        },
         "replace": true
     },
     "rasterizer_shaders_blob_decrypt": {
-        "address": "0x51d080",
-        "server-address": null,
-        "arguments": ["ebx", "eax"],
+        "game": {
+            "address": "0x51d080",
+            "arguments": ["ebx", "eax"]
+        },
+        "server": {
+            "address": null,
+            "arguments": ["ebx", "eax"]
+        },
         "use_return_value": true,
         "replace": true
     },
     "rasterizer_shaders_blob_read_file": {
-        "address": "0x51d0f0",
-        "server-address": null,
-        "arguments": ["0", "4", "ecx"],
+        "game": {
+            "address": "0x51d0f0",
+            "arguments": ["0", "4", "ecx"]
+        },
+        "server": {
+            "address": null,
+            "arguments": ["0", "4", "ecx"]
+        },
         "use_return_value": true,
         "replace": true
     },
     "rasterizer_transparent_geometry_group_draw": {
-        "address": "0x536740",
-        "server-address": null,
-        "arguments": ["0", "4"],
+        "game": {
+            "address": "0x536740",
+            "arguments": ["0", "4"]
+        },
+        "server": {
+            "address": null,
+            "arguments": ["0", "4"]
+        },
         "replace": false
     },
     "rasterizer_transparent_geometry_group_draw_vertices": {
-        "address": "0x536550",
-        "server-address": null,
-        "arguments": ["0", "ecx"],
+        "game": {
+            "address": "0x536550",
+            "arguments": ["0", "ecx"]
+        },
+        "server": {
+            "address": null,
+            "arguments": ["0", "ecx"]
+        },
         "replace": false
     },
     "render_project_point_to_screen_space": {
-        "address": "0x511740",
-        "server-address": null,
-        "arguments": ["edi", "esi", "edx", "ecx"],
+        "game": {
+            "address": "0x511740",
+            "arguments": ["edi", "esi", "edx", "ecx"]
+        },
+        "server": {
+            "address": null,
+            "arguments": ["edi", "esi", "edx", "ecx"]
+        },
         "use_return_value": true,
         "replace": true
     },
     "saved_game_file_get_path_to_enclosing_directory": {
-        "address": "0x5403e0",
-        "server-address": null,
-        "arguments": ["eax", "esi"],
+        "game": {
+            "address": "0x5403e0",
+            "arguments": ["eax", "esi"]
+        },
+        "server": {
+            "address": null,
+            "arguments": ["eax", "esi"]
+        },
         "use_return_value": true,
         "replace": false
     },
     "saved_game_file_name_is_unique": {
-        "address": "0x540540",
-        "server-address": null,
-        "arguments": ["eax"],
+        "game": {
+            "address": "0x540540",
+            "arguments": ["eax"]
+        },
+        "server": {
+            "address": null,
+            "arguments": ["eax"]
+        },
         "use_return_value": true,
         "replace": false
     },
     "saved_games_name_is_from_player_profile": {
-        "address": "0x498dd0",
-        "server-address": null,
-        "arguments": ["0"],
+        "game": {
+            "address": "0x498dd0",
+            "arguments": ["0"]
+        },
+        "server": {
+            "address": null,
+            "arguments": ["0"]
+        },
         "use_return_value": true,
         "replace": false
     },
     "saved_games_read_player_profile": {
-        "address": "0x53dad0",
-        "server-address": "0x4f8f50",
-        "arguments": ["0", "ecx"],
+        "game": {
+            "address": "0x53dad0",
+            "arguments": ["0", "ecx"]
+        },
+        "server": {
+            "address": "0x4f8f50",
+            "arguments": ["0", "ecx"]
+        },
         "use_return_value": true,
         "replace": false
     },
     "saved_games_write_player_profile": {
-        "address": "0x53dcb0",
-        "server-address": "0x4f9130",
-        "arguments": ["0", "4"],
+        "game": {
+            "address": "0x53dcb0",
+            "arguments": ["0", "4"]
+        },
+        "server": {
+            "address": "0x4f9130",
+            "arguments": ["0", "4"]
+        },
         "replace": false
     },
     "scoreboard_draw_row": {
-        "address": "0x4662a0",
-        "server-address": null,
-        "arguments": ["0", "4", "eax", "edx"],
+        "game": {
+            "address": "0x4662a0",
+            "arguments": ["0", "4", "eax", "edx"]
+        },
+        "server": {
+            "address": null,
+            "arguments": ["0", "4", "eax", "edx"]
+        },
         "replace": true
     },
     "scoreboard_render": {
-        "address": "0x4682b0",
-        "server-address": null,
-        "arguments": ["0", "4"],
+        "game": {
+            "address": "0x4682b0",
+            "arguments": ["0", "4"]
+        },
+        "server": {
+            "address": null,
+            "arguments": ["0", "4"]
+        },
         "replace": true
     },
     "seh_exception_handler": {
-        "address": "0x5cd84c",
-        "server-address": null,
-        "arguments": ["0", "4", "8", "12"],
+        "game": {
+            "address": "0x5cd84c",
+            "arguments": ["0", "4", "8", "12"]
+        },
+        "server": {
+            "address": null,
+            "arguments": ["0", "4", "8", "12"]
+        },
         "use_return_value": true,
         "replace": true
     },
     "shader_get_vertex_shader_permutation": {
-        "address": "0x543160",
-        "server-address": null,
-        "arguments": ["ecx"],
+        "game": {
+            "address": "0x543160",
+            "arguments": ["ecx"]
+        },
+        "server": {
+            "address": null,
+            "arguments": ["ecx"]
+        },
         "use_return_value": true,
         "replace": false
     },
     "shader_texture_animation_evaluate": {
-        "address": "0x543250",
-        "server-address": null,
-        "arguments": ["0", "4", "8", "12", "16", "20", "esi", "ecx", "ebx", "edi"],
+        "game": {
+            "address": "0x543250",
+            "arguments": ["0", "4", "8", "12", "16", "20", "esi", "ecx", "ebx", "edi"]
+        },
+        "server": {
+            "address": null,
+            "arguments": ["0", "4", "8", "12", "16", "20", "esi", "ecx", "ebx", "edi"]
+        },
         "replace": false
     },
     "shell_create_window": {
-        "address": "0x5191d0",
-        "server-address": null,
-        "arguments": ["ebx", "eax"],
+        "game": {
+            "address": "0x5191d0",
+            "arguments": ["ebx", "eax"]
+        },
+        "server": {
+            "address": null,
+            "arguments": ["ebx", "eax"]
+        },
         "use_return_value": true,
         "replace": true
     },
     "stack_memory_pool_new_block": {
-        "address": "0x4d5310",
-        "server-address": "0x4bdb80",
-        "arguments": ["ecx", "eax"],
+        "game": {
+            "address": "0x4d5310",
+            "arguments": ["ecx", "eax"]
+        },
+        "server": {
+            "address": "0x4bdb80",
+            "arguments": ["ecx", "eax"]
+        },
         "use_return_value": true,
         "replace": false
     },
     "string_calculate_line_break": {
-        "address": "0x55a9a0",
-        "server-address": null,
-        "arguments": ["ecx", "0"],
+        "game": {
+            "address": "0x55a9a0",
+            "arguments": ["ecx", "0"]
+        },
+        "server": {
+            "address": null,
+            "arguments": ["ecx", "0"]
+        },
         "use_return_value": true,
         "replace": true
     },
     "string_contains_non_whitespace": {
-        "address": "0x4abb20",
-        "server-address": null,
-        "arguments": ["eax"],
+        "game": {
+            "address": "0x4abb20",
+            "arguments": ["eax"]
+        },
+        "server": {
+            "address": null,
+            "arguments": ["eax"]
+        },
         "use_return_value": true,
         "replace": true
     },
     "string_parse_state_init": {
-        "address": "0x559f70",
-        "server-address": null,
-        "arguments": ["0", "4", "ecx", "edx", "ebx", "esi"],
+        "game": {
+            "address": "0x559f70",
+            "arguments": ["0", "4", "ecx", "edx", "ebx", "esi"]
+        },
+        "server": {
+            "address": null,
+            "arguments": ["0", "4", "ecx", "edx", "ebx", "esi"]
+        },
         "replace": true
     },
     "string_parse_unicode_string": {
-        "address": "0x55a380",
-        "server-address": null,
-        "arguments": ["eax"],
+        "game": {
+            "address": "0x55a380",
+            "arguments": ["eax"]
+        },
+        "server": {
+            "address": null,
+            "arguments": ["eax"]
+        },
         "use_return_value": true,
         "replace": true
     },
     "structure_bsp_index_evaluate": {
-        "address": "0x482200",
-        "server-address": "0x479d50",
-        "arguments": ["0", "4"],
+        "game": {
+            "address": "0x482200",
+            "arguments": ["0", "4"]
+        },
+        "server": {
+            "address": "0x479d50",
+            "arguments": ["0", "4"]
+        },
         "replace": true
     },
     "table_new": {
-        "address": "0x4d3770",
-        "server-address": "0x4bc5f0",
-        "arguments": ["0", "4", "ebx"],
+        "game": {
+            "address": "0x4d3770",
+            "arguments": ["0", "4", "ebx"]
+        },
+        "server": {
+            "address": "0x4bc5f0",
+            "arguments": ["0", "4", "ebx"]
+        },
         "use_return_value": true,
         "replace": true
     },
     "table_remove_element": {
-        "address": "0x4d3910",
-        "server-address": null,
-        "arguments": ["eax", "edx"],
+        "game": {
+            "address": "0x4d3910",
+            "arguments": ["eax", "edx"]
+        },
+        "server": {
+            "address": null,
+            "arguments": ["eax", "edx"]
+        },
         "replace": false
     },
     "terminal_initialize": {
-        "address": "0x499330",
-        "server-address": null,
+        "game": {
+            "address": "0x499330"
+        },
+        "server": {
+            "address": null
+        },
         "replace": true
     },
     "terminal_printf_in": {
-        "address": "0x499ab0",
-        "server-address": "0x48eb40",
-        "arguments": ["eax", "4", "8"],
+        "game": {
+            "address": "0x499ab0",
+            "arguments": ["eax", "4", "8"]
+        },
+        "server": {
+            "address": "0x48eb40",
+            "arguments": ["eax", "4", "8"]
+        },
         "replace": false,
         "comment": "takes variable args but the bridge doesn't support varargs so two are passed for now plus color"
     },
     "text_calculate_unicode_string_draw_bounds": {
-        "address": "0x559710",
-        "server-address": null,
-        "arguments": ["0", "ebx", "esi", "edi"],
+        "game": {
+            "address": "0x559710",
+            "arguments": ["0", "ebx", "esi", "edi"]
+        },
+        "server": {
+            "address": null,
+            "arguments": ["0", "ebx", "esi", "edi"]
+        },
         "replace": true
     },
     "text_draw_initialize_for_new_map": {
-        "address": "0x5595f0",
-        "server-address": null,
+        "game": {
+            "address": "0x5595f0"
+        },
+        "server": {
+            "address": null
+        },
         "replace": false
     },
     "text_draw_string": {
-        "address": "0x518150",
-        "server-address": null,
-        "arguments": ["ecx", "eax", "0", "4", "8"],
+        "game": {
+            "address": "0x518150",
+            "arguments": ["ecx", "eax", "0", "4", "8"]
+        },
+        "server": {
+            "address": null,
+            "arguments": ["ecx", "eax", "0", "4", "8"]
+        },
         "replace": true
     },
     "text_draw_unicode_string": {
-        "address": "0x518350",
-        "server-address": null,
-        "arguments": ["ecx", "eax", "0", "4", "8"],
+        "game": {
+            "address": "0x518350",
+            "arguments": ["ecx", "eax", "0", "4", "8"]
+        },
+        "server": {
+            "address": null,
+            "arguments": ["ecx", "eax", "0", "4", "8"]
+        },
         "replace": true
     },
     "text_set_drawing_parameters": {
-        "address": "0x559820",
-        "server-address": null,
-        "arguments": ["0", "4", "8", "ecx", "eax"],
+        "game": {
+            "address": "0x559820",
+            "arguments": ["0", "4", "8", "ecx", "eax"]
+        },
+        "server": {
+            "address": null,
+            "arguments": ["0", "4", "8", "ecx", "eax"]
+        },
         "replace": true
     },
     "time_query_performance_counter_ms": {
-        "address": "0x449b80",
-        "server-address": null,
+        "game": {
+            "address": "0x449b80"
+        },
+        "server": {
+            "address": null
+        },
         "use_return_value": true,
         "replace": false
     },
     "ui_cursor_displace": {
-        "address": "0x49a1b0",
-        "server-address": null,
-        "arguments": ["eax", "ecx"],
+        "game": {
+            "address": "0x49a1b0",
+            "arguments": ["eax", "ecx"]
+        },
+        "server": {
+            "address": null,
+            "arguments": ["eax", "ecx"]
+        },
         "replace": true
     },
     "ui_cursor_render": {
-        "address": "0x49a2e0",
-        "server-address": null,
+        "game": {
+            "address": "0x49a2e0"
+        },
+        "server": {
+            "address": null
+        },
         "replace": true
     },
     "ui_cursor_update": {
-        "address": "0x49a220",
-        "server-address": null,
+        "game": {
+            "address": "0x49a220"
+        },
+        "server": {
+            "address": null
+        },
         "replace": true,
         "comment": "this functions was inlined by the compiler",
-        "inlines": ["0x4b41ba"]
+        "inlines": [
+            "0x4b41ba"
+        ]
     },
     "ui_error_modal_show": {
-        "address": "0x49beb0",
-        "server-address": null,
-        "arguments": ["0", "4", "8", "12"],
+        "game": {
+            "address": "0x49beb0",
+            "arguments": ["0", "4", "8", "12"]
+        },
+        "server": {
+            "address": null,
+            "arguments": ["0", "4", "8", "12"]
+        },
         "replace": false
     },
     "ui_virtual_keyboard_backspace": {
-        "address": "0x4ac700",
-        "server-address": null,
+        "game": {
+            "address": "0x4ac700"
+        },
+        "server": {
+            "address": null
+        },
         "replace": true
     },
     "ui_virtual_keyboard_cancel": {
-        "address": "0x4ac260",
-        "server-address": null,
+        "game": {
+            "address": "0x4ac260"
+        },
+        "server": {
+            "address": null
+        },
         "use_return_value": true,
         "replace": true
     },
     "ui_virtual_keyboard_initialize": {
-        "address": "0x4ab900",
-        "server-address": null,
+        "game": {
+            "address": "0x4ab900"
+        },
+        "server": {
+            "address": null
+        },
         "use_return_value": true,
         "replace": true
     },
     "ui_virtual_keyboard_launch": {
-        "address": "0x4ab9b0",
-        "server-address": null,
-        "arguments": ["0", "4", "esi"],
+        "game": {
+            "address": "0x4ab9b0",
+            "arguments": ["0", "4", "esi"]
+        },
+        "server": {
+            "address": null,
+            "arguments": ["0", "4", "esi"]
+        },
         "use_return_value": true,
         "replace": true
     },
     "ui_virtual_keyboard_process": {
-        "address": "0x4abbf0",
-        "server-address": null,
+        "game": {
+            "address": "0x4abbf0"
+        },
+        "server": {
+            "address": null
+        },
         "replace": true
     },
     "ui_virtual_keyboard_render": {
-        "address": "0x4ac520",
-        "server-address": null,
+        "game": {
+            "address": "0x4ac520"
+        },
+        "server": {
+            "address": null
+        },
         "replace": true
     },
     "ui_virtual_keyboard_render_prompt": {
-        "address": "0x4ac310",
-        "server-address": null,
-        "arguments": ["0"],
+        "game": {
+            "address": "0x4ac310",
+            "arguments": ["0"]
+        },
+        "server": {
+            "address": null,
+            "arguments": ["0"]
+        },
         "replace": true
     },
     "ui_virtual_keyboard_validate_input_character": {
-        "address": "0x4abb90",
-        "server-address": null,
-        "arguments": ["ecx", "eax"],
+        "game": {
+            "address": "0x4abb90",
+            "arguments": ["ecx", "eax"]
+        },
+        "server": {
+            "address": null,
+            "arguments": ["ecx", "eax"]
+        },
         "use_return_value": true,
         "replace": false
     },
     "ui_widget_adjust_spinner_list_bounds": {
-        "address": "0x49c920",
-        "server-address": null,
-        "arguments": ["eax", "ecx"],
+        "game": {
+            "address": "0x49c920",
+            "arguments": ["eax", "ecx"]
+        },
+        "server": {
+            "address": null,
+            "arguments": ["eax", "ecx"]
+        },
         "replace": true
     },
     "ui_widget_close": {
-        "address": "0x0049f370",
-        "server-address": null,
+        "game": {
+            "address": "0x0049f370"
+        },
+        "server": {
+            "address": null
+        },
         "replace": false
     },
     "ui_widget_delete_recursive": {
-        "address": "0x49ab90",
-        "server-address": "0x48f670",
-        "arguments": ["0"],
+        "game": {
+            "address": "0x49ab90",
+            "arguments": ["0"]
+        },
+        "server": {
+            "address": "0x48f670",
+            "arguments": ["0"]
+        },
         "replace": false
     },
     "ui_widget_event_handler_dispatch": {
-        "address": "0x49d3c0",
-        "server-address": "0x491840",
-        "arguments": ["0", "4", "8", "12", "16"],
+        "game": {
+            "address": "0x49d3c0",
+            "arguments": ["0", "4", "8", "12", "16"]
+        },
+        "server": {
+            "address": "0x491840",
+            "arguments": ["0", "4", "8", "12", "16"]
+        },
         "replace": false
     },
     "ui_widget_get_cursor_focused_widget": {
-        "address": "0x49ca60",
-        "server-address": null,
-        "arguments": ["0", "4", "8", "12"],
+        "game": {
+            "address": "0x49ca60",
+            "arguments": ["0", "4", "8", "12"]
+        },
+        "server": {
+            "address": null,
+            "arguments": ["0", "4", "8", "12"]
+        },
         "use_return_value": true,
         "replace": true
     },
     "ui_widget_instance_give_focus_directly": {
-        "address": "0x49eb30",
-        "server-address": "0x491d10",
-        "arguments": ["eax", "ecx"],
+        "game": {
+            "address": "0x49eb30",
+            "arguments": ["eax", "ecx"]
+        },
+        "server": {
+            "address": "0x491d10",
+            "arguments": ["eax", "ecx"]
+        },
         "replace": true
     },
     "ui_widget_instance_render_recursive": {
-        "address": "0x49d850",
-        "server-address": null,
-        "arguments": ["0", "4", "8", "12", "16"],
+        "game": {
+            "address": "0x49d850",
+            "arguments": ["0", "4", "8", "12", "16"]
+        },
+        "server": {
+            "address": null,
+            "arguments": ["0", "4", "8", "12", "16"]
+        },
         "replace": true
     },
     "ui_widget_is_cursor_over": {
-        "address": "0x49c980",
-        "server-address": null,
-        "arguments": ["eax"],
+        "game": {
+            "address": "0x49c980",
+            "arguments": ["eax"]
+        },
+        "server": {
+            "address": null,
+            "arguments": ["eax"]
+        },
         "use_return_value": true,
         "replace": true
     },
     "ui_widget_launch": {
-        "address": "0x49f450",
-        "server-address": null,
-        "arguments": ["0", "4"],
+        "game": {
+            "address": "0x49f450",
+            "arguments": ["0", "4"]
+        },
+        "server": {
+            "address": null,
+            "arguments": ["0", "4"]
+        },
         "use_return_value": true,
         "replace": false
     },
     "ui_widget_load_by_name_or_tag": {
-        "address": "0x49aa00",
-        "server-address": "0x48f4e0",
-        "arguments": ["0", "4", "8", "12", "16", "20", "24"],
+        "game": {
+            "address": "0x49aa00",
+            "arguments": ["0", "4", "8", "12", "16", "20", "24"]
+        },
+        "server": {
+            "address": "0x48f4e0",
+            "arguments": ["0", "4", "8", "12", "16", "20", "24"]
+        },
         "use_return_value": true,
         "replace": true
     },
     "ui_widget_load_children_recursive": {
-        "address": "0x49c4d0",
-        "server-address": "0x4909c0",
-        "arguments": ["0", "esi"],
+        "game": {
+            "address": "0x49c4d0",
+            "arguments": ["0", "esi"]
+        },
+        "server": {
+            "address": "0x4909c0",
+            "arguments": ["0", "esi"]
+        },
         "use_return_value": true,
         "replace": true
     },
     "ui_widget_new_history_node": {
-        "address": "0x49c3c0",
-        "server-address": "0x4908b0",
-        "arguments": ["esi", "edi"],
+        "game": {
+            "address": "0x49c3c0",
+            "arguments": ["esi", "edi"]
+        },
+        "server": {
+            "address": "0x4908b0",
+            "arguments": ["esi", "edi"]
+        },
         "replace": true
     },
     "ui_widget_new_instance": {
-        "address": "0x49c710",
-        "server-address": "0x490c00",
-        "arguments": ["0", "4", "ecx", "eax", "edx"],
+        "game": {
+            "address": "0x49c710",
+            "arguments": ["0", "4", "ecx", "eax", "edx"]
+        },
+        "server": {
+            "address": "0x490c00",
+            "arguments": ["0", "4", "ecx", "eax", "edx"]
+        },
         "replace": true
     },
     "ui_widget_play_feedback_sound": {
-        "address": "0x49be20",
-        "server-address": null,
-        "arguments": ["eax"],
+        "game": {
+            "address": "0x49be20",
+            "arguments": ["eax"]
+        },
+        "server": {
+            "address": null,
+            "arguments": ["eax"]
+        },
         "replace": false
     },
     "ui_widget_render": {
-        "address": "0x49b450",
-        "server-address": null,
-        "arguments": ["eax"],
+        "game": {
+            "address": "0x49b450",
+            "arguments": ["eax"]
+        },
+        "server": {
+            "address": null,
+            "arguments": ["eax"]
+        },
         "replace": true
     },
     "ui_widget_render_column_list_og": {
-        "address": "0x49ea50",
-        "server-address": null,
-        "arguments": ["0", "4", "8", "12", "edi"],
+        "game": {
+            "address": "0x49ea50",
+            "arguments": ["0", "4", "8", "12", "edi"]
+        },
+        "server": {
+            "address": null,
+            "arguments": ["0", "4", "8", "12", "edi"]
+        },
         "replace": false
     },
     "ui_widget_render_spinner_list": {
-        "address": "0x49e4f0",
-        "server-address": null,
-        "arguments": ["0", "4", "8", "12", "16"],
+        "game": {
+            "address": "0x49e4f0",
+            "arguments": ["0", "4", "8", "12", "16"]
+        },
+        "server": {
+            "address": null,
+            "arguments": ["0", "4", "8", "12", "16"]
+        },
         "replace": false
     },
     "ui_widget_render_text_box": {
-        "address": "0x49e160",
-        "server-address": null,
-        "arguments": ["0", "4", "8", "12", "16"],
+        "game": {
+            "address": "0x49e160",
+            "arguments": ["0", "4", "8", "12", "16"]
+        },
+        "server": {
+            "address": null,
+            "arguments": ["0", "4", "8", "12", "16"]
+        },
         "replace": false
     },
     "ui_widget_text_box_is_focused": {
-        "address": "0x49cc40",
-        "server-address": null,
-        "arguments": ["eax"],
+        "game": {
+            "address": "0x49cc40",
+            "arguments": ["eax"]
+        },
+        "server": {
+            "address": null,
+            "arguments": ["eax"]
+        },
         "use_return_value": true,
         "replace": false
     },
     "ui_widget_update_multiplayer_type_menu_extended_description": {
-        "address": "0x4a7d00",
-        "server-address": null,
-        "arguments": ["0"],
+        "game": {
+            "address": "0x4a7d00",
+            "arguments": ["0"]
+        },
+        "server": {
+            "address": null,
+            "arguments": ["0"]
+        },
         "replace": true
     },
     "ui_widget_update_player_profile_text": {
-        "address": "0x49f6a0",
-        "server-address": null,
-        "arguments": ["0", "ebx"],
+        "game": {
+            "address": "0x49f6a0",
+            "arguments": ["0", "ebx"]
+        },
+        "server": {
+            "address": null,
+            "arguments": ["0", "ebx"]
+        },
         "replace": true
     },
     "ui_widgets_initialize": {
-        "address": "0x49a940",
-        "server-address": "0x48f420",
+        "game": {
+            "address": "0x49a940"
+        },
+        "server": {
+            "address": "0x48f420"
+        },
         "replace": true
     },
     "unicode_string_list_get_string": {
-        "address": "0x55ad90",
-        "server-address": null,
-        "arguments": ["ecx", "edx"],
+        "game": {
+            "address": "0x55ad90",
+            "arguments": ["ecx", "edx"]
+        },
+        "server": {
+            "address": null,
+            "arguments": ["ecx", "edx"]
+        },
         "use_return_value": true,
         "replace": true
     },
     "unit_add_weapon_to_inventory": {
-        "address": "0x570b00",
-        "server-address": "0x51f390",
-        "arguments": ["ecx", "eax", "0"],
+        "game": {
+            "address": "0x570b00",
+            "arguments": ["ecx", "eax", "0"]
+        },
+        "server": {
+            "address": "0x51f390",
+            "arguments": ["ecx", "eax", "0"]
+        },
         "replace": false
     },
     "unit_delete_all_weapons": {
-        "address": "0x570a60",
-        "server-address": "0x51f2f0",
-        "arguments": ["eax"],
+        "game": {
+            "address": "0x570a60",
+            "arguments": ["eax"]
+        },
+        "server": {
+            "address": "0x51f2f0",
+            "arguments": ["eax"]
+        },
         "replace": false
     },
     "unit_get_camera_position": {
-        "address": "0x56c440",
-        "server-address": null,
-        "arguments": ["ecx", "eax"],
+        "game": {
+            "address": "0x56c440",
+            "arguments": ["ecx", "eax"]
+        },
+        "server": {
+            "address": null,
+            "arguments": ["ecx", "eax"]
+        },
         "replace": false
     },
     "wave_function_calculate_value_og": {
-        "address": "0x4cfdb0",
-        "server-address": "0x4b8d30",
-        "arguments": ["0", "4", "eax"],
+        "game": {
+            "address": "0x4cfdb0",
+            "arguments": ["0", "4", "eax"]
+        },
+        "server": {
+            "address": "0x4b8d30",
+            "arguments": ["0", "4", "eax"]
+        },
         "use_return_value": true,
         "return_64_bit_value": true,
         "replace": false
     },
     "weapon_build_weapon_interface_state": {
-        "address": "0x4c5d90",
-        "server-address": null,
-        "arguments": ["eax", "0"],
+        "game": {
+            "address": "0x4c5d90",
+            "arguments": ["eax", "0"]
+        },
+        "server": {
+            "address": null,
+            "arguments": ["eax", "0"]
+        },
         "replace": false
     },
     "widgets_initialize": {
-        "address": "0x5032e0",
-        "server-address": null,
+        "game": {
+            "address": "0x5032e0"
+        },
+        "server": {
+            "address": null
+        },
         "replace": false
     },
     "widgets_initialize_for_new_map": {
-        "address": "0x503320",
-        "server-address": null,
+        "game": {
+            "address": "0x503320"
+        },
+        "server": {
+            "address": null
+        },
         "replace": false
     }
 }

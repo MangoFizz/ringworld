@@ -6,24 +6,43 @@
     "patternProperties": {
         "^.*$": {
             "type": "object",
-            "description": "Entry describing a single function",
+            "description": "Entry describing a single function (split format)",
             "properties": {
-                "address": {
-                    "type": "string",
-                    "pattern": "^0x[0-9a-fA-F]+$",
-                    "description": "Hexadecimal address string (required)"
+                "game": {
+                    "type": "object",
+                    "properties": {
+                        "address": {
+                            "type": "string",
+                            "pattern": "^0x[0-9a-fA-F]+$",
+                            "description": "Hexadecimal address string (required)"
+                        },
+                        "arguments": {
+                            "type": "array",
+                            "items": {"type": "string"},
+                            "description": "Array of argument descriptors (register names, stack offsets, constants, etc.)"
+                        }
+                    },
+                    "required": ["address"],
+                    "additionalProperties": false
                 },
-                "server-address": {
-                    "description": "Optional address for server-side counterpart or null",
-                    "anyOf": [
-                        {"type": "string", "pattern": "^0x[0-9a-fA-F]+$"},
-                        {"type": "null"}
-                    ]
-                },
-                "arguments": {
-                    "type": "array",
-                    "items": {"type": "string"},
-                    "description": "Array of argument descriptors (register names, stack offsets, constants, etc.)"
+                "server": {
+                    "type": "object",
+                    "properties": {
+                        "address": {
+                            "anyOf": [
+                                {"type": "string", "pattern": "^0x[0-9a-fA-F]+$"},
+                                {"type": "null"}
+                            ],
+                            "description": "Optional address for server-side counterpart or null"
+                        },
+                        "arguments": {
+                            "type": "array",
+                            "items": {"type": "string"},
+                            "description": "Array of argument descriptors (register names, stack offsets, constants, etc.)"
+                        }
+                    },
+                    "required": ["address"],
+                    "additionalProperties": false
                 },
                 "use_return_value": {"type": "boolean"},
                 "return_64_bit_value": {"type": "boolean"},
@@ -36,7 +55,7 @@
                     "description": "Array of inlined function addresses (hex strings). Unused at the moment"
                 }
             },
-            "required": ["address"],
+            "required": ["game", "server"],
             "additionalProperties": true
         }
     },
@@ -44,10 +63,15 @@
     "examples": [
         {
             "bitmap_draw": {
-                "address": "0x497b20",
-                "arguments": ["0", "4", "8", "12", "16", "eax"],
-                "replace": true,
-                "server-address": null
+                "game": {
+                    "address": "0x497b20",
+                    "arguments": ["0", "4", "8", "12", "16", "eax"]
+                },
+                "server": {
+                    "address": null,
+                    "arguments": ["0", "4", "8", "12", "16", "eax"]
+                },
+                "replace": true
             }
         }
     ]

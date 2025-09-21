@@ -1,4 +1,5 @@
 #include <windows.h>
+#include "../debug/assertion.h"
 #include "../exception/exception.h"
 #include "../font/font.h"
 #include "../math/math.h"
@@ -36,10 +37,11 @@ static void add_new_unicode_string_rect(DynamicArray *text_recs, const wchar_t *
     }
 
     VectorFontTextRect *new_fmt = dynamic_array_push(text_recs, NULL);
-    
+
     dynamic_buffer_init(&new_fmt->text);
-    dynamic_buffer_push_data(&new_fmt->text, str + start, substr_size * sizeof(wchar_t));
-    dynamic_buffer_push_data(&new_fmt->text, L"\0", sizeof(wchar_t));
+
+    ASSERT_OR_RETURN(dynamic_buffer_push_data(&new_fmt->text, str + start, substr_size * sizeof(wchar_t)));
+    ASSERT_OR_RETURN(dynamic_buffer_push_data(&new_fmt->text, L"\0", sizeof(wchar_t)));
 
     new_fmt->x = x;
     new_fmt->width = width;
@@ -144,8 +146,8 @@ static void add_new_string_rect(DynamicArray *text_recs, const char *str, size_t
     VectorFontTextRect *new_fmt = dynamic_array_push(text_recs, NULL);
     
     dynamic_buffer_init(&new_fmt->text);
-    dynamic_buffer_push_data(&new_fmt->text, str + start, substr_size * sizeof(char));
-    dynamic_buffer_push_data(&new_fmt->text, L"\0", sizeof(char));
+    ASSERT_OR_RETURN(dynamic_buffer_push_data(&new_fmt->text, str + start, substr_size * sizeof(char)));
+    ASSERT_OR_RETURN(dynamic_buffer_push_data(&new_fmt->text, L"\0", sizeof(char)));
 
     new_fmt->x = x;
     new_fmt->width = width;

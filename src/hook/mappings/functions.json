@@ -1822,7 +1822,7 @@
         },
         "replace": false
     },
-    "wave_function_calculate_value_og": {
+    "wave_function_calculate_value": {
         "game": {
             "address": "0x4cfdb0",
             "arguments": ["0", "4", "eax"]

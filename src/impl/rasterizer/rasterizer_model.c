@@ -184,7 +184,7 @@ void rasterizer_model_draw(ShaderModel *shader, int16_t texture_index, uint32_t 
         self_illumination_color.g = shader->self_illumination.animation_color[1].g - shader->self_illumination.animation_color[0].g;
         self_illumination_color.b = shader->self_illumination.animation_color[1].b - shader->self_illumination.animation_color[0].b;
 
-        animation_phase = wave_function_calculate_value_og(
+        animation_phase = wave_function_calculate_value(
             frame_parameters->elapsed_time_sec / shader->self_illumination.animation_period + animation_phase,
             shader->self_illumination.animation_function
         );

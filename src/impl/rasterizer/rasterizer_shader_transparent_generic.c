@@ -698,7 +698,7 @@ void rasterizer_dx9_transparent_generic_preprocess(TransparentGeometryGroup *gro
             }
             else {
                 RasterizerFrameParameters *frame_parameters = rasterizer_get_frame_parameters();
-                progress = wave_function_calculate_value_og(frame_parameters->elapsed_time_sec / stage->color_0_animation_period, stage->color_0_animation_function);
+                progress = wave_function_calculate_value(frame_parameters->elapsed_time_sec / stage->color_0_animation_period, stage->color_0_animation_function);
             } 
             ASSERT(!nan_f32(progress));
 

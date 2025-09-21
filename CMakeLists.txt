@@ -28,7 +28,6 @@ set(CMAKE_FIND_LIBRARY_SUFFIXES .a)
 
 # Find dependencies
 find_package(LuaRuntime REQUIRED)
-find_package(Python3 COMPONENTS Interpreter REQUIRED)
 find_package(Git REQUIRED)
 find_package(Backtrace)
 
@@ -160,7 +159,7 @@ set(RINGWORLD_SOURCES
     src/impl/text/string.c
     src/impl/text/text.c
     src/impl/text/unicode_string_list.c
-    ${RINGWORLD_HOOKS_SOURCES}
+    ${RINGWORLD_HOOK_SOURCES}
     ${TAG_DEFINITION_HPP_FILES}
     ${CMAKE_CURRENT_SOURCE_DIR}/src/version.h
 )

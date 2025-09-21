@@ -129,3 +129,7 @@ void exception_throw_runtime_error(const char* fmt, ...) {
 void exception_throw_forbidden_function_called(const char *function_name, void *from) {
     exception_throw_runtime_error("Forbidden function called! %s was called from 0x%08zX", function_name, from);
 }
+
+void unavailable_function_called() {
+    exception_throw_runtime_error("Unexisting function called!");
+}

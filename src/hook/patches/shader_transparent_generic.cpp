@@ -4,7 +4,7 @@
  */
 
 #include <windows.h>
-#include "hook.hpp"
+#include "../hook.hpp"
 
 extern "C" {
     void shader_transparent_generic_switch_case_asm();

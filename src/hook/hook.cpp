@@ -10,7 +10,7 @@
 #include "ringworld.h"
 #include "version.h"
 
-using namespace Demon;
+using namespace Ringworld;
 
 static std::byte *hook_heap;
 static const std::size_t hook_heap_size = 512 * 1024;
@@ -43,16 +43,16 @@ extern "C" void set_up_ringworld_hooks(Platform platform) {
         switch(platform) {
             case RW_PLATFORM_GAME: 
                 ringworld_server_mode = false;
-                set_game_variables();
-                set_up_game_hooks();
+                set_up_game_variables();
+                set_up_game_function_mappings();
                 set_up_transparent_generic_hooks();
                 set_up_game_state_hooks();
                 set_up_hud_hooks();
                 break;
             case RW_PLATFORM_DEDICATED_SERVER:
                 ringworld_server_mode = true;
-                set_server_variables();
-                set_up_server_hooks();
+                set_up_server_variables();
+                set_up_server_function_mappings();
                 break;
         }
     }
@@ -210,7 +210,7 @@ void *Hook::write_hook() {
                                     }
 
                                     default:
-                                        throw std::logic_error("Unknown register!");
+                                        throw std::logic_error("Unknown register: " + std::to_string(p.second));
                                 }
                                 break;
                             }
@@ -245,7 +245,7 @@ void *Hook::write_hook() {
                                     case ESP:
                                         throw std::logic_error("ESP register is not supported");
                                     default:
-                                        throw std::logic_error("Unknown register!");
+                                        throw std::logic_error("Unknown register (" + std::to_string(p.second) + ") in hook " + this->name);
                                 }
 
                                 std::size_t offset = stack_offset + sizeof(std::uint32_t) * pi_rev;

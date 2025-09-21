@@ -1,11 +1,11 @@
-#ifndef DEMON__HOOK_HPP
-#define DEMON__HOOK_HPP
+#ifndef RINGWORLD__HOOK__HOOK_HPP
+#define RINGWORLD__HOOK__HOOK_HPP
 
 #include <cstdint>
 #include <vector>
 #include <windows.h>
 
-namespace Demon {
+namespace Ringworld {
     enum HookType {
         /**
          * This is intended to be called from the game to the library.
@@ -113,10 +113,10 @@ namespace Demon {
             std::vector<std::pair<ParameterStorageType, std::size_t>> parameters;
     };
 
-    void set_up_game_hooks();
-    void set_up_server_hooks();
-    void set_game_variables();
-    void set_server_variables();
+    void set_up_game_function_mappings();
+    void set_up_server_function_mappings();
+    void set_up_game_variables();
+    void set_up_server_variables();
 }
 
 /**

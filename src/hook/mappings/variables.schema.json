@@ -1,0 +1,27 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Variables mapping schema",
+  "description": "Schema for the variables mapping (keys are variable identifiers, values describe type/address and optional server address).",
+  "type": "object",
+  "patternProperties": {
+    "^.*$": {
+      "type": "object",
+      "description": "Entry describing a single global variable",
+      "properties": {
+        "type": { "type": "string", "description": "C type or descriptor" },
+        "address": { "type": "string", "pattern": "^0x[0-9a-fA-F]+$", "description": "Hex address string" },
+        "server-address": {
+          "description": "Optional server-side address; can be hex string, the literal 'NULL', the literal '0', or null",
+          "anyOf": [
+            { "type": "string", "pattern": "^0x[0-9a-fA-F]+$" },
+            { "type": "null" }
+          ]
+        },
+        "notes": { "type": "string" }
+      },
+      "required": ["type", "address"],
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": false
+}

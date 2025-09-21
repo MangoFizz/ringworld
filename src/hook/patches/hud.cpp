@@ -5,8 +5,8 @@
 
 #include <windows.h>
 #include <cstdio>
-#include "hook.hpp"
-#include "codefinder.hpp"
+#include "../codefinder.hpp"
+#include "../hook.hpp"
 #include "../impl/tag/definitions/font.h"
 #include "../impl/tag/definitions/vector_font.h"
 #include "../impl/interface/hud.h"

@@ -4,8 +4,8 @@
  */
 
 #include <windows.h>
-#include "hook.hpp"
-#include "codefinder.hpp"
+#include "../codefinder.hpp"
+#include "../hook.hpp"
 #include "../impl/memory/memory.h"
 
 void set_up_game_state_hooks() {

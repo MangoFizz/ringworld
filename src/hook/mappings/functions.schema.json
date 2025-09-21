@@ -1,0 +1,54 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "Functions mapping schema",
+    "description": "Schema for the game functions mapping (keys are function identifiers, values describe call metadata).",
+    "type": "object",
+    "patternProperties": {
+        "^.*$": {
+            "type": "object",
+            "description": "Entry describing a single function",
+            "properties": {
+                "address": {
+                    "type": "string",
+                    "pattern": "^0x[0-9a-fA-F]+$",
+                    "description": "Hexadecimal address string (required)"
+                },
+                "server-address": {
+                    "description": "Optional address for server-side counterpart or null",
+                    "anyOf": [
+                        {"type": "string", "pattern": "^0x[0-9a-fA-F]+$"},
+                        {"type": "null"}
+                    ]
+                },
+                "arguments": {
+                    "type": "array",
+                    "items": {"type": "string"},
+                    "description": "Array of argument descriptors (register names, stack offsets, constants, etc.)"
+                },
+                "use_return_value": {"type": "boolean"},
+                "return_64_bit_value": {"type": "boolean"},
+                "replace": {"type": "boolean"},
+                "disabled": {"type": "boolean"},
+                "comment": {"type": "string"},
+                "inlines": {
+                    "type": "array",
+                    "items": {"type": "string", "pattern": "^0x[0-9a-fA-F]+$"},
+                    "description": "Array of inlined function addresses (hex strings). Unused at the moment"
+                }
+            },
+            "required": ["address"],
+            "additionalProperties": true
+        }
+    },
+    "additionalProperties": false,
+    "examples": [
+        {
+            "bitmap_draw": {
+                "address": "0x497b20",
+                "arguments": ["0", "4", "8", "12", "16", "eax"],
+                "replace": true,
+                "server-address": null
+            }
+        }
+    ]
+}

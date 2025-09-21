@@ -7,17 +7,17 @@
     "build_number": {
         "type": "wchar_t",
         "game-address": "0x6b4300",
-        "server-address": null
+        "server-address": "0x61cb30"
     },
     "cinematic_globals": {
         "type": "CinematicGlobals *",
         "game-address": "0x68c83c",
-        "server-address": null
+        "server-address": "0x5f506c"
     },
     "close_server_connection_flag": {
         "type": "bool",
         "game-address": "0x6b736e",
-        "server-address": null
+        "server-address": "0x61fb36"
     },
     "collideable_object": {
         "type": "void *",
@@ -52,7 +52,7 @@
     "current_scenario": {
         "type": "Scenario *",
         "game-address": "0x6e224c",
-        "server-address": null
+        "server-address": "0x62942c"
     },
     "cursor_should_activate_widgets": {
         "type": "uint8_t",
@@ -102,7 +102,7 @@
     "devmode_enabled": {
         "type": "bool",
         "game-address": "0x6bd15e",
-        "server-address": null
+        "server-address": "0x62583e"
     },
     "dynamic_triangles": {
         "type": "DynamicTriangles",
@@ -147,7 +147,7 @@
     "game_engine_globals": {
         "type": "GameEngineGlobals",
         "game-address": "0x815ea0",
-        "server-address": null
+        "server-address": "0x6e19e0"
     },
     "game_globals": {
         "type": "Globals *",
@@ -167,7 +167,7 @@
     "globals_rasterizer_data": {
         "type": "GlobalsRasterizerData *",
         "game-address": "0x6b83fc",
-        "server-address": null
+        "server-address": "0x620bec"
     },
     "hsc_functions": {
         "type": "HscFunction *",
@@ -177,27 +177,27 @@
     "hud_globals": {
         "type": "HUDGlobals *",
         "game-address": "0x6b44a4",
-        "server-address": null
+        "server-address": "0x61ccd4"
     },
     "hud_messaging_parameters": {
         "type": "HUDGlobalsMessagingParameters *",
         "game-address": "0x80f120",
-        "server-address": null
+        "server-address": "0x6dac94"
     },
     "input_events_globals": {
         "type": "InputEventsGlobals",
         "game-address": "0x6add08",
-        "server-address": null
+        "server-address": "0x616538"
     },
     "input_flags": {
         "type": "uint8_t",
         "game-address": "0x6ad572",
-        "server-address": null
+        "server-address": "0x615da2"
     },
     "input_globals": {
         "type": "InputGlobals",
         "game-address": "0x64c528",
-        "server-address": null
+        "server-address": "0x5be308"
     },
     "is_main_menu": {
         "type": "bool",
@@ -212,37 +212,37 @@
     "loading_screen_map_name": {
         "type": "wchar[]",
         "game-address": "0x64de98",
-        "server-address": null
+        "server-address": "0x5bfc78"
     },
     "loading_screen_server_address": {
         "type": "wchar[]",
         "game-address": "0x64de58",
-        "server-address": null
+        "server-address": "0x5bfc38"
     },
     "loading_screen_state": {
         "type": "UILoadingScreenState",
         "game-address": "0x6b4014",
-        "server-address": null
+        "server-address": "0x61c844"
     },
     "loading_screen_time_counter_ms_0": {
         "type": "int32_t",
         "game-address": "0x629c70",
-        "server-address": null
+        "server-address": "0x59f610"
     },
     "loading_screen_time_counter_ms_1": {
         "type": "int32_t",
         "game-address": "0x629c74",
-        "server-address": null
+        "server-address": "0x59f614"
     },
     "loading_screen_time_counter_ms_2": {
         "type": "int32_t",
         "game-address": "0x629c78",
-        "server-address": null
+        "server-address": "0x59f618"
     },
     "loading_screen_unk_flag": {
         "type": "bool",
         "game-address": "0x6ad4a1",
-        "server-address": null
+        "server-address": "0x615cd1"
     },
     "local_player_index_for_draw_string_and_hack_in_icons": {
         "type": "bool",
@@ -297,27 +297,27 @@
     "network_game_client": {
         "type": "NetworkGameClient *",
         "game-address": "0x6b7368",
-        "server-address": null
+        "server-address": "0x61fb30"
     },
     "network_game_globals_client": {
         "type": "NetworkGame",
-        "game-address": "0x80EC94",
-        "server-address": null
+        "game-address": "0x80ec94",
+        "server-address": "0x6da814"
     },
     "network_game_globals_host": {
         "type": "NetworkGame",
         "game-address": "0x7fc6a8",
-        "server-address": null
+        "server-address": "0x6c7968"
     },
     "network_game_server_address_host": {
         "type": "uint32_t",
         "game-address": "0x621f74",
-        "server-address": null
+        "server-address": "0x59792c"
     },
     "network_game_server_port_host": {
         "type": "uint16_t",
         "game-address": "0x6337f8",
-        "server-address": null
+        "server-address": "0x5a9190"
     },
     "noncollideable_object": {
         "type": "void *",
@@ -382,7 +382,7 @@
     "player_profile_directory": {
         "type": "char[]",
         "game-address": "0x647830",
-        "server-address": null
+        "server-address": "0x5b9610"
     },
     "players_data": {
         "type": "PlayersTable *",
@@ -397,12 +397,12 @@
     "process_argc": {
         "type": "size_t",
         "game-address": "0x6bd164",
-        "server-address": null
+        "server-address": "0x625844"
     },
     "process_argv": {
         "type": "const char **",
         "game-address": "0x6bd160",
-        "server-address": null
+        "server-address": "0x625840"
     },
     "rasterizer_bitmap_font_vertex_shader_constants": {
         "type": "VertexShaderScreenprojConstants",
@@ -497,7 +497,7 @@
     "rng_global_seed": {
         "type": "uint32_t",
         "game-address": "0x6b4d64",
-        "server-address": null
+        "server-address": "0x61d52c"
     },
     "saved_game_state_buffer": {
         "type": "void *",
@@ -532,7 +532,7 @@
     "server_connection_attempts": {
         "type": "uint32_t",
         "game-address": "0x6b4018",
-        "server-address": null
+        "server-address": "0x61c848"
     },
     "shader_effects": {
         "type": "RasterizerDx9ShaderEffectEntry",
@@ -562,7 +562,7 @@
     "strings_module": {
         "type": "HMODULE",
         "game-address": "0x6bde88",
-        "server-address": null
+        "server-address": "0x626500"
     },
     "structure_bsp_index": {
         "type": "uint16_t",
@@ -662,17 +662,17 @@
     "virtual_keyboard_labels": {
         "type": "wchar_t **",
         "game-address": "0x611674",
-        "server-address": null
+        "server-address": "0x56a7e0"
     },
     "wave_functions": {
         "type": "uint8_t *[12]",
-        "game-address": "0xd85a4c",
-        "server-address": null
+        "game-address": "0x6529d8",
+        "server-address": "0x5c478c"
     },
     "wave_functions_initialized": {
         "type": "bool",
-        "game-address": "0xd85a94",
-        "server-address": null
+        "game-address": "0x652a20",
+        "server-address": "0x5c47d4"
     },
     "widget_globals": {
         "type": "WidgetGlobals",

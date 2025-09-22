@@ -17,9 +17,12 @@ enum {
 };
 
 typedef enum PACKED_ENUM InputValidationMode {
-    INPUT_VALIDATION_PROFILE_NAME = 1,
-    INPUT_VALIDATION_GAME_VARIANT_NAME = 2,
-    INPUT_VALIDATION_NOT_EMPTY = 3,
+    INPUT_VALIDATION_NONE,
+    INPUT_VALIDATION_PROFILE_NAME,
+    INPUT_VALIDATION_GAME_VARIANT_NAME,
+    INPUT_VALIDATION_NOT_EMPTY,
+    INPUT_VALIDATION_HOSTNAME,
+    INPUT_VALIDATION_NUMERIC,
     INPUT_VALIDATION_MODE_SIZE = 0xFFFFFFFF
 } InputValidationMode;
 _Static_assert(sizeof(InputValidationMode) == 4);
@@ -48,6 +51,7 @@ typedef struct VirtualKeyboardGlobals {
     TagHandle caption_font_tag;
     TagHandle text_font_tag;
 } VirtualKeyboardGlobals;
+_Static_assert(sizeof(VirtualKeyboardGlobals) == 0x74);
 
 /**
  * Get the virtual keyboard globals.
@@ -71,8 +75,14 @@ void ui_virtual_keyboard_render(void);
  * @param character the character to validate
  * @param validation_mode the validation mode to use
  * @return true if the character is valid, false otherwise
+ * @note This function does not return a boolean value; it may return
+ *       the result of some functions it calls, such as isdigit(),
+ *       which can return nonzero values for true and zero for false.
+ *       Using its return value as a boolean may not work as expected,
+ *       because the comparison the compiler generates in assembly
+ *       is against 1, not against 0.
  */
-bool ui_virtual_keyboard_validate_input_character(unsigned char character, uint32_t validation_mode);
+uint32_t ui_virtual_keyboard_validate_input_character(unsigned char character, uint32_t validation_mode);
 
 #ifdef __cplusplus
 }

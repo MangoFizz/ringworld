@@ -75,7 +75,7 @@ bool ui_virtual_keyboard_launch(uint16_t buffer_size, int16_t caption_index, wch
     globals->cursor_blink_time = time_query_performance_counter_ms();
     wcsncpy(globals->original_buffer, text, UI_VIRTUAL_KEYBOARD_BUFFER_LEN);
     globals->original_buffer[31] = L'\0';
-    globals->validate_mode = true;
+    globals->validate_mode = INPUT_VALIDATION_PROFILE_NAME;
     globals->caption_font_tag = font_get_default_large();
     if(buffer_size <= UI_VIRTUAL_KEYBOARD_FONT_SIZE_THRESHOLD) {
         globals->text_font_tag = font_get_default_large();
@@ -296,7 +296,7 @@ bool ui_virtual_keyboard_insert(char character) {
         return false;
     }
 
-    if(!ui_virtual_keyboard_validate_input_character(character, globals->validate_mode)) {
+    if(ui_virtual_keyboard_validate_input_character(character, globals->validate_mode) == FALSE) {
         return false;
     }
 

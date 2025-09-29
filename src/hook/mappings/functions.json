@@ -373,6 +373,17 @@
         },
         "replace": true
     },
+    "hud_draw_bitmap": {
+        "game": {
+            "address": "0x4affa0",
+            "arguments": ["0", "4", "8", "12", "16", "20", "eax", "ecx", "edx"]
+        },
+        "server": {
+            "address": null
+        },
+        "replace": true,
+        "comment": "The parameters of this function are a mess, no idea why it doesn't work"
+    },
     "hud_draw_bitmap_internal": {
         "game": {
             "address": "0x4b0140",

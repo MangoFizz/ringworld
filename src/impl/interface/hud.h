@@ -84,12 +84,16 @@ void hud_initialize_for_new_map(void);
  * Calculate the position of a HUD element on the screen.
  * @param absolute_placement The absolute placement of the HUD element.
  * @param meter_definition The definition of the meter.
- * @param anchor_adjustments Adjustments to the anchor.
+ * #@param anchor_adjustments Adjustments to the anchor.
+ * @param use_hud_globals_canvas Whether to use the HUD globals canvas size.
  * @param override_scale Whether to override the scale.
  * @param custom_scale The custom scale to use.
  * @param out_position The output position of the HUD element.
+ * @note The anchor adjustments parameter is currently not implemented, as 
+ *       it seems to be unused in the original code. The parameter has been
+ *       reused for the use_hud_globals_canvas boolean instead.
  */
-void hud_calculate_point(HUDInterfaceAnchor *absolute_placement, HUDMeterDefinition *meter_definition, Bounds2D *anchor_adjustments, bool override_scale, float custom_scale, VectorXYInt *out_position);
+void hud_calculate_point(HUDInterfaceAnchor *absolute_placement, HUDMeterDefinition *meter_definition, bool use_hud_globals_canvas, bool override_scale, float custom_scale, VectorXYInt *out_position);
 
 /**
  * Calculate the bounds of a HUD bitmap.

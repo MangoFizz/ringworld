@@ -66,4 +66,8 @@ void set_up_hud_hooks() {
     *reinterpret_cast<std::uint8_t *>(address + 2) = 0xE8;
     *reinterpret_cast<std::uintptr_t *>(address + 2 + 1) = function - (address + 2 + 5);
     VirtualProtect(reinterpret_cast<void *>(address), 16, old_protection, &old_protection);
+
+    // Enable the use of the custom canvas in the HUD numbers call to hud_calculate_point
+    uint8_t canvas_parameter_value[] = { 0xB1, 0x01 }; // mov cl, 1
+    overwrite(reinterpret_cast<uint8_t *>(0x4af614), canvas_parameter_value, 2);
 }

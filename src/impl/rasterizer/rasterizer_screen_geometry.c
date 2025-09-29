@@ -92,6 +92,10 @@ static void rasterizer_screen_geometry_hud_meter_draw(BitmapData **meter_maps, R
 }
 
 void rasterizer_screen_geometry_draw(RasterizerDynamicScreenGeometryParams *params, RasterizerDynamicVertex *vertices) {
+    rasterizer_screen_geometry_draw_with_custom_canvas(params, vertices, render_get_screen_width(), render_get_screen_height());
+}
+
+void rasterizer_screen_geometry_draw_with_custom_canvas(RasterizerDynamicScreenGeometryParams *params, RasterizerDynamicVertex *vertices, uint16_t canvas_width, uint16_t canvas_height) {
     IDirect3DDevice9 *device = rasterizer_dx9_device();
     RasterizerWindowRenderParameters *window_parameters = rasterizer_get_window_parameters();
     RasterizerGlobals *rasterizer_globals = rasterizer_get_globals();
@@ -131,8 +135,8 @@ void rasterizer_screen_geometry_draw(RasterizerDynamicScreenGeometryParams *para
     Rectangle2D *window_bounds = &window_parameters->camera.window_bounds;
     float window_width = window_bounds->right - window_bounds->left;
     float window_height = window_bounds->bottom - window_bounds->top;
-    float inv_screen_width = 2.0f / render_get_screen_width();
-    float inv_screen_height = -2.0f / render_get_screen_height();
+    float inv_screen_width = 2.0f / canvas_width;
+    float inv_screen_height = -2.0f / canvas_height;
 
     float offset_x, offset_y;
     if(params->offset == NULL) {

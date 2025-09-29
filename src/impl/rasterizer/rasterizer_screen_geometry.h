@@ -41,6 +41,15 @@ typedef struct RasterizerDynamicScreenGeometryParams {
 _Static_assert(sizeof(RasterizerDynamicScreenGeometryParams) == 140);
 
 /**
+ * Renders a screen geometry quad with a custom canvas size.
+ * @param params Pointer to the structure containing the rendering parameters.
+ * @param vertices Pointer to an array of vertex structures that define the corners of the screen quad.
+ * @param canvas_width The width of the custom canvas.
+ * @param canvas_height The height of the custom canvas.
+ */
+void rasterizer_screen_geometry_draw_with_custom_canvas(RasterizerDynamicScreenGeometryParams *params, RasterizerDynamicVertex *vertices, uint16_t canvas_width, uint16_t canvas_height);
+
+/**
  * Renders a screen geometry quad.
  * @param params Pointer to the structure containing the rendering parameters.
  * @param vertices Pointer to an array of vertex structures that define the corners of the screen quad.

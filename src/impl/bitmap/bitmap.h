@@ -35,6 +35,18 @@ int16_t bitmap_group_sequence_get_bitmap_index_for_frame(TagHandle bitmap_tag, u
 BitmapData *bitmap_group_sequence_get_bitmap_for_frame(TagHandle bitmap_tag, uint16_t sequence_index, uint16_t frame_index);
 
 /**
+ * Get the bitmap and bounds for a specific frame within a sequence.
+ * @param bitmap_tag Handle of the bitmap tag.
+ * @param sequence_index The index of the sequence within the bitmap tag.
+ * @param bitmap_out Output parameter to receive the pointer to the bitmap data.
+ * @param bounds_out Output parameter to receive the pointer to the bounds data.
+ * @param frame_index The index of the frame within the sequence.
+ * @return Pointer to the bitmap data corresponding to the specified frame.
+ * @todo Reorder parameters to have outputs last.
+ */
+void bitmap_group_sequence_get_bitmap_and_bounds_for_frame(TagHandle bitmap_tag, uint16_t sequence_index, BitmapData **bitmap_out, Bounds2D **bounds_out, uint16_t frame_index);
+
+/**
  * Load bitmap texture.
  * @param bitmap The bitmap data.
  * @param block True if the load should block the thread, false otherwise.

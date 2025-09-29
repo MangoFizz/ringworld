@@ -5,6 +5,7 @@
 extern "C" {
 #endif
 
+#include "../player/player.h"
 #include "../tag/definitions/weapon_hud_interface.h"
 #include "../tag/definitions/hud_globals.h"
 #include "../rasterizer/rasterizer_screen_geometry.h"
@@ -44,6 +45,54 @@ typedef struct HUDMeterDrawFlags {
     uint8_t pad0[3];
 } HUDMeterDrawFlags;
 _Static_assert(sizeof(HUDMeterDrawFlags) == 4);
+
+typedef struct HudMessage {
+    int32_t time_displayed;
+    wchar_t text[63];
+    bool display;
+    uint8_t display_index;
+    int32_t next_message;
+    uint32_t unk1;
+} HudMessage; 
+_Static_assert(sizeof(HudMessage) == 0x8C);
+
+typedef struct HudMessagingActionPrompt {
+    wchar_t message_buffer[256];
+    union {
+        HUDInterfaceMessagingIcon *icon;
+        int16_t string_index;
+    };
+    uint32_t unk1[8]; // this seems to be another union like above 
+    void *state;
+    uint32_t unk2;
+} HudMessagingActionPrompt;
+
+typedef struct HudMessagingPlayerData {
+    HudMessage messages[4];
+    HudMessagingActionPrompt action_prompt;
+    uint32_t unk1;
+} HudMessagingPlayerData;
+
+typedef struct HudMessagingGlobals {
+    HudMessagingPlayerData player_messages[MAX_LOCAL_PLAYERS];
+    uint32_t unk1;
+    uint32_t unk2;
+    uint32_t unk3;
+    void *unk4;
+    void *unk5;
+    uint32_t unk6;
+    uint32_t unk7[4]; // I give up for now
+} HudMessagingGlobals;
+_Static_assert(sizeof(HudMessagingGlobals) == 0x488);
+
+typedef enum PACKED_ENUM HudPointCalculationMode {
+    HUD_POINT_CALCULATION_MODE_BASE_CANVAS = 0,
+    HUD_POINT_CALCULATION_MODE_SCALED_CANVAS,
+    HUD_POINT_CALCULATION_MODE_INVERSE_SCALED_CANVAS,
+    HUD_POINT_CALCULATION_MODE_MAX_VALUE,
+    HUD_POINT_CALCULATION_MODE_SIZE = 0xFF
+} HudPointCalculationMode;
+_Static_assert(sizeof(HudPointCalculationMode) == sizeof(uint8_t));
 
 /**
  * Get the global HUD settings.
@@ -85,15 +134,15 @@ void hud_initialize_for_new_map(void);
  * @param absolute_placement The absolute placement of the HUD element.
  * @param meter_definition The definition of the meter.
  * #@param anchor_adjustments Adjustments to the anchor.
- * @param use_hud_globals_canvas Whether to use the HUD globals canvas size.
+ * @param calculation_mode The calculation mode to use for positioning.
  * @param override_scale Whether to override the scale.
  * @param custom_scale The custom scale to use.
  * @param out_position The output position of the HUD element.
  * @note The anchor adjustments parameter is currently not implemented, as 
  *       it seems to be unused in the original code. The parameter has been
- *       reused for the use_hud_globals_canvas boolean instead.
+ *       reused for the calculation_mode instead.
  */
-void hud_calculate_point(HUDInterfaceAnchor *absolute_placement, HUDMeterDefinition *meter_definition, bool use_hud_globals_canvas, bool override_scale, float custom_scale, VectorXYInt *out_position);
+void hud_calculate_point(HUDInterfaceAnchor *absolute_placement, HUDMeterDefinition *meter_definition, HudPointCalculationMode calculation_mode, bool override_scale, float custom_scale, VectorXYInt *out_position);
 
 /**
  * Calculate the bounds of a HUD bitmap.
@@ -116,7 +165,7 @@ void hud_calculate_bitmap_bounds(HUDInterfaceAnchor absolute_placement, BitmapDa
  * @param scale The scaling factors for the bitmap in both x and y directions.
  * @param position The position on the screen where the bitmap should be drawn.
  */
-void hud_draw_bitmap_internal(RasterizerMeterParams *meter_params, BitmapData *bitmap, Bounds2D *texture_bounds, Bounds2D *screen_coords, float rotation, Pixel32 color, VectorXY *scale, VectorXYInt *position);
+void hud_draw_bitmap_internal(const RasterizerMeterParams *meter_params, const BitmapData *bitmap, const Bounds2D *texture_bounds, const Bounds2D *screen_coords, float rotation, Pixel32 color, const VectorXY *scale, const VectorXYInt *position);
 
 /**
  * Draw a HUD bitmap with a meter on the screen.

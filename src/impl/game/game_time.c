@@ -17,3 +17,8 @@ void game_time_set_paused(bool paused) {
     }
     globals->paused = paused;
 }
+
+int32_t game_time_get_local_time(void) {
+    GameTimeGlobals *globals = game_time_get_globals();
+    return globals->local_time;
+}

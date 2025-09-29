@@ -93,6 +93,17 @@
         "use_return_value": true,
         "replace": true
     },
+    "bitmap_group_sequence_get_bitmap_and_bounds_for_frame": {
+        "game": {
+            "address": "0x4aecc0",
+            "arguments": ["0", "4", "8", "12", "eax"]
+        },
+        "server": {
+            "address": null
+        },
+        "use_return_value": false,
+        "replace": false
+    },
     "bitmap_load": {
         "game": {
             "address": "0x444eb0",
@@ -414,6 +425,16 @@
         "server": {
             "address": null,
             "arguments": ["0", "4"]
+        },
+        "replace": true
+    },
+    "hud_draw_message_icon": {
+        "game": {
+            "address": "0x4b0d60",
+            "arguments": ["0", "4", "esi", "edi"]
+        },
+        "server": {
+            "address": null
         },
         "replace": true
     },

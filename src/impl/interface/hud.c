@@ -3,6 +3,7 @@
 #include "../bitmap/bitmap.h"
 #include "../debug/assertion.h"
 #include "../exception/exception.h"
+#include "../game/game_time.h"
 #include "../tag/definitions/bitmap.h"
 #include "../tag/tag.h"
 #include "../math/math.h"
@@ -61,7 +62,8 @@ uint32_t hud_get_canvas_height(void) {
 }
 
 void hud_calculate_point(HUDInterfaceAnchor *absolute_placement, HUDMeterDefinition *meter_definition,
-                         bool use_hud_globals_canvas, bool override_scale, float custom_scale, VectorXYInt *out_position) {
+                         HudPointCalculationMode calculation_mode, bool override_scale, float custom_scale, 
+                         VectorXYInt *out_position) {
     
     float scale = 1.0f;
     if(override_scale && !nan_f32(custom_scale) && custom_scale != 0.0f) {
@@ -72,20 +74,29 @@ void hud_calculate_point(HUDInterfaceAnchor *absolute_placement, HUDMeterDefinit
     ASSERT(meter_definition != NULL);
 
     const uint16_t HUD_INTERFACE_MARGIN = 8;
-    uint16_t screen_width = render_get_screen_width();
-    uint16_t screen_height = render_get_screen_height();
-    uint16_t left_offset = HUD_INTERFACE_MARGIN + hud_interface_safe_zones.x;
-    uint16_t top_offset = HUD_INTERFACE_MARGIN + hud_interface_safe_zones.y;
-    uint16_t right_offset = screen_width - HUD_INTERFACE_MARGIN - hud_interface_safe_zones.x;
-    uint16_t bottom_offset = screen_height - hud_interface_safe_zones.y;
+    uint16_t screen_width, screen_height, left_offset, top_offset, right_offset, bottom_offset;
+    float canvas_scale = hud_get_canvas_scale();
 
-    if(use_hud_globals_canvas) {
-        screen_width = hud_get_canvas_width();
-        screen_height = hud_get_canvas_height();
-        left_offset = (HUD_INTERFACE_MARGIN + hud_interface_safe_zones.x) * hud_get_canvas_scale();
-        top_offset = (HUD_INTERFACE_MARGIN + hud_interface_safe_zones.y) * hud_get_canvas_scale();
-        right_offset = screen_width - ((HUD_INTERFACE_MARGIN + hud_interface_safe_zones.x) * hud_get_canvas_scale());
-        bottom_offset = screen_height - (hud_interface_safe_zones.y * hud_get_canvas_scale());
+    switch(calculation_mode) {
+        case HUD_POINT_CALCULATION_MODE_SCALED_CANVAS:
+        case HUD_POINT_CALCULATION_MODE_INVERSE_SCALED_CANVAS:
+            screen_width = hud_get_canvas_width();
+            screen_height = hud_get_canvas_height();
+            left_offset = (HUD_INTERFACE_MARGIN + hud_interface_safe_zones.x) * canvas_scale;
+            top_offset = (HUD_INTERFACE_MARGIN + hud_interface_safe_zones.y) * canvas_scale;
+            right_offset = screen_width - ((HUD_INTERFACE_MARGIN + hud_interface_safe_zones.x) * canvas_scale);
+            bottom_offset = screen_height - (hud_interface_safe_zones.y * canvas_scale);
+            break;
+
+        case HUD_POINT_CALCULATION_MODE_BASE_CANVAS:
+        default:
+            screen_width = render_get_screen_width();
+            screen_height = render_get_screen_height();
+            left_offset = HUD_INTERFACE_MARGIN + hud_interface_safe_zones.x;
+            top_offset = HUD_INTERFACE_MARGIN + hud_interface_safe_zones.y;
+            right_offset = screen_width - HUD_INTERFACE_MARGIN - hud_interface_safe_zones.x;
+            bottom_offset = screen_height - hud_interface_safe_zones.y;
+            break;
     }
 
     float pos_x = 0.0f;
@@ -123,13 +134,14 @@ void hud_calculate_point(HUDInterfaceAnchor *absolute_placement, HUDMeterDefinit
         }
     }
 
-    // @todo: implement anchor adjustments (seems to be unused)
-    // if(anchor_adjustments != NULL) {
-    //     exception_throw_runtime_error("Anchor adjustments are not implemented");
-    // }
-
     out_position->x = math_float_to_long(pos_x);
     out_position->y = math_float_to_long(pos_y);
+
+    // If using inverse scaled canvas, we need to divide the position by the canvas scale
+    if(calculation_mode == HUD_POINT_CALCULATION_MODE_INVERSE_SCALED_CANVAS) {
+        out_position->x /= canvas_scale;
+        out_position->y /= canvas_scale;
+    }
 }
 
 void hud_calculate_bitmap_bounds(HUDInterfaceAnchor absolute_placement, BitmapData *bitmap_data, Bounds2D *screen_coords, Bounds2D *output, bool is_interface_bitmap) {
@@ -197,9 +209,9 @@ void hud_calculate_bitmap_bounds(HUDInterfaceAnchor absolute_placement, BitmapDa
     }
 }
 
-void hud_draw_bitmap_internal(RasterizerMeterParams *meter_params, BitmapData *bitmap, Bounds2D *texture_bounds, 
-                            Bounds2D *screen_coords, float rotation, Pixel32 color, VectorXY *scale, VectorXYInt *offset) {
-    
+void hud_draw_bitmap_internal(const RasterizerMeterParams *meter_params, const BitmapData *bitmap, const Bounds2D *texture_bounds, 
+                            const Bounds2D *screen_coords, float rotation, Pixel32 color, const VectorXY *scale, const VectorXYInt *offset) {
+
     float sin_rotation = sin(rotation);
     float cos_rotation = cos(rotation);
 
@@ -439,4 +451,54 @@ void hud_draw_message(wchar_t *message, float fade) {
     text_set_drawing_parameters(-1, 2, 8, font, &text_color);
     text_draw_unicode_string(&rect, NULL, NULL, 0, message);
     text_set_drawing_parameters(-1, 0, 0, font, &text_color);
+}
+
+void hud_draw_message_icon(Rectangle2D *text_bounds, Pixel32 color, HUDInterfaceMessagingIcon *icon, Bounds2D *input_bounds) {
+    const HUDGlobals *hud_globals = hud_get_globals();
+    const PlayersGlobals *players_globals = player_get_globals();
+    
+    uint16_t frame_index;    
+    if(icon->frame_rate == '\0') {
+        frame_index = 0;
+    }
+    else {
+        frame_index = game_time_get_local_time() / (int)icon->frame_rate;
+    }
+
+    BitmapData *bitmap;
+    Bounds2D *bounds;
+    TagHandle icon_bitmap = hud_globals->messaging_parameters.icon_bitmap.tag_handle;
+    bitmap_group_sequence_get_bitmap_and_bounds_for_frame(icon_bitmap, icon->sequence_index, &bitmap, &bounds, frame_index);
+    if(bitmap == NULL || bitmap_load(false, true, bitmap) == NULL) {
+        return;
+    }
+
+    float scale = 1.0f; 
+    if(players_globals->local_player_count > 1) {
+        scale = 0.75f; // some day!
+    }
+
+    int16_t pos_x = text_bounds->left + icon->offset_from_reference_corner.x * scale;
+    int16_t pos_y = text_bounds->bottom - icon->offset_from_reference_corner.y * scale;
+
+    VectorXYInt offset;
+    offset.x = pos_x * hud_get_canvas_scale();
+    offset.y = pos_y * hud_get_canvas_scale();
+
+    Pixel32 final_color = color;
+    if(icon->flags.override_default_color) {
+        final_color = icon->override_icon_color;
+    }
+
+    hud_draw_bitmap(HUD_INTERFACE_ANCHOR_BOTTOM_LEFT, &offset, scale, 0.0f, final_color, input_bounds, bounds, false, bitmap);
+
+    if(icon->flags.width_offset_is_absolute_icon_width != 0) {
+        text_bounds->left = icon->width_offset * scale + pos_x;
+    }
+    else if(bounds != NULL) {
+        text_bounds->left = ((bounds->right - bounds->left) * bitmap->width + icon->width_offset) * scale + pos_x;
+    }
+    else {
+        text_bounds->left = (bitmap->width + icon->width_offset) * scale + pos_x;
+    }
 }
